@@ -1,1 +1,647 @@
+/* =========================================================
+   GRUNNVERDIER
+========================================================= */
 
+:root {
+    --color-primary: #0066a1;
+    --color-primary-dark: #004f7c;
+
+    --color-background: #eef2f5;
+    --color-surface: #ffffff;
+
+    --color-text: #17212b;
+    --color-muted: #667085;
+
+    --color-border: #d0d5dd;
+    --color-border-light: #e4e7ec;
+
+    --color-green: #16834b;
+    --color-green-dark: #0e6739;
+
+    --color-red: #c62828;
+    --color-red-dark: #a51e1e;
+
+    --color-blue-light: #dceef9;
+    --color-blue-light-hover: #c7e4f5;
+
+    --color-black: #202124;
+
+    --radius-small: 6px;
+    --radius-medium: 10px;
+    --radius-large: 14px;
+
+    --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-medium: 0 5px 18px rgba(0, 0, 0, 0.08);
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    --input-height: 42px;
+}
+
+
+/* =========================================================
+   RESET / BASE
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    color: var(--color-text);
+    background: var(--color-background);
+
+    line-height: 1.45;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.app-header {
+    padding: 18px 32px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.app-header h1 {
+    margin: 0;
+
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.app-eyebrow,
+.section-eyebrow {
+    margin: 0 0 3px;
+
+    color: var(--color-muted);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+
+/* =========================================================
+   HOVEDLAYOUT
+========================================================= */
+
+.app-shell {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        360px;
+
+    gap: 24px;
+
+    width: min(1500px, calc(100% - 48px));
+
+    margin: 24px auto 60px;
+}
+
+
+/* =========================================================
+   SKJEMAPANEL
+========================================================= */
+
+.form-panel {
+    min-width: 0;
+}
+
+.form-title {
+    margin-bottom: 16px;
+}
+
+.form-title h2 {
+    margin: 0;
+
+    font-size: 28px;
+}
+
+
+/* =========================================================
+   SEKSJONER
+========================================================= */
+
+.form-section {
+    margin-bottom: 18px;
+
+    padding: 22px;
+
+    background: var(--color-surface);
+
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-small);
+}
+
+.form-section h3 {
+    margin: 0 0 18px;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.form-grid {
+    display: grid;
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+.form-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tg-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.form-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-bottom: 14px;
+}
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    color: #344054;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+
+    background: #ffffff;
+
+    color: var(--color-text);
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+input {
+    height: var(--input-height);
+
+    padding: 0 11px;
+}
+
+textarea {
+    padding: 11px;
+
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 102, 161, 0.12);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #98a2b3;
+}
+
+
+/* =========================================================
+   TG-KORT
+========================================================= */
+
+.field-card {
+    padding: 12px;
+
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-medium);
+
+    background: #fafbfc;
+}
+
+.field-card-title {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #344054;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.other-tg-input {
+    margin-bottom: 8px;
+}
+
+.other-tg-input:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   CHIPS
+========================================================= */
+
+.chip-group {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.chip {
+    min-width: 42px;
+    height: 38px;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    color: #344054;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.chip:hover {
+    border-color: var(--color-primary);
+}
+
+.chip.is-selected {
+    border-color: var(--color-primary);
+
+    background: var(--color-primary);
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   KRITERIER
+========================================================= */
+
+.criteria-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.criteria-chip {
+    width: 100%;
+
+    padding: 14px 16px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    background: #ffffff;
+
+    color: var(--color-text);
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.criteria-chip:hover {
+    border-color: var(--color-primary);
+}
+
+.criteria-chip.is-selected {
+    border-color: var(--color-primary);
+
+    background: #eaf5fb;
+
+    box-shadow:
+        0 0 0 2px rgba(0, 102, 161, 0.08);
+}
+
+.conditional-field {
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   PERSONER
+========================================================= */
+
+.person-row {
+    display: grid;
+
+    grid-template-columns:
+        140px
+        minmax(0, 1fr)
+        190px;
+
+    gap: 12px;
+
+    align-items: center;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.person-row:last-child {
+    border-bottom: none;
+}
+
+.person-role {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SIDE PANEL
+========================================================= */
+
+.side-panel {
+    min-width: 0;
+}
+
+.side-panel-inner {
+    position: sticky;
+
+    top: 20px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-medium);
+}
+
+.side-panel h2 {
+    margin: 0 0 14px;
+
+    font-size: 21px;
+}
+
+.report-output {
+    width: 100%;
+    height: 430px;
+
+    margin-bottom: 16px;
+
+    padding: 13px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    background: #f8fafc;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size: 12.5px;
+    line-height: 1.5;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   HANDLINGSKNAPPER
+========================================================= */
+
+.action-buttons {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.action-button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 10px 14px;
+
+    border: 0;
+    border-radius: var(--radius-medium);
+
+    font-weight: 700;
+
+    text-align: center;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.05s ease;
+}
+
+.action-button:active {
+    transform: translateY(1px);
+}
+
+.action-copy {
+    background: var(--color-green);
+
+    color: #ffffff;
+}
+
+.action-copy:hover {
+    background: var(--color-green-dark);
+}
+
+.action-reset {
+    background: var(--color-red);
+
+    color: #ffffff;
+}
+
+.action-reset:hover {
+    background: var(--color-red-dark);
+}
+
+.action-procedure {
+    background: var(--color-blue-light);
+
+    color: #174a67;
+}
+
+.action-procedure:hover {
+    background: var(--color-blue-light-hover);
+}
+
+.action-email {
+    background: var(--color-black);
+
+    color: #ffffff;
+}
+
+.action-email:hover {
+    background: #000000;
+}
+
+.button-icon {
+    margin-right: 8px;
+
+    font-size: 18px;
+}
+
+.copy-confirmation {
+    min-height: 18px;
+
+    color: var(--color-green);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   HJELPEKLASSER
+========================================================= */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   RESPONSIVT
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .app-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .side-panel-inner {
+        position: static;
+    }
+
+    .report-output {
+        height: 320px;
+    }
+}
+
+
+@media (max-width: 760px) {
+
+    .app-shell {
+        width: min(100% - 24px, 1500px);
+
+        margin-top: 12px;
+    }
+
+    .app-header {
+        padding: 16px;
+    }
+
+    .form-grid-2,
+    .form-grid-3,
+    .tg-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .person-row {
+        grid-template-columns: 1fr;
+    }
+
+    .person-role {
+        margin-top: 6px;
+    }
+}
