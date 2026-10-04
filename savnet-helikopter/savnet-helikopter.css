@@ -31,9 +31,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(
-    var(--header-height) + var(--panel-gap)
-  );
+  scroll-padding-top: calc(var(--header-height) + var(--panel-gap));
 }
 
 body {
@@ -73,14 +71,11 @@ a:focus-visible {
   position: sticky;
   top: 0;
   z-index: 20;
-
   display: flex;
   align-items: center;
-
   width: 100%;
   height: var(--header-height);
-  padding: 10px 20px;
-
+  padding: 10px 180px 10px 20px;
   background: var(--surface);
   border-bottom: 1px solid var(--border-light);
 }
@@ -100,19 +95,21 @@ a:focus-visible {
   line-height: 1.2;
 }
 
-/* HOVEDLAYOUT: MENY | SKJEMA | RAPPORT */
+.app-header .theme-toggle {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+/* HOVEDLAYOUT */
 
 .app-shell {
   display: grid;
-  grid-template-columns:
-    190px
-    minmax(0, 1fr)
-    340px;
+  grid-template-columns: 190px minmax(0, 1fr) 340px;
   grid-template-areas: "navigation form report";
-
   gap: 16px;
   align-items: start;
-
   width: calc(100% - 24px);
   max-width: 1800px;
   margin: var(--panel-gap) auto;
@@ -158,13 +155,10 @@ a:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
-
   min-height: 42px;
   padding: 8px 9px;
-
   border: 1px solid transparent;
   border-radius: 9px;
-
   color: var(--text);
   font-size: 14px;
   font-weight: 600;
@@ -193,11 +187,70 @@ a:focus-visible {
   min-width: 0;
 }
 
-/* SKJEMA */
+/* SKJEMA OG EGET RULLEFELT */
+
+.form-panel-frame {
+  grid-area: form;
+  position: relative;
+  min-width: 0;
+  height: calc(
+    100vh - var(--header-height) - var(--panel-gap) * 2
+  );
+  height: calc(
+    100dvh - var(--header-height) - var(--panel-gap) * 2
+  );
+}
 
 .form-panel {
-  grid-area: form;
   min-width: 0;
+}
+
+.form-panel-frame .form-panel {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: var(--primary) var(--background);
+  padding-right: 5px;
+  overscroll-behavior-y: contain;
+}
+
+.form-panel::-webkit-scrollbar {
+  width: 12px;
+}
+
+.form-panel::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 3px solid var(--background);
+  border-radius: 10px;
+}
+
+.form-panel::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.form-panel form {
+  padding-bottom: 48px;
+}
+
+.form-scroll-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 24px;
+  z-index: 5;
+  padding: 7px 12px;
+  color: var(--primary);
+  background: var(--surface);
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  box-shadow: 0 3px 12px #0002;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.form-scroll-hint[hidden] {
+  display: none;
 }
 
 .form-section {
@@ -260,8 +313,6 @@ label,
   font-size: 13px;
   font-weight: 650;
 }
-
-/* INPUT OG TEKSTFELTER */
 
 input,
 textarea {
@@ -333,10 +384,8 @@ textarea::placeholder {
   min-width: 36px;
   min-height: 36px;
   padding: 0 10px;
-
   border: 1px solid var(--border);
   border-radius: 999px;
-
   background: var(--surface);
   color: #344054;
 }
@@ -351,15 +400,13 @@ textarea::placeholder {
   color: #ffffff;
 }
 
-/* CREX MANIFEST */
+/* CREW MANIFEST */
 
 .person-row {
   display: grid;
-  grid-template-columns:
-    145px
-    minmax(0, 1fr)
-    140px;
-  gap: 8px;
+  grid-template-columns: 100px minmax(0, 1fr) 125px;
+  column-gap: 10px;
+  row-gap: 8px;
   align-items: center;
   padding: 7px 0;
   border-bottom: 1px solid var(--border-light);
@@ -394,6 +441,17 @@ textarea::placeholder {
   font-size: 20px;
 }
 
+.person-row .crew-name {
+  display: block;
+  min-height: 36px;
+  padding: 7px 9px;
+  line-height: 20px;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
 /* UTLØSENDE KRITERIUM */
 
 .criteria-list {
@@ -405,10 +463,8 @@ textarea::placeholder {
 .criteria-chip {
   width: 100%;
   padding: 9px 10px;
-
   border: 1px solid var(--border);
   border-radius: var(--radius-medium);
-
   background: var(--surface);
   color: var(--text);
   text-align: left;
@@ -432,6 +488,10 @@ textarea::placeholder {
   margin-bottom: 5px;
 }
 
+.field-revealed {
+  animation: reveal-feedback 0.8s ease-out;
+}
+
 /* FEILMELDINGER */
 
 .field-error {
@@ -445,19 +505,15 @@ textarea::placeholder {
   margin: 0 0 10px;
 }
 
-/* RAPPORTPANEL
-   Fyller vindushøyden under overskriften.
-   Hele panelet blir stående mens skjemaet scrolles. */
+/* RAPPORTPANEL */
 
 .side-panel {
   grid-area: report;
   position: sticky;
   top: calc(var(--header-height) + var(--panel-gap));
   align-self: start;
-
   min-width: 0;
   min-height: 0;
-
   height: calc(
     100vh - var(--header-height) - var(--panel-gap) * 2
   );
@@ -471,17 +527,13 @@ textarea::placeholder {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   height: 100%;
   min-height: 0;
   padding: 14px;
-
   background: var(--surface);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-large);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-
-  /* Gir tilgang til innholdet ved svært lav vindushøyde. */
   overflow: auto;
 }
 
@@ -492,21 +544,16 @@ textarea::placeholder {
   line-height: 1.2;
 }
 
-/* Rapportfeltet bruker all ledig plass over knappene. */
-
 .report-output {
   display: block;
   flex: 1 1 0;
-
   width: 100%;
   height: auto;
   min-height: 100px;
   max-height: none;
   margin: 0;
   padding: 10px;
-
   background: #f8fafc;
-
   font-family:
     "SFMono-Regular",
     Consolas,
@@ -514,7 +561,6 @@ textarea::placeholder {
     monospace;
   font-size: 12px;
   line-height: 1.5;
-
   resize: none;
   overflow: auto;
 }
@@ -534,14 +580,11 @@ textarea::placeholder {
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
-
   border: 0;
   border-radius: var(--radius-medium);
-
   font-weight: 700;
   text-align: center;
   text-decoration: none;
@@ -589,37 +632,38 @@ textarea::placeholder {
   flex: 0 0 5px;
 }
 
-.copy-confirmation {
-  min-height: 18px;
-  color: var(--green);
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
+.copy-flash {
+  animation: copy-feedback 0.65s ease-out;
 }
 
-/* SKJUL FELTER */
+@keyframes copy-feedback {
+  40% {
+    background: #35b977;
+    box-shadow: 0 0 0 4px #16834b33;
+  }
+}
+
+@keyframes reveal-feedback {
+  from {
+    background: #dceef9;
+  }
+
+  to {
+    background: transparent;
+  }
+}
 
 .hidden {
   display: none !important;
 }
 
-/* MINDRE PC / LAPTOP */
+/* MINDRE LAPTOP */
 
 @media (max-width: 1200px) {
   .app-shell {
-    grid-template-columns:
-      165px
-      minmax(0, 1fr)
-      300px;
+    grid-template-columns: 165px minmax(0, 1fr) 300px;
     gap: 10px;
     width: calc(100% - 16px);
-  }
-
-  .person-row {
-    grid-template-columns:
-      120px
-      minmax(0, 1fr)
-      115px;
   }
 
   .side-panel-inner {
@@ -631,8 +675,17 @@ textarea::placeholder {
   }
 }
 
-/* SMAL SKJERM
-   Panelene legges under hverandre. */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .person-row {
+    grid-template-columns: 90px minmax(0, 1fr);
+  }
+
+  .person-row > input[type="tel"] {
+    grid-column: 2;
+  }
+}
+
+/* NETTBRETT OG SMAL SKJERM */
 
 @media (max-width: 900px) {
   .app-header {
@@ -655,11 +708,6 @@ textarea::placeholder {
     position: static;
     top: auto;
     height: auto;
-  }
-
-  .form-navigation-inner,
-  .side-panel-inner {
-    position: static;
   }
 
   .form-navigation-label {
@@ -686,6 +734,24 @@ textarea::placeholder {
     grid-template-columns: 1fr;
   }
 
+  .form-panel-frame {
+    height: auto;
+  }
+
+  .form-panel-frame .form-panel {
+    height: auto;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .form-panel form {
+    padding-bottom: 0;
+  }
+
+  .form-scroll-hint {
+    display: none;
+  }
+
   .side-panel-inner {
     height: auto;
     overflow: visible;
@@ -704,11 +770,15 @@ textarea::placeholder {
 
 @media (max-width: 560px) {
   .app-header {
-    padding: 12px;
+    padding: 12px 145px 12px 12px;
   }
 
   .app-header h1 {
     font-size: 21px;
+  }
+
+  .app-header .theme-toggle {
+    right: 12px;
   }
 
   .form-section {
@@ -725,50 +795,20 @@ textarea::placeholder {
   }
 }
 
-/* Kortere crew-navnefelt og mer luft før mobilnummer. */
+/* REDUSERT BEVEGELSE */
 
-@media (min-width: 901px) {
-    .person-row {
-        grid-template-columns:
-            120px
-            minmax(0, 220px)
-            140px;
-
-        column-gap: 20px;
-        justify-content: start;
-    }
-}
-
-/* Tilpasning til mindre laptopvinduer. */
-
-@media (min-width: 901px) and (max-width: 1200px) {
-    .person-row {
-        grid-template-columns:
-            110px
-            minmax(0, 180px)
-            115px;
-
-        column-gap: 12px;
-    }
-}
-
-.app-header {
-  padding-right: 180px;
-}
-
-.app-header .theme-toggle {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-}
-
-@media (max-width: 560px) {
-  .app-header {
-    padding-right: 145px;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .app-header .theme-toggle {
-    right: 12px;
+  .copy-flash,
+  .field-revealed {
+    animation: none;
+  }
+
+  .copy-flash {
+    outline: 2px solid #35b977;
+    outline-offset: 2px;
   }
 }

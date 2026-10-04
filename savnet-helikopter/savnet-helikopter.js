@@ -10,9 +10,7 @@ const state = {
 
 let copyTimer = null;
 
-/* =========================================================
-   KRITERIER
-   ========================================================= */
+/* KRITERIER */
 
 const CRITERIA = {
     1: "Helikopteret svarer ikke på anrop eller planlagt rapportering i henhold til flight following, og vises som rød både på Locus og Nødnett.",
@@ -26,9 +24,7 @@ const CRITERIA_LABELS = {
     3: "Observasjoner/meldinger som gir grunn til å mistenke eller bekrefte havari."
 };
 
-/* =========================================================
-   ICAO / LOKASJONER
-   ========================================================= */
+/* ICAO / LOKASJONER */
 
 const ICAO_LOCATIONS = {
     XZAH: "Ahus",
@@ -86,25 +82,12 @@ const ICAO_LOCATIONS = {
     ENME: "Hjelset SH"
 };
 
-/* =========================================================
-   TALEGRUPPER OG INDEKSNUMRE
-
-   Startindekser fra den vedlagte oversikten (juli 2020).
-   X i oversikten betyr talegruppenummer.
-
-   Område 01–09:
-   BAPS:    1–9
-   SAR:     1–4
-   SAMV:    1–5
-   SAMV-A:  A1–A2
-   SAMVUP:  11–29
-
-   NOSE-EM: 1–8
-   NOSE-CO: 1–8
-
-   Oppslaget ignorerer store/små bokstaver, mellomrom,
-   bindestreker, punktum og understrek.
-   ========================================================= */
+/*
+ * TALEGRUPPER
+ *
+ * Indekser fra den vedlagte oversikten, juli 2020.
+ * X i oversikten betyr talegruppenummer.
+ */
 
 const TG_REGISTER = new Map();
 
@@ -166,7 +149,7 @@ function registerTg(name, index, aliases = []) {
     }
 });
 
-/* LA, FKS, HRS, SAR sjø og særskilte FINO-grupper */
+/* LA, FKS, HRS og særskilte SAR-/FINO-grupper */
 
 [
     ["LA-SØR-ØST1", 1, ["la so 1", "la sor ost 1"]],
@@ -265,14 +248,12 @@ function registerTg(name, index, aliases = []) {
 });
 
 /*
- * Område, BAPS-base, felles base for SAR/SAMV/SAMVUP.
+ * Område, BAPS-base, felles SAR/SAMV/SAMVUP-base.
  *
- * Eksempel område 08:
- * BAPS-6   = 5170 + 6      = 5176
- * SAR-4    = 5200 + 40 + 4 = 5244
- * SAMV-1   = 5200 + 10 + 1 = 5211
- * SAMV-A1  = 5200 + 15 + 1 = 5216
- * SAMVUP-11 = 5200 + 10 + 11 = 5221
+ * BAPS:   1–9
+ * SAR:    1–4
+ * SAMV:   1–5 og A1–A2
+ * SAMVUP: 11–29
  */
 
 const TG_AREAS = [
@@ -290,17 +271,13 @@ const TG_AREAS = [
 TG_AREAS.forEach(([area, bapsBase, sharedBase]) => {
     const padded = String(area).padStart(2, "0");
 
-    const add = (
-        series,
-        number,
-        index,
-        extraSeries = []
-    ) => {
-        const aliases = [series, ...extraSeries]
-            .flatMap((prefix) => [
+    const add = (series, number, index, extraSeries = []) => {
+        const aliases = [series, ...extraSeries].flatMap(
+            (prefix) => [
                 area + "-" + prefix + "-" + number,
                 padded + "-" + prefix + "-" + number
-            ]);
+            ]
+        );
 
         registerTg(
             padded + "-" + series + "-" + number,
@@ -367,8 +344,6 @@ for (let number = 1; number <= 4; number++) {
     registerTg("FINO-SAR-" + number, 9290 + number);
 }
 
-/* Talegruppetekst i rapporten */
-
 function formatTgForReport(value) {
     const text = String(value ?? "").trim();
 
@@ -379,13 +354,11 @@ function formatTgForReport(value) {
     const group = TG_REGISTER.get(normaliseTgKey(text));
 
     return group
-        ? group.name + " (indeks " + group.index + ")"
-        : text + " (indeks ikke funnet)";
+        ? `${group.name} (indeks ${group.index})`
+        : `${text} (indeks ikke funnet)`;
 }
 
-/* =========================================================
-   OPPSTART
-   ========================================================= */
+/* OPPSTART */
 
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initialiseForm);
@@ -415,14 +388,13 @@ function initialiseForm() {
     $("#resetButton")?.addEventListener("click", resetForm);
     $("#emailReportButton")?.addEventListener("click", createEmail);
 
+    initialiseFormEnhancements();
     clearCoordinateError();
     renumberPax();
     updateReport();
 }
 
-/* =========================================================
-   POB
-   ========================================================= */
+/* POB */
 
 function initialisePob() {
     $$("#pobChips .chip").forEach((button) => {
@@ -432,7 +404,6 @@ function initialisePob() {
             state.pob = state.pob === number ? null : number;
 
             updatePobButtons();
-            clearCopyConfirmation();
             updateReport();
         });
     });
@@ -447,9 +418,7 @@ function updatePobButtons() {
     });
 }
 
-/* =========================================================
-   KRITERIEKNAPPER
-   ========================================================= */
+/* KRITERIEKNAPPER */
 
 function initialiseCriteria() {
     $$(".criteria-chip").forEach((button) => {
@@ -465,7 +434,6 @@ function initialiseCriteria() {
 
             updateCriteriaButtons();
             updateObservationField();
-            clearCopyConfirmation();
             updateReport();
         });
     });
@@ -484,15 +452,52 @@ function updateCriteriaButtons() {
 }
 
 function updateObservationField() {
-    $("#observationWrapper")?.classList.toggle(
-        "hidden",
-        state.criterion !== 3
+    const wrapper = $("#observationWrapper");
+
+    if (!wrapper) {
+        return;
+    }
+
+    const wasHidden = wrapper.classList.contains("hidden");
+    const visible = state.criterion === 3;
+
+    wrapper.classList.toggle("hidden", !visible);
+
+    $(".criteria-chip[data-criterion='3']")?.setAttribute(
+        "aria-expanded",
+        String(visible)
     );
+
+    if (visible && wasHidden) {
+        requestAnimationFrame(() => {
+            const panel = $(".form-panel");
+
+            if (panel && panel.scrollHeight > panel.clientHeight) {
+                const bottom = wrapper.getBoundingClientRect().bottom;
+                const panelBottom =
+                    panel.getBoundingClientRect().bottom - 16;
+
+                panel.scrollBy({
+                    top: Math.max(0, bottom - panelBottom),
+                    behavior: motionBehavior()
+                });
+            } else {
+                wrapper.scrollIntoView({
+                    block: "nearest",
+                    behavior: motionBehavior()
+                });
+            }
+
+            wrapper.classList.remove("field-revealed");
+            void wrapper.offsetWidth;
+            wrapper.classList.add("field-revealed");
+
+            updateFormScrollHint();
+        });
+    }
 }
 
-/* =========================================================
-   INPUT
-   ========================================================= */
+/* INPUT */
 
 function handleInput(event) {
     const target = event.target;
@@ -503,8 +508,6 @@ function handleInput(event) {
     ) {
         return;
     }
-
-    clearCopyConfirmation();
 
     if (target.classList.contains("other-tg-input")) {
         maintainDynamicTgFields();
@@ -591,9 +594,7 @@ function handleFocusOut(event) {
     updateReport();
 }
 
-/* =========================================================
-   DYNAMISKE TALEGRUPPER
-   ========================================================= */
+/* DYNAMISKE TALEGRUPPER */
 
 function createTgInput() {
     const input = document.createElement("input");
@@ -649,9 +650,7 @@ function getTgValues() {
     return values.filter(Boolean).map(formatTgForReport);
 }
 
-/* =========================================================
-   DYNAMISKE PAX-RADER
-   ========================================================= */
+/* DYNAMISKE PAX-RADER */
 
 function createPaxRow() {
     const row = document.createElement("div");
@@ -664,12 +663,12 @@ function createPaxRow() {
             <span class="pax-label">PAX</span>
         </div>
 
-        <input
-            type="text"
-            class="trainee-name"
+        <textarea
+            rows="1"
+            class="trainee-name crew-name"
             placeholder="Navn"
             autocomplete="off"
-        >
+        ></textarea>
 
         <input
             type="tel"
@@ -742,9 +741,7 @@ function renumberPax() {
     });
 }
 
-/* =========================================================
-   TELEFON
-   ========================================================= */
+/* TELEFON */
 
 function formatPhoneNumber(value) {
     let digits = value.replace(/\D/g, "");
@@ -769,9 +766,7 @@ function formatPhoneNumber(value) {
     return value.trim();
 }
 
-/* =========================================================
-   KLOKKESLETT
-   ========================================================= */
+/* KLOKKESLETT */
 
 function formatTime(value) {
     const text = value.trim();
@@ -831,9 +826,7 @@ function validateTimes() {
     return !invalid;
 }
 
-/* =========================================================
-   RESSURS-ID, REGISTRERING OG LOKASJON
-   ========================================================= */
+/* RESSURS-ID, REGISTRERING OG LOKASJON */
 
 function normaliseResourceId(value) {
     const text = value.trim();
@@ -880,10 +873,7 @@ function formatLocation(value) {
     return text;
 }
 
-/* =========================================================
-   LES KOORDINATER
-   Ukjent format behandles som fritekst.
-   ========================================================= */
+/* LES KOORDINATER */
 
 function parseUtm(value) {
     const text = value.trim().toUpperCase();
@@ -896,13 +886,8 @@ function parseUtm(value) {
         return null;
     }
 
-    const easting = Number(
-        match[1].replace(/\s/g, "")
-    );
-
-    const northing = Number(
-        match[2].replace(/\s/g, "")
-    );
+    const easting = Number(match[1].replace(/\s/g, ""));
+    const northing = Number(match[2].replace(/\s/g, ""));
 
     if (
         !Number.isFinite(easting) ||
@@ -930,14 +915,9 @@ function parseDmm(value) {
     }
 
     const latDegrees = Number(match[1]);
-    const latMinutes = Number(
-        match[2].replace(",", ".")
-    );
-
+    const latMinutes = Number(match[2].replace(",", "."));
     const lonDegrees = Number(match[4]);
-    const lonMinutes = Number(
-        match[5].replace(",", ".")
-    );
+    const lonMinutes = Number(match[5].replace(",", "."));
 
     if (
         latDegrees > 90 ||
@@ -964,9 +944,7 @@ function parseDmm(value) {
     return { latitude, longitude };
 }
 
-/* =========================================================
-   FORMATER KOORDINATER
-   ========================================================= */
+/* FORMATER KOORDINATER */
 
 function splitDegrees(value) {
     const absolute = Math.abs(value);
@@ -1018,9 +996,7 @@ function formatUtmInput(easting, northing) {
     );
 }
 
-/* =========================================================
-   UTM32N TIL LATITUDE / LONGITUDE
-   ========================================================= */
+/* UTM32N TIL LATITUDE / LONGITUDE */
 
 function utm32ToLatLon(easting, northing) {
     const a = 6378137;
@@ -1059,10 +1035,7 @@ function utm32ToLatLon(easting, northing) {
     const cosPhi = Math.cos(phi);
     const tanPhi = Math.tan(phi);
 
-    const n = a / Math.sqrt(
-        1 - e2 * sinPhi ** 2
-    );
-
+    const n = a / Math.sqrt(1 - e2 * sinPhi ** 2);
     const t = tanPhi ** 2;
     const c = ep2 * cosPhi ** 2;
 
@@ -1110,9 +1083,7 @@ function utm32ToLatLon(easting, northing) {
     };
 }
 
-/* =========================================================
-   LATITUDE / LONGITUDE TIL UTM32N
-   ========================================================= */
+/* LATITUDE / LONGITUDE TIL UTM32N */
 
 function latLonToUtm32(latitude, longitude) {
     const a = 6378137;
@@ -1128,10 +1099,7 @@ function latLonToUtm32(latitude, longitude) {
     const cosLat = Math.cos(lat);
     const tanLat = Math.tan(lat);
 
-    const n = a / Math.sqrt(
-        1 - e2 * sinLat ** 2
-    );
-
+    const n = a / Math.sqrt(1 - e2 * sinLat ** 2);
     const t = tanLat ** 2;
     const c = ep2 * cosLat ** 2;
     const aa = cosLat * (lon - origin);
@@ -1193,12 +1161,7 @@ function latLonToUtm32(latitude, longitude) {
     };
 }
 
-/* =========================================================
-   KOORDINATKONVERTERING
-
-   Fritekst beholdes uten koordinatfeilmelding.
-   Fyller bare tomme eller automatisk fylte felt.
-   ========================================================= */
+/* KOORDINATKONVERTERING */
 
 function clearCoordinateError() {
     const error = $("#coordinateError");
@@ -1314,9 +1277,7 @@ function convertCoordinates(sourceId) {
     }
 }
 
-/* =========================================================
-   POSISJON I RAPPORTEN
-   ========================================================= */
+/* POSISJON I RAPPORTEN */
 
 function dmmToReportText(value) {
     if (!value.trim()) {
@@ -1357,9 +1318,155 @@ function utmToReportText(value) {
     );
 }
 
-/* =========================================================
-   PERSONER I RAPPORTEN
-   ========================================================= */
+/* CREW-ROLLER */
+
+function isPoliceHelicopter() {
+    const registration = normaliseRegistration(
+        $("#registration")?.value ?? ""
+    );
+
+    return /^LN-OR[ABC]$/.test(registration);
+}
+
+function updateCrewRoles() {
+    const police = isPoliceHelicopter();
+
+    const roles = [
+        [
+            "rescuer",
+            police ? "PCM" : "HCM",
+            police
+                ? "Police Crew Member (PCM)"
+                : "Helicopter Crew Member (HCM)"
+        ],
+        [
+            "doctor",
+            police ? "PCM" : "Lege",
+            police ? "Police Crew Member (PCM)" : "Lege"
+        ]
+    ];
+
+    for (const [prefix, label, explanation] of roles) {
+        const element = $("#" + prefix + "Role");
+
+        if (element) {
+            element.textContent = label;
+            element.title = explanation;
+            element.setAttribute("aria-label", explanation);
+        }
+
+        $("#" + prefix + "Name")?.setAttribute(
+            "aria-label",
+            label + " navn"
+        );
+
+        $("#" + prefix + "Phone")?.setAttribute(
+            "aria-label",
+            label + " mobilnummer"
+        );
+    }
+
+    const hcmIcon = $("#rescuerName")
+        ?.closest(".person-row")
+        ?.querySelector("img");
+
+    const doctorIcon = $("#doctorName")
+        ?.closest(".person-row")
+        ?.querySelector("img");
+
+    if (doctorIcon && hcmIcon) {
+        doctorIcon.dataset.originalSrc ??=
+            doctorIcon.getAttribute("src");
+
+        doctorIcon.setAttribute(
+            "src",
+            police
+                ? hcmIcon.getAttribute("src")
+                : doctorIcon.dataset.originalSrc
+        );
+    }
+}
+
+/* NAVNEFELTER SOM VOKSER */
+
+function resizeCrewNames() {
+    $$(".crew-name").forEach((field) => {
+        field.style.height = "auto";
+
+        field.style.height =
+            Math.max(36, field.scrollHeight + 2) + "px";
+    });
+}
+
+/* RULLEINDIKATOR */
+
+function motionBehavior() {
+    return window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches
+        ? "auto"
+        : "smooth";
+}
+
+function updateFormScrollHint() {
+    const panel = $(".form-panel");
+    const hint = $("#formScrollHint");
+
+    if (!panel || !hint) {
+        return;
+    }
+
+    hint.hidden =
+        panel.scrollHeight -
+        panel.clientHeight -
+        panel.scrollTop < 12;
+}
+
+function initialiseFormEnhancements() {
+    const panel = $(".form-panel");
+
+    panel?.addEventListener(
+        "scroll",
+        updateFormScrollHint,
+        { passive: true }
+    );
+
+    $("#formScrollHint")?.addEventListener("click", () => {
+        panel?.scrollBy({
+            top: panel.clientHeight * 0.7,
+            behavior: motionBehavior()
+        });
+    });
+
+    $(".criteria-chip[data-criterion='3']")?.setAttribute(
+        "aria-controls",
+        "observationWrapper"
+    );
+
+    window.addEventListener("resize", () => {
+        resizeCrewNames();
+        updateFormScrollHint();
+    });
+
+    if (window.ResizeObserver) {
+        const observer = new ResizeObserver(() => {
+            resizeCrewNames();
+            updateFormScrollHint();
+        });
+
+        if (panel) {
+            observer.observe(panel);
+        }
+
+        const form = $("#missingHelicopterForm");
+
+        if (form) {
+            observer.observe(form);
+        }
+    }
+}
+
+/* PERSONER I RAPPORTEN */
 
 function personReportLine(role, name, phone) {
     const parts = [];
@@ -1375,9 +1482,7 @@ function personReportLine(role, name, phone) {
     return `${role}: ${parts.join(" - ")}`;
 }
 
-/* =========================================================
-   GENERER RAPPORT
-   ========================================================= */
+/* GENERER RAPPORT */
 
 function generateReport() {
     const value = (id) => $("#" + id)?.value.trim() ?? "";
@@ -1392,6 +1497,8 @@ function generateReport() {
 
         return formatTime(raw) || "[kontroller klokkeslett]";
     };
+
+    const police = isPoliceHelicopter();
 
     const lines = [
         "SAVNET HELIKOPTER",
@@ -1436,14 +1543,14 @@ function generateReport() {
         "-",
 
         personReportLine(
-            "Redningsmann",
+            police ? "PCM" : "HCM",
             value("rescuerName"),
             value("rescuerPhone")
         ),
         "-",
 
         personReportLine(
-            "Lege",
+            police ? "PCM" : "Lege",
             value("doctorName"),
             value("doctorPhone")
         )
@@ -1477,6 +1584,9 @@ function generateReport() {
 
 function updateReport() {
     validateTimes();
+    updateCrewRoles();
+    resizeCrewNames();
+    updateFormScrollHint();
 
     const output = $("#reportOutput");
 
@@ -1485,9 +1595,7 @@ function updateReport() {
     }
 }
 
-/* =========================================================
-   KOPIER RAPPORT
-   ========================================================= */
+/* KOPIER RAPPORT */
 
 async function copyReport() {
     updateReport();
@@ -1528,43 +1636,44 @@ async function copyReport() {
 
     clearTimeout(copyTimer);
 
+    const button = $("#copyButton");
     const text = $("#copyButtonText");
-    const confirmation = $("#copyConfirmation");
 
-    if (copied) {
-        if (text) {
-            text.textContent = "Tekst kopiert";
-        }
-
-        if (confirmation) {
-            confirmation.textContent = "Tekst kopiert";
-        }
-
-        copyTimer = setTimeout(clearCopyConfirmation, 2500);
-    } else if (confirmation) {
-        confirmation.textContent =
-            "Kopiering ble blokkert. Marker og kopier rapportteksten manuelt.";
+    if (text) {
+        text.textContent = copied
+            ? "Tekst kopiert"
+            : "Kopiering mislyktes";
     }
+
+    if (button) {
+        button.classList.remove("copy-flash");
+        void button.offsetWidth;
+
+        if (copied) {
+            button.classList.add("copy-flash");
+        }
+
+        button.title = copied
+            ? ""
+            : "Marker og kopier rapportteksten manuelt.";
+    }
+
+    copyTimer = setTimeout(clearCopyConfirmation, 5000);
 }
 
 function clearCopyConfirmation() {
     clearTimeout(copyTimer);
 
     const text = $("#copyButtonText");
-    const confirmation = $("#copyConfirmation");
 
     if (text) {
         text.textContent = "Kopier tekst";
     }
 
-    if (confirmation) {
-        confirmation.textContent = "";
-    }
+    $("#copyButton")?.classList.remove("copy-flash");
 }
 
-/* =========================================================
-   OPPRETT E-POST
-   ========================================================= */
+/* OPPRETT E-POST */
 
 function createEmail() {
     updateReport();
@@ -1577,13 +1686,11 @@ function createEmail() {
         `mailto:?subject=${subject}&body=${body}`;
 }
 
-/* =========================================================
-   TØM SKJEMA
-   ========================================================= */
+/* TØM SKJEMA */
 
 function resetForm() {
-    $$(".form-panel input, .form-panel textarea")
-        .forEach((field) => {
+    $$(".form-panel input, .form-panel textarea").forEach(
+        (field) => {
             field.value = "";
 
             delete field.dataset.generatedCoordinate;
@@ -1591,7 +1698,8 @@ function resetForm() {
 
             field.removeAttribute("aria-invalid");
             field.setCustomValidity("");
-        });
+        }
+    );
 
     state.pob = null;
     state.criterion = null;
@@ -1626,12 +1734,13 @@ function resetForm() {
         report.scrollTop = 0;
     }
 
+    $(".form-panel")?.scrollTo({
+        top: 0,
+        behavior: motionBehavior()
+    });
+
     window.scrollTo({
         top: 0,
-        behavior: window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-        ).matches
-            ? "auto"
-            : "smooth"
+        behavior: motionBehavior()
     });
 }
