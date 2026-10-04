@@ -6,6 +6,7 @@
     --color-muted: #667085;
     --color-border: #d0d5dd;
     --color-border-light: #e4e7ec;
+
     --color-green: #16834b;
     --color-green-dark: #0e6739;
     --color-red: #c62828;
@@ -13,10 +14,12 @@
     --color-blue-light: #dceef9;
     --color-blue-light-hover: #c7e4f5;
     --color-black: #202124;
+
     --radius-small: 6px;
     --radius-medium: 10px;
     --radius-large: 14px;
-    --input-height: 42px;
+
+    --input-height: 34px;
 }
 
 * {
@@ -48,8 +51,10 @@ textarea {
     font: inherit;
 }
 
+/* Overskrift */
+
 .app-header {
-    padding: 18px 32px;
+    padding: 10px 20px;
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border-light);
 }
@@ -82,13 +87,93 @@ textarea {
     font-weight: 500;
 }
 
+/* Skjema og rapportpanel */
+
 .app-shell {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-columns: 190px minmax(0, 1fr) 260px;
     align-items: start;
-    gap: 24px;
-    width: min(1500px, calc(100% - 48px));
-    margin: 24px auto 60px;
+    gap: 12px;
+    width: min(1700px, calc(100% - 24px));
+    margin: 12px auto 24px;
+}
+
+/* Venstremeny */
+
+.form-navigation {
+    min-width: 0;
+    align-self: stretch;
+}
+
+.form-navigation-inner {
+    position: sticky;
+    top: 12px;
+    padding: 12px 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-large);
+}
+
+.form-navigation-label {
+    margin: 20px 10px 8px;
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.form-nav-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.form-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 8px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a.form-nav-link:hover {
+    background: #f3f6f8;
+    border-color: var(--color-border-light);
+}
+
+.form-nav-link[aria-current="page"] {
+    background: #eaf5fb;
+    color: var(--color-primary);
+    border-color: #c5e1f1;
+}
+
+.form-nav-link.is-unavailable {
+    color: var(--color-muted);
+}
+
+.form-nav-icon {
+    flex: 0 0 23px;
+    text-align: center;
+    font-size: 19px;
+}
+
+.form-nav-copy {
+    display: grid;
+    gap: 2px;
+}
+
+.form-nav-status {
+    font-size: 11px;
+    font-weight: 400;
 }
 
 .form-panel,
@@ -96,9 +181,11 @@ textarea {
     min-width: 0;
 }
 
+/* Seksjoner */
+
 .form-section {
-    margin-bottom: 18px;
-    padding: 22px;
+    margin-bottom: 8px;
+    padding: 12px;
     background: var(--color-surface);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
@@ -106,15 +193,17 @@ textarea {
 }
 
 .form-section h2 {
-    margin: 0 0 18px;
+    margin: 0 0 8px;
     font-size: 17px;
     font-weight: 700;
 }
 
+/* Feltrader */
+
 .form-grid {
     display: grid;
-    gap: 14px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
 .form-grid-2 {
@@ -128,17 +217,18 @@ textarea {
 
 .tg-grid {
     display: grid;
-    gap: 14px;
+    gap: 8px;
 }
 
 .form-field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 4px;
+    margin-bottom: 8px;
 }
 
-.form-field:last-child {
+.form-field:last-child,
+.form-grid > .form-field {
     margin-bottom: 0;
 }
 
@@ -148,6 +238,8 @@ label,
     font-size: 13px;
     font-weight: 650;
 }
+
+/* Skrivefelt */
 
 input,
 textarea {
@@ -164,11 +256,11 @@ textarea {
 
 input {
     height: var(--input-height);
-    padding: 0 11px;
+    padding: 0 8px;
 }
 
 textarea {
-    padding: 11px;
+    padding: 8px;
     resize: vertical;
 }
 
@@ -189,8 +281,10 @@ textarea::placeholder {
     color: #98a2b3;
 }
 
+/* Talegrupper */
+
 .field-card {
-    padding: 12px;
+    padding: 8px;
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-medium);
     background: #fafbfc;
@@ -198,7 +292,7 @@ textarea::placeholder {
 
 .field-card > label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 700;
 }
 
@@ -210,16 +304,18 @@ textarea::placeholder {
     margin-bottom: 0;
 }
 
+/* POB-knapper */
+
 .chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 }
 
 .chip {
-    min-width: 42px;
-    min-height: 40px;
-    padding: 0 13px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0 9px;
     border: 1px solid var(--color-border);
     border-radius: 999px;
     background: var(--color-surface);
@@ -237,15 +333,17 @@ textarea::placeholder {
     color: #ffffff;
 }
 
+/* Utløsende kriterium */
+
 .criteria-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .criteria-chip {
     width: 100%;
-    padding: 14px 16px;
+    padding: 8px 10px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
     background: var(--color-surface);
@@ -265,29 +363,38 @@ textarea::placeholder {
 }
 
 .conditional-field {
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 .conditional-field label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
+
+/* Personer om bord */
 
 .person-row {
     display: grid;
-    grid-template-columns: 155px minmax(0, 1fr) 190px;
-    gap: 12px;
+    grid-template-columns: 140px minmax(0, 1fr) 135px;
+    gap: 8px;
     align-items: center;
-    padding: 12px 0;
+    padding: 6px 0;
     border-bottom: 1px solid var(--color-border-light);
 }
 
 .person-role {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
     font-size: 14px;
     font-weight: 700;
+}
+
+.person-role img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .role-icon {
@@ -298,14 +405,16 @@ textarea::placeholder {
     flex-shrink: 0;
 }
 
+/* Rapportpanel */
+
 .side-panel {
     align-self: stretch;
 }
 
 .side-panel-inner {
     position: sticky;
-    top: 20px;
-    padding: 20px;
+    top: 12px;
+    padding: 12px;
     background: var(--color-surface);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
@@ -313,14 +422,14 @@ textarea::placeholder {
 }
 
 .side-panel h2 {
-    margin: 0 0 14px;
+    margin: 0 0 8px;
     font-size: 21px;
 }
 
 .report-output {
     height: clamp(180px, calc(100dvh - 420px), 430px);
-    margin-bottom: 16px;
-    padding: 13px;
+    margin-bottom: 8px;
+    padding: 10px;
     border-radius: var(--radius-medium);
     background: #f8fafc;
     font-family:
@@ -333,10 +442,12 @@ textarea::placeholder {
     resize: vertical;
 }
 
+/* Handlingsknapper */
+
 .action-buttons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .action-button {
@@ -395,7 +506,7 @@ textarea::placeholder {
 }
 
 .action-space {
-    height: 16px;
+    height: 6px;
 }
 
 .copy-confirmation {
@@ -406,6 +517,8 @@ textarea::placeholder {
     text-align: center;
 }
 
+/* Feilmeldinger og skjulte felt */
+
 .field-error {
     margin: 0;
     color: var(--color-red);
@@ -413,25 +526,52 @@ textarea::placeholder {
 }
 
 .field-error:not(:empty) {
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .hidden {
     display: none !important;
 }
 
-@media (max-width: 1100px) {
+/* Mobil og smale vinduer */
+
+/* Smalere PC-vinduer */
+
+@media (max-width: 1200px) {
     .app-shell {
-        grid-template-columns: minmax(0, 1fr) 300px;
-        gap: 16px;
+        grid-template-columns: minmax(0, 1fr) 260px;
     }
 
-    .person-row {
-        grid-template-columns: 1fr;
+    .form-navigation {
+        grid-column: 1 / -1;
+    }
+
+    .form-navigation-inner {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-navigation-label {
+        display: none;
+    }
+
+    .form-nav-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 }
 
+/* Mobil og svært smale vinduer */
+
 @media (max-width: 760px) {
+    :root {
+        --input-height: 42px;
+    }
+
     .app-shell {
         grid-template-columns: 1fr;
         width: calc(100% - 24px);
@@ -449,7 +589,8 @@ textarea::placeholder {
 
     .form-grid-2,
     .form-grid-3,
-    .tg-grid {
+    .tg-grid,
+    .person-row {
         grid-template-columns: 1fr;
     }
 
@@ -465,23 +606,4 @@ textarea::placeholder {
     textarea {
         font-size: 16px;
     }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-}
-
-.person-role {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.person-role img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  flex-shrink: 0;
 }

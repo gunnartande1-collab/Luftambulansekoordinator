@@ -3,378 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Luftambulansekoordinator – Savnet helikopter</title>
+
     <link rel="stylesheet" href="savnet-helikopter.css">
     <script src="savnet-helikopter.js" defer></script>
 </head>
+
 <body>
+    <header class="app-header">
+        <h1>
+            Luftambulansekoordinator
+            <span class="header-separator">·</span>
+            <span class="header-form-name">Savnet helikopter</span>
+        </h1>
+    </header>
 
-<header class="app-header">
-    <p class="app-eyebrow">Operativt verktøy</p>
-    <h1>
-        Luftambulansekoordinator
-        <span class="header-separator">·</span>
-        <span class="header-form-name">Savnet helikopter</span>
-    </h1>
-</header>
+    <main class="app-shell">
 
-<main class="app-shell">
-    <section class="form-panel" aria-label="Savnet helikopter">
+        <!-- Venstremeny -->
+        <aside class="form-navigation" aria-label="Hovedmeny">
+            <nav class="form-navigation-inner">
+                <a class="form-nav-link" href="../fremside.html">
+                    <span class="form-nav-icon" aria-hidden="true">⌂</span>
+                    <span>Hjem</span>
+                </a>
 
-        <section class="form-section">
-            <h2>Talegruppe</h2>
+                <p class="form-navigation-label">Skjemaer</p>
 
-            <div class="tg-grid">
-                <div class="field-card">
-                    <label for="healthTg">Helse TG</label>
-                    <input type="text" id="healthTg" autocomplete="off">
-                </div>
+                <ul class="form-nav-list">
+                    <li>
+                        <a
+                            class="form-nav-link"
+                            href="savnet-helikopter.html"
+                            aria-current="page"
+                        >
+                            <span class="form-nav-icon" aria-hidden="true">✈</span>
+                            <span>Savnet helikopter</span>
+                        </a>
+                    </li>
 
-                <div class="field-card">
-                    <label for="sarTg">SAR TG</label>
-                    <input type="text" id="sarTg" autocomplete="off">
-                </div>
+                    <li>
+                        <span class="form-nav-link is-unavailable">
+                            <span class="form-nav-icon" aria-hidden="true">⌖</span>
+                            <span class="form-nav-copy">
+                                <span>GPS-forstyrrelser</span>
+                                <span class="form-nav-status">Kommer</span>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-                <div class="field-card">
-                    <label for="otherTgFirst">Annen TG</label>
-                    <div id="otherTgContainer">
+        <!-- Skjema -->
+        <section class="form-panel" aria-label="Savnet helikopter">
+
+            <!-- 1. Talegruppe -->
+            <section class="form-section">
+                <h2>Talegruppe</h2>
+
+                <div class="tg-grid">
+                    <div class="field-card">
+                        <label for="healthTg">Helse TG</label>
                         <input
                             type="text"
-                            id="otherTgFirst"
-                            class="other-tg-input"
-                            aria-label="Annen TG"
+                            id="healthTg"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="field-card">
+                        <label for="sarTg">SAR TG</label>
+                        <input
+                            type="text"
+                            id="sarTg"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="field-card">
+                        <label for="otherTgFirst">Annen TG</label>
+                        <div id="otherTgContainer">
+                            <input
+                                type="text"
+                                id="otherTgFirst"
+                                class="other-tg-input"
+                                aria-label="Annen TG"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Posisjon -->
+            <section class="form-section">
+                <h2>Sist kjente posisjon</h2>
+
+                <div class="form-grid form-grid-2">
+                    <div class="form-field">
+                        <label for="utmPosition">UTM</label>
+                        <input
+                            type="text"
+                            id="utmPosition"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="dmmPosition">Grader og desimalmin</label>
+                        <input
+                            type="text"
+                            id="dmmPosition"
                             autocomplete="off"
                         >
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section class="form-section">
-            <h2>Sist kjente posisjon</h2>
-
-            <div class="form-grid form-grid-2">
-                <div class="form-field">
-                    <label for="utmPosition">UTM</label>
-                    <input type="text" id="utmPosition" autocomplete="off">
-                </div>
+                <p id="coordinateError" class="field-error" role="alert"></p>
 
                 <div class="form-field">
-                    <label for="dmmPosition">Grader og desimalmin</label>
-                    <input type="text" id="dmmPosition" autocomplete="off">
-                </div>
-            </div>
-
-            <p id="coordinateError" class="field-error" role="alert"></p>
-
-            <div class="form-field">
-                <label for="placeName">Stedsnavn</label>
-                <input type="text" id="placeName" autocomplete="off">
-            </div>
-        </section>
-
-        <section class="form-section">
-            <h2>Luftfartøy</h2>
-
-            <div class="form-grid form-grid-3">
-                <div class="form-field">
-                    <label for="resourceId">Ressurs ID</label>
-                    <input type="text" id="resourceId" autocomplete="off">
-                </div>
-
-                <div class="form-field">
-                    <label for="registration">Reg.nr</label>
-                    <input type="text" id="registration" autocomplete="off">
-                </div>
-
-                <div class="form-field">
-                    <label for="callsign">Callsign (HD)</label>
-                    <input type="text" id="callsign" autocomplete="off">
-                </div>
-            </div>
-
-            <div class="form-field">
-                <span class="field-label">POB</span>
-
-                <div
-                    class="chip-group"
-                    id="pobChips"
-                    role="group"
-                    aria-label="Personer om bord"
-                >
-                    <button type="button" class="chip" data-pob="1" aria-pressed="false">1</button>
-                    <button type="button" class="chip" data-pob="2" aria-pressed="false">2</button>
-                    <button type="button" class="chip" data-pob="3" aria-pressed="false">3</button>
-                    <button type="button" class="chip" data-pob="4" aria-pressed="false">4</button>
-                    <button type="button" class="chip" data-pob="5" aria-pressed="false">5</button>
-                    <button type="button" class="chip" data-pob="6" aria-pressed="false">6</button>
-                    <button type="button" class="chip" data-pob="7" aria-pressed="false">7</button>
-                    <button type="button" class="chip" data-pob="8" aria-pressed="false">8</button>
-                    <button type="button" class="chip" data-pob="9" aria-pressed="false">9</button>
-                    <button type="button" class="chip" data-pob="10" aria-pressed="false">10</button>
-                </div>
-            </div>
-        </section>
-
-        <section class="form-section">
-            <h2>Flyrute</h2>
-
-            <div class="form-grid form-grid-2">
-                <div class="form-field">
-                    <label for="fromLocation">Fra</label>
-                    <input type="text" id="fromLocation" autocomplete="off">
-                </div>
-
-                <div class="form-field">
-                    <label for="toLocation">Til</label>
-                    <input type="text" id="toLocation" autocomplete="off">
-                </div>
-            </div>
-
-            <div class="form-field">
-                <label for="plannedRoute">Planlagt flyrute</label>
-                <input type="text" id="plannedRoute" autocomplete="off">
-            </div>
-
-            <div class="form-grid form-grid-2">
-                <div class="form-field">
-                    <label for="departureTime">Avgangstid</label>
+                    <label for="placeName">Stedsnavn</label>
                     <input
                         type="text"
-                        id="departureTime"
-                        inputmode="numeric"
+                        id="placeName"
                         autocomplete="off"
                     >
                 </div>
+            </section>
+
+            <!-- 3. Luftfartøy, POB og personell -->
+            <section class="form-section">
+                <h2>Crex manifest</h2>
+
+                <div class="form-grid form-grid-3">
+                    <div class="form-field">
+                        <label for="resourceId">Ressurs ID</label>
+                        <input
+                            type="text"
+                            id="resourceId"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="registration">Reg.nr</label>
+                        <input
+                            type="text"
+                            id="registration"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="callsign">Callsign (HD)</label>
+                        <input
+                            type="text"
+                            id="callsign"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
 
                 <div class="form-field">
-                    <label for="etaTime">ETA landing</label>
-                    <input
-                        type="text"
-                        id="etaTime"
-                        inputmode="numeric"
-                        autocomplete="off"
+                    <span class="field-label">POB</span>
+
+                    <div
+                        class="chip-group"
+                        id="pobChips"
+                        role="group"
+                        aria-label="Personer om bord"
                     >
+                        <button type="button" class="chip" data-pob="1" aria-pressed="false">1</button>
+                        <button type="button" class="chip" data-pob="2" aria-pressed="false">2</button>
+                        <button type="button" class="chip" data-pob="3" aria-pressed="false">3</button>
+                        <button type="button" class="chip" data-pob="4" aria-pressed="false">4</button>
+                        <button type="button" class="chip" data-pob="5" aria-pressed="false">5</button>
+                        <button type="button" class="chip" data-pob="6" aria-pressed="false">6</button>
+                        <button type="button" class="chip" data-pob="7" aria-pressed="false">7</button>
+                        <button type="button" class="chip" data-pob="8" aria-pressed="false">8</button>
+                        <button type="button" class="chip" data-pob="9" aria-pressed="false">9</button>
+                        <button type="button" class="chip" data-pob="10" aria-pressed="false">10</button>
+                    </div>
                 </div>
-            </div>
 
-            <p id="timeError" class="field-error" role="alert"></p>
-        </section>
-
-        <section class="form-section">
-            <h2>Utløsende kriterium for savnet helikopter</h2>
-
-            <div
-                class="criteria-list"
-                id="criteriaList"
-                role="group"
-                aria-label="Utløsende kriterium"
-            >
-                <button
-                    type="button"
-                    class="criteria-chip"
-                    data-criterion="1"
-                    aria-pressed="false"
-                >
-                    Helikopteret svarer ikke på anrop eller planlagt rapportering
-                    i henhold til flight following, og vises som rød både på
-                    Locus og Nødnett.
-                </button>
-
-                <button
-                    type="button"
-                    class="criteria-chip"
-                    data-criterion="2"
-                    aria-pressed="false"
-                >
-                    Helikopteret har ikke meldt landing innen 10 minutter etter
-                    oppgitt ETA, og det foreligger samtidig manglende kontakt
-                    eller andre indikasjoner på avvik.
-                </button>
-
-                <button
-                    type="button"
-                    class="criteria-chip"
-                    data-criterion="3"
-                    aria-pressed="false"
-                >
-                    Observasjoner/meldinger som gir grunn til å
-                    mistenke/bekrefte havari.
-                </button>
-            </div>
-
-            <div class="conditional-field hidden" id="observationWrapper">
-                <label for="observations">Observasjoner / meldinger</label>
-                <textarea id="observations" rows="4"></textarea>
-            </div>
-        </section>
-
-        <section class="form-section">
-            <h2>Navn og telefon til personer om bord</h2>
-
-<div class="person-role">
-  <img
-src="../img/pilot.svg"
-    alt=""
-    aria-hidden="true"
-    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
-  >
-  <span>Pilot</span>
-</div>
-
-                <input
-                    type="text"
-                    id="pilotName"
-                    aria-label="Pilot fullt navn"
-                    autocomplete="off"
-                >
-
-                <input
-                    type="tel"
-                    id="pilotPhone"
-                    aria-label="Pilot mobilnummer"
-                    placeholder="Mobilnummer"
-                    autocomplete="off"
-                >
-            </div>
-
-<div class="person-role">
-  <img
-    src="../img/redningsmann.svg"
-    alt=""
-    aria-hidden="true"
-    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
-  >
-  <span>Redningsmann</span>
-</div>
-
-                <input
-                    type="text"
-                    id="rescuerName"
-                    aria-label="Redningsmann fullt navn"
-                    autocomplete="off"
-                >
-
-                <input
-                    type="tel"
-                    id="rescuerPhone"
-                    aria-label="Redningsmann mobilnummer"
-                    placeholder="Mobilnummer"
-                    autocomplete="off"
-                >
-            </div>
-
-<div class="person-role">
-  <img
-    src="../img/lege.svg"
-    alt=""
-    aria-hidden="true"
-    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
-  >
-  <span>Lege</span>
-</div>
-
-                <input
-                    type="text"
-                    id="doctorName"
-                    aria-label="Lege fullt navn"
-                    autocomplete="off"
-                >
-
-                <input
-                    type="tel"
-                    id="doctorPhone"
-                    aria-label="Lege mobilnummer"
-                    placeholder="Mobilnummer"
-                    autocomplete="off"
-                >
-            </div>
-
-            <div id="traineeContainer">
-                <div class="person-row trainee-row">
+                <div class="person-row">
                     <div class="person-role">
-                        <span class="role-icon" aria-hidden="true">👤</span>
-                        <span class="pax-label">PAX 1</span>
+                        <img src="../img/pilot.svg" alt="">
+                        <span>Pilot</span>
                     </div>
 
                     <input
                         type="text"
-                        class="trainee-name"
-                        aria-label="PAX 1 fullt navn"
+                        id="pilotName"
+                        aria-label="Pilot fullt navn"
                         autocomplete="off"
                     >
 
                     <input
                         type="tel"
-                        class="trainee-phone"
-                        aria-label="PAX 1 mobilnummer"
+                        id="pilotPhone"
+                        aria-label="Pilot mobilnummer"
                         placeholder="Mobilnummer"
                         autocomplete="off"
                     >
                 </div>
-            </div>
-        </section>
-    </section>
 
-    <aside class="side-panel" aria-label="Rapport og handlinger">
-        <div class="side-panel-inner">
+                <div class="person-row">
+                    <div class="person-role">
+                        <img src="../img/redningsmann.svg" alt="">
+                        <span>Redningsmann</span>
+                    </div>
 
-            <h2>Rapporttekst</h2>
+                    <input
+                        type="text"
+                        id="rescuerName"
+                        aria-label="Redningsmann fullt navn"
+                        autocomplete="off"
+                    >
 
-            <textarea
-                id="reportOutput"
-                class="report-output"
-                readonly
-                aria-label="Generert rapporttekst"
-            ></textarea>
+                    <input
+                        type="tel"
+                        id="rescuerPhone"
+                        aria-label="Redningsmann mobilnummer"
+                        placeholder="Mobilnummer"
+                        autocomplete="off"
+                    >
+                </div>
 
-            <div class="action-buttons">
-                <button
-                    type="button"
-                    id="copyButton"
-                    class="action-button action-copy"
-                >
-                    <span class="button-icon" aria-hidden="true">⧉</span>
-                    <span id="copyButtonText">Kopier tekst</span>
-                </button>
+                <div class="person-row">
+                    <div class="person-role">
+                        <img src="../img/lege.svg" alt="">
+                        <span>Lege</span>
+                    </div>
+
+                    <input
+                        type="text"
+                        id="doctorName"
+                        aria-label="Lege fullt navn"
+                        autocomplete="off"
+                    >
+
+                    <input
+                        type="tel"
+                        id="doctorPhone"
+                        aria-label="Lege mobilnummer"
+                        placeholder="Mobilnummer"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div id="traineeContainer">
+                    <div class="person-row trainee-row">
+                        <div class="person-role">
+                            <span class="role-icon" aria-hidden="true">👤</span>
+                            <span class="pax-label">PAX 1</span>
+                        </div>
+
+                        <input
+                            type="text"
+                            class="trainee-name"
+                            aria-label="PAX 1 fullt navn"
+                            autocomplete="off"
+                        >
+
+                        <input
+                            type="tel"
+                            class="trainee-phone"
+                            aria-label="PAX 1 mobilnummer"
+                            placeholder="Mobilnummer"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Flyrute -->
+            <section class="form-section">
+                <h2>Flyrute</h2>
+
+                <div class="form-grid form-grid-2">
+                    <div class="form-field">
+                        <label for="fromLocation">Fra</label>
+                        <input
+                            type="text"
+                            id="fromLocation"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="toLocation">Til</label>
+                        <input
+                            type="text"
+                            id="toLocation"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="plannedRoute">Planlagt flyrute</label>
+                    <input
+                        type="text"
+                        id="plannedRoute"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="form-grid form-grid-2">
+                    <div class="form-field">
+                        <label for="departureTime">Avgangstid</label>
+                        <input
+                            type="text"
+                            id="departureTime"
+                            inputmode="numeric"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="etaTime">ETA landing</label>
+                        <input
+                            type="text"
+                            id="etaTime"
+                            inputmode="numeric"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+
+                <p id="timeError" class="field-error" role="alert"></p>
+            </section>
+
+            <!-- 5. Utløsende kriterium -->
+            <section class="form-section">
+                <h2>Utløsende kriterium for savnet helikopter</h2>
 
                 <div
-                    id="copyConfirmation"
-                    class="copy-confirmation"
-                    aria-live="polite"
-                ></div>
-
-                <a
-                    href="https://ehandbok.ous-hf.no/document/144250"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="action-button action-procedure"
+                    class="criteria-list"
+                    id="criteriaList"
+                    role="group"
+                    aria-label="Utløsende kriterium"
                 >
-                    <span class="button-icon" aria-hidden="true">▤</span>
-                    Prosedyre
-                </a>
+                    <button
+                        type="button"
+                        class="criteria-chip"
+                        data-criterion="1"
+                        aria-pressed="false"
+                    >
+                        Helikopteret svarer ikke på anrop eller planlagt
+                        rapportering i henhold til flight following, og vises
+                        som rød både på Locus og Nødnett.
+                    </button>
 
-                <div class="action-space" aria-hidden="true"></div>
+                    <button
+                        type="button"
+                        class="criteria-chip"
+                        data-criterion="2"
+                        aria-pressed="false"
+                    >
+                        Helikopteret har ikke meldt landing innen 10 minutter
+                        etter oppgitt ETA, og det foreligger samtidig manglende
+                        kontakt eller andre indikasjoner på avvik.
+                    </button>
 
-                <button
-                    type="button"
-                    id="resetButton"
-                    class="action-button action-reset"
+                    <button
+                        type="button"
+                        class="criteria-chip"
+                        data-criterion="3"
+                        aria-pressed="false"
+                    >
+                        Observasjoner/meldinger som gir grunn til å
+                        mistenke/bekrefte havari.
+                    </button>
+                </div>
+
+                <div
+                    class="conditional-field hidden"
+                    id="observationWrapper"
                 >
-                    <span class="button-icon" aria-hidden="true">🗑</span>
-                    Tøm skjema
-                </button>
+                    <label for="observations">Observasjoner / meldinger</label>
+                    <textarea id="observations" rows="2"></textarea>
+                </div>
+            </section>
+        </section>
 
-                <a
-                    href="mailto:b32838@ous.hf.no?subject=Tilbakemelding%20skjema%20savnet%20helikopter"
-                    class="action-button action-email"
-                >
-                    Send tilbakemelding
-                </a>
+        <!-- Rapport og handlinger -->
+        <aside class="side-panel" aria-label="Rapport og handlinger">
+            <div class="side-panel-inner">
+                <h2>Rapporttekst</h2>
+
+                <textarea
+                    id="reportOutput"
+                    class="report-output"
+                    readonly
+                    aria-label="Generert rapporttekst"
+                ></textarea>
+
+                <div class="action-buttons">
+                    <button
+                        type="button"
+                        id="copyButton"
+                        class="action-button action-copy"
+                    >
+                        <span class="button-icon" aria-hidden="true">⧉</span>
+                        <span id="copyButtonText">Kopier tekst</span>
+                    </button>
+
+                    <div
+                        id="copyConfirmation"
+                        class="copy-confirmation"
+                        aria-live="polite"
+                    ></div>
+
+                    <a
+                        href="https://ehandbok.ous-hf.no/document/144250"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="action-button action-procedure"
+                    >
+                        <span class="button-icon" aria-hidden="true">▤</span>
+                        Prosedyre
+                    </a>
+
+                    <div class="action-space" aria-hidden="true"></div>
+
+                    <button
+                        type="button"
+                        id="resetButton"
+                        class="action-button action-reset"
+                    >
+                        <span class="button-icon" aria-hidden="true">🗑</span>
+                        Tøm skjema
+                    </button>
+
+                    <a
+                        href="mailto:b32838@ous.hf.no?subject=Tilbakemelding%20skjema%20savnet%20helikopter"
+                        class="action-button action-email"
+                    >
+                        Send tilbakemelding
+                    </a>
+                </div>
             </div>
-        </div>
-    </aside>
-</main>
-
+        </aside>
+    </main>
 </body>
 </html>
