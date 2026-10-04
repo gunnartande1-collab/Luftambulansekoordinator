@@ -3,238 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Luftambulansekoordinator</title>
-
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <title>Luftambulansekoordinator – Savnet helikopter</title>
+    <link rel="stylesheet" href="savnet-helikopter.css">
+    <script src="savnet-helikopter.js" defer></script>
 </head>
-
 <body>
 
 <header class="app-header">
-    <div>
-        <p class="app-eyebrow">Operativt verktøy</p>
-        <h1>Luftambulansekoordinator</h1>
-    </div>
+    <p class="app-eyebrow">Operativt verktøy</p>
+    <h1>
+        Luftambulansekoordinator
+        <span class="header-separator">·</span>
+        <span class="header-form-name">Savnet helikopter</span>
+    </h1>
 </header>
 
-
 <main class="app-shell">
-
-    <!-- =========================
-         VENSTRE: SKJEMA
-    ========================== -->
-
-    <section class="form-panel">
-
-        <div class="form-title">
-            <div>
-                <p class="section-eyebrow">Skjema</p>
-                <h2>Savnet helikopter</h2>
-            </div>
-        </div>
-
-
-        <!-- =========================
-             TG
-        ========================== -->
+    <section class="form-panel" aria-label="Savnet helikopter">
 
         <section class="form-section">
-
-            <h3>TG</h3>
+            <h2>Talegruppe</h2>
 
             <div class="tg-grid">
-
                 <div class="field-card">
-                    <span class="field-card-title">Helse TG</span>
-                    <input
-                        type="text"
-                        id="healthTg"
-                        autocomplete="off"
-                    >
+                    <label for="healthTg">Helse TG</label>
+                    <input type="text" id="healthTg" autocomplete="off">
                 </div>
 
                 <div class="field-card">
-                    <span class="field-card-title">SAR TG</span>
-                    <input
-                        type="text"
-                        id="sarTg"
-                        autocomplete="off"
-                    >
+                    <label for="sarTg">SAR TG</label>
+                    <input type="text" id="sarTg" autocomplete="off">
                 </div>
 
                 <div class="field-card">
-                    <span class="field-card-title">Annen TG</span>
-
+                    <label for="otherTgFirst">Annen TG</label>
                     <div id="otherTgContainer">
                         <input
                             type="text"
+                            id="otherTgFirst"
                             class="other-tg-input"
+                            aria-label="Annen TG"
                             autocomplete="off"
                         >
                     </div>
                 </div>
-
             </div>
-
         </section>
 
-
-        <!-- =========================
-             SIST KJENTE POSISJON
-        ========================== -->
-
         <section class="form-section">
-
-            <h3>Sist kjente posisjon</h3>
+            <h2>Sist kjente posisjon</h2>
 
             <div class="form-grid form-grid-2">
-
                 <div class="form-field">
                     <label for="utmPosition">UTM</label>
-                    <input
-                        type="text"
-                        id="utmPosition"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="utmPosition" autocomplete="off">
                 </div>
 
                 <div class="form-field">
                     <label for="dmmPosition">Grader og desimalmin</label>
-                    <input
-                        type="text"
-                        id="dmmPosition"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="dmmPosition" autocomplete="off">
                 </div>
-
             </div>
+
+            <p id="coordinateError" class="field-error" role="alert"></p>
 
             <div class="form-field">
                 <label for="placeName">Stedsnavn</label>
-                <input
-                    type="text"
-                    id="placeName"
-                    autocomplete="off"
-                >
+                <input type="text" id="placeName" autocomplete="off">
             </div>
-
         </section>
 
-
-        <!-- =========================
-             LUFTFARTØY
-        ========================== -->
-
         <section class="form-section">
-
-            <h3>Luftfartøy</h3>
+            <h2>Luftfartøy</h2>
 
             <div class="form-grid form-grid-3">
-
                 <div class="form-field">
                     <label for="resourceId">Ressurs ID</label>
-                    <input
-                        type="text"
-                        id="resourceId"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="resourceId" autocomplete="off">
                 </div>
 
                 <div class="form-field">
                     <label for="registration">Reg.nr</label>
-                    <input
-                        type="text"
-                        id="registration"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="registration" autocomplete="off">
                 </div>
 
                 <div class="form-field">
                     <label for="callsign">Callsign (HD)</label>
-                    <input
-                        type="text"
-                        id="callsign"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="callsign" autocomplete="off">
                 </div>
-
             </div>
 
-
             <div class="form-field">
-
-                <label>POB</label>
+                <span class="field-label">POB</span>
 
                 <div
-                    class="chip-group pob-chips"
+                    class="chip-group"
                     id="pobChips"
                     role="group"
                     aria-label="Personer om bord"
                 >
-
-                    <button type="button" class="chip" data-pob="1">1</button>
-                    <button type="button" class="chip" data-pob="2">2</button>
-                    <button type="button" class="chip" data-pob="3">3</button>
-                    <button type="button" class="chip" data-pob="4">4</button>
-                    <button type="button" class="chip" data-pob="5">5</button>
-                    <button type="button" class="chip" data-pob="6">6</button>
-                    <button type="button" class="chip" data-pob="7">7</button>
-                    <button type="button" class="chip" data-pob="8">8</button>
-                    <button type="button" class="chip" data-pob="9">9</button>
-                    <button type="button" class="chip" data-pob="10">10</button>
-
+                    <button type="button" class="chip" data-pob="1" aria-pressed="false">1</button>
+                    <button type="button" class="chip" data-pob="2" aria-pressed="false">2</button>
+                    <button type="button" class="chip" data-pob="3" aria-pressed="false">3</button>
+                    <button type="button" class="chip" data-pob="4" aria-pressed="false">4</button>
+                    <button type="button" class="chip" data-pob="5" aria-pressed="false">5</button>
+                    <button type="button" class="chip" data-pob="6" aria-pressed="false">6</button>
+                    <button type="button" class="chip" data-pob="7" aria-pressed="false">7</button>
+                    <button type="button" class="chip" data-pob="8" aria-pressed="false">8</button>
+                    <button type="button" class="chip" data-pob="9" aria-pressed="false">9</button>
+                    <button type="button" class="chip" data-pob="10" aria-pressed="false">10</button>
                 </div>
-
             </div>
-
         </section>
 
-
-        <!-- =========================
-             FLYRUTE
-        ========================== -->
-
         <section class="form-section">
-
-            <h3>Flyrute</h3>
+            <h2>Flyrute</h2>
 
             <div class="form-grid form-grid-2">
-
                 <div class="form-field">
                     <label for="fromLocation">Fra</label>
-                    <input
-                        type="text"
-                        id="fromLocation"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="fromLocation" autocomplete="off">
                 </div>
 
                 <div class="form-field">
                     <label for="toLocation">Til</label>
-                    <input
-                        type="text"
-                        id="toLocation"
-                        autocomplete="off"
-                    >
+                    <input type="text" id="toLocation" autocomplete="off">
                 </div>
-
             </div>
-
 
             <div class="form-field">
                 <label for="plannedRoute">Planlagt flyrute</label>
-                <input
-                    type="text"
-                    id="plannedRoute"
-                    autocomplete="off"
-                >
+                <input type="text" id="plannedRoute" autocomplete="off">
             </div>
 
-
             <div class="form-grid form-grid-2">
-
                 <div class="form-field">
                     <label for="departureTime">Avgangstid</label>
                     <input
@@ -254,19 +156,13 @@
                         autocomplete="off"
                     >
                 </div>
-
             </div>
 
+            <p id="timeError" class="field-error" role="alert"></p>
         </section>
 
-
-        <!-- =========================
-             UTLØSENDE KRITERIUM
-        ========================== -->
-
         <section class="form-section">
-
-            <h3>Utløsende kriterium for savnet helikopter</h3>
+            <h2>Utløsende kriterium for savnet helikopter</h2>
 
             <div
                 class="criteria-list"
@@ -274,69 +170,57 @@
                 role="group"
                 aria-label="Utløsende kriterium"
             >
-
                 <button
                     type="button"
                     class="criteria-chip"
                     data-criterion="1"
+                    aria-pressed="false"
                 >
-                    Helikopteret svarer ikke på anrop eller planlagt rapportering i henhold til flight following, og vises som rød både på Locus og Nødnett.
+                    Helikopteret svarer ikke på anrop eller planlagt rapportering
+                    i henhold til flight following, og vises som rød både på
+                    Locus og Nødnett.
                 </button>
-
 
                 <button
                     type="button"
                     class="criteria-chip"
                     data-criterion="2"
+                    aria-pressed="false"
                 >
-                    Helikopteret har ikke meldt landing innen 10 minutter etter oppgitt ETA, og det foreligger samtidig manglende kontakt eller andre indikasjoner på avvik.
+                    Helikopteret har ikke meldt landing innen 10 minutter etter
+                    oppgitt ETA, og det foreligger samtidig manglende kontakt
+                    eller andre indikasjoner på avvik.
                 </button>
-
 
                 <button
                     type="button"
                     class="criteria-chip"
                     data-criterion="3"
+                    aria-pressed="false"
                 >
-                    Observasjoner/meldinger som gir grunn til å mistenke/bekrefte havari.
+                    Observasjoner/meldinger som gir grunn til å
+                    mistenke/bekrefte havari.
                 </button>
-
             </div>
 
-
-            <div
-                class="conditional-field hidden"
-                id="observationWrapper"
-            >
-
-                <label for="observations">
-                    Observasjoner / meldinger
-                </label>
-
-                <textarea
-                    id="observations"
-                    rows="4"
-                ></textarea>
-
+            <div class="conditional-field hidden" id="observationWrapper">
+                <label for="observations">Observasjoner / meldinger</label>
+                <textarea id="observations" rows="4"></textarea>
             </div>
-
         </section>
 
-
-        <!-- =========================
-             PERSONER OM BORD
-        ========================== -->
-
         <section class="form-section">
+            <h2>Navn og telefon til personer om bord</h2>
 
-            <h3>Navn og telefon til personer om bord</h3>
-
-
-            <div class="person-row">
-
-                <div class="person-role">
-                    Pilot
-                </div>
+<div class="person-role">
+  <img
+src="../img/pilot.svg"
+    alt=""
+    aria-hidden="true"
+    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
+  >
+  <span>Pilot</span>
+</div>
 
                 <input
                     type="text"
@@ -352,15 +236,17 @@
                     placeholder="Mobilnummer"
                     autocomplete="off"
                 >
-
             </div>
 
-
-            <div class="person-row">
-
-                <div class="person-role">
-                    Redningsmann
-                </div>
+<div class="person-role">
+  <img
+    src="../img/redningsmann.svg"
+    alt=""
+    aria-hidden="true"
+    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
+  >
+  <span>Redningsmann</span>
+</div>
 
                 <input
                     type="text"
@@ -376,15 +262,17 @@
                     placeholder="Mobilnummer"
                     autocomplete="off"
                 >
-
             </div>
 
-
-            <div class="person-row">
-
-                <div class="person-role">
-                    Lege
-                </div>
+<div class="person-role">
+  <img
+    src="../img/lege.svg"
+    alt=""
+    aria-hidden="true"
+    style="width: 24px; height: 24px; object-fit: contain; flex-shrink: 0;"
+  >
+  <span>Lege</span>
+</div>
 
                 <input
                     type="text"
@@ -400,57 +288,38 @@
                     placeholder="Mobilnummer"
                     autocomplete="off"
                 >
-
             </div>
 
-
             <div id="traineeContainer">
-
                 <div class="person-row trainee-row">
-
                     <div class="person-role">
-                        Hospitant
+                        <span class="role-icon" aria-hidden="true">👤</span>
+                        <span class="pax-label">PAX 1</span>
                     </div>
 
                     <input
                         type="text"
                         class="trainee-name"
-                        aria-label="Hospitant fullt navn"
+                        aria-label="PAX 1 fullt navn"
                         autocomplete="off"
                     >
 
                     <input
                         type="tel"
                         class="trainee-phone"
-                        aria-label="Hospitant mobilnummer"
+                        aria-label="PAX 1 mobilnummer"
                         placeholder="Mobilnummer"
                         autocomplete="off"
                     >
-
                 </div>
-
             </div>
-
         </section>
-
     </section>
 
-
-    <!-- =========================
-         HØYRE: FAST SIDEPANEL
-    ========================== -->
-
-    <aside class="side-panel">
-
+    <aside class="side-panel" aria-label="Rapport og handlinger">
         <div class="side-panel-inner">
 
-            <div>
-
-                <p class="section-eyebrow">Rapport</p>
-                <h2>Rapporttekst</h2>
-
-            </div>
-
+            <h2>Rapporttekst</h2>
 
             <textarea
                 id="reportOutput"
@@ -459,18 +328,15 @@
                 aria-label="Generert rapporttekst"
             ></textarea>
 
-
             <div class="action-buttons">
-
                 <button
                     type="button"
                     id="copyButton"
                     class="action-button action-copy"
                 >
-                    <span class="button-icon">⧉</span>
-                    Kopier tekst
+                    <span class="button-icon" aria-hidden="true">⧉</span>
+                    <span id="copyButtonText">Kopier tekst</span>
                 </button>
-
 
                 <div
                     id="copyConfirmation"
@@ -478,25 +344,26 @@
                     aria-live="polite"
                 ></div>
 
-
-                <button
-                    type="button"
-                    id="resetButton"
-                    class="action-button action-reset"
-                >
-                    Tøm skjema
-                </button>
-
-
                 <a
                     href="https://ehandbok.ous-hf.no/document/144250"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="action-button action-procedure"
                 >
-                    Prosedyre savnet helikopter
+                    <span class="button-icon" aria-hidden="true">▤</span>
+                    Prosedyre
                 </a>
 
+                <div class="action-space" aria-hidden="true"></div>
+
+                <button
+                    type="button"
+                    id="resetButton"
+                    class="action-button action-reset"
+                >
+                    <span class="button-icon" aria-hidden="true">🗑</span>
+                    Tøm skjema
+                </button>
 
                 <a
                     href="mailto:b32838@ous.hf.no?subject=Tilbakemelding%20skjema%20savnet%20helikopter"
@@ -504,13 +371,9 @@
                 >
                     Send tilbakemelding
                 </a>
-
             </div>
-
         </div>
-
     </aside>
-
 </main>
 
 </body>

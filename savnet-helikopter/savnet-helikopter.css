@@ -1,51 +1,23 @@
-/* =========================================================
-   GRUNNVERDIER
-========================================================= */
-
 :root {
     --color-primary: #0066a1;
-    --color-primary-dark: #004f7c;
-
     --color-background: #eef2f5;
     --color-surface: #ffffff;
-
     --color-text: #17212b;
     --color-muted: #667085;
-
     --color-border: #d0d5dd;
     --color-border-light: #e4e7ec;
-
     --color-green: #16834b;
     --color-green-dark: #0e6739;
-
     --color-red: #c62828;
     --color-red-dark: #a51e1e;
-
     --color-blue-light: #dceef9;
     --color-blue-light-hover: #c7e4f5;
-
     --color-black: #202124;
-
     --radius-small: 6px;
     --radius-medium: 10px;
     --radius-large: 14px;
-
-    --shadow-small: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --shadow-medium: 0 5px 18px rgba(0, 0, 0, 0.08);
-
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-
     --input-height: 42px;
 }
-
-
-/* =========================================================
-   RESET / BASE
-========================================================= */
 
 * {
     box-sizing: border-box;
@@ -57,7 +29,6 @@ html {
 
 body {
     margin: 0;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -66,10 +37,8 @@ body {
         Helvetica,
         Arial,
         sans-serif;
-
     color: var(--color-text);
     background: var(--color-background);
-
     line-height: 1.45;
 }
 
@@ -79,112 +48,72 @@ textarea {
     font: inherit;
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
 .app-header {
     padding: 18px 32px;
-
-    background: #ffffff;
-
+    background: var(--color-surface);
     border-bottom: 1px solid var(--color-border-light);
 }
 
 .app-header h1 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px;
     margin: 0;
-
     font-size: 24px;
     font-weight: 700;
 }
 
-.app-eyebrow,
-.section-eyebrow {
+.app-eyebrow {
     margin: 0 0 3px;
-
     color: var(--color-muted);
-
     font-size: 12px;
     font-weight: 700;
-
     text-transform: uppercase;
     letter-spacing: 0.07em;
 }
 
+.header-separator {
+    color: var(--color-muted);
+}
 
-/* =========================================================
-   HOVEDLAYOUT
-========================================================= */
+.header-form-name {
+    font-size: 0.8em;
+    font-weight: 500;
+}
 
 .app-shell {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        360px;
-
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
     gap: 24px;
-
     width: min(1500px, calc(100% - 48px));
-
     margin: 24px auto 60px;
 }
 
-
-/* =========================================================
-   SKJEMAPANEL
-========================================================= */
-
-.form-panel {
+.form-panel,
+.side-panel {
     min-width: 0;
 }
 
-.form-title {
-    margin-bottom: 16px;
-}
-
-.form-title h2 {
-    margin: 0;
-
-    font-size: 28px;
-}
-
-
-/* =========================================================
-   SEKSJONER
-========================================================= */
-
 .form-section {
     margin-bottom: 18px;
-
     padding: 22px;
-
     background: var(--color-surface);
-
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
-
-    box-shadow: var(--shadow-small);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.form-section h3 {
+.form-section h2 {
     margin: 0 0 18px;
-
     font-size: 17px;
     font-weight: 700;
 }
 
-
-/* =========================================================
-   GRID
-========================================================= */
-
 .form-grid {
     display: grid;
-
     gap: 14px;
-
     margin-bottom: 14px;
 }
 
@@ -192,30 +121,20 @@ textarea {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.form-grid-3 {
+.form-grid-3,
+.tg-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .tg-grid {
     display: grid;
-
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-
     gap: 14px;
 }
 
-
-/* =========================================================
-   INPUT
-========================================================= */
-
 .form-field {
     display: flex;
-
     flex-direction: column;
-
     gap: 6px;
-
     margin-bottom: 14px;
 }
 
@@ -223,9 +142,9 @@ textarea {
     margin-bottom: 0;
 }
 
-label {
+label,
+.field-label {
     color: #344054;
-
     font-size: 13px;
     font-weight: 650;
 }
@@ -233,16 +152,11 @@ label {
 input,
 textarea {
     width: 100%;
-
+    min-width: 0;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-small);
-
-    background: #ffffff;
-
+    background: var(--color-surface);
     color: var(--color-text);
-
-    outline: none;
-
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
@@ -250,22 +164,24 @@ textarea {
 
 input {
     height: var(--input-height);
-
     padding: 0 11px;
 }
 
 textarea {
     padding: 11px;
-
     resize: vertical;
 }
 
 input:focus,
 textarea:focus {
-    border-color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+}
 
-    box-shadow:
-        0 0 0 3px rgba(0, 102, 161, 0.12);
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
 }
 
 input::placeholder,
@@ -273,28 +189,16 @@ textarea::placeholder {
     color: #98a2b3;
 }
 
-
-/* =========================================================
-   TG-KORT
-========================================================= */
-
 .field-card {
     padding: 12px;
-
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-medium);
-
     background: #fafbfc;
 }
 
-.field-card-title {
+.field-card > label {
     display: block;
-
     margin-bottom: 8px;
-
-    color: #344054;
-
-    font-size: 13px;
     font-weight: 700;
 }
 
@@ -306,38 +210,21 @@ textarea::placeholder {
     margin-bottom: 0;
 }
 
-
-/* =========================================================
-   CHIPS
-========================================================= */
-
 .chip-group {
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 8px;
 }
 
 .chip {
     min-width: 42px;
-    height: 38px;
-
+    min-height: 40px;
     padding: 0 13px;
-
     border: 1px solid var(--color-border);
     border-radius: 999px;
-
-    background: #ffffff;
-
+    background: var(--color-surface);
     color: #344054;
-
     cursor: pointer;
-
-    transition:
-        background 0.15s ease,
-        color 0.15s ease,
-        border-color 0.15s ease;
 }
 
 .chip:hover {
@@ -346,45 +233,25 @@ textarea::placeholder {
 
 .chip.is-selected {
     border-color: var(--color-primary);
-
     background: var(--color-primary);
-
     color: #ffffff;
 }
 
-
-/* =========================================================
-   KRITERIER
-========================================================= */
-
 .criteria-list {
     display: flex;
-
     flex-direction: column;
-
     gap: 10px;
 }
 
 .criteria-chip {
     width: 100%;
-
     padding: 14px 16px;
-
     border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
-
-    background: #ffffff;
-
+    background: var(--color-surface);
     color: var(--color-text);
-
     text-align: left;
-
     cursor: pointer;
-
-    transition:
-        border-color 0.15s ease,
-        background 0.15s ease,
-        box-shadow 0.15s ease;
 }
 
 .criteria-chip:hover {
@@ -393,148 +260,102 @@ textarea::placeholder {
 
 .criteria-chip.is-selected {
     border-color: var(--color-primary);
-
     background: #eaf5fb;
-
-    box-shadow:
-        0 0 0 2px rgba(0, 102, 161, 0.08);
+    box-shadow: 0 0 0 2px rgba(0, 102, 161, 0.08);
 }
 
 .conditional-field {
     margin-top: 16px;
 }
 
-
-/* =========================================================
-   PERSONER
-========================================================= */
+.conditional-field label {
+    display: block;
+    margin-bottom: 6px;
+}
 
 .person-row {
     display: grid;
-
-    grid-template-columns:
-        140px
-        minmax(0, 1fr)
-        190px;
-
+    grid-template-columns: 155px minmax(0, 1fr) 190px;
     gap: 12px;
-
     align-items: center;
-
-    padding: 10px 0;
-
+    padding: 12px 0;
     border-bottom: 1px solid var(--color-border-light);
 }
 
-.person-row:last-child {
-    border-bottom: none;
-}
-
 .person-role {
+    display: flex;
+    align-items: center;
+    gap: 9px;
     font-size: 14px;
     font-weight: 700;
 }
 
-
-/* =========================================================
-   SIDE PANEL
-========================================================= */
+.role-icon {
+    display: inline-flex;
+    justify-content: center;
+    width: 24px;
+    font-size: 20px;
+    flex-shrink: 0;
+}
 
 .side-panel {
-    min-width: 0;
+    align-self: stretch;
 }
 
 .side-panel-inner {
     position: sticky;
-
     top: 20px;
-
     padding: 20px;
-
-    background: #ffffff;
-
+    background: var(--color-surface);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
-
-    box-shadow: var(--shadow-medium);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
 }
 
 .side-panel h2 {
     margin: 0 0 14px;
-
     font-size: 21px;
 }
 
 .report-output {
-    width: 100%;
-    height: 430px;
-
+    height: clamp(180px, calc(100dvh - 420px), 430px);
     margin-bottom: 16px;
-
     padding: 13px;
-
-    border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
-
     background: #f8fafc;
-
     font-family:
         "SFMono-Regular",
         Consolas,
         "Liberation Mono",
         monospace;
-
     font-size: 12.5px;
     line-height: 1.5;
-
     resize: vertical;
 }
 
-
-/* =========================================================
-   HANDLINGSKNAPPER
-========================================================= */
-
 .action-buttons {
     display: flex;
-
     flex-direction: column;
-
     gap: 10px;
 }
 
 .action-button {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
+    gap: 9px;
     min-height: 44px;
-
     padding: 10px 14px;
-
     border: 0;
     border-radius: var(--radius-medium);
-
     font-weight: 700;
-
     text-align: center;
     text-decoration: none;
-
     cursor: pointer;
-
-    transition:
-        background 0.15s ease,
-        transform 0.05s ease;
-}
-
-.action-button:active {
-    transform: translateY(1px);
 }
 
 .action-copy {
     background: var(--color-green);
-
     color: #ffffff;
 }
 
@@ -544,7 +365,6 @@ textarea::placeholder {
 
 .action-reset {
     background: var(--color-red);
-
     color: #ffffff;
 }
 
@@ -554,7 +374,6 @@ textarea::placeholder {
 
 .action-procedure {
     background: var(--color-blue-light);
-
     color: #174a67;
 }
 
@@ -564,7 +383,6 @@ textarea::placeholder {
 
 .action-email {
     background: var(--color-black);
-
     color: #ffffff;
 }
 
@@ -573,39 +391,65 @@ textarea::placeholder {
 }
 
 .button-icon {
-    margin-right: 8px;
+    font-size: 19px;
+}
 
-    font-size: 18px;
+.action-space {
+    height: 16px;
 }
 
 .copy-confirmation {
     min-height: 18px;
-
     color: var(--color-green);
-
     font-size: 13px;
     font-weight: 700;
-
     text-align: center;
 }
 
+.field-error {
+    margin: 0;
+    color: var(--color-red);
+    font-size: 13px;
+}
 
-/* =========================================================
-   HJELPEKLASSER
-========================================================= */
+.field-error:not(:empty) {
+    margin-bottom: 14px;
+}
 
 .hidden {
     display: none !important;
 }
 
-
-/* =========================================================
-   RESPONSIVT
-========================================================= */
-
 @media (max-width: 1100px) {
-
     .app-shell {
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 16px;
+    }
+
+    .person-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .app-shell {
+        grid-template-columns: 1fr;
+        width: calc(100% - 24px);
+        margin-top: 12px;
+    }
+
+    .app-header {
+        padding: 16px;
+    }
+
+    .app-header h1 {
+        font-size: 21px;
+        gap: 8px;
+    }
+
+    .form-grid-2,
+    .form-grid-3,
+    .tg-grid {
         grid-template-columns: 1fr;
     }
 
@@ -616,32 +460,28 @@ textarea::placeholder {
     .report-output {
         height: 320px;
     }
+
+    input,
+    textarea {
+        font-size: 16px;
+    }
 }
 
-
-@media (max-width: 760px) {
-
-    .app-shell {
-        width: min(100% - 24px, 1500px);
-
-        margin-top: 12px;
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
     }
+}
 
-    .app-header {
-        padding: 16px;
-    }
+.person-role {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    .form-grid-2,
-    .form-grid-3,
-    .tg-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .person-row {
-        grid-template-columns: 1fr;
-    }
-
-    .person-role {
-        margin-top: 6px;
-    }
+.person-role img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
