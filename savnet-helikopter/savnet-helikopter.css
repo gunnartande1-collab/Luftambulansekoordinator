@@ -1,48 +1,51 @@
 :root {
-    --color-primary: #0066a1;
+    --primary: #0066a1;
 
-    --color-background: #eef2f5;
-    --color-surface: #ffffff;
+    --background: #eef2f5;
+    --surface: #ffffff;
 
-    --color-text: #17212b;
-    --color-muted: #667085;
+    --text: #17212b;
+    --muted: #667085;
 
-    --color-border: #d0d5dd;
-    --color-border-light: #e4e7ec;
+    --border: #d0d5dd;
+    --border-light: #e4e7ec;
 
-    --color-green: #16834b;
-    --color-green-dark: #0e6739;
+    --green: #16834b;
+    --green-dark: #0e6739;
 
-    --color-red: #c62828;
-    --color-red-dark: #a51e1e;
+    --red: #c62828;
+    --red-dark: #a51e1e;
 
-    --color-blue-light: #dceef9;
-    --color-blue-light-hover: #c7e4f5;
+    --blue-light: #dceef9;
+    --blue-light-hover: #c7e4f5;
 
-    --color-black: #202124;
+    --black: #202124;
 
     --radius-small: 6px;
     --radius-medium: 10px;
     --radius-large: 14px;
-
-    --input-height: 34px;
 }
 
 
 /* =========================================================
-   GENERELT
+   RESET / GENERELT
    ========================================================= */
 
 * {
     box-sizing: border-box;
 }
 
+
 html {
     scroll-behavior: smooth;
 }
 
+
 body {
     margin: 0;
+
+    background: var(--background);
+    color: var(--text);
 
     font-family:
         -apple-system,
@@ -53,11 +56,9 @@ body {
         Arial,
         sans-serif;
 
-    color: var(--color-text);
-    background: var(--color-background);
-
     line-height: 1.45;
 }
+
 
 button,
 input,
@@ -66,46 +67,48 @@ textarea {
 }
 
 
+
 /* =========================================================
    HEADER
    ========================================================= */
 
 .app-header {
+    width: 100%;
+
     padding: 10px 20px;
 
-    background: var(--color-surface);
+    background: var(--surface);
 
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--border-light);
 }
 
-.app-header h1 {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-
-    gap: 12px;
-
-    margin: 0;
-
-    font-size: 24px;
-    font-weight: 700;
-}
 
 .app-eyebrow {
-    margin: 0 0 3px;
+    margin: 0 0 2px;
 
-    color: var(--color-muted);
+    color: var(--muted);
 
     font-size: 12px;
     font-weight: 700;
 
-    text-transform: uppercase;
     letter-spacing: 0.07em;
+    text-transform: uppercase;
 }
+
+
+.app-header h1 {
+    margin: 0;
+
+    font-size: 24px;
+    line-height: 1.2;
+}
+
 
 
 /* =========================================================
    HOVEDLAYOUT
+
+   PC:
    MENY | SKJEMA | RAPPORT
    ========================================================= */
 
@@ -114,20 +117,22 @@ textarea {
 
     grid-template-columns:
         190px
-        minmax(520px, 1fr)
-        minmax(320px, 380px);
+        minmax(0, 1fr)
+        340px;
 
     grid-template-areas:
         "navigation form report";
 
-    align-items: start;
-
     gap: 16px;
 
-    width: min(1800px, calc(100% - 24px));
+    align-items: start;
+
+    width: calc(100% - 24px);
+    max-width: 1800px;
 
     margin: 12px auto 24px;
 }
+
 
 
 /* =========================================================
@@ -138,45 +143,49 @@ textarea {
     grid-area: navigation;
 
     min-width: 0;
-
-    align-self: stretch;
 }
+
 
 .form-navigation-inner {
     position: sticky;
 
     top: 12px;
 
-    padding: 12px 8px;
+    padding: 10px;
 
-    background: var(--color-surface);
+    background: var(--surface);
 
-    border: 1px solid var(--color-border-light);
+    border: 1px solid var(--border-light);
     border-radius: var(--radius-large);
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.form-navigation-label {
-    margin: 8px 10px 8px;
 
-    color: var(--color-muted);
+.form-navigation-label {
+    margin: 4px 8px 10px;
+
+    color: var(--muted);
 
     font-size: 12px;
     font-weight: 700;
 
-    text-transform: uppercase;
     letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
+
 
 .form-nav-list {
     display: grid;
 
-    gap: 8px;
+    gap: 6px;
 
     margin: 0;
     padding: 0;
 
     list-style: none;
 }
+
 
 .form-nav-link {
     display: flex;
@@ -185,14 +194,14 @@ textarea {
 
     gap: 8px;
 
-    min-height: 44px;
+    min-height: 42px;
 
-    padding: 10px 8px;
+    padding: 8px 9px;
 
     border: 1px solid transparent;
     border-radius: 9px;
 
-    color: var(--color-text);
+    color: var(--text);
 
     font-size: 14px;
     font-weight: 600;
@@ -200,37 +209,37 @@ textarea {
     text-decoration: none;
 }
 
-a.form-nav-link:hover {
+
+.form-nav-link:hover {
     background: #f3f6f8;
 
-    border-color: var(--color-border-light);
+    border-color: var(--border-light);
 }
+
 
 .form-nav-link[aria-current="page"] {
     background: #eaf5fb;
 
-    color: var(--color-primary);
-
     border-color: #c5e1f1;
+
+    color: var(--primary);
 }
 
+
 .form-nav-icon {
-    flex: 0 0 23px;
+    width: 24px;
+
+    flex: 0 0 24px;
 
     text-align: center;
 
-    font-size: 19px;
+    font-size: 18px;
 }
 
-.form-nav-copy {
-    display: grid;
-
-    gap: 2px;
-}
 
 
 /* =========================================================
-   SKJEMA
+   MIDTKOLONNE
    ========================================================= */
 
 .form-panel {
@@ -240,74 +249,91 @@ a.form-nav-link:hover {
 }
 
 
+
 /* =========================================================
-   SEKSJONER
+   SKJEMASEKSJONER
    ========================================================= */
 
 .form-section {
-    margin-bottom: 8px;
+    margin: 0 0 10px;
 
-    padding: 12px;
+    padding: 14px;
 
-    background: var(--color-surface);
+    background: var(--surface);
 
-    border: 1px solid var(--color-border-light);
+    border: 1px solid var(--border-light);
     border-radius: var(--radius-large);
 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
+
 
 .form-section h2 {
-    margin: 0 0 8px;
+    margin: 0 0 12px;
 
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
 }
+
 
 
 /* =========================================================
-   FELTRADER
+   FELTER
    ========================================================= */
 
 .form-grid {
     display: grid;
 
-    gap: 8px;
+    gap: 10px;
 
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
+
 
 .form-grid-2 {
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
 }
 
-.form-grid-3,
-.tg-grid {
+
+.form-grid-3 {
     grid-template-columns:
         repeat(3, minmax(0, 1fr));
 }
 
+
 .tg-grid {
     display: grid;
 
-    gap: 8px;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
 }
+
 
 .form-field {
     display: flex;
 
     flex-direction: column;
 
-    gap: 4px;
+    gap: 5px;
 
-    margin-bottom: 8px;
+    min-width: 0;
+
+    margin-bottom: 10px;
 }
 
-.form-field:last-child,
-.form-grid > .form-field {
+
+.form-grid .form-field {
     margin-bottom: 0;
 }
+
+
+.form-field:last-child {
+    margin-bottom: 0;
+}
+
 
 label,
 .field-label {
@@ -318,6 +344,7 @@ label,
 }
 
 
+
 /* =========================================================
    INPUT
    ========================================================= */
@@ -325,46 +352,36 @@ label,
 input,
 textarea {
     width: 100%;
-
     min-width: 0;
 
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-small);
 
-    background: var(--color-surface);
-
-    color: var(--color-text);
-
-    transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
+    background: var(--surface);
+    color: var(--text);
 }
+
 
 input {
-    height: var(--input-height);
+    height: 36px;
 
-    padding: 0 8px;
+    padding: 0 9px;
 }
 
+
 textarea {
-    padding: 8px;
+    padding: 8px 9px;
 
     resize: vertical;
 }
 
+
 input:focus,
 textarea:focus {
-    outline: 2px solid var(--color-primary);
-
+    outline: 2px solid var(--primary);
     outline-offset: 1px;
 }
 
-button:focus-visible,
-a:focus-visible {
-    outline: 3px solid var(--color-primary);
-
-    outline-offset: 3px;
-}
 
 input::placeholder,
 textarea::placeholder {
@@ -372,39 +389,49 @@ textarea::placeholder {
 }
 
 
+
 /* =========================================================
    TALEGRUPPER
    ========================================================= */
 
 .field-card {
-    padding: 8px;
+    min-width: 0;
 
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-medium);
+    padding: 9px;
 
     background: #fafbfc;
+
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-medium);
 }
+
 
 .field-card > label {
     display: block;
 
-    margin-bottom: 4px;
-
-    font-weight: 700;
+    margin-bottom: 5px;
 }
+
 
 .other-tg-input {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
+
 
 .other-tg-input:last-child {
     margin-bottom: 0;
 }
 
 
+
 /* =========================================================
-   CHIPS
+   POB CHIPS
    ========================================================= */
+
+.pob-field {
+    margin-bottom: 14px;
+}
+
 
 .chip-group {
     display: flex;
@@ -414,63 +441,65 @@ textarea::placeholder {
     gap: 6px;
 }
 
+
 .chip {
-    min-width: 34px;
-    min-height: 34px;
+    min-width: 36px;
+    min-height: 36px;
 
-    padding: 0 9px;
+    padding: 0 10px;
 
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     border-radius: 999px;
 
-    background: var(--color-surface);
+    background: var(--surface);
 
     color: #344054;
 
     cursor: pointer;
 }
 
+
 .chip:hover {
-    border-color: var(--color-primary);
+    border-color: var(--primary);
 }
 
-.chip.is-selected {
-    border-color: var(--color-primary);
 
-    background: var(--color-primary);
+.chip.is-selected {
+    background: var(--primary);
+
+    border-color: var(--primary);
 
     color: #ffffff;
 }
 
 
-/* =========================================================
-   CREX MANIFEST
-   ========================================================= */
 
-.crex-pob-field {
-    margin-bottom: 14px;
-}
+/* =========================================================
+   CREX / PERSONER
+   ========================================================= */
 
 .person-row {
     display: grid;
 
     grid-template-columns:
-        140px
+        145px
         minmax(0, 1fr)
-        135px;
+        140px;
 
     gap: 8px;
 
     align-items: center;
 
-    padding: 6px 0;
+    padding: 7px 0;
 
-    border-bottom: 1px solid var(--color-border-light);
+    border-bottom: 1px solid var(--border-light);
 }
+
 
 .person-row:last-child {
     border-bottom: 0;
 }
+
 
 .person-role {
     display: flex;
@@ -479,31 +508,23 @@ textarea::placeholder {
 
     gap: 8px;
 
+    min-width: 0;
+
     font-size: 14px;
     font-weight: 700;
 }
 
-.person-role img,
-.person-ikon {
+
+.person-ikon,
+.person-role img {
     width: 24px;
     height: 24px;
 
     object-fit: contain;
 
-    flex-shrink: 0;
+    flex: 0 0 24px;
 }
 
-.role-icon {
-    display: inline-flex;
-
-    justify-content: center;
-
-    width: 24px;
-
-    font-size: 20px;
-
-    flex-shrink: 0;
-}
 
 
 /* =========================================================
@@ -515,98 +536,117 @@ textarea::placeholder {
 
     flex-direction: column;
 
-    gap: 6px;
+    gap: 7px;
 }
+
 
 .criteria-chip {
     width: 100%;
 
-    padding: 8px 10px;
+    padding: 9px 10px;
 
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     border-radius: var(--radius-medium);
 
-    background: var(--color-surface);
+    background: var(--surface);
 
-    color: var(--color-text);
+    color: var(--text);
 
     text-align: left;
 
     cursor: pointer;
 }
 
+
 .criteria-chip:hover {
-    border-color: var(--color-primary);
+    border-color: var(--primary);
 }
+
 
 .criteria-chip.is-selected {
-    border-color: var(--color-primary);
-
     background: #eaf5fb;
 
-    box-shadow: 0 0 0 2px rgba(0, 102, 161, 0.08);
+    border-color: var(--primary);
 }
+
 
 .conditional-field {
-    margin-top: 8px;
+    margin-top: 12px;
 }
 
-.conditional-field label {
-    display: block;
-
-    margin-bottom: 4px;
-}
 
 
 /* =========================================================
-   RAPPORTPANEL
+   FEIL
+   ========================================================= */
+
+.field-error {
+    min-height: 0;
+
+    margin: 0;
+
+    color: var(--red);
+
+    font-size: 13px;
+}
+
+
+.field-error:not(:empty) {
+    margin: 0 0 10px;
+}
+
+
+
+/* =========================================================
+   RAPPORT – HØYRE KOLONNE
    ========================================================= */
 
 .side-panel {
     grid-area: report;
 
     min-width: 0;
-
-    align-self: start;
 }
+
 
 .side-panel-inner {
     position: sticky;
 
     top: 12px;
 
-    padding: 12px;
+    padding: 14px;
 
-    background: var(--color-surface);
+    background: var(--surface);
 
-    border: 1px solid var(--color-border-light);
+    border: 1px solid var(--border-light);
     border-radius: var(--radius-large);
 
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
+
 
 .side-panel h2 {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
 
-    font-size: 21px;
+    font-size: 20px;
 }
 
+
 .report-output {
+    display: block;
+
     width: 100%;
 
     height: clamp(
-        260px,
-        calc(100dvh - 410px),
-        480px
+        280px,
+        calc(100vh - 420px),
+        500px
     );
 
-    min-height: 220px;
+    min-height: 250px;
 
-    margin-bottom: 8px;
+    margin: 0 0 8px;
 
     padding: 10px;
-
-    border-radius: var(--radius-medium);
 
     background: #f8fafc;
 
@@ -616,16 +656,16 @@ textarea::placeholder {
         "Liberation Mono",
         monospace;
 
-    font-size: 12.5px;
-
+    font-size: 12px;
     line-height: 1.5;
 
     resize: vertical;
 }
 
 
+
 /* =========================================================
-   KNAPPER
+   RAPPORTKNAPPER
    ========================================================= */
 
 .action-buttons {
@@ -633,8 +673,9 @@ textarea::placeholder {
 
     flex-direction: column;
 
-    gap: 6px;
+    gap: 7px;
 }
+
 
 .action-button {
     display: flex;
@@ -642,13 +683,13 @@ textarea::placeholder {
     align-items: center;
     justify-content: center;
 
-    gap: 9px;
+    gap: 8px;
 
     width: 100%;
 
     min-height: 44px;
 
-    padding: 10px 14px;
+    padding: 10px 12px;
 
     border: 0;
     border-radius: var(--radius-medium);
@@ -661,58 +702,64 @@ textarea::placeholder {
     cursor: pointer;
 }
 
-.action-copy {
-    background: var(--color-green);
 
-    color: #ffffff;
+.action-copy {
+    background: var(--green);
+
+    color: white;
 }
+
 
 .action-copy:hover {
-    background: var(--color-green-dark);
+    background: var(--green-dark);
 }
+
 
 .action-reset {
-    background: var(--color-red);
+    background: var(--red);
 
-    color: #ffffff;
+    color: white;
 }
+
 
 .action-reset:hover {
-    background: var(--color-red-dark);
+    background: var(--red-dark);
 }
 
+
 .action-procedure {
-    background: var(--color-blue-light);
+    background: var(--blue-light);
 
     color: #174a67;
 }
 
+
 .action-procedure:hover {
-    background: var(--color-blue-light-hover);
+    background: var(--blue-light-hover);
 }
+
 
 .action-email {
-    background: var(--color-black);
+    background: var(--black);
 
-    color: #ffffff;
+    color: white;
 }
+
 
 .action-email:hover {
     background: #000000;
 }
 
-.button-icon {
-    font-size: 19px;
-}
 
 .action-space {
-    height: 6px;
+    height: 5px;
 }
+
 
 .copy-confirmation {
     min-height: 18px;
 
-    color: var(--color-green);
+    color: var(--green);
 
     font-size: 13px;
     font-weight: 700;
@@ -721,25 +768,9 @@ textarea::placeholder {
 }
 
 
-/* =========================================================
-   FEILMELDINGER
-   ========================================================= */
-
-.field-error {
-    margin: 0;
-
-    color: var(--color-red);
-
-    font-size: 13px;
-}
-
-.field-error:not(:empty) {
-    margin-bottom: 8px;
-}
-
 
 /* =========================================================
-   SKJULT
+   SKJUL
    ========================================================= */
 
 .hidden {
@@ -747,81 +778,56 @@ textarea::placeholder {
 }
 
 
+
 /* =========================================================
-   MELLOMSTOR SKJERM
+   MINDRE PC / LAPTOP
+
+   FORTSATT:
+   MENY | SKJEMA | RAPPORT
    ========================================================= */
 
-@media (max-width: 1350px) {
+@media (max-width: 1200px) {
 
     .app-shell {
         grid-template-columns:
-            175px
-            minmax(470px, 1fr)
+            165px
+            minmax(0, 1fr)
             300px;
 
-        gap: 12px;
+        gap: 10px;
 
-        width: calc(100% - 20px);
+        width: calc(100% - 16px);
     }
+
 
     .person-row {
         grid-template-columns:
-            125px
+            120px
             minmax(0, 1fr)
-            120px;
+            115px;
     }
 
-    .side-panel h2 {
-        font-size: 19px;
-    }
-
-    .report-output {
-        font-size: 12px;
-    }
-}
-
-
-/* =========================================================
-   SMAL LAPTOP / NETTBRETT
-   ========================================================= */
-
-@media (max-width: 1050px) {
-
-    .app-shell {
-        grid-template-columns:
-            180px
-            minmax(0, 1fr);
-
-        grid-template-areas:
-            "navigation form"
-            "navigation report";
-    }
-
-    .form-navigation-inner {
-        position: sticky;
-
-        top: 12px;
-    }
 
     .side-panel-inner {
-        position: static;
+        padding: 10px;
     }
 
+
     .report-output {
-        height: 300px;
+        font-size: 11.5px;
     }
+
 }
 
 
+
 /* =========================================================
-   MOBIL
+   MOBIL / SMAL SKJERM
+
+   Først her stabler vi.
    ========================================================= */
 
-@media (max-width: 760px) {
-
-    :root {
-        --input-height: 42px;
-    }
+@media (max-width: 900px) {
 
     .app-shell {
         grid-template-columns: 1fr;
@@ -831,30 +837,20 @@ textarea::placeholder {
             "form"
             "report";
 
-        width: calc(100% - 24px);
-
-        margin-top: 12px;
+        width: calc(100% - 20px);
     }
 
-    .app-header {
-        padding: 16px;
-    }
 
-    .app-header h1 {
-        font-size: 21px;
-
-        gap: 8px;
-    }
-
-    .form-navigation-inner {
+    .form-navigation-inner,
+    .side-panel-inner {
         position: static;
-
-        padding: 10px;
     }
+
 
     .form-navigation-label {
         display: none;
     }
+
 
     .form-nav-list {
         display: flex;
@@ -864,37 +860,56 @@ textarea::placeholder {
         gap: 6px;
     }
 
-    .form-nav-link {
-        min-height: 40px;
 
-        padding: 8px 10px;
+    .form-nav-link {
+        width: auto;
     }
+
 
     .form-grid-2,
     .form-grid-3,
-    .tg-grid,
+    .tg-grid {
+        grid-template-columns: 1fr;
+    }
+
+
     .person-row {
         grid-template-columns: 1fr;
     }
 
-    .person-row {
-        gap: 6px;
-
-        padding: 10px 0;
-    }
-
-    .side-panel-inner {
-        position: static;
-    }
 
     .report-output {
-        height: 320px;
-
-        min-height: 260px;
+        height: 340px;
     }
+
+}
+
+
+
+/* =========================================================
+   TELEFON
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .app-header {
+        padding: 12px;
+    }
+
+
+    .app-header h1 {
+        font-size: 21px;
+    }
+
+
+    .form-section {
+        padding: 11px;
+    }
+
 
     input,
     textarea {
         font-size: 16px;
     }
+
 }

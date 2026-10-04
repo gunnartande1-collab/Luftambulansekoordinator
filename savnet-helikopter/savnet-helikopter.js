@@ -1,9 +1,18 @@
 "use strict";
 
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => [...document.querySelectorAll(selector)];
+const $ = (selector) =>
+    document.querySelector(selector);
 
+
+const $$ = (selector) =>
+    [...document.querySelectorAll(selector)];
+
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
 
 const state = {
     pob: null,
@@ -14,195 +23,410 @@ const state = {
 let copyTimer = null;
 
 
+
+/* =========================================================
+   UTLØSENDE KRITERIER
+   ========================================================= */
+
 const CRITERIA = {
-    1: "Helikopteret svarer ikke på anrop eller planlagt rapportering i henhold til flight following, og vises som rød både på Locus og Nødnett.",
-    2: "Helikopteret har ikke meldt landing innen 10 minutter etter oppgitt ETA, og det foreligger samtidig manglende kontakt eller andre indikasjoner på avvik.",
-    3: "Observasjoner/meldinger som gir grunn til å mistenke/bekrefte havari."
+
+    1:
+        "Helikopteret svarer ikke på anrop eller planlagt rapportering i henhold til flight following, og vises som rød både på Locus og Nødnett.",
+
+    2:
+        "Helikopteret har ikke meldt landing innen 10 minutter etter oppgitt ETA, og det foreligger samtidig manglende kontakt eller andre indikasjoner på avvik.",
+
+    3:
+        "Observasjoner/meldinger som gir grunn til å mistenke/bekrefte havari."
+
 };
 
+
+
+/* =========================================================
+   ICAO / LOKASJONER
+   ========================================================= */
 
 const ICAO_LOCATIONS = {
+
     XZAH: "Ahus",
+
     ENAR: "Arendal base",
     ENGK: "Arendal lufthavn",
+
     ENDB: "Dombås base",
+
     ENDH: "Drammen SH",
+
     ENEG: "Eggemoen flyplass",
+
     ENEL: "Elverum SH",
+
     ENGJ: "Gjøvik SH",
+
     XZHM: "Hamar SH",
     ENHA: "Hamar flyplass",
+
     ENSP: "Kalnes SH",
+
     ENKO: "Kongsberg SH",
+
     ENKG: "Kongsvinger SH",
+
     ENKH: "Kristiansand SH",
+
     ENCN: "Kjevik flyplass",
+
     ENLH: "Lillehammer SH",
+
     ENLX: "Lørenskog base",
+
     ENNO: "Notodden flyplass",
     ENNT: "Notodden SH",
+
     ENGM: "Oslo lufthavn",
+
     ENRH: "Rikshospitalet",
+
     ENRX: "Ringerike SH",
+
     ENRY: "Rygge flystasjon",
+
     ENTE: "Skien SH",
     ENSN: "Skien lufthavn",
+
     XZSA: "Sunnaas SH",
+
     ENTX: "Taraldrud",
+
     XZTP: "Torpomoen",
+
     XZTY: "Tynset SH",
+
     ENTH: "Tønsberg SH",
+
     ENUH: "Ullevål",
+
     ENAH: "Ål base",
+
     ENBG: "Bergen base",
+
     ENEH: "Egersund SH",
+
     ENFD: "Førde SH / base",
+
     ENBX: "Haukeland SH",
+
     ENHX: "Haugesund SH",
+
     ENLD: "Lærdal SH",
+
     ENNF: "Nordfjord SH",
+
     ENLV: "Stord SH",
+
     ENSX: "Stavanger SH",
+
     ENVS: "Voss SH",
+
     ENKS: "Kristiansund SH",
+
     ENYY: "Levanger SH",
+
     ENMP: "Molde SH",
+
     ENNH: "Namsos SH",
+
     ENRT: "Rosten base",
+
     ENTR: "St. Olavs",
+
     ENVI: "Volda SH",
+
     ENVA: "Værnes flyplass",
+
     ENOL: "Ørland flystasjon",
+
     ENAX: "Ålesund SH",
+
     ENME: "Hjelset SH"
+
 };
 
 
-document.addEventListener("DOMContentLoaded", initialiseForm);
+
+/* =========================================================
+   OPPSTART
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initialiseForm
+);
+
 
 
 function initialiseForm() {
 
-    $(".form-panel").addEventListener("input", handleInput);
-    $(".form-panel").addEventListener("focusout", handleFocusOut);
+    const formPanel =
+        $(".form-panel");
 
 
-    $$("#pobChips .chip").forEach((button) => {
-
-        button.addEventListener("click", () => {
-
-            const value = Number(button.dataset.pob);
-
-            state.pob = state.pob === value ? null : value;
+    if (!formPanel) {
+        return;
+    }
 
 
-            $$("#pobChips .chip").forEach((chip) => {
-
-                const selected =
-                    Number(chip.dataset.pob) === state.pob;
-
-                chip.classList.toggle(
-                    "is-selected",
-                    selected
-                );
-
-                chip.setAttribute(
-                    "aria-pressed",
-                    String(selected)
-                );
-
-            });
-
-
-            clearCopyConfirmation();
-            updateReport();
-
-        });
-
-    });
-
-
-    $$(".criteria-chip").forEach((button) => {
-
-        button.addEventListener("click", () => {
-
-            const value =
-                Number(button.dataset.criterion);
-
-            state.criterion =
-                state.criterion === value
-                    ? null
-                    : value;
-
-
-            $$(".criteria-chip").forEach((chip) => {
-
-                const selected =
-                    Number(chip.dataset.criterion) ===
-                    state.criterion;
-
-                chip.classList.toggle(
-                    "is-selected",
-                    selected
-                );
-
-                chip.setAttribute(
-                    "aria-pressed",
-                    String(selected)
-                );
-
-            });
-
-
-            $("#observationWrapper").classList.toggle(
-                "hidden",
-                state.criterion !== 3
-            );
-
-
-            clearCopyConfirmation();
-            updateReport();
-
-        });
-
-    });
-
-
-    $("#copyButton").addEventListener(
-        "click",
-        copyReport
+    formPanel.addEventListener(
+        "input",
+        handleInput
     );
 
 
-    $("#resetButton").addEventListener(
-        "click",
-        resetForm
+    formPanel.addEventListener(
+        "focusout",
+        handleFocusOut
     );
 
 
-    $("#emailReportButton").addEventListener(
-        "click",
-        openEmail
-    );
+    initialisePob();
+
+    initialiseCriteria();
+
+
+    $("#copyButton")
+        ?.addEventListener(
+            "click",
+            copyReport
+        );
+
+
+    $("#resetButton")
+        ?.addEventListener(
+            "click",
+            resetForm
+        );
+
+
+    $("#emailReportButton")
+        ?.addEventListener(
+            "click",
+            createEmail
+        );
 
 
     renumberPax();
+
     updateReport();
 
 }
 
 
 
+/* =========================================================
+   POB
+   ========================================================= */
+
+function initialisePob() {
+
+    $$("#pobChips .chip")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const number =
+                        Number(
+                            button.dataset.pob
+                        );
+
+
+                    if (
+                        state.pob === number
+                    ) {
+
+                        state.pob = null;
+
+                    }
+                    else {
+
+                        state.pob = number;
+
+                    }
+
+
+                    updatePobButtons();
+
+                    clearCopyConfirmation();
+
+                    updateReport();
+
+                }
+            );
+
+        });
+
+}
+
+
+
+function updatePobButtons() {
+
+    $$("#pobChips .chip")
+        .forEach((button) => {
+
+            const number =
+                Number(
+                    button.dataset.pob
+                );
+
+
+            const selected =
+                number === state.pob;
+
+
+            button.classList.toggle(
+                "is-selected",
+                selected
+            );
+
+
+            button.setAttribute(
+                "aria-pressed",
+                String(selected)
+            );
+
+        });
+
+}
+
+
+
+/* =========================================================
+   KRITERIER
+   ========================================================= */
+
+function initialiseCriteria() {
+
+    $$(".criteria-chip")
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const number =
+                        Number(
+                            button.dataset.criterion
+                        );
+
+
+                    if (
+                        state.criterion === number
+                    ) {
+
+                        state.criterion = null;
+
+                    }
+                    else {
+
+                        state.criterion = number;
+
+                    }
+
+
+                    updateCriteriaButtons();
+
+                    updateObservationField();
+
+                    clearCopyConfirmation();
+
+                    updateReport();
+
+                }
+            );
+
+        });
+
+}
+
+
+
+function updateCriteriaButtons() {
+
+    $$(".criteria-chip")
+        .forEach((button) => {
+
+            const number =
+                Number(
+                    button.dataset.criterion
+                );
+
+
+            const selected =
+                number === state.criterion;
+
+
+            button.classList.toggle(
+                "is-selected",
+                selected
+            );
+
+
+            button.setAttribute(
+                "aria-pressed",
+                String(selected)
+            );
+
+        });
+
+}
+
+
+
+function updateObservationField() {
+
+    const wrapper =
+        $("#observationWrapper");
+
+
+    if (!wrapper) {
+        return;
+    }
+
+
+    wrapper.classList.toggle(
+        "hidden",
+        state.criterion !== 3
+    );
+
+}
+
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
 function handleInput(event) {
 
-    const target = event.target;
+    const target =
+        event.target;
 
 
     if (
-        !(target instanceof HTMLInputElement) &&
-        !(target instanceof HTMLTextAreaElement)
+        !(
+            target instanceof HTMLInputElement
+        )
+        &&
+        !(
+            target instanceof HTMLTextAreaElement
+        )
     ) {
+
         return;
+
     }
 
 
@@ -214,45 +438,24 @@ function handleInput(event) {
             "other-tg-input"
         )
     ) {
+
         maintainDynamicTgFields();
+
     }
 
 
     if (
         target.classList.contains(
             "trainee-name"
-        ) ||
+        )
+        ||
         target.classList.contains(
             "trainee-phone"
         )
     ) {
-        maintainTraineeRows();
-    }
 
+        maintainPaxRows();
 
-    if (
-        target.id === "departureTime" ||
-        target.id === "etaTime"
-    ) {
-
-        const formatted =
-            formatTime(target.value);
-
-        if (formatted) {
-            target.value = formatted;
-        }
-
-    }
-
-
-    if (
-        target.id === "utmPosition" ||
-        target.id === "dmmPosition"
-    ) {
-        convertCoordinates(
-            target.id,
-            false
-        );
     }
 
 
@@ -262,43 +465,88 @@ function handleInput(event) {
 
 
 
+/* =========================================================
+   FOCUS OUT
+   ========================================================= */
+
 function handleFocusOut(event) {
 
-    const target = event.target;
+    const target =
+        event.target;
 
 
     if (
-        !(target instanceof HTMLInputElement)
+        !(
+            target instanceof HTMLInputElement
+        )
     ) {
+
         return;
+
     }
 
 
-    if (target.type === "tel") {
+    if (
+        target.type === "tel"
+    ) {
+
         target.value =
             formatPhoneNumber(
                 target.value
             );
+
     }
 
 
     if (
-        target.id === "departureTime" ||
+        target.id === "departureTime"
+        ||
         target.id === "etaTime"
     ) {
 
         const formatted =
-            formatTime(target.value);
+            formatTime(
+                target.value
+            );
+
 
         if (formatted) {
-            target.value = formatted;
+
+            target.value =
+                formatted;
+
         }
 
     }
 
 
     if (
-        target.id === "utmPosition" ||
+        target.id === "resourceId"
+    ) {
+
+        target.value =
+            normaliseResourceId(
+                target.value
+            );
+
+    }
+
+
+    if (
+        target.id === "registration"
+    ) {
+
+        target.value =
+            normaliseRegistration(
+                target.value
+            );
+
+    }
+
+
+    if (
+        target.id === "utmPosition"
+        ||
         target.id === "dmmPosition"
     ) {
 
@@ -307,22 +555,6 @@ function handleFocusOut(event) {
             true
         );
 
-    }
-
-
-    if (target.id === "registration") {
-        target.value =
-            normaliseRegistration(
-                target.value
-            );
-    }
-
-
-    if (target.id === "resourceId") {
-        target.value =
-            normaliseResourceId(
-                target.value
-            );
     }
 
 
@@ -341,6 +573,12 @@ function maintainDynamicTgFields() {
     const container =
         $("#otherTgContainer");
 
+
+    if (!container) {
+        return;
+    }
+
+
     let inputs = [
         ...container.querySelectorAll(
             ".other-tg-input"
@@ -348,52 +586,72 @@ function maintainDynamicTgFields() {
     ];
 
 
-    const last = inputs.at(-1);
+    const last =
+        inputs.at(-1);
 
 
     if (
-        last &&
+        last
+        &&
         last.value.trim()
     ) {
 
         const input =
-            document.createElement("input");
+            document.createElement(
+                "input"
+            );
+
 
         input.type = "text";
 
         input.className =
             "other-tg-input";
 
-        input.autocomplete = "off";
+        input.placeholder =
+            "Talegruppe";
+
+        input.autocomplete =
+            "off";
 
         input.setAttribute(
             "aria-label",
-            "Annen TG"
+            "Annen talegruppe"
         );
 
-        container.appendChild(input);
 
-
-        inputs = [
-            ...container.querySelectorAll(
-                ".other-tg-input"
-            )
-        ];
+        container.appendChild(
+            input
+        );
 
     }
 
 
+    inputs = [
+        ...container.querySelectorAll(
+            ".other-tg-input"
+        )
+    ];
+
+
     for (
-        let i = inputs.length - 2;
+        let i =
+            inputs.length - 2;
         i >= 0;
         i--
     ) {
 
         if (
-            !inputs[i].value.trim() &&
-            !inputs[i + 1].value.trim()
+            !inputs[i]
+                .value
+                .trim()
+            &&
+            !inputs[i + 1]
+                .value
+                .trim()
         ) {
+
             inputs[i].remove();
+
         }
 
     }
@@ -404,32 +662,64 @@ function maintainDynamicTgFields() {
 
 function getTgValues() {
 
-    return [
+    const values = [];
 
-        $("#healthTg").value.trim(),
 
-        $("#sarTg").value.trim(),
+    const health =
+        $("#healthTg")
+            ?.value
+            .trim();
 
-        ...$$(".other-tg-input")
-            .map(
-                (input) =>
-                    input.value.trim()
-            )
 
-    ].filter(Boolean);
+    const sar =
+        $("#sarTg")
+            ?.value
+            .trim();
+
+
+    if (health) {
+        values.push(health);
+    }
+
+
+    if (sar) {
+        values.push(sar);
+    }
+
+
+    $$(".other-tg-input")
+        .forEach((input) => {
+
+            const value =
+                input.value.trim();
+
+
+            if (value) {
+
+                values.push(value);
+
+            }
+
+        });
+
+
+    return values;
 
 }
 
 
 
 /* =========================================================
-   DYNAMISKE PAX
+   DYNAMISK PAX
    ========================================================= */
 
-function createTraineeRow() {
+function createPaxRow() {
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     row.className =
         "person-row trainee-row";
@@ -441,6 +731,7 @@ function createTraineeRow() {
 
             <img
                 src="../img/pax.svg"
+                class="person-ikon"
                 alt=""
                 aria-hidden="true"
             >
@@ -455,7 +746,6 @@ function createTraineeRow() {
         <input
             type="text"
             class="trainee-name"
-            aria-label="PAX fullt navn"
             placeholder="Navn"
             autocomplete="off"
         >
@@ -464,7 +754,6 @@ function createTraineeRow() {
         <input
             type="tel"
             class="trainee-phone"
-            aria-label="PAX mobilnummer"
             placeholder="Mobilnummer"
             autocomplete="off"
         >
@@ -478,30 +767,41 @@ function createTraineeRow() {
 
 
 
-function traineeRowHasContent(row) {
+function paxRowHasContent(row) {
 
-    return (
-
+    const name =
         row.querySelector(
             ".trainee-name"
-        ).value.trim() !== ""
+        )
+        ?.value
+        .trim();
 
-        ||
 
+    const phone =
         row.querySelector(
             ".trainee-phone"
-        ).value.trim() !== ""
+        )
+        ?.value
+        .trim();
 
+
+    return Boolean(
+        name || phone
     );
 
 }
 
 
 
-function maintainTraineeRows() {
+function maintainPaxRows() {
 
     const container =
         $("#traineeContainer");
+
+
+    if (!container) {
+        return;
+    }
 
 
     let rows = [
@@ -511,39 +811,43 @@ function maintainTraineeRows() {
     ];
 
 
-    const last = rows.at(-1);
+    const last =
+        rows.at(-1);
 
 
     if (
-        last &&
-        traineeRowHasContent(last)
+        last
+        &&
+        paxRowHasContent(last)
     ) {
 
         container.appendChild(
-            createTraineeRow()
+            createPaxRow()
         );
-
-
-        rows = [
-            ...container.querySelectorAll(
-                ".trainee-row"
-            )
-        ];
 
     }
 
 
+    rows = [
+        ...container.querySelectorAll(
+            ".trainee-row"
+        )
+    ];
+
+
     for (
-        let i = rows.length - 2;
+        let i =
+            rows.length - 2;
         i >= 0;
         i--
     ) {
 
         if (
-            !traineeRowHasContent(
+            !paxRowHasContent(
                 rows[i]
-            ) &&
-            !traineeRowHasContent(
+            )
+            &&
+            !paxRowHasContent(
                 rows[i + 1]
             )
         ) {
@@ -563,53 +867,72 @@ function maintainTraineeRows() {
 
 function renumberPax() {
 
-    $$(".trainee-row").forEach(
-        (row, index) => {
+    $$(".trainee-row")
+        .forEach(
+            (row, index) => {
 
-            const label =
-                `PAX ${index + 1}`;
-
-
-            row.querySelector(
-                ".pax-label"
-            ).textContent =
-                label;
+                const number =
+                    index + 1;
 
 
-            row.querySelector(
-                ".trainee-name"
-            ).setAttribute(
-                "aria-label",
-                `${label} fullt navn`
-            );
+                const label =
+                    `PAX ${number}`;
 
 
-            row.querySelector(
-                ".trainee-phone"
-            ).setAttribute(
-                "aria-label",
-                `${label} mobilnummer`
-            );
+                const labelElement =
+                    row.querySelector(
+                        ".pax-label"
+                    );
 
-        }
-    );
+
+                if (labelElement) {
+
+                    labelElement.textContent =
+                        label;
+
+                }
+
+
+                row.querySelector(
+                    ".trainee-name"
+                )
+                ?.setAttribute(
+                    "aria-label",
+                    `${label} navn`
+                );
+
+
+                row.querySelector(
+                    ".trainee-phone"
+                )
+                ?.setAttribute(
+                    "aria-label",
+                    `${label} mobilnummer`
+                );
+
+            }
+        );
 
 }
 
 
 
 /* =========================================================
-   TELEFON OG KLOKKESLETT
+   TELEFON
    ========================================================= */
 
 function formatPhoneNumber(value) {
 
     let digits =
-        value.replace(/\D/g, "");
+        value.replace(
+            /\D/g,
+            ""
+        );
 
 
     if (
-        digits.startsWith("0047") &&
+        digits.startsWith("0047")
+        &&
         digits.length === 12
     ) {
 
@@ -617,8 +940,11 @@ function formatPhoneNumber(value) {
             digits.slice(4);
 
     }
-    else if (
-        digits.startsWith("47") &&
+
+
+    if (
+        digits.startsWith("47")
+        &&
         digits.length === 10
     ) {
 
@@ -628,13 +954,19 @@ function formatPhoneNumber(value) {
     }
 
 
-    if (digits.length === 8) {
+    if (
+        digits.length === 8
+    ) {
 
         return (
-            digits.slice(0, 3) +
-            " " +
-            digits.slice(3, 5) +
-            " " +
+            digits.slice(0, 3)
+            +
+            " "
+            +
+            digits.slice(3, 5)
+            +
+            " "
+            +
             digits.slice(5)
         );
 
@@ -646,6 +978,10 @@ function formatPhoneNumber(value) {
 }
 
 
+
+/* =========================================================
+   KLOKKESLETT
+   ========================================================= */
 
 function formatTime(value) {
 
@@ -662,27 +998,28 @@ function formatTime(value) {
     let minute;
 
 
-    const colonMatch =
+    const colon =
         text.match(
             /^(\d{1,2}):(\d{2})(?::\d{2})?$/
         );
 
 
-    if (colonMatch) {
+    if (colon) {
 
         hour =
             Number(
-                colonMatch[1]
+                colon[1]
             );
 
         minute =
             Number(
-                colonMatch[2]
+                colon[2]
             );
 
     }
     else if (
-        /^\d{3,4}$/.test(text)
+        /^\d{3,4}$/
+            .test(text)
     ) {
 
         const digits =
@@ -691,10 +1028,15 @@ function formatTime(value) {
                 "0"
             );
 
+
         hour =
             Number(
-                digits.slice(0, 2)
+                digits.slice(
+                    0,
+                    2
+                )
             );
+
 
         minute =
             Number(
@@ -710,7 +1052,8 @@ function formatTime(value) {
 
 
     if (
-        hour > 23 ||
+        hour > 23
+        ||
         minute > 59
     ) {
 
@@ -735,29 +1078,51 @@ function formatTime(value) {
 
 function validateTimes() {
 
-    const invalid = [
+    const ids = [
         "departureTime",
         "etaTime"
-    ].some((id) => {
-
-        const value =
-            $("#" + id)
-                .value
-                .trim();
+    ];
 
 
-        return (
-            value !== "" &&
-            formatTime(value) === ""
-        );
+    const invalid =
+        ids.some((id) => {
 
-    });
+            const element =
+                $("#" + id);
 
 
-    $("#timeError").textContent =
-        invalid
-            ? "Ugyldig klokkeslett. Bruk for eksempel 2350 eller 23:50."
-            : "";
+            if (!element) {
+                return false;
+            }
+
+
+            const text =
+                element
+                    .value
+                    .trim();
+
+
+            return (
+                text
+                &&
+                !formatTime(text)
+            );
+
+        });
+
+
+    const error =
+        $("#timeError");
+
+
+    if (error) {
+
+        error.textContent =
+            invalid
+                ? "Ugyldig klokkeslett. Bruk for eksempel 2350 eller 23:50."
+                : "";
+
+    }
 
 
     return !invalid;
@@ -767,10 +1132,12 @@ function validateTimes() {
 
 
 /* =========================================================
-   LUFTFARTØY OG STEDER
+   RESSURS-ID
    ========================================================= */
 
-function normaliseResourceId(value) {
+function normaliseResourceId(
+    value
+) {
 
     const text =
         value.trim();
@@ -778,25 +1145,39 @@ function normaliseResourceId(value) {
 
     const match =
         text.match(
-            /^(?:LA|Luftambulanse)?\s*(\d+)\s*-\s*(\d+)$/i
+            /^(?:LA|LUFTAMBULANSE)?\s*(\d+)\s*-\s*(\d+)$/i
         );
 
 
-    return match
-        ? `LA ${match[1]}-${match[2]}`
-        : text;
+    if (!match) {
+        return text;
+    }
+
+
+    return (
+        `LA ${match[1]}-${match[2]}`
+    );
 
 }
 
 
 
-function normaliseRegistration(value) {
+/* =========================================================
+   REGISTRERING
+   ========================================================= */
+
+function normaliseRegistration(
+    value
+) {
 
     const text =
         value
             .trim()
             .toUpperCase()
-            .replace(/\s+/g, "");
+            .replace(
+                /\s+/g,
+                ""
+            );
 
 
     if (!text) {
@@ -805,11 +1186,13 @@ function normaliseRegistration(value) {
 
 
     if (
-        /^LN[A-Z]{3}$/.test(text)
+        /^LN[A-Z]{3}$/
+            .test(text)
     ) {
 
         return (
-            "LN-" +
+            "LN-"
+            +
             text.slice(2)
         );
 
@@ -817,11 +1200,13 @@ function normaliseRegistration(value) {
 
 
     if (
-        /^[A-Z]{3}$/.test(text)
+        /^[A-Z]{3}$/
+            .test(text)
     ) {
 
         return (
-            "LN-" +
+            "LN-"
+            +
             text
         );
 
@@ -834,10 +1219,21 @@ function normaliseRegistration(value) {
 
 
 
-function formatLocation(value) {
+/* =========================================================
+   LOKASJON
+   ========================================================= */
+
+function formatLocation(
+    value
+) {
 
     const text =
         value.trim();
+
+
+    if (!text) {
+        return "";
+    }
 
 
     const code =
@@ -846,7 +1242,8 @@ function formatLocation(value) {
 
     if (
         Object.prototype
-            .hasOwnProperty.call(
+            .hasOwnProperty
+            .call(
                 ICAO_LOCATIONS,
                 code
             )
@@ -866,7 +1263,7 @@ function formatLocation(value) {
 
 
 /* =========================================================
-   KOORDINATER
+   POSISJON
    ========================================================= */
 
 function parseUtm(value) {
@@ -882,50 +1279,34 @@ function parseUtm(value) {
     }
 
 
-    const zoneMatch =
-        text.match(
-            /UTM\s*(\d{1,2})\s*([NS])?/
-        );
-
-
-    if (
-        zoneMatch &&
-        (
-            Number(
-                zoneMatch[1]
-            ) !== 32
-            ||
-            zoneMatch[2] === "S"
-        )
-    ) {
-
-        return null;
-
-    }
-
-
-    const labelled =
+    const match =
         text.match(
             /[ØE]\s*([\d\s]+?)\s*[,;]?\s*N\s*([\d\s]+)/
         );
 
 
-    if (!labelled) {
+    if (!match) {
         return null;
     }
 
 
     const easting =
         Number(
-            labelled[1]
-                .replace(/\s/g, "")
+            match[1]
+                .replace(
+                    /\s/g,
+                    ""
+                )
         );
 
 
     const northing =
         Number(
-            labelled[2]
-                .replace(/\s/g, "")
+            match[2]
+                .replace(
+                    /\s/g,
+                    ""
+                )
         );
 
 
@@ -933,7 +1314,14 @@ function parseUtm(value) {
         !Number.isFinite(easting)
         ||
         !Number.isFinite(northing)
-        ||
+    ) {
+
+        return null;
+
+    }
+
+
+    if (
         easting < 100000
         ||
         easting > 900000
@@ -963,7 +1351,10 @@ function parseDmm(value) {
         value
             .trim()
             .toUpperCase()
-            .replace(/,/g, ".");
+            .replace(
+                /,/g,
+                "."
+            );
 
 
     const match =
@@ -980,34 +1371,27 @@ function parseDmm(value) {
     const latDegrees =
         Number(match[1]);
 
+
     const latMinutes =
         Number(match[2]);
 
+
     const lonDegrees =
         Number(match[4]);
+
 
     const lonMinutes =
         Number(match[5]);
 
 
     if (
-        latMinutes >= 60
-        ||
-        lonMinutes >= 60
-        ||
         latDegrees > 90
         ||
         lonDegrees > 180
         ||
-        (
-            latDegrees === 90 &&
-            latMinutes !== 0
-        )
+        latMinutes >= 60
         ||
-        (
-            lonDegrees === 180 &&
-            lonMinutes !== 0
-        )
+        lonMinutes >= 60
     ) {
 
         return null;
@@ -1016,12 +1400,14 @@ function parseDmm(value) {
 
 
     let latitude =
-        latDegrees +
+        latDegrees
+        +
         latMinutes / 60;
 
 
     let longitude =
-        lonDegrees +
+        lonDegrees
+        +
         lonMinutes / 60;
 
 
@@ -1054,30 +1440,42 @@ function parseDmm(value) {
 
 
 
-function splitDegrees(value) {
+function splitDegrees(
+    value
+) {
 
     const absolute =
         Math.abs(value);
 
 
     let degrees =
-        Math.floor(absolute);
-
-
-    let minutes =
-        Number(
-            (
-                (
-                    absolute -
-                    degrees
-                ) * 60
-            ).toFixed(3)
+        Math.floor(
+            absolute
         );
 
 
-    if (minutes >= 60) {
+    let minutes =
+        (
+            absolute
+            -
+            degrees
+        )
+        *
+        60;
 
-        degrees += 1;
+
+    minutes =
+        Number(
+            minutes.toFixed(3)
+        );
+
+
+    if (
+        minutes >= 60
+    ) {
+
+        degrees++;
+
         minutes = 0;
 
     }
@@ -1111,54 +1509,30 @@ function decimalDegreesToDmm(
 
 
     return (
-        `${lat.degrees}° ${lat.minutes}' ${latitude >= 0 ? "N" : "S"} ` +
-        `${lon.degrees}° ${lon.minutes}' ${longitude >= 0 ? "Ø" : "V"}`
+
+        `${lat.degrees}° ${lat.minutes}' `
+
+        +
+
+        `${latitude >= 0 ? "N" : "S"}, `
+
+        +
+
+        `${lon.degrees}° ${lon.minutes}' `
+
+        +
+
+        `${longitude >= 0 ? "Ø" : "V"}`
+
     );
 
 }
 
 
 
-function dmmToReportText(value) {
-
-    if (!value.trim()) {
-        return "";
-    }
-
-
-    const parsed =
-        parseDmm(value);
-
-
-    if (!parsed) {
-        return "[kontroller koordinater]";
-    }
-
-
-    const lat =
-        splitDegrees(
-            parsed.latitude
-        );
-
-
-    const lon =
-        splitDegrees(
-            parsed.longitude
-        );
-
-
-    return (
-        `${lat.degrees} grader ${lat.minutes} ` +
-        `${parsed.latitude >= 0 ? "nordlig" : "sørlig"}, ` +
-        `${lon.degrees} grader ${lon.minutes} ` +
-        `${parsed.longitude >= 0 ? "østlig" : "vestlig"}`
-    );
-
-}
-
-
-
-function formatUtmNumber(number) {
+function formatUtmNumber(
+    number
+) {
 
     const digits =
         String(
@@ -1167,25 +1541,41 @@ function formatUtmNumber(number) {
 
 
     if (
-        digits.length > 5
+        digits.length <= 5
     ) {
 
-        return (
-            digits.slice(0, -5)
-            +
-            " "
-            +
-            digits.slice(-5, -2)
-            +
-            " "
-            +
-            digits.slice(-2)
-        );
+        return digits;
 
     }
 
 
-    return digits;
+    return (
+
+        digits.slice(
+            0,
+            -5
+        )
+
+        +
+
+        " "
+
+        +
+
+        digits.slice(
+            -5,
+            -2
+        )
+
+        +
+
+        " "
+
+        +
+
+        digits.slice(-2)
+
+    );
 
 }
 
@@ -1197,223 +1587,54 @@ function formatUtmInput(
 ) {
 
     return (
-        `Ø ${formatUtmNumber(easting)}, ` +
+
+        `Ø ${formatUtmNumber(easting)}, `
+
+        +
+
         `N ${formatUtmNumber(northing)} UTM32N`
+
     );
 
 }
 
 
 
-function utmToReportText(value) {
-
-    if (!value.trim()) {
-        return "";
-    }
-
-
-    const parsed =
-        parseUtm(value);
-
-
-    if (!parsed) {
-        return "[kontroller koordinater]";
-    }
-
-
-    return (
-        `32 Ø ${formatUtmNumber(parsed.easting)}, ` +
-        `N ${formatUtmNumber(parsed.northing)}`
-    );
-
-}
-
-
-
-function convertCoordinates(
-    sourceId,
-    showError
-) {
-
-    const source =
-        $("#" + sourceId);
-
-
-    const other =
-        sourceId === "utmPosition"
-            ? $("#dmmPosition")
-            : $("#utmPosition");
-
-
-    const error =
-        $("#coordinateError");
-
-
-    const value =
-        source.value.trim();
-
-
-    error.textContent = "";
-
-
-    if (!value) {
-
-        other.value = "";
-        return;
-
-    }
-
-
-    if (
-        sourceId === "utmPosition"
-    ) {
-
-        const parsed =
-            parseUtm(value);
-
-
-        if (!parsed) {
-
-            other.value = "";
-
-
-            if (showError) {
-
-                error.textContent =
-                    "Kontroller UTM-posisjonen. Konverteringen bruker WGS84 og UTM 32N.";
-
-            }
-
-
-            return;
-
-        }
-
-
-        const coordinates =
-            utm32ToLatLon(
-                parsed.easting,
-                parsed.northing
-            );
-
-
-        if (
-            coordinates.latitude < 0
-            ||
-            coordinates.latitude > 84
-        ) {
-
-            other.value = "";
-
-
-            if (showError) {
-
-                error.textContent =
-                    "Posisjonen er utenfor området for UTM 32N.";
-
-            }
-
-
-            return;
-
-        }
-
-
-        other.value =
-            decimalDegreesToDmm(
-                coordinates.latitude,
-                coordinates.longitude
-            );
-
-    }
-    else {
-
-        const parsed =
-            parseDmm(value);
-
-
-        if (
-            !parsed
-            ||
-            parsed.latitude < 0
-            ||
-            parsed.latitude > 84
-        ) {
-
-            other.value = "";
-
-
-            if (showError) {
-
-                error.textContent =
-                    "Kontroller grader og minutter. Konverteringen bruker WGS84 og UTM 32N.";
-
-            }
-
-
-            return;
-
-        }
-
-
-        const coordinates =
-            latLonToUtm32(
-                parsed.latitude,
-                parsed.longitude
-            );
-
-
-        if (
-            coordinates.easting < 100000
-            ||
-            coordinates.easting > 900000
-        ) {
-
-            other.value = "";
-
-
-            if (showError) {
-
-                error.textContent =
-                    "Posisjonen ligger for langt fra UTM-sone 32.";
-
-            }
-
-
-            return;
-
-        }
-
-
-        other.value =
-            formatUtmInput(
-                coordinates.easting,
-                coordinates.northing
-            );
-
-    }
-
-}
-
-
+/* =========================================================
+   UTM -> LAT/LON
+   ========================================================= */
 
 function utm32ToLatLon(
     easting,
     northing
 ) {
 
-    const a = 6378137.0;
-    const e2 = 0.00669438;
-    const k0 = 0.9996;
-    const ep2 = e2 / (1 - e2);
+    const a =
+        6378137.0;
+
+
+    const e2 =
+        0.00669438;
+
+
+    const k0 =
+        0.9996;
+
+
+    const ep2 =
+        e2 /
+        (1 - e2);
 
 
     const x =
-        easting - 500000;
+        easting
+        -
+        500000;
 
 
     const m =
-        northing / k0;
+        northing /
+        k0;
 
 
     const mu =
@@ -1434,13 +1655,19 @@ function utm32ToLatLon(
 
     const e1 =
         (
-            1 -
-            Math.sqrt(1 - e2)
+            1
+            -
+            Math.sqrt(
+                1 - e2
+            )
         )
         /
         (
-            1 +
-            Math.sqrt(1 - e2)
+            1
+            +
+            Math.sqrt(
+                1 - e2
+            )
         );
 
 
@@ -1453,7 +1680,9 @@ function utm32ToLatLon(
             27 * e1 ** 3 / 32
         )
         *
-        Math.sin(2 * mu)
+        Math.sin(
+            2 * mu
+        )
         +
         (
             21 * e1 ** 2 / 16
@@ -1461,35 +1690,45 @@ function utm32ToLatLon(
             55 * e1 ** 4 / 32
         )
         *
-        Math.sin(4 * mu)
+        Math.sin(
+            4 * mu
+        )
         +
         (
             151 * e1 ** 3 / 96
         )
         *
-        Math.sin(6 * mu)
+        Math.sin(
+            6 * mu
+        )
         +
         (
             1097 * e1 ** 4 / 512
         )
         *
-        Math.sin(8 * mu);
+        Math.sin(
+            8 * mu
+        );
 
 
     const sinPhi =
         Math.sin(phi);
 
+
     const cosPhi =
         Math.cos(phi);
+
 
     const tanPhi =
         Math.tan(phi);
 
 
     const n =
-        a /
+        a
+        /
         Math.sqrt(
-            1 -
+            1
+            -
             e2 *
             sinPhi ** 2
         );
@@ -1509,7 +1748,8 @@ function utm32ToLatLon(
         (1 - e2)
         /
         (
-            1 -
+            1
+            -
             e2 *
             sinPhi ** 2
         ) ** 1.5;
@@ -1604,15 +1844,19 @@ function utm32ToLatLon(
     return {
 
         latitude:
-            latitude *
-            180 /
+            latitude
+            *
+            180
+            /
             Math.PI,
 
         longitude:
             9
             +
-            longitude *
-            180 /
+            longitude
+            *
+            180
+            /
             Math.PI
 
     };
@@ -1621,49 +1865,74 @@ function utm32ToLatLon(
 
 
 
+/* =========================================================
+   LAT/LON -> UTM
+   ========================================================= */
+
 function latLonToUtm32(
     latitude,
     longitude
 ) {
 
-    const a = 6378137.0;
-    const e2 = 0.00669438;
-    const k0 = 0.9996;
-    const ep2 = e2 / (1 - e2);
+    const a =
+        6378137.0;
+
+
+    const e2 =
+        0.00669438;
+
+
+    const k0 =
+        0.9996;
+
+
+    const ep2 =
+        e2 /
+        (1 - e2);
 
 
     const lat =
-        latitude *
-        Math.PI /
+        latitude
+        *
+        Math.PI
+        /
         180;
 
 
     const lon =
-        longitude *
-        Math.PI /
+        longitude
+        *
+        Math.PI
+        /
         180;
 
 
     const origin =
-        9 *
-        Math.PI /
+        9
+        *
+        Math.PI
+        /
         180;
 
 
     const sinLat =
         Math.sin(lat);
 
+
     const cosLat =
         Math.cos(lat);
+
 
     const tanLat =
         Math.tan(lat);
 
 
     const n =
-        a /
+        a
+        /
         Math.sqrt(
-            1 -
+            1
+            -
             e2 *
             sinLat ** 2
         );
@@ -1681,7 +1950,8 @@ function latLonToUtm32(
     const aa =
         cosLat *
         (
-            lon -
+            lon
+            -
             origin
         );
 
@@ -1700,7 +1970,9 @@ function latLonToUtm32(
             )
             *
             lat
+
             -
+
             (
                 3 * e2 / 8
                 +
@@ -1709,21 +1981,31 @@ function latLonToUtm32(
                 45 * e2 ** 3 / 1024
             )
             *
-            Math.sin(2 * lat)
+            Math.sin(
+                2 * lat
+            )
+
             +
+
             (
                 15 * e2 ** 2 / 256
                 +
                 45 * e2 ** 3 / 1024
             )
             *
-            Math.sin(4 * lat)
+            Math.sin(
+                4 * lat
+            )
+
             -
+
             (
                 35 * e2 ** 3 / 3072
             )
             *
-            Math.sin(6 * lat)
+            Math.sin(
+                6 * lat
+            )
         );
 
 
@@ -1732,7 +2014,9 @@ function latLonToUtm32(
         n *
         (
             aa
+
             +
+
             (
                 1
                 -
@@ -1742,7 +2026,9 @@ function latLonToUtm32(
             )
             *
             aa ** 3 / 6
+
             +
+
             (
                 5
                 -
@@ -1770,7 +2056,9 @@ function latLonToUtm32(
             tanLat *
             (
                 aa ** 2 / 2
+
                 +
+
                 (
                     5
                     -
@@ -1782,7 +2070,9 @@ function latLonToUtm32(
                 )
                 *
                 aa ** 4 / 24
+
                 +
+
                 (
                     61
                     -
@@ -1819,7 +2109,250 @@ function latLonToUtm32(
 
 
 /* =========================================================
-   RAPPORT
+   KONVERTER POSISJON
+   ========================================================= */
+
+function convertCoordinates(
+    sourceId,
+    showError
+) {
+
+    const source =
+        $("#" + sourceId);
+
+
+    const error =
+        $("#coordinateError");
+
+
+    if (
+        !source
+        ||
+        !error
+    ) {
+
+        return;
+
+    }
+
+
+    const value =
+        source
+            .value
+            .trim();
+
+
+    error.textContent = "";
+
+
+    if (!value) {
+        return;
+    }
+
+
+    if (
+        sourceId ===
+        "utmPosition"
+    ) {
+
+        const parsed =
+            parseUtm(value);
+
+
+        if (!parsed) {
+
+            if (showError) {
+
+                error.textContent =
+                    "Kontroller UTM-posisjonen.";
+
+            }
+
+            return;
+
+        }
+
+
+        const result =
+            utm32ToLatLon(
+                parsed.easting,
+                parsed.northing
+            );
+
+
+        const dmm =
+            $("#dmmPosition");
+
+
+        if (dmm) {
+
+            dmm.value =
+                decimalDegreesToDmm(
+                    result.latitude,
+                    result.longitude
+                );
+
+        }
+
+    }
+
+
+    if (
+        sourceId ===
+        "dmmPosition"
+    ) {
+
+        const parsed =
+            parseDmm(value);
+
+
+        if (!parsed) {
+
+            if (showError) {
+
+                error.textContent =
+                    "Kontroller grader og desimalminutter.";
+
+            }
+
+            return;
+
+        }
+
+
+        const result =
+            latLonToUtm32(
+                parsed.latitude,
+                parsed.longitude
+            );
+
+
+        const utm =
+            $("#utmPosition");
+
+
+        if (utm) {
+
+            utm.value =
+                formatUtmInput(
+                    result.easting,
+                    result.northing
+                );
+
+        }
+
+    }
+
+}
+
+
+
+/* =========================================================
+   RAPPORTPOSISJON
+   ========================================================= */
+
+function dmmToReportText(
+    value
+) {
+
+    if (!value.trim()) {
+        return "";
+    }
+
+
+    const parsed =
+        parseDmm(value);
+
+
+    if (!parsed) {
+
+        return (
+            "[kontroller koordinater]"
+        );
+
+    }
+
+
+    const lat =
+        splitDegrees(
+            parsed.latitude
+        );
+
+
+    const lon =
+        splitDegrees(
+            parsed.longitude
+        );
+
+
+    return (
+
+        `${lat.degrees} grader ${lat.minutes} `
+
+        +
+
+        `${
+            parsed.latitude >= 0
+                ? "nordlig"
+                : "sørlig"
+        }, `
+
+        +
+
+        `${lon.degrees} grader ${lon.minutes} `
+
+        +
+
+        `${
+            parsed.longitude >= 0
+                ? "østlig"
+                : "vestlig"
+        }`
+
+    );
+
+}
+
+
+
+function utmToReportText(
+    value
+) {
+
+    if (!value.trim()) {
+        return "";
+    }
+
+
+    const parsed =
+        parseUtm(value);
+
+
+    if (!parsed) {
+
+        return (
+            "[kontroller koordinater]"
+        );
+
+    }
+
+
+    return (
+
+        `32 Ø ${formatUtmNumber(parsed.easting)}, `
+
+        +
+
+        `N ${formatUtmNumber(parsed.northing)}`
+
+    );
+
+}
+
+
+
+/* =========================================================
+   RAPPORT PERSON
    ========================================================= */
 
 function personReportLine(
@@ -1828,33 +2361,54 @@ function personReportLine(
     phone
 ) {
 
-    const parts = [
+    const parts = [];
 
-        name.trim(),
 
-        formatPhoneNumber(
-            phone
-        )
+    if (
+        name.trim()
+    ) {
 
-    ].filter(Boolean);
+        parts.push(
+            name.trim()
+        );
+
+    }
+
+
+    if (
+        phone.trim()
+    ) {
+
+        parts.push(
+            formatPhoneNumber(
+                phone
+            )
+        );
+
+    }
 
 
     return (
         `${role}: ${parts.join(" - ")}`
-            .trimEnd()
     );
 
 }
 
 
 
+/* =========================================================
+   GENERER RAPPORT
+   ========================================================= */
+
 function generateReport() {
 
     const value =
         (id) =>
             $("#" + id)
-                .value
-                .trim();
+                ?.value
+                .trim()
+            ??
+            "";
 
 
     const separator =
@@ -1868,13 +2422,16 @@ function generateReport() {
                 value(id);
 
 
-            return raw
-                ? (
-                    formatTime(raw)
-                    ||
-                    "[kontroller klokkeslett]"
-                )
-                : "";
+            if (!raw) {
+                return "";
+            }
+
+
+            return (
+                formatTime(raw)
+                ||
+                "[kontroller klokkeslett]"
+            );
 
         };
 
@@ -1960,48 +2517,64 @@ function generateReport() {
     ];
 
 
-    $$(".trainee-row").forEach(
-        (row, index) => {
 
-            const name =
-                row.querySelector(
-                    ".trainee-name"
-                ).value;
+    $$(".trainee-row")
+        .forEach(
+            (row, index) => {
+
+                const name =
+                    row
+                        .querySelector(
+                            ".trainee-name"
+                        )
+                        ?.value
+                        .trim()
+                    ??
+                    "";
 
 
-            const phone =
-                row.querySelector(
-                    ".trainee-phone"
-                ).value;
+                const phone =
+                    row
+                        .querySelector(
+                            ".trainee-phone"
+                        )
+                        ?.value
+                        .trim()
+                    ??
+                    "";
 
 
-            if (
-                !name.trim()
-                &&
-                !phone.trim()
-            ) {
-                return;
+                if (
+                    !name
+                    &&
+                    !phone
+                ) {
+
+                    return;
+
+                }
+
+
+                lines.push("-");
+
+
+                lines.push(
+
+                    personReportLine(
+                        `PAX ${index + 1}`,
+                        name,
+                        phone
+                    )
+
+                );
+
             }
+        );
 
 
-            lines.push("-");
-
-
-            lines.push(
-
-                personReportLine(
-                    `PAX ${index + 1}`,
-                    name,
-                    phone
-                )
-
-            );
-
-        }
+    lines.push(
+        separator
     );
-
-
-    lines.push(separator);
 
 
     return lines.join("\n");
@@ -2010,11 +2583,25 @@ function generateReport() {
 
 
 
+/* =========================================================
+   OPPDATER RAPPORT
+   ========================================================= */
+
 function updateReport() {
 
     validateTimes();
 
-    $("#reportOutput").value =
+
+    const output =
+        $("#reportOutput");
+
+
+    if (!output) {
+        return;
+    }
+
+
+    output.value =
         generateReport();
 
 }
@@ -2022,7 +2609,7 @@ function updateReport() {
 
 
 /* =========================================================
-   KOPIERING
+   KOPIER
    ========================================================= */
 
 async function copyReport() {
@@ -2030,65 +2617,33 @@ async function copyReport() {
     validateTimes();
 
 
-    if (
-        $("#utmPosition")
-            .value
-            .trim()
-    ) {
-
-        convertCoordinates(
-            "utmPosition",
-            true
-        );
-
-    }
-    else if (
-        $("#dmmPosition")
-            .value
-            .trim()
-    ) {
-
-        convertCoordinates(
-            "dmmPosition",
-            true
-        );
-
-    }
+    const report =
+        $("#reportOutput");
 
 
-    updateReport();
-
-
-    if (
-        $("#timeError").textContent
-        ||
-        $("#coordinateError").textContent
-    ) {
-
-        $("#copyConfirmation")
-            .textContent =
-            "Kontroller klokkeslett og posisjon før kopiering.";
-
+    if (!report) {
         return;
-
     }
 
 
-    const text =
-        $("#reportOutput").value;
-
-
-    let copied = false;
+    let copied =
+        false;
 
 
     try {
 
         if (
-            navigator.clipboard?.writeText
+            navigator.clipboard
+            &&
+            navigator.clipboard.writeText
         ) {
 
-            await navigator.clipboard
-                .writeText(text);
+            await navigator
+                .clipboard
+                .writeText(
+                    report.value
+                );
+
 
             copied = true;
 
@@ -2104,20 +2659,7 @@ async function copyReport() {
 
     if (!copied) {
 
-        const report =
-            $("#reportOutput");
-
-
-        const scrollX =
-            window.scrollX;
-
-        const scrollY =
-            window.scrollY;
-
-
-        report.focus({
-            preventScroll: true
-        });
+        report.focus();
 
         report.select();
 
@@ -2136,28 +2678,38 @@ async function copyReport() {
 
         }
 
-
-        window.scrollTo(
-            scrollX,
-            scrollY
-        );
-
     }
 
 
-    clearTimeout(copyTimer);
+    clearTimeout(
+        copyTimer
+    );
+
+
+    const buttonText =
+        $("#copyButtonText");
+
+
+    const confirmation =
+        $("#copyConfirmation");
 
 
     if (copied) {
 
-        $("#copyButtonText")
-            .textContent =
-            "Tekst kopiert";
+        if (buttonText) {
+
+            buttonText.textContent =
+                "Tekst kopiert";
+
+        }
 
 
-        $("#copyConfirmation")
-            .textContent =
-            "Tekst kopiert";
+        if (confirmation) {
+
+            confirmation.textContent =
+                "Tekst kopiert";
+
+        }
 
 
         copyTimer =
@@ -2169,9 +2721,12 @@ async function copyReport() {
     }
     else {
 
-        $("#copyConfirmation")
-            .textContent =
-            "Kopiering ble blokkert. Marker rapporten og kopier manuelt.";
+        if (confirmation) {
+
+            confirmation.textContent =
+                "Kopiering ble blokkert.";
+
+        }
 
     }
 
@@ -2179,19 +2734,39 @@ async function copyReport() {
 
 
 
+/* =========================================================
+   NULLSTILL KOPIERINGSTEKST
+   ========================================================= */
+
 function clearCopyConfirmation() {
 
-    clearTimeout(copyTimer);
+    clearTimeout(
+        copyTimer
+    );
 
 
-    $("#copyButtonText")
-        .textContent =
-        "Kopier tekst";
+    const buttonText =
+        $("#copyButtonText");
 
 
-    $("#copyConfirmation")
-        .textContent =
-        "";
+    const confirmation =
+        $("#copyConfirmation");
+
+
+    if (buttonText) {
+
+        buttonText.textContent =
+            "Kopier tekst";
+
+    }
+
+
+    if (confirmation) {
+
+        confirmation.textContent =
+            "";
+
+    }
 
 }
 
@@ -2201,9 +2776,16 @@ function clearCopyConfirmation() {
    E-POST
    ========================================================= */
 
-function openEmail() {
+function createEmail() {
 
     updateReport();
+
+
+    const report =
+        $("#reportOutput")
+            ?.value
+        ??
+        "";
 
 
     const subject =
@@ -2214,7 +2796,7 @@ function openEmail() {
 
     const body =
         encodeURIComponent(
-            $("#reportOutput").value
+            report
         );
 
 
@@ -2226,7 +2808,7 @@ function openEmail() {
 
 
 /* =========================================================
-   NULLSTILLING
+   NULLSTILL SKJEMA
    ========================================================= */
 
 function resetForm() {
@@ -2234,66 +2816,90 @@ function resetForm() {
     $$(".form-panel input, .form-panel textarea")
         .forEach((field) => {
 
-            field.value = "";
+            field.value =
+                "";
 
         });
 
 
-    state.pob = null;
-    state.criterion = null;
+    state.pob =
+        null;
 
 
-    $$(".chip, .criteria-chip")
-        .forEach((button) => {
-
-            button.classList.remove(
-                "is-selected"
-            );
-
-            button.setAttribute(
-                "aria-pressed",
-                "false"
-            );
-
-        });
+    state.criterion =
+        null;
 
 
-    $("#observationWrapper")
-        .classList
-        .add("hidden");
+    updatePobButtons();
+
+    updateCriteriaButtons();
+
+    updateObservationField();
 
 
-    $("#otherTgContainer")
-        .innerHTML = `
+    const tgContainer =
+        $("#otherTgContainer");
+
+
+    if (tgContainer) {
+
+        tgContainer.innerHTML = `
 
             <input
                 type="text"
                 id="otherTgFirst"
                 class="other-tg-input"
-                aria-label="Annen TG"
+                aria-label="Annen talegruppe"
+                placeholder="Talegruppe"
                 autocomplete="off"
             >
 
         `;
 
+    }
 
-    $("#traineeContainer")
-        .replaceChildren(
-            createTraineeRow()
+
+    const paxContainer =
+        $("#traineeContainer");
+
+
+    if (paxContainer) {
+
+        paxContainer.replaceChildren(
+            createPaxRow()
         );
 
-
-    $("#coordinateError")
-        .textContent = "";
+    }
 
 
-    $("#timeError")
-        .textContent = "";
+    renumberPax();
+
+
+    const coordinateError =
+        $("#coordinateError");
+
+
+    if (coordinateError) {
+
+        coordinateError.textContent =
+            "";
+
+    }
+
+
+    const timeError =
+        $("#timeError");
+
+
+    if (timeError) {
+
+        timeError.textContent =
+            "";
+
+    }
 
 
     clearCopyConfirmation();
-
-    renumberPax();
 
     updateReport();
 
