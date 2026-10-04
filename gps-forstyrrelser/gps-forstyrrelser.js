@@ -1,6 +1,10 @@
 "use strict";
 
 
+/* =========================================================
+   KORTE HJELPEFUNKSJONER
+   ========================================================= */
+
 const $ = (selector) =>
   document.querySelector(selector);
 
@@ -18,18 +22,7 @@ const state = {
 
   altitudeUnit: "",
 
-  altitudeReference: "",
-
-  noFollowUp: false,
-
-  notifications: {
-
-    flightFollowing: "",
-    police: "",
-    nkom: "",
-    opl: ""
-
-  }
+  altitudeReference: ""
 
 };
 
@@ -43,7 +36,7 @@ let copyTimer = null;
 
    Basert på oversikten som er lagt ved.
 
-   Nye registreringer kan senere legges til her.
+   LN-ORA / ORB / ORC er lagt inn som AW169.
    ========================================================= */
 
 const AIRCRAFT_TYPES = {
@@ -85,7 +78,7 @@ const AIRCRAFT_TYPES = {
   "LN-ODM": "AW139",
 
 
-  /* POLITI */
+  /* POLITIHELIKOPTER */
 
   "LN-ORA": "AW169",
   "LN-ORB": "AW169",
@@ -137,15 +130,24 @@ function initialiseForm() {
   }
 
 
+  /* Dagens dato */
+
   setToday();
 
 
+  /* Ikke la skjemaet sendes normalt */
+
   form.addEventListener(
     "submit",
-    (event) =>
-      event.preventDefault()
+    (event) => {
+
+      event.preventDefault();
+
+    }
   );
 
+
+  /* Input */
 
   panel.addEventListener(
     "input",
@@ -153,20 +155,30 @@ function initialiseForm() {
   );
 
 
+  /* Når bruker går ut av et felt */
+
   panel.addEventListener(
     "focusout",
     handleFocusOut
   );
 
 
+  /* Chips */
+
   initialiseAltitudeChips();
 
-  initialiseFollowUp();
 
-  initialiseNotifications();
+  /* Klikkbare klokkeslett */
+
+  initialiseTimeFields();
+
+
+  /* Rulleindikator */
 
   initialiseScrollHint();
 
+
+  /* Kopier */
 
   $("#copyButton")
     ?.addEventListener(
@@ -175,6 +187,8 @@ function initialiseForm() {
     );
 
 
+  /* Nullstill */
+
   $("#resetButton")
     ?.addEventListener(
       "click",
@@ -182,12 +196,16 @@ function initialiseForm() {
     );
 
 
+  /* Send til Nkom */
+
   $("#sendNkomButton")
     ?.addEventListener(
       "click",
       createNkomEmail
     );
 
+
+  /* Tilbakemelding */
 
   $("#feedbackButton")
     ?.addEventListener(
@@ -213,7 +231,9 @@ function setToday() {
 
 
   if (!field) {
+
     return;
+
   }
 
 
@@ -253,7 +273,23 @@ function setToday() {
 function formatDate(value) {
 
   if (!value) {
+
     return "";
+
+  }
+
+
+  const parts =
+    value.split("-");
+
+
+  if (
+    parts.length !==
+    3
+  ) {
+
+    return value;
+
   }
 
 
@@ -261,18 +297,7 @@ function formatDate(value) {
     year,
     month,
     day
-  ] = value.split("-");
-
-
-  if (
-    !year ||
-    !month ||
-    !day
-  ) {
-
-    return value;
-
-  }
+  ] = parts;
 
 
   return (
@@ -284,7 +309,49 @@ function formatDate(value) {
 
 
 /* =========================================================
-   KLOKKESLETT
+   NÅVÆRENDE KLOKKESLETT
+   ========================================================= */
+
+function currentTime() {
+
+  const now =
+    new Date();
+
+
+  const hour =
+    String(
+      now.getHours()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  const minute =
+    String(
+      now.getMinutes()
+    ).padStart(
+      2,
+      "0"
+    );
+
+
+  return (
+    `${hour}:${minute}`
+  );
+
+}
+
+
+
+/* =========================================================
+   FORMATTER KLOKKESLETT
+
+   Eksempel:
+   930   -> 09:30
+   0930  -> 09:30
+   09:30 -> 09:30
+   09.30 -> 09:30
    ========================================================= */
 
 function formatTime(value) {
@@ -296,7 +363,9 @@ function formatTime(value) {
 
 
   if (!text) {
+
     return "";
+
   }
 
 
@@ -304,19 +373,24 @@ function formatTime(value) {
   let minute;
 
 
-  const match =
+  const colonMatch =
     text.match(
       /^(\d{1,2}):(\d{2})$/
     );
 
 
-  if (match) {
+  if (colonMatch) {
 
     hour =
-      Number(match[1]);
+      Number(
+        colonMatch[1]
+      );
+
 
     minute =
-      Number(match[2]);
+      Number(
+        colonMatch[2]
+      );
 
   } else if (
     /^\d{3,4}$/.test(text)
@@ -351,7 +425,9 @@ function formatTime(value) {
 
 
   if (
+    hour < 0 ||
     hour > 23 ||
+    minute < 0 ||
     minute > 59
   ) {
 
@@ -379,30 +455,138 @@ function formatTime(value) {
 
 
 /* =========================================================
-   NÅVÆRENDE KLOKKESLETT
+   KLIKKBARE KLOKKESLETTFELT
    ========================================================= */
 
-function currentTime() {
+function initialiseTimeFields() {
 
-  const now =
-    new Date();
+  /*
+   * Tidspunkt for selve hendelsen.
+   *
+   * Brukeren kan:
+   * - klikke i tomt felt -> tiden nå settes inn
+   * - skrive manuelt
+   */
+
+  const eventTime =
+    $("#eventTime");
 
 
-  return (
-    String(
-      now.getHours()
-    ).padStart(
-      2,
-      "0"
-    ) +
-    ":" +
-    String(
-      now.getMinutes()
-    ).padStart(
-      2,
-      "0"
-    )
-  );
+  eventTime
+    ?.addEventListener(
+      "click",
+      () => {
+
+        if (
+          !eventTime.value.trim()
+        ) {
+
+          eventTime.value =
+            currentTime();
+
+
+          updateReport();
+
+        }
+
+      }
+    );
+
+
+  /*
+   * Varslingsfeltene.
+   *
+   * Et klikk setter klokkeslettet til tiden akkurat nå.
+   * Klikker man igjen senere, oppdateres klokkeslettet.
+   */
+
+  const notificationFields = [
+
+    "flightFollowingTime",
+
+    "policeTime",
+
+    "nkomTime",
+
+    "oplTime"
+
+  ];
+
+
+  notificationFields
+    .forEach(
+      (id) => {
+
+        const field =
+          $("#" + id);
+
+
+        if (!field) {
+
+          return;
+
+        }
+
+
+        field.addEventListener(
+          "click",
+          () => {
+
+            field.value =
+              currentTime();
+
+
+            field.classList.add(
+              "has-time"
+            );
+
+
+            updateReport();
+
+          }
+        );
+
+
+        /*
+         * Keyboard:
+         * Enter / mellomrom setter også tiden.
+         */
+
+        field.addEventListener(
+          "keydown",
+          (event) => {
+
+            if (
+              event.key !==
+                "Enter" &&
+              event.key !==
+                " "
+            ) {
+
+              return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            field.value =
+              currentTime();
+
+
+            field.classList.add(
+              "has-time"
+            );
+
+
+            updateReport();
+
+          }
+        );
+
+      }
+    );
 
 }
 
@@ -420,7 +604,9 @@ function getTimezone() {
 
 
   if (!dateValue) {
+
     return "";
+
   }
 
 
@@ -443,20 +629,28 @@ function getTimezone() {
 
       }
     )
-      .formatToParts(date);
+      .formatToParts(
+        date
+      );
 
 
   const timezonePart =
     parts.find(
-      (part) =>
-        part.type ===
-        "timeZoneName"
+      (part) => {
+
+        return (
+          part.type ===
+          "timeZoneName"
+        );
+
+      }
     );
 
 
   const offset =
     timezonePart
-      ?.value ?? "";
+      ?.value ??
+    "";
 
 
   if (
@@ -485,27 +679,17 @@ function handleInput(event) {
     event.target;
 
 
+  /*
+   * Når registreringsnummer skrives,
+   * forsøk automatisk å finne luftfartøytype.
+   */
+
   if (
     target.id ===
     "registration"
   ) {
 
     updateAircraftType();
-
-  }
-
-
-  if (
-    target.id ===
-    "aircraftType"
-  ) {
-
-    /*
-     * Dersom operatøren selv skriver i typefeltet,
-     * regnes det ikke lenger som automatisk utfylt.
-     */
-
-    delete target.dataset.autoFilled;
 
   }
 
@@ -517,7 +701,7 @@ function handleInput(event) {
 
 
 /* =========================================================
-   FOCUS OUT
+   NÅR BRUKER FORLATER FELT
    ========================================================= */
 
 function handleFocusOut(event) {
@@ -534,6 +718,10 @@ function handleFocusOut(event) {
 
   }
 
+
+  /*
+   * Formatter hendelsestid.
+   */
 
   if (
     target.id ===
@@ -555,6 +743,10 @@ function handleFocusOut(event) {
 
   }
 
+
+  /*
+   * Formatter registreringsnummer.
+   */
 
   if (
     target.id ===
@@ -579,132 +771,7 @@ function handleFocusOut(event) {
 
 
 /* =========================================================
-   REGISTRERINGSNUMMER
-   ========================================================= */
-
-function normaliseRegistration(
-  value
-) {
-
-  const text =
-    String(value ?? "")
-      .trim()
-      .toUpperCase()
-      .replace(/\s+/g, "");
-
-
-  if (
-    /^LN[A-Z]{3}$/.test(text)
-  ) {
-
-    return (
-      "LN-" +
-      text.slice(2)
-    );
-
-  }
-
-
-  if (
-    /^[A-Z]{3}$/.test(text)
-  ) {
-
-    return (
-      "LN-" +
-      text
-    );
-
-  }
-
-
-  return text;
-
-}
-
-
-
-/* =========================================================
-   AUTOMATISK LUFTFARTØYTYPE
-   ========================================================= */
-
-function updateAircraftType() {
-
-  const registrationField =
-    $("#registration");
-
-
-  const typeField =
-    $("#aircraftType");
-
-
-  if (
-    !registrationField ||
-    !typeField
-  ) {
-
-    return;
-
-  }
-
-
-  const registration =
-    normaliseRegistration(
-      registrationField.value
-    );
-
-
-  const type =
-    AIRCRAFT_TYPES[
-      registration
-    ];
-
-
-  /*
-   * Treffer registreringen i registeret:
-   * fyll type automatisk.
-   */
-
-  if (type) {
-
-    typeField.value =
-      type;
-
-
-    typeField.dataset.autoFilled =
-      "true";
-
-
-    return;
-
-  }
-
-
-  /*
-   * Dersom tidligere automatisk type ikke lenger
-   * passer registreringen, fjernes den.
-   *
-   * Manuelt skrevet type beholdes.
-   */
-
-  if (
-    typeField.dataset.autoFilled ===
-    "true"
-  ) {
-
-    typeField.value =
-      "";
-
-
-    delete typeField.dataset.autoFilled;
-
-  }
-
-}
-
-
-
-/* =========================================================
-   VALIDER HENDELSESTID
+   VALIDER KLOKKESLETT
    ========================================================= */
 
 function validateEventTime() {
@@ -767,20 +834,26 @@ function validateEventTime() {
 
 
 /* =========================================================
-   HØYDE
+   HØYDECHIPS
    ========================================================= */
 
 function initialiseAltitudeChips() {
 
   initialiseSingleChoiceChips(
+
     "#altitudeUnitChips .chip",
+
     "altitudeUnit"
+
   );
 
 
   initialiseSingleChoiceChips(
+
     "#altitudeReferenceChips .chip",
+
     "altitudeReference"
+
   );
 
 }
@@ -803,15 +876,29 @@ function initialiseSingleChoiceChips(
         "click",
         () => {
 
-          const value =
+          const buttonValue =
             button.dataset.value;
 
 
-          state[stateKey] =
+          /*
+           * Klikk på valgt chip en gang til
+           * fjerner valget.
+           */
+
+          if (
             state[stateKey] ===
-            value
-              ? ""
-              : value;
+            buttonValue
+          ) {
+
+            state[stateKey] =
+              "";
+
+          } else {
+
+            state[stateKey] =
+              buttonValue;
+
+          }
 
 
           buttons.forEach(
@@ -850,136 +937,82 @@ function initialiseSingleChoiceChips(
 
 
 /* =========================================================
-   VARSLING
+   REGISTRERINGSNUMMER
    ========================================================= */
 
-function initialiseNotifications() {
+function normaliseRegistration(
+  value
+) {
 
-  $$(".notification-time-button")
-    .forEach(
-      (button) => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const key =
-              button.dataset.notification;
-
-
-            if (!key) {
-              return;
-            }
+  const text =
+    String(value ?? "")
+      .trim()
+      .toUpperCase()
+      .replace(
+        /\s+/g,
+        ""
+      );
 
 
-            /*
-             * Første klikk setter tidspunkt nå.
-             *
-             * Klikker man igjen, fjernes registreringen.
-             * Dermed fungerer den som en avkrysningsboks.
-             */
+  /*
+   * LNOUD -> LN-OUD
+   */
 
-            if (
-              state.notifications[key]
-            ) {
+  if (
+    /^LN[A-Z]{3}$/.test(text)
+  ) {
 
-              state.notifications[key] =
-                "";
-
-            } else {
-
-              state.notifications[key] =
-                currentTime();
-
-            }
-
-
-            updateNotificationButtons();
-
-            updateReport();
-
-          }
-        );
-
-      }
+    return (
+      "LN-" +
+      text.slice(2)
     );
 
-
-  updateNotificationButtons();
-
-}
+  }
 
 
+  /*
+   * OUD -> LN-OUD
+   */
 
-function updateNotificationButtons() {
+  if (
+    /^[A-Z]{3}$/.test(text)
+  ) {
 
-  $$(".notification-time-button")
-    .forEach(
-      (button) => {
-
-        const key =
-          button.dataset.notification;
-
-
-        const time =
-          state.notifications[key];
-
-
-        const selected =
-          Boolean(time);
-
-
-        button.classList.toggle(
-          "is-selected",
-          selected
-        );
-
-
-        button.setAttribute(
-          "aria-pressed",
-          String(selected)
-        );
-
-
-        const text =
-          button.querySelector(
-            ".notification-time-text"
-          );
-
-
-        if (text) {
-
-          text.textContent =
-            selected
-              ? time
-              : "Registrer";
-
-        }
-
-      }
+    return (
+      "LN-" +
+      text
     );
+
+  }
+
+
+  /*
+   * LN-OUD beholdes.
+   */
+
+  return text;
 
 }
 
 
 
 /* =========================================================
-   VIDERE OPPFØLGING
+   AUTOMATISK LUFTFARTØYTYPE
    ========================================================= */
 
-function initialiseFollowUp() {
+function updateAircraftType() {
 
-  const button =
-    $("#noFollowUpButton");
+  const registrationField =
+    $("#registration");
 
 
-  const field =
-    $("#followUp");
+  const typeField =
+    $("#aircraftType");
 
 
   if (
-    !button ||
-    !field
+    !registrationField ||
+    !typeField
   ) {
 
     return;
@@ -987,58 +1020,36 @@ function initialiseFollowUp() {
   }
 
 
-  button.addEventListener(
-    "click",
-    () => {
-
-      state.noFollowUp =
-        !state.noFollowUp;
+  const registration =
+    normaliseRegistration(
+      registrationField.value
+    );
 
 
-      button.classList.toggle(
-        "is-selected",
-        state.noFollowUp
-      );
+  const aircraftType =
+    AIRCRAFT_TYPES[
+      registration
+    ];
 
 
-      button.setAttribute(
-        "aria-pressed",
-        String(
-          state.noFollowUp
-        )
-      );
+  if (aircraftType) {
 
+    typeField.value =
+      aircraftType;
 
-      if (
-        state.noFollowUp
-      ) {
+  } else {
 
-        field.value =
-          "";
+    typeField.value =
+      "";
 
-
-        field.disabled =
-          true;
-
-      } else {
-
-        field.disabled =
-          false;
-
-      }
-
-
-      updateReport();
-
-    }
-  );
+  }
 
 }
 
 
 
 /* =========================================================
-   FELTVERDI
+   VERDI FRA FELT
    ========================================================= */
 
 function value(id) {
@@ -1055,7 +1066,7 @@ function value(id) {
 
 
 /* =========================================================
-   RAPPORTTID
+   TID I RAPPORT
    ========================================================= */
 
 function reportTime(id) {
@@ -1065,13 +1076,15 @@ function reportTime(id) {
 
 
   if (!raw) {
+
     return "";
+
   }
 
 
   return (
     formatTime(raw) ||
-    "[kontroller klokkeslett]"
+    raw
   );
 
 }
@@ -1079,26 +1092,30 @@ function reportTime(id) {
 
 
 /* =========================================================
-   POSISJON
+   POSISJON / OMRÅDE
    ========================================================= */
 
 function buildPosition() {
 
   const position =
-    value("position");
+    value(
+      "position"
+    );
 
 
-  const area =
-    value("placeName");
+  const placeName =
+    value(
+      "placeName"
+    );
 
 
   if (
     position &&
-    area
+    placeName
   ) {
 
     return (
-      `${position} – ${area}`
+      `${position} – ${placeName}`
     );
 
   }
@@ -1106,7 +1123,7 @@ function buildPosition() {
 
   return (
     position ||
-    area
+    placeName
   );
 
 }
@@ -1119,17 +1136,23 @@ function buildPosition() {
 
 function buildAltitude() {
 
-  return [
+  const parts = [
 
-    value("altitude"),
+    value(
+      "altitude"
+    ),
 
     state.altitudeUnit,
 
     state.altitudeReference
 
   ]
-    .filter(Boolean)
-    .join(" ");
+    .filter(Boolean);
+
+
+  return (
+    parts.join(" ")
+  );
 
 }
 
@@ -1141,15 +1164,33 @@ function buildAltitude() {
 
 function buildAircraft() {
 
+  const resourceId =
+    value(
+      "resourceId"
+    );
+
+
+  const registration =
+    normaliseRegistration(
+      value(
+        "registration"
+      )
+    );
+
+
+  const aircraftType =
+    value(
+      "aircraftType"
+    );
+
+
   return [
 
-    normaliseRegistration(
-      value("registration")
-    ),
+    resourceId,
 
-    value("callsign"),
+    registration,
 
-    value("aircraftType")
+    aircraftType
 
   ]
     .filter(Boolean)
@@ -1168,95 +1209,76 @@ function buildNotificationReport() {
   const lines = [];
 
 
-  const flightFollowing =
-    state.notifications
-      .flightFollowing;
-
-
-  const police =
-    state.notifications
-      .police;
-
-
-  const nkom =
-    state.notifications
-      .nkom;
-
-
-  const opl =
-    state.notifications
-      .opl;
-
-
-  if (flightFollowing) {
-
-    lines.push(
-      `HKP med flight following fått beskjed på TG kl. ${flightFollowing}`
+  const flightFollowingTime =
+    value(
+      "flightFollowingTime"
     );
 
-  }
 
-
-  if (police) {
-
-    const district =
-      value(
-        "policeDistrict"
-      );
-
-
-    lines.push(
-      district
-        ? `${district} operasjonssentral varslet kl. ${police}`
-        : `Politiets lokale operasjonssentral varslet kl. ${police}`
+  const policeTime =
+    value(
+      "policeTime"
     );
 
-  }
 
-
-  if (nkom) {
-
-    lines.push(
-      `Nkom beredskapsvakt varslet kl. ${nkom}`
+  const nkomTime =
+    value(
+      "nkomTime"
     );
 
-  }
 
-
-  if (opl) {
-
-    lines.push(
-      `OPL AMK Oslo varslet kl. ${opl}`
+  const oplTime =
+    value(
+      "oplTime"
     );
 
-  }
-
-
-  return lines.join(
-    ". "
-  );
-
-}
-
-
-
-/* =========================================================
-   VIDERE OPPFØLGING
-   ========================================================= */
-
-function buildFollowUp() {
 
   if (
-    state.noFollowUp
+    flightFollowingTime
   ) {
 
-    return "Ingen avtale";
+    lines.push(
+      `HKP med flight following fått beskjed på TG kl. ${flightFollowingTime}`
+    );
 
   }
 
 
-  return value(
-    "followUp"
+  if (
+    policeTime
+  ) {
+
+    lines.push(
+      `Politiets lokale operasjonssentral varslet kl. ${policeTime}`
+    );
+
+  }
+
+
+  if (
+    nkomTime
+  ) {
+
+    lines.push(
+      `Nkom beredskapsvakt varslet kl. ${nkomTime}`
+    );
+
+  }
+
+
+  if (
+    oplTime
+  ) {
+
+    lines.push(
+      `OPL AMK Oslo varslet kl. ${oplTime}`
+    );
+
+  }
+
+
+  return (
+    lines.join(". ")
   );
 
 }
@@ -1271,7 +1293,9 @@ function generateReport() {
 
   const date =
     formatDate(
-      value("eventDate")
+      value(
+        "eventDate"
+      )
     );
 
 
@@ -1283,6 +1307,12 @@ function generateReport() {
 
   const timezone =
     getTimezone();
+
+
+  const followUp =
+    value(
+      "followUp"
+    );
 
 
   const senderName =
@@ -1297,11 +1327,15 @@ function generateReport() {
 
     "",
 
-    `Tidspunkt for forstyrrelsen: ${[
-      date,
-      time,
-      timezone
-    ].filter(Boolean).join(", ")}`,
+    `Tidspunkt for forstyrrelsen: ${
+      [
+        date,
+        time,
+        timezone
+      ]
+        .filter(Boolean)
+        .join(", ")
+    }`,
 
     `Posisjon/område: ${buildPosition()}`,
 
@@ -1315,7 +1349,7 @@ function generateReport() {
 
     `Varsling: ${buildNotificationReport()}`,
 
-    `Videre oppfølging: ${buildFollowUp()}`,
+    `Videre oppfølging: ${followUp}`,
 
     "",
 
@@ -1342,7 +1376,9 @@ function generateReport() {
   ];
 
 
-  return lines.join("\n");
+  return (
+    lines.join("\n")
+  );
 
 }
 
@@ -1357,19 +1393,31 @@ function updateReport() {
   validateEventTime();
 
 
+  /*
+   * Oppdater tidssoneinformasjon.
+   */
+
   const timezoneInfo =
     $("#timezoneInfo");
 
 
   if (timezoneInfo) {
 
+    const timezone =
+      getTimezone();
+
+
     timezoneInfo.textContent =
-      getTimezone()
-        ? `Tidssone i rapport: ${getTimezone()}`
+      timezone
+        ? `Tidssone i rapport: ${timezone}`
         : "";
 
   }
 
+
+  /*
+   * Oppdater rapportfelt.
+   */
 
   const output =
     $("#reportOutput");
@@ -1403,13 +1451,19 @@ async function copyReport() {
 
 
   if (!report) {
+
     return;
+
   }
 
 
   let copied =
     false;
 
+
+  /*
+   * Moderne clipboard API.
+   */
 
   try {
 
@@ -1436,6 +1490,10 @@ async function copyReport() {
 
   }
 
+
+  /*
+   * Fallback.
+   */
 
   if (!copied) {
 
@@ -1480,17 +1538,17 @@ async function copyReport() {
   }
 
 
+  clearTimeout(
+    copyTimer
+  );
+
+
   const button =
     $("#copyButton");
 
 
   const text =
     $("#copyButtonText");
-
-
-  clearTimeout(
-    copyTimer
-  );
 
 
   if (text) {
@@ -1569,13 +1627,17 @@ function clearCopyConfirmation() {
 function buildEmailSubject() {
 
   const area =
-    value("placeName") ||
+    value(
+      "placeName"
+    ) ||
     "område ikke oppgitt";
 
 
   const date =
     formatDate(
-      value("eventDate")
+      value(
+        "eventDate"
+      )
     );
 
 
@@ -1585,16 +1647,26 @@ function buildEmailSubject() {
     );
 
 
+  const details =
+    [
+      area,
+      date,
+      time
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+
   return (
-    `GNSS-forstyrrelser ${area}, ${date} ${time}`
-  ).trim();
+    `GNSS-forstyrrelser ${details}`
+  );
 
 }
 
 
 
 /* =========================================================
-   SEND TIL NKOM
+   SEND VARSLING PÅ E-POST
    ========================================================= */
 
 function createNkomEmail() {
@@ -1618,7 +1690,7 @@ function createNkomEmail() {
     generateReport();
 
 
-  const url =
+  const mailto =
     `mailto:${recipient}` +
     `?cc=${encodeURIComponent(cc)}` +
     `&subject=${encodeURIComponent(subject)}` +
@@ -1626,14 +1698,14 @@ function createNkomEmail() {
 
 
   window.location.href =
-    url;
+    mailto;
 
 }
 
 
 
 /* =========================================================
-   TILBAKEMELDING
+   TILBAKEMELDING PÅ SKJEMA
    ========================================================= */
 
 function createFeedbackEmail() {
@@ -1646,9 +1718,13 @@ function createFeedbackEmail() {
     "GPS forstyrrelser";
 
 
-  window.location.href =
+  const mailto =
     `mailto:${recipient}` +
     `?subject=${encodeURIComponent(subject)}`;
+
+
+  window.location.href =
+    mailto;
 
 }
 
@@ -1660,9 +1736,20 @@ function createFeedbackEmail() {
 
 function resetForm() {
 
-  $("#gpsForm")
-    ?.reset();
+  const form =
+    $("#gpsForm");
 
+
+  if (form) {
+
+    form.reset();
+
+  }
+
+
+  /*
+   * Nullstill chips.
+   */
 
   state.altitudeUnit =
     "";
@@ -1670,20 +1757,6 @@ function resetForm() {
 
   state.altitudeReference =
     "";
-
-
-  state.noFollowUp =
-    false;
-
-
-  state.notifications = {
-
-    flightFollowing: "",
-    police: "",
-    nkom: "",
-    opl: ""
-
-  };
 
 
   $$(".chip")
@@ -1704,17 +1777,29 @@ function resetForm() {
     );
 
 
-  const followUp =
-    $("#followUp");
+  /*
+   * Fjern grønne klokkeslett.
+   */
+
+  $$(".notification-time-field")
+    .forEach(
+      (field) => {
+
+        field.value =
+          "";
 
 
-  if (followUp) {
+        field.classList.remove(
+          "has-time"
+        );
 
-    followUp.disabled =
-      false;
+      }
+    );
 
-  }
 
+  /*
+   * Typefelt må også tømmes.
+   */
 
   const aircraftType =
     $("#aircraftType");
@@ -1722,30 +1807,52 @@ function resetForm() {
 
   if (aircraftType) {
 
-    delete aircraftType
-      .dataset
-      .autoFilled;
+    aircraftType.value =
+      "";
 
   }
 
 
-  updateNotificationButtons();
-
+  /*
+   * Dato skal automatisk settes tilbake til i dag.
+   */
 
   setToday();
 
 
+  /*
+   * Kopieringsstatus.
+   */
+
   clearCopyConfirmation();
 
+
+  /*
+   * Oppdater rapport.
+   */
 
   updateReport();
 
 
-  $("#reportOutput")
-    ?.scrollTo({
-      top: 0
-    });
+  /*
+   * Rapport til toppen.
+   */
 
+  const report =
+    $("#reportOutput");
+
+
+  if (report) {
+
+    report.scrollTop =
+      0;
+
+  }
+
+
+  /*
+   * Skjema til toppen.
+   */
 
   $(".form-panel")
     ?.scrollTo({
@@ -1772,20 +1879,26 @@ function resetForm() {
 
 
 /* =========================================================
-   RULLEINDIKATOR
+   BEVEGELSE
    ========================================================= */
 
 function motionBehavior() {
 
-  return window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches
-    ? "auto"
-    : "smooth";
+  return (
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+      ? "auto"
+      : "smooth"
+  );
 
 }
 
 
+
+/* =========================================================
+   RULLEINDIKATOR
+   ========================================================= */
 
 function initialiseScrollHint() {
 
@@ -1793,17 +1906,18 @@ function initialiseScrollHint() {
     $(".form-panel");
 
 
-  panel?.addEventListener(
+  panel
+    ?.addEventListener(
 
-    "scroll",
+      "scroll",
 
-    updateFormScrollHint,
+      updateFormScrollHint,
 
-    {
-      passive: true
-    }
+      {
+        passive: true
+      }
 
-  );
+    );
 
 
   $("#formScrollHint")
@@ -1811,7 +1925,14 @@ function initialiseScrollHint() {
       "click",
       () => {
 
-        panel?.scrollBy({
+        if (!panel) {
+
+          return;
+
+        }
+
+
+        panel.scrollBy({
 
           top:
             panel.clientHeight *
@@ -1838,7 +1959,11 @@ function initialiseScrollHint() {
 
     const observer =
       new ResizeObserver(
-        updateFormScrollHint
+        () => {
+
+          updateFormScrollHint();
+
+        }
       );
 
 

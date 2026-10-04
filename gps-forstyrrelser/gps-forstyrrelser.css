@@ -1,22 +1,755 @@
+:root {
+  --primary: #0066a1;
+
+  --background: #eef2f5;
+  --surface: #ffffff;
+
+  --text: #17212b;
+  --muted: #667085;
+
+  --border: #d0d5dd;
+  --border-light: #e4e7ec;
+
+  --green: #16834b;
+  --green-dark: #0e6739;
+
+  --red: #c62828;
+  --red-dark: #a51e1e;
+
+  --blue-light: #dceef9;
+  --blue-light-hover: #c7e4f5;
+
+  --black: #202124;
+
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 14px;
+
+  --header-height: 70px;
+  --panel-gap: 12px;
+}
+
+
 /* =========================================================
-   GPS – LUFTFARTØY
+   GENERELT
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+html {
+  scroll-behavior: smooth;
+
+  scroll-padding-top:
+    calc(
+      var(--header-height) +
+      var(--panel-gap)
+    );
+}
+
+
+body {
+  margin: 0;
+
+  background:
+    var(--background);
+
+  color:
+    var(--text);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  line-height: 1.45;
+}
+
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+
+button {
+  cursor: pointer;
+}
+
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline:
+    3px solid
+    var(--primary);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.app-header {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+
+  display: flex;
+
+  align-items: center;
+
+  width: 100%;
+
+  height:
+    var(--header-height);
+
+  padding:
+    10px
+    180px
+    10px
+    20px;
+
+  background:
+    var(--surface);
+
+  border-bottom:
+    1px solid
+    var(--border-light);
+}
+
+
+.app-eyebrow {
+  margin:
+    0 0 2px;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.07em;
+
+  text-transform: uppercase;
+}
+
+
+.app-header h1 {
+  margin: 0;
+
+  font-size: 24px;
+
+  line-height: 1.2;
+}
+
+
+.app-header .theme-toggle {
+  position: absolute;
+
+  top: 50%;
+
+  right: 20px;
+
+  transform:
+    translateY(-50%);
+}
+
+
+/* =========================================================
+   HOVEDLAYOUT
+   ========================================================= */
+
+.app-shell {
+  display: grid;
+
+  grid-template-columns:
+    190px
+    minmax(0, 1fr)
+    340px;
+
+  grid-template-areas:
+    "navigation form report";
+
+  gap: 16px;
+
+  align-items: start;
+
+  width:
+    calc(100% - 24px);
+
+  max-width: 1800px;
+
+  margin:
+    var(--panel-gap)
+    auto;
+}
+
+
+/* =========================================================
+   VENSTREMENY
+   ========================================================= */
+
+.form-navigation {
+  grid-area: navigation;
+
+  position: sticky;
+
+  top:
+    calc(
+      var(--header-height) +
+      var(--panel-gap)
+    );
+
+  align-self: start;
+
+  min-width: 0;
+}
+
+
+.form-navigation-inner {
+  position: static;
+
+  padding: 10px;
+
+  background:
+    var(--surface);
+
+  border:
+    1px solid
+    var(--border-light);
+
+  border-radius:
+    var(--radius-large);
+
+  box-shadow:
+    0 1px 3px
+    rgba(0, 0, 0, 0.06);
+}
+
+
+.form-navigation-label {
+  margin:
+    4px
+    8px
+    10px;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+}
+
+
+.form-nav-list {
+  display: grid;
+
+  gap: 6px;
+
+  margin: 0;
+
+  padding: 0;
+
+  list-style: none;
+}
+
+
+.form-nav-link {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 42px;
+
+  padding:
+    8px
+    9px;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 9px;
+
+  color:
+    var(--text);
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+
+.form-nav-link:hover {
+  background: #f3f6f8;
+
+  border-color:
+    var(--border-light);
+}
+
+
+.form-nav-link[aria-current="page"] {
+  background: #eaf5fb;
+
+  border-color: #c5e1f1;
+
+  color:
+    var(--primary);
+}
+
+
+.form-nav-icon {
+  width: 24px;
+
+  flex:
+    0 0 24px;
+
+  text-align: center;
+
+  font-size: 18px;
+}
+
+
+.form-nav-copy {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   SKJEMAPANEL
+   ========================================================= */
+
+.form-panel-frame {
+  grid-area: form;
+
+  position: relative;
+
+  min-width: 0;
+
+  height:
+    calc(
+      100vh -
+      var(--header-height) -
+      var(--panel-gap) * 2
+    );
+
+  height:
+    calc(
+      100dvh -
+      var(--header-height) -
+      var(--panel-gap) * 2
+    );
+}
+
+
+.form-panel {
+  min-width: 0;
+}
+
+
+.form-panel-frame .form-panel {
+  height: 100%;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  scrollbar-gutter: stable;
+
+  scrollbar-width: auto;
+
+  scrollbar-color:
+    var(--primary)
+    var(--background);
+
+  padding-right: 5px;
+
+  overscroll-behavior-y: contain;
+}
+
+
+.form-panel::-webkit-scrollbar {
+  width: 12px;
+}
+
+
+.form-panel::-webkit-scrollbar-thumb {
+  background:
+    var(--primary);
+
+  border:
+    3px solid
+    var(--background);
+
+  border-radius: 10px;
+}
+
+
+.form-panel::-webkit-scrollbar-track {
+  background:
+    var(--background);
+}
+
+
+.form-panel form {
+  padding-bottom: 48px;
+}
+
+
+/* =========================================================
+   RULLEINDIKATOR
+   ========================================================= */
+
+.form-scroll-hint {
+  position: absolute;
+
+  bottom: 10px;
+
+  right: 24px;
+
+  z-index: 5;
+
+  padding:
+    7px 12px;
+
+  color:
+    var(--primary);
+
+  background:
+    var(--surface);
+
+  border:
+    1px solid
+    var(--primary);
+
+  border-radius: 999px;
+
+  box-shadow:
+    0 3px 12px #0002;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+.form-scroll-hint[hidden] {
+  display: none;
+}
+
+
+/* =========================================================
+   SEKSJONER
+   ========================================================= */
+
+.form-section {
+  margin:
+    0 0 10px;
+
+  padding: 14px;
+
+  background:
+    var(--surface);
+
+  border:
+    1px solid
+    var(--border-light);
+
+  border-radius:
+    var(--radius-large);
+
+  box-shadow:
+    0 1px 3px
+    rgba(0, 0, 0, 0.06);
+}
+
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+
+.form-section h2 {
+  margin:
+    0 0 12px;
+
+  font-size: 18px;
+
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   STANDARD FELTER
+   ========================================================= */
+
+.form-grid {
+  display: grid;
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+
+.form-grid-2 {
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+}
+
+
+.form-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  min-width: 0;
+
+  margin-bottom: 10px;
+}
+
+
+.form-grid .form-field,
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+
+label,
+.field-label {
+  color: #344054;
+
+  font-size: 13px;
+
+  font-weight: 650;
+}
+
+
+input,
+textarea {
+  width: 100%;
+
+  min-width: 0;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    var(--radius-small);
+
+  background:
+    var(--surface);
+
+  color:
+    var(--text);
+}
+
+
+input {
+  height: 36px;
+
+  padding:
+    0 9px;
+}
+
+
+textarea {
+  padding:
+    8px 9px;
+
+  resize: vertical;
+}
+
+
+input:focus,
+textarea:focus {
+  outline:
+    2px solid
+    var(--primary);
+
+  outline-offset: 1px;
+}
+
+
+input::placeholder,
+textarea::placeholder {
+  color: #98a2b3;
+}
+
+
+input[readonly] {
+  cursor: pointer;
+}
+
+
+.field-help {
+  margin:
+    4px 0 0;
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   FEILMELDING
+   ========================================================= */
+
+.field-error {
+  min-height: 0;
+
+  margin: 0;
+
+  color:
+    var(--red);
+
+  font-size: 13px;
+}
+
+
+.field-error:not(:empty) {
+  margin:
+    0 0 10px;
+}
+
+
+/* =========================================================
+   HØYDECHIPS
+   ========================================================= */
+
+.gps-chip-row {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 16px;
+}
+
+
+.chip-group {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+
+.chip {
+  min-width: 36px;
+
+  min-height: 36px;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 999px;
+
+  background:
+    var(--surface);
+
+  color: #344054;
+}
+
+
+.chip:hover {
+  border-color:
+    var(--primary);
+}
+
+
+.chip.is-selected {
+  background:
+    var(--primary);
+
+  border-color:
+    var(--primary);
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   LUFTFARTØY
    ========================================================= */
 
 .aircraft-grid {
   grid-template-columns:
-    minmax(120px, 0.8fr)
-    minmax(140px, 1fr)
-    minmax(140px, 1fr);
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
 }
 
 
+#aircraftType[readonly] {
+  background: #f6f8fa;
+
+  cursor: default;
+}
+
 
 /* =========================================================
-   VARSLINGSLISTE
+   KLOKKESLETT – HENDELSE
+   ========================================================= */
+
+.time-click-field {
+  cursor: text;
+}
+
+
+.time-click-field:hover {
+  border-color:
+    var(--primary);
+}
+
+
+/* =========================================================
+   VARSLING
    ========================================================= */
 
 .notification-list {
   display: flex;
+
   flex-direction: column;
 
   gap: 8px;
@@ -28,19 +761,19 @@
 
   grid-template-columns:
     minmax(0, 1fr)
-    112px;
+    118px;
 
   gap: 12px;
 
   align-items: center;
 
-  min-height: 52px;
+  min-height: 54px;
 
-  padding: 8px 10px;
+  padding:
+    8px 10px;
 
   border:
-    1px
-    solid
+    1px solid
     var(--border-light);
 
   border-radius:
@@ -50,7 +783,7 @@
 }
 
 
-.notification-copy {
+.notification-question {
   display: flex;
 
   align-items: center;
@@ -58,6 +791,9 @@
   gap: 9px;
 
   min-width: 0;
+
+  color:
+    var(--text);
 
   font-size: 14px;
 
@@ -72,9 +808,11 @@
 
   justify-content: center;
 
-  flex: 0 0 26px;
+  flex:
+    0 0 26px;
 
   width: 26px;
+
   height: 26px;
 
   border-radius: 50%;
@@ -90,110 +828,59 @@
 }
 
 
-.notification-police-copy {
-  display: grid;
-
-  grid-template-columns:
-    auto
-    minmax(110px, 180px);
-
-  gap: 10px;
-
-  align-items: center;
-
-  width: 100%;
-}
-
-
-.notification-inline-input {
-  height: 32px;
-
-  padding:
-    0
-    8px;
-
-  background:
-    var(--surface);
-}
-
-
-
 /* =========================================================
-   TIDSSTEMPELKNAPP
+   KLOKKEBOKSENE I VARSLING
    ========================================================= */
 
-.notification-time-button {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 6px;
-
-  width: 100%;
-
-  min-height: 36px;
+.notification-time-field {
+  height: 38px;
 
   padding:
-    6px
-    9px;
+    0 8px;
 
   border:
-    1px
-    solid
+    1px solid
     var(--border);
 
-  border-radius:
-    8px;
+  border-radius: 8px;
 
   background:
     var(--surface);
 
   color:
-    var(--muted);
+    var(--text);
 
-  font-size: 12px;
+  text-align: center;
 
-  font-weight: 700;
+  font-size: 14px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  user-select: none;
 }
 
 
-.notification-time-button:hover {
+.notification-time-field:hover {
   border-color:
     var(--primary);
 
-  color:
-    var(--primary);
+  background: #f4f9fc;
 }
 
 
-.notification-check {
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  width: 18px;
-  height: 18px;
-
-  border:
-    1px
-    solid
-    var(--border);
-
-  border-radius: 5px;
-
-  color: transparent;
-
-  font-size: 12px;
-}
-
-
-.notification-time-button.is-selected {
+.notification-time-field:focus {
   border-color:
-    var(--green);
+    var(--primary);
+
+  background: #f4f9fc;
+}
+
+
+.notification-time-field.has-time {
+  border-color:
+    #a5d4bb;
 
   background: #edf8f2;
 
@@ -202,174 +889,539 @@
 }
 
 
-.notification-time-button.is-selected
-.notification-check {
+/* =========================================================
+   PUNKT 5 I VARSLING
+   ========================================================= */
 
-  border-color:
-    var(--green);
+.notification-row-large {
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(220px, 1fr);
 
-  background:
-    var(--green);
-
-  color: #ffffff;
+  align-items: start;
 }
 
+
+.notification-row-large
+.notification-question {
+  padding-top: 7px;
+}
+
+
+.notification-row-large textarea {
+  min-height: 62px;
+}
 
 
 /* =========================================================
-   SEND VARSLING
+   RAPPORTPANEL
    ========================================================= */
 
-.email-send-section {
-  margin:
-    18px
-    0
-    4px;
+.side-panel {
+  grid-area: report;
+
+  position: sticky;
+
+  top:
+    calc(
+      var(--header-height) +
+      var(--panel-gap)
+    );
+
+  align-self: start;
+
+  min-width: 0;
+
+  min-height: 0;
+
+  height:
+    calc(
+      100vh -
+      var(--header-height) -
+      var(--panel-gap) * 2
+    );
+
+  height:
+    calc(
+      100dvh -
+      var(--header-height) -
+      var(--panel-gap) * 2
+    );
 }
 
 
-.send-notification-button {
+.side-panel-inner {
+  position: static;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  height: 100%;
+
+  min-height: 0;
+
+  padding: 14px;
+
+  background:
+    var(--surface);
+
+  border:
+    1px solid
+    var(--border-light);
+
+  border-radius:
+    var(--radius-large);
+
+  box-shadow:
+    0 4px 16px
+    rgba(0, 0, 0, 0.08);
+
+  overflow: auto;
+}
+
+
+.side-panel h2 {
+  flex:
+    0 0 auto;
+
+  margin: 0;
+
+  font-size: 20px;
+
+  line-height: 1.2;
+}
+
+
+.report-output {
+  display: block;
+
+  flex:
+    1 1 0;
+
+  width: 100%;
+
+  min-height: 100px;
+
+  margin: 0;
+
+  padding: 10px;
+
+  background: #f8fafc;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  resize: none;
+
+  overflow: auto;
+}
+
+
+/* =========================================================
+   HANDLINGSKNAPPER
+   ========================================================= */
+
+.action-buttons {
+  display: flex;
+
+  flex:
+    0 0 auto;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin: 0;
+}
+
+
+.action-button {
   display: flex;
 
   align-items: center;
 
   justify-content: center;
 
-  gap: 12px;
+  gap: 8px;
 
   width: 100%;
 
-  min-height: 58px;
+  min-height: 44px;
 
   padding:
-    14px
-    20px;
+    10px 12px;
 
   border: 0;
 
   border-radius:
-    var(--radius-large);
+    var(--radius-medium);
 
-  background:
-    #202124;
+  font-weight: 700;
 
-  color: #ffffff;
+  text-align: center;
 
-  box-shadow:
-    0 3px 10px
-    rgba(0, 0, 0, 0.16);
-
-  font-size: 16px;
-
-  font-weight: 750;
+  text-decoration: none;
 
   cursor: pointer;
 }
 
 
-.send-notification-button:hover {
+/* KOPIER */
+
+.action-copy {
+  background:
+    var(--green);
+
+  color: #ffffff;
+}
+
+
+.action-copy:hover {
+  background:
+    var(--green-dark);
+}
+
+
+/* TØM */
+
+.action-reset {
+  background:
+    var(--red);
+
+  color: #ffffff;
+}
+
+
+.action-reset:hover {
+  background:
+    var(--red-dark);
+}
+
+
+/* PROSEDYRE */
+
+.action-procedure {
+  background:
+    var(--blue-light);
+
+  color: #174a67;
+}
+
+
+.action-procedure:hover {
+  background:
+    var(--blue-light-hover);
+}
+
+
+/* SEND VARSLING */
+
+.action-email {
+  background:
+    var(--black);
+
+  color: #ffffff;
+}
+
+
+.action-email:hover {
   background: #000000;
-
-  transform:
-    translateY(-1px);
 }
 
 
-.send-notification-button:active {
-  transform:
-    translateY(0);
+.action-email-primary {
+  min-height: 50px;
+
+  margin-top: 2px;
+
+  font-size: 14px;
 }
 
 
-.send-notification-icon {
-  font-size: 21px;
+/* TILBAKEMELDING */
+
+.action-feedback {
+  background: #59636e;
+
+  color: #ffffff;
 }
 
+
+.action-feedback:hover {
+  background: #414a53;
+}
+
+
+.action-space {
+  height: 5px;
+
+  flex:
+    0 0 5px;
+}
 
 
 /* =========================================================
-   SKJULT LABEL FOR SKJERMLESER
+   KOPIERINGSANIMASJON
    ========================================================= */
 
-.visually-hidden {
-  position: absolute !important;
-
-  width: 1px !important;
-  height: 1px !important;
-
-  padding: 0 !important;
-  margin: -1px !important;
-
-  overflow: hidden !important;
-
-  clip:
-    rect(
-      0,
-      0,
-      0,
-      0
-    ) !important;
-
-  white-space: nowrap !important;
-
-  border: 0 !important;
+.copy-flash {
+  animation:
+    copy-feedback
+    0.65s
+    ease-out;
 }
 
 
+@keyframes copy-feedback {
+
+  40% {
+
+    background: #35b977;
+
+    box-shadow:
+      0 0 0 4px
+      #16834b33;
+
+  }
+
+}
+
 
 /* =========================================================
-   RESPONSIVT
+   MINDRE LAPTOP
    ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 
-  .aircraft-grid {
+  .app-shell {
     grid-template-columns:
-      1fr
-      1fr;
+      165px
+      minmax(0, 1fr)
+      300px;
+
+    gap: 10px;
+
+    width:
+      calc(100% - 16px);
   }
 
 
-  .aircraft-grid
-  .form-field:last-child {
-
-    grid-column:
-      1 / -1;
-
+  .side-panel-inner {
+    padding: 10px;
   }
 
 
-  .notification-police-copy {
-    grid-template-columns: 1fr;
-
-    gap: 6px;
-  }
-
-}
-
-
-@media (max-width: 700px) {
-
-  .aircraft-grid {
-    grid-template-columns: 1fr;
-  }
-
-
-  .aircraft-grid
-  .form-field:last-child {
-
-    grid-column: auto;
-
+  .report-output {
+    font-size: 11.5px;
   }
 
 
   .notification-row {
+    grid-template-columns:
+      minmax(0, 1fr)
+      105px;
+  }
+
+
+  .notification-row-large {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(180px, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   NETTBRETT
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .app-header {
+    position: static;
+
+    height: auto;
+
+    min-height:
+      var(--header-height);
+  }
+
+
+  .app-shell {
+    grid-template-columns: 1fr;
+
+    grid-template-areas:
+      "navigation"
+      "form"
+      "report";
+
+    width:
+      calc(100% - 20px);
+  }
+
+
+  .form-navigation,
+  .side-panel {
+    position: static;
+
+    top: auto;
+
+    height: auto;
+  }
+
+
+  .form-navigation-label {
+    display: none;
+  }
+
+
+  .form-nav-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+  }
+
+
+  .form-nav-link {
+    width: auto;
+  }
+
+
+  .form-grid-2,
+  .gps-chip-row,
+  .aircraft-grid {
     grid-template-columns: 1fr;
   }
 
 
-  .notification-time-button {
-    width: 100%;
+  .notification-row,
+  .notification-row-large {
+    grid-template-columns: 1fr;
+  }
+
+
+  .form-panel-frame {
+    height: auto;
+  }
+
+
+  .form-panel-frame .form-panel {
+    height: auto;
+
+    overflow: visible;
+
+    padding-right: 0;
+  }
+
+
+  .form-panel form {
+    padding-bottom: 0;
+  }
+
+
+  .form-scroll-hint {
+    display: none;
+  }
+
+
+  .side-panel-inner {
+    height: auto;
+
+    overflow: visible;
+  }
+
+
+  .report-output {
+    flex:
+      0 0 auto;
+
+    height: 500px;
+
+    min-height: 300px;
+
+    font-size: 12px;
+
+    resize: vertical;
+  }
+
+}
+
+
+/* =========================================================
+   TELEFON
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  .app-header {
+    padding:
+      12px
+      145px
+      12px
+      12px;
+  }
+
+
+  .app-header h1 {
+    font-size: 21px;
+  }
+
+
+  .app-header .theme-toggle {
+    right: 12px;
+  }
+
+
+  .form-section {
+    padding: 11px;
+  }
+
+
+  input,
+  textarea {
+    font-size: 16px;
+  }
+
+
+  .report-output {
+    font-size: 14px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUSERT BEVEGELSE
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+
+  .copy-flash {
+    animation: none;
+
+    outline:
+      2px solid
+      #35b977;
+
+    outline-offset: 2px;
   }
 
 }
