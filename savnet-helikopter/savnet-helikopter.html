@@ -1,399 +1,1006 @@
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Luftambulansekoordinator – Savnet helikopter</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="savnet-helikopter.css">
-    <script src="savnet-helikopter.js" defer></script>
+    <title>Savnet helikopter | Luftambulansekoordinator</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/savnet-helikopter.css"
+    >
 </head>
 
+
 <body>
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
     <header class="app-header">
-        <h1>
+
+        <p class="app-eyebrow">
             Luftambulansekoordinator
-            <span class="header-separator">·</span>
-            <span class="header-form-name">Savnet helikopter</span>
+        </p>
+
+        <h1>
+
+            <span>Savnet helikopter</span>
+
         </h1>
+
     </header>
+
+
+    <!-- =====================================================
+         HOVEDLAYOUT
+         VENSTRE MENY | SKJEMA | RAPPORT
+         ===================================================== -->
 
     <main class="app-shell">
 
-        <!-- Venstremeny -->
-        <aside class="form-navigation" aria-label="Hovedmeny">
-            <nav class="form-navigation-inner">
-                <a class="form-nav-link" href="../fremside.html">
-                    <span class="form-nav-icon" aria-hidden="true">⌂</span>
-                    <span>Hjem</span>
-                </a>
 
-                <p class="form-navigation-label">Skjemaer</p>
+        <!-- =================================================
+             VENSTRE MENY
+             ================================================= -->
+
+        <nav
+            class="form-navigation"
+            aria-label="Skjemaer"
+        >
+
+            <div class="form-navigation-inner">
+
+
+                <p class="form-navigation-label">
+                    Skjemaer
+                </p>
+
 
                 <ul class="form-nav-list">
+
+
+                    <!-- FREMSIDE -->
+
                     <li>
+
                         <a
+                            href="../index.html"
                             class="form-nav-link"
+                        >
+
+                            <span
+                                class="form-nav-icon"
+                                aria-hidden="true"
+                            >
+                                🏠
+                            </span>
+
+                            <span class="form-nav-copy">
+
+                                <span>
+                                    Fremside
+                                </span>
+
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- SAVNET HELIKOPTER -->
+
+                    <li>
+
+                        <a
                             href="savnet-helikopter.html"
+                            class="form-nav-link"
                             aria-current="page"
                         >
-                            <span class="form-nav-icon" aria-hidden="true">✈</span>
-                            <span>Savnet helikopter</span>
+
+                            <span
+                                class="form-nav-icon"
+                                aria-hidden="true"
+                            >
+                                🚁
+                            </span>
+
+                            <span class="form-nav-copy">
+
+                                <span>
+                                    Savnet helikopter
+                                </span>
+
+                            </span>
+
                         </a>
+
                     </li>
+
+
+                    <!-- GPS FORSTYRRELSER -->
 
                     <li>
-                        <span class="form-nav-link is-unavailable">
-                            <span class="form-nav-icon" aria-hidden="true">⌖</span>
-                            <span class="form-nav-copy">
-                                <span>GPS-forstyrrelser</span>
-                                <span class="form-nav-status">Kommer</span>
+
+                        <a
+                            href="gps-forstyrrelser.html"
+                            class="form-nav-link"
+                        >
+
+                            <span
+                                class="form-nav-icon"
+                                aria-hidden="true"
+                            >
+                                📡
                             </span>
-                        </span>
+
+                            <span class="form-nav-copy">
+
+                                <span>
+                                    GPS-forstyrrelser
+                                </span>
+
+                            </span>
+
+                        </a>
+
                     </li>
+
+
                 </ul>
-            </nav>
-        </aside>
 
-        <!-- Skjema -->
-        <section class="form-panel" aria-label="Savnet helikopter">
+            </div>
 
-            <!-- 1. Talegruppe -->
-            <section class="form-section">
-                <h2>Talegruppe</h2>
+        </nav>
 
-                <div class="tg-grid">
-                    <div class="field-card">
-                        <label for="healthTg">Helse TG</label>
-                        <input
-                            type="text"
-                            id="healthTg"
-                            autocomplete="off"
-                        >
-                    </div>
 
-                    <div class="field-card">
-                        <label for="sarTg">SAR TG</label>
-                        <input
-                            type="text"
-                            id="sarTg"
-                            autocomplete="off"
-                        >
-                    </div>
 
-                    <div class="field-card">
-                        <label for="otherTgFirst">Annen TG</label>
-                        <div id="otherTgContainer">
+        <!-- =================================================
+             SKJEMA
+             ================================================= -->
+
+        <div class="form-panel">
+
+            <form
+                id="missingHelicopterForm"
+                autocomplete="off"
+            >
+
+
+                <!-- =========================================
+                     1. TALEGRUPPER
+                     ========================================= -->
+
+                <section
+                    class="form-section"
+                    id="talegrupper"
+                >
+
+                    <h2>
+                        Talegrupper
+                    </h2>
+
+
+                    <div class="tg-grid">
+
+
+                        <!-- NØDNETT -->
+
+                        <div class="field-card">
+
+                            <label for="tgEmergency">
+                                Nødnett
+                            </label>
+
                             <input
                                 type="text"
-                                id="otherTgFirst"
-                                class="other-tg-input"
-                                aria-label="Annen TG"
-                                autocomplete="off"
+                                id="tgEmergency"
+                                name="tgEmergency"
+                                placeholder="Talegruppe"
                             >
+
                         </div>
+
+
+                        <!-- SAMBAND -->
+
+                        <div class="field-card">
+
+                            <label for="tgSamband">
+                                Samband
+                            </label>
+
+                            <input
+                                type="text"
+                                id="tgSamband"
+                                name="tgSamband"
+                                placeholder="Talegruppe"
+                            >
+
+                        </div>
+
+
+                        <!-- ANNEN TALEGRUPPE -->
+
+                        <div class="field-card">
+
+                            <label for="tgOther">
+                                Annen talegruppe
+                            </label>
+
+                            <input
+                                type="text"
+                                id="tgOther"
+                                name="tgOther"
+                                placeholder="Talegruppe"
+                            >
+
+                        </div>
+
                     </div>
-                </div>
-            </section>
 
-            <!-- 2. Posisjon -->
-            <section class="form-section">
-                <h2>Sist kjente posisjon</h2>
+                </section>
 
-                <div class="form-grid form-grid-2">
+
+
+                <!-- =========================================
+                     2. POSISJON
+                     ========================================= -->
+
+                <section
+                    class="form-section"
+                    id="posisjon"
+                >
+
+                    <h2>
+                        Posisjon
+                    </h2>
+
+
+                    <div class="form-grid form-grid-2">
+
+
+                        <!-- SIST KJENTE POSISJON -->
+
+                        <div class="form-field">
+
+                            <label for="lastKnownPosition">
+                                Sist kjente posisjon
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lastKnownPosition"
+                                name="lastKnownPosition"
+                                placeholder="Grader og desimalminutter"
+                            >
+
+                        </div>
+
+
+                        <!-- STED / OMRÅDE -->
+
+                        <div class="form-field">
+
+                            <label for="positionArea">
+                                Sted / område
+                            </label>
+
+                            <input
+                                type="text"
+                                id="positionArea"
+                                name="positionArea"
+                                placeholder="Stedsnavn eller område"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-grid form-grid-3">
+
+
+                        <!-- HØYDE -->
+
+                        <div class="form-field">
+
+                            <label for="altitude">
+                                Høyde
+                            </label>
+
+                            <input
+                                type="number"
+                                id="altitude"
+                                name="altitude"
+                                min="0"
+                                placeholder="Høyde"
+                            >
+
+                        </div>
+
+
+                        <!-- HØYDEENHET -->
+
+                        <div class="form-field">
+
+                            <span class="field-label">
+                                Enhet
+                            </span>
+
+                            <div
+                                class="chip-group"
+                                id="altitudeUnitChips"
+                            >
+
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    data-value="FT"
+                                >
+                                    FT
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    data-value="M"
+                                >
+                                    M
+                                </button>
+
+                            </div>
+
+                            <input
+                                type="hidden"
+                                id="altitudeUnit"
+                                name="altitudeUnit"
+                            >
+
+                        </div>
+
+
+                        <!-- HØYDEREFERANSE -->
+
+                        <div class="form-field">
+
+                            <span class="field-label">
+                                Referanse
+                            </span>
+
+                            <div
+                                class="chip-group"
+                                id="altitudeReferenceChips"
+                            >
+
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    data-value="MSL"
+                                >
+                                    MSL
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    data-value="AGL"
+                                >
+                                    AGL
+                                </button>
+
+                            </div>
+
+                            <input
+                                type="hidden"
+                                id="altitudeReference"
+                                name="altitudeReference"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TIDSPUNKT SIST POSISJON -->
+
                     <div class="form-field">
-                        <label for="utmPosition">UTM</label>
+
+                        <label for="lastPositionTime">
+                            Tidspunkt for sist kjente posisjon
+                        </label>
+
                         <input
                             type="text"
-                            id="utmPosition"
-                            autocomplete="off"
+                            id="lastPositionTime"
+                            name="lastPositionTime"
+                            placeholder="TT:MM"
+                            maxlength="5"
+                            inputmode="numeric"
                         >
+
                     </div>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     3. CREX MANIFEST
+                     ========================================= -->
+
+                <section
+                    class="form-section"
+                    id="crex-manifest"
+                >
+
+                    <h2>
+                        CREX manifest
+                    </h2>
+
+
+                    <!-- POB TOTALT -->
 
                     <div class="form-field">
-                        <label for="dmmPosition">Grader og desimalmin</label>
+
+                        <span class="field-label">
+                            POB – totalt
+                        </span>
+
+
+                        <div
+                            class="chip-group"
+                            id="pobTotalChips"
+                            role="group"
+                            aria-label="Velg totalt antall personer om bord"
+                        >
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="1"
+                            >
+                                1
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="2"
+                            >
+                                2
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="3"
+                            >
+                                3
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="4"
+                            >
+                                4
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="5"
+                            >
+                                5
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="6"
+                            >
+                                6
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="7"
+                            >
+                                7
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="8"
+                            >
+                                8
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="9"
+                            >
+                                9
+                            </button>
+
+                            <button
+                                type="button"
+                                class="chip pob-chip"
+                                data-value="10"
+                            >
+                                10
+                            </button>
+
+                        </div>
+
+
+                        <input
+                            type="hidden"
+                            id="pobTotal"
+                            name="pobTotal"
+                        >
+
+                    </div>
+
+
+
+                    <!-- LUFTFARTØY -->
+
+                    <div class="form-grid form-grid-3">
+
+
+                        <!-- RESSURS-ID -->
+
+                        <div class="form-field">
+
+                            <label for="resourceId">
+                                Ressurs-ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="resourceId"
+                                name="resourceId"
+                                placeholder="F.eks. LA1"
+                            >
+
+                        </div>
+
+
+                        <!-- REGISTRERINGSNUMMER -->
+
+                        <div class="form-field">
+
+                            <label for="registration">
+                                Reg.nr.
+                            </label>
+
+                            <input
+                                type="text"
+                                id="registration"
+                                name="registration"
+                                placeholder="F.eks. LN-OOA"
+                            >
+
+                        </div>
+
+
+                        <!-- CALLSIGN -->
+
+                        <div class="form-field">
+
+                            <label for="callsign">
+                                Callsign
+                            </label>
+
+                            <input
+                                type="text"
+                                id="callsign"
+                                name="callsign"
+                                placeholder="Callsign"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PILOT -->
+
+                    <div class="person-row">
+
+                        <div class="person-role">
+
+                            <img
+                                src="../img/pilot.svg"
+                                alt=""
+                                aria-hidden="true"
+                            >
+
+                            <span>
+                                Pilot
+                            </span>
+
+                        </div>
+
+
                         <input
                             type="text"
-                            id="dmmPosition"
-                            autocomplete="off"
+                            id="pilotName"
+                            name="pilotName"
+                            placeholder="Navn"
                         >
+
+
+                        <input
+                            type="text"
+                            id="pilotPhone"
+                            name="pilotPhone"
+                            placeholder="Telefon"
+                            inputmode="tel"
+                        >
+
                     </div>
-                </div>
 
-                <p id="coordinateError" class="field-error" role="alert"></p>
 
-                <div class="form-field">
-                    <label for="placeName">Stedsnavn</label>
-                    <input
-                        type="text"
-                        id="placeName"
-                        autocomplete="off"
-                    >
-                </div>
-            </section>
 
-            <!-- 3. Luftfartøy, POB og personell -->
-            <section class="form-section">
-                <h2>Crex manifest</h2>
+                    <!-- REDNINGSMANN -->
 
-                <div class="form-grid form-grid-3">
+                    <div class="person-row">
+
+                        <div class="person-role">
+
+                            <img
+                                src="../img/redningsmann.svg"
+                                alt=""
+                                aria-hidden="true"
+                            >
+
+                            <span>
+                                Redningsmann
+                            </span>
+
+                        </div>
+
+
+                        <input
+                            type="text"
+                            id="rescuerName"
+                            name="rescuerName"
+                            placeholder="Navn"
+                        >
+
+
+                        <input
+                            type="text"
+                            id="rescuerPhone"
+                            name="rescuerPhone"
+                            placeholder="Telefon"
+                            inputmode="tel"
+                        >
+
+                    </div>
+
+
+
+                    <!-- LEGE -->
+
+                    <div class="person-row">
+
+                        <div class="person-role">
+
+                            <img
+                                src="../img/lege.svg"
+                                alt=""
+                                aria-hidden="true"
+                            >
+
+                            <span>
+                                Lege
+                            </span>
+
+                        </div>
+
+
+                        <input
+                            type="text"
+                            id="doctorName"
+                            name="doctorName"
+                            placeholder="Navn"
+                        >
+
+
+                        <input
+                            type="text"
+                            id="doctorPhone"
+                            name="doctorPhone"
+                            placeholder="Telefon"
+                            inputmode="tel"
+                        >
+
+                    </div>
+
+
+
+                    <!-- PAX -->
+
+                    <div class="person-row">
+
+                        <div class="person-role">
+
+                            <img
+                                src="../img/pax.svg"
+                                alt=""
+                                aria-hidden="true"
+                            >
+
+                            <span>
+                                PAX
+                            </span>
+
+                        </div>
+
+
+                        <input
+                            type="text"
+                            id="paxName"
+                            name="paxName"
+                            placeholder="Navn / beskrivelse"
+                        >
+
+
+                        <input
+                            type="text"
+                            id="paxPhone"
+                            name="paxPhone"
+                            placeholder="Telefon"
+                            inputmode="tel"
+                        >
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     4. FLYRUTE
+                     ========================================= -->
+
+                <section
+                    class="form-section"
+                    id="flyrute"
+                >
+
+                    <h2>
+                        Flyrute
+                    </h2>
+
+
+                    <!-- FRA / TIL -->
+
+                    <div class="form-grid form-grid-2">
+
+
+                        <div class="form-field">
+
+                            <label for="flightFrom">
+                                Fra
+                            </label>
+
+                            <input
+                                type="text"
+                                id="flightFrom"
+                                name="flightFrom"
+                                placeholder="Fra"
+                            >
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label for="flightTo">
+                                Til
+                            </label>
+
+                            <input
+                                type="text"
+                                id="flightTo"
+                                name="flightTo"
+                                placeholder="Til"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BESKRIVELSE -->
+
                     <div class="form-field">
-                        <label for="resourceId">Ressurs ID</label>
-                        <input
-                            type="text"
-                            id="resourceId"
-                            autocomplete="off"
-                        >
+
+                        <label for="flightDescription">
+                            Beskrivelse
+                        </label>
+
+                        <textarea
+                            id="flightDescription"
+                            name="flightDescription"
+                            rows="3"
+                            placeholder="Beskrivelse av flyruten"
+                        ></textarea>
+
                     </div>
 
-                    <div class="form-field">
-                        <label for="registration">Reg.nr</label>
-                        <input
-                            type="text"
-                            id="registration"
-                            autocomplete="off"
-                        >
+
+                    <!-- TATT AV / ETA -->
+
+                    <div class="form-grid form-grid-2">
+
+
+                        <div class="form-field">
+
+                            <label for="takeoffTime">
+                                Tatt av
+                            </label>
+
+                            <input
+                                type="text"
+                                id="takeoffTime"
+                                name="takeoffTime"
+                                placeholder="TT:MM"
+                                maxlength="5"
+                                inputmode="numeric"
+                            >
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label for="eta">
+                                ETA
+                            </label>
+
+                            <input
+                                type="text"
+                                id="eta"
+                                name="eta"
+                                placeholder="TT:MM"
+                                maxlength="5"
+                                inputmode="numeric"
+                            >
+
+                        </div>
+
                     </div>
 
-                    <div class="form-field">
-                        <label for="callsign">Callsign (HD)</label>
-                        <input
-                            type="text"
-                            id="callsign"
-                            autocomplete="off"
-                        >
-                    </div>
-                </div>
+                </section>
 
-                <div class="form-field">
-                    <span class="field-label">POB</span>
+
+
+                <!-- =========================================
+                     5. UTLØSENDE KRITERIUM
+                     ========================================= -->
+
+                <section
+                    class="form-section"
+                    id="utlosende-kriterium"
+                >
+
+                    <h2>
+                        Utløsende kriterium
+                    </h2>
+
 
                     <div
-                        class="chip-group"
-                        id="pobChips"
-                        role="group"
-                        aria-label="Personer om bord"
-                    >
-                        <button type="button" class="chip" data-pob="1" aria-pressed="false">1</button>
-                        <button type="button" class="chip" data-pob="2" aria-pressed="false">2</button>
-                        <button type="button" class="chip" data-pob="3" aria-pressed="false">3</button>
-                        <button type="button" class="chip" data-pob="4" aria-pressed="false">4</button>
-                        <button type="button" class="chip" data-pob="5" aria-pressed="false">5</button>
-                        <button type="button" class="chip" data-pob="6" aria-pressed="false">6</button>
-                        <button type="button" class="chip" data-pob="7" aria-pressed="false">7</button>
-                        <button type="button" class="chip" data-pob="8" aria-pressed="false">8</button>
-                        <button type="button" class="chip" data-pob="9" aria-pressed="false">9</button>
-                        <button type="button" class="chip" data-pob="10" aria-pressed="false">10</button>
-                    </div>
-                </div>
-
-                <div class="person-row">
-                    <div class="person-role">
-                        <img src="../img/pilot.svg" alt="">
-                        <span>Pilot</span>
-                    </div>
-
-                    <input
-                        type="text"
-                        id="pilotName"
-                        aria-label="Pilot fullt navn"
-                        autocomplete="off"
+                        class="criteria-list"
+                        id="criteriaList"
                     >
 
-                    <input
-                        type="tel"
-                        id="pilotPhone"
-                        aria-label="Pilot mobilnummer"
-                        placeholder="Mobilnummer"
-                        autocomplete="off"
-                    >
-                </div>
 
-                <div class="person-row">
-                    <div class="person-role">
-                        <img src="../img/redningsmann.svg" alt="">
-                        <span>Redningsmann</span>
-                    </div>
-
-                    <input
-                        type="text"
-                        id="rescuerName"
-                        aria-label="Redningsmann fullt navn"
-                        autocomplete="off"
-                    >
-
-                    <input
-                        type="tel"
-                        id="rescuerPhone"
-                        aria-label="Redningsmann mobilnummer"
-                        placeholder="Mobilnummer"
-                        autocomplete="off"
-                    >
-                </div>
-
-                <div class="person-row">
-                    <div class="person-role">
-                        <img src="../img/lege.svg" alt="">
-                        <span>Lege</span>
-                    </div>
-
-                    <input
-                        type="text"
-                        id="doctorName"
-                        aria-label="Lege fullt navn"
-                        autocomplete="off"
-                    >
-
-                    <input
-                        type="tel"
-                        id="doctorPhone"
-                        aria-label="Lege mobilnummer"
-                        placeholder="Mobilnummer"
-                        autocomplete="off"
-                    >
-                </div>
-
-                <div id="traineeContainer">
-                    <div class="person-row trainee-row">
-                        <div class="person-role">
-                            <span class="role-icon" aria-hidden="true">👤</span>
-                            <span class="pax-label">PAX 1</span>
-                        </div>
-
-                        <input
-                            type="text"
-                            class="trainee-name"
-                            aria-label="PAX 1 fullt navn"
-                            autocomplete="off"
+                        <button
+                            type="button"
+                            class="criteria-chip"
+                            data-value="Manglende samband"
                         >
+                            Manglende samband
+                        </button>
 
-                        <input
-                            type="tel"
-                            class="trainee-phone"
-                            aria-label="PAX 1 mobilnummer"
-                            placeholder="Mobilnummer"
-                            autocomplete="off"
+
+                        <button
+                            type="button"
+                            class="criteria-chip"
+                            data-value="Manglende flight following"
                         >
-                    </div>
-                </div>
-            </section>
+                            Manglende flight following / posisjonsoppdatering
+                        </button>
 
-            <!-- 4. Flyrute -->
-            <section class="form-section">
-                <h2>Flyrute</h2>
 
-                <div class="form-grid form-grid-2">
-                    <div class="form-field">
-                        <label for="fromLocation">Fra</label>
-                        <input
-                            type="text"
-                            id="fromLocation"
-                            autocomplete="off"
+                        <button
+                            type="button"
+                            class="criteria-chip"
+                            data-value="Ikke ankommet som forventet"
                         >
-                    </div>
+                            Ikke ankommet som forventet
+                        </button>
 
-                    <div class="form-field">
-                        <label for="toLocation">Til</label>
-                        <input
-                            type="text"
-                            id="toLocation"
-                            autocomplete="off"
+
+                        <button
+                            type="button"
+                            class="criteria-chip"
+                            data-value="Annet"
                         >
-                    </div>
-                </div>
+                            Annet
+                        </button>
 
-                <div class="form-field">
-                    <label for="plannedRoute">Planlagt flyrute</label>
+                    </div>
+
+
                     <input
-                        type="text"
-                        id="plannedRoute"
-                        autocomplete="off"
+                        type="hidden"
+                        id="triggerCriterion"
+                        name="triggerCriterion"
                     >
-                </div>
 
-                <div class="form-grid form-grid-2">
-                    <div class="form-field">
-                        <label for="departureTime">Avgangstid</label>
-                        <input
-                            type="text"
-                            id="departureTime"
-                            inputmode="numeric"
-                            autocomplete="off"
-                        >
+
+                    <!-- ANNET -->
+
+                    <div
+                        class="conditional-field hidden"
+                        id="otherCriterionField"
+                    >
+
+                        <label for="otherCriterion">
+                            Beskriv annet kriterium
+                        </label>
+
+                        <textarea
+                            id="otherCriterion"
+                            name="otherCriterion"
+                            rows="3"
+                            placeholder="Beskrivelse"
+                        ></textarea>
+
                     </div>
 
-                    <div class="form-field">
-                        <label for="etaTime">ETA landing</label>
-                        <input
-                            type="text"
-                            id="etaTime"
-                            inputmode="numeric"
-                            autocomplete="off"
-                        >
-                    </div>
-                </div>
+                </section>
 
-                <p id="timeError" class="field-error" role="alert"></p>
-            </section>
 
-            <!-- 5. Utløsende kriterium -->
-            <section class="form-section">
-                <h2>Utløsende kriterium for savnet helikopter</h2>
+            </form>
 
-                <div
-                    class="criteria-list"
-                    id="criteriaList"
-                    role="group"
-                    aria-label="Utløsende kriterium"
-                >
-                    <button
-                        type="button"
-                        class="criteria-chip"
-                        data-criterion="1"
-                        aria-pressed="false"
-                    >
-                        Helikopteret svarer ikke på anrop eller planlagt
-                        rapportering i henhold til flight following, og vises
-                        som rød både på Locus og Nødnett.
-                    </button>
+        </div>
 
-                    <button
-                        type="button"
-                        class="criteria-chip"
-                        data-criterion="2"
-                        aria-pressed="false"
-                    >
-                        Helikopteret har ikke meldt landing innen 10 minutter
-                        etter oppgitt ETA, og det foreligger samtidig manglende
-                        kontakt eller andre indikasjoner på avvik.
-                    </button>
 
-                    <button
-                        type="button"
-                        class="criteria-chip"
-                        data-criterion="3"
-                        aria-pressed="false"
-                    >
-                        Observasjoner/meldinger som gir grunn til å
-                        mistenke/bekrefte havari.
-                    </button>
-                </div>
 
-                <div
-                    class="conditional-field hidden"
-                    id="observationWrapper"
-                >
-                    <label for="observations">Observasjoner / meldinger</label>
-                    <textarea id="observations" rows="2"></textarea>
-                </div>
-            </section>
-        </section>
+        <!-- =================================================
+             HØYRE RAPPORTPANEL
+             ================================================= -->
 
-        <!-- Rapport og handlinger -->
-        <aside class="side-panel" aria-label="Rapport og handlinger">
+        <aside class="side-panel">
+
             <div class="side-panel-inner">
-                <h2>Rapporttekst</h2>
+
+
+                <h2>
+                    Rapporttekst
+                </h2>
+
 
                 <textarea
                     id="reportOutput"
@@ -402,15 +1009,32 @@
                     aria-label="Generert rapporttekst"
                 ></textarea>
 
+
+
+                <!-- KOPIER -->
+
                 <div class="action-buttons">
+
+
                     <button
                         type="button"
-                        id="copyButton"
+                        id="copyReportButton"
                         class="action-button action-copy"
                     >
-                        <span class="button-icon" aria-hidden="true">⧉</span>
-                        <span id="copyButtonText">Kopier tekst</span>
+
+                        <span
+                            class="button-icon"
+                            aria-hidden="true"
+                        >
+                            📋
+                        </span>
+
+                        <span>
+                            Kopier tekst
+                        </span>
+
                     </button>
+
 
                     <div
                         id="copyConfirmation"
@@ -418,36 +1042,99 @@
                         aria-live="polite"
                     ></div>
 
+
+
+                    <!-- TØM -->
+
+                    <button
+                        type="button"
+                        id="resetFormButton"
+                        class="action-button action-reset"
+                    >
+
+                        <span
+                            class="button-icon"
+                            aria-hidden="true"
+                        >
+                            🗑️
+                        </span>
+
+                        <span>
+                            Tøm skjema
+                        </span>
+
+                    </button>
+
+
+
+                    <div class="action-space"></div>
+
+
+
+                    <!-- PROSEDYRE -->
+
                     <a
                         href="https://ehandbok.ous-hf.no/document/144250"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="action-button action-procedure"
                     >
-                        <span class="button-icon" aria-hidden="true">▤</span>
-                        Prosedyre
+
+                        <span
+                            class="button-icon"
+                            aria-hidden="true"
+                        >
+                            📘
+                        </span>
+
+                        <span>
+                            Prosedyre savnet helikopter
+                        </span>
+
                     </a>
 
-                    <div class="action-space" aria-hidden="true"></div>
+
+
+                    <!-- OUTLOOK -->
 
                     <button
                         type="button"
-                        id="resetButton"
-                        class="action-button action-reset"
-                    >
-                        <span class="button-icon" aria-hidden="true">🗑</span>
-                        Tøm skjema
-                    </button>
-
-                    <a
-                        href="mailto:b32838@ous.hf.no?subject=Tilbakemelding%20skjema%20savnet%20helikopter"
+                        id="emailReportButton"
                         class="action-button action-email"
                     >
-                        Send tilbakemelding
-                    </a>
+
+                        <span
+                            class="button-icon"
+                            aria-hidden="true"
+                        >
+                            ✉️
+                        </span>
+
+                        <span>
+                            Opprett Outlook e-post
+                        </span>
+
+                    </button>
+
+
                 </div>
+
             </div>
+
         </aside>
+
+
     </main>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script src="../js/savnet-helikopter.js"></script>
+
+
 </body>
+
 </html>
