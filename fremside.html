@@ -426,24 +426,44 @@
   </header>
 
   <div class="app-layout">
-    <aside class="sidebar">
-      <div class="sidebar-inner">
-        <nav aria-label="Hovedmeny">
-          <a
-            class="nav-link"
-            href="fremside.html"
-            aria-current="page"
-          >
-            <span class="nav-icon" aria-hidden="true">⌂</span>
-            <span>Hjem</span>
-          </a>
+    <nav class="form-navigation" aria-label="Skjemaer">
+  <div class="form-navigation-inner">
+    <p class="form-navigation-label">Skjemaer</p>
 
-          <p class="navigation-label">Skjemaer</p>
+    <ul class="form-nav-list">
+      <li>
+        <a
+          href="fremside.html"
+          class="form-nav-link"
+          aria-current="page"
+        >
+          <span class="form-nav-icon" aria-hidden="true">🏠</span>
+          <span class="form-nav-copy">Fremside</span>
+        </a>
+      </li>
 
-          <ul class="nav-list" id="formNavigation"></ul>
-        </nav>
-      </div>
-    </aside>
+      <li>
+        <a
+          href="savnet-helikopter/savnet-helikopter.html"
+          class="form-nav-link"
+        >
+          <span class="form-nav-icon" aria-hidden="true">🚁</span>
+          <span class="form-nav-copy">Savnet helikopter</span>
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="gps-forstyrrelser/gps-forstyrrelser.html"
+          class="form-nav-link"
+        >
+          <span class="form-nav-icon" aria-hidden="true">📡</span>
+          <span class="form-nav-copy">GPS-forstyrrelser</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
 
     <main class="main-content" id="mainContent">
       <div class="page-heading">

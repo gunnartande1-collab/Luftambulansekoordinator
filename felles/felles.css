@@ -171,3 +171,103 @@ html[data-theme="dark"] .field-error {
     font-size: 12px;
   }
 }
+
+/* FELLES VENSTREMENY */
+
+.form-navigation {
+  min-width: 0;
+  align-self: start;
+  position: sticky;
+  top: calc(var(--header-height, 70px) + 12px);
+}
+
+.form-navigation-inner {
+  padding: 10px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border-light, #e4e7ec);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.form-navigation-label {
+  margin: 4px 8px 10px;
+  color: var(--muted, #667085);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.form-nav-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.form-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  min-height: 42px;
+  padding: 8px 9px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  color: var(--text, #17212b);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.form-nav-link:hover {
+  background: #f3f6f8;
+  border-color: var(--border-light, #e4e7ec);
+}
+
+.form-nav-link[aria-current="page"] {
+  background: #eaf5fb;
+  border-color: #c5e1f1;
+  color: var(--primary, #0066a1);
+}
+
+.form-nav-icon {
+  width: 24px;
+  flex: 0 0 24px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.form-nav-copy {
+  min-width: 0;
+}
+
+html[data-theme="dark"] .form-nav-link:hover {
+  background: #263444;
+}
+
+html[data-theme="dark"] .form-nav-link[aria-current="page"] {
+  background: #243f55;
+  border-color: var(--primary);
+  color: #d8efff;
+}
+
+@media (max-width: 900px) {
+  .form-navigation {
+    position: static;
+  }
+
+  .form-navigation-label {
+    display: none;
+  }
+
+  .form-nav-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
