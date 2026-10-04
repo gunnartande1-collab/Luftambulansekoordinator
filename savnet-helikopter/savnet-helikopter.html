@@ -14,7 +14,7 @@
 
   <!-- Skjemaets JavaScript ligger i samme mappe som denne HTML-filen. -->
   <script src="savnet-helikopter.js" defer></script>
-</head>
+</head><script src="../felles/felles.js" defer></script>
 
 <body>
   <header class="app-header">
@@ -401,9 +401,7 @@
               data-criterion="1"
               aria-pressed="false"
             >
-              Helikopteret svarer ikke på anrop eller planlagt
-              rapportering i henhold til flight following, og vises
-              som rød både på Locus og Nødnett.
+              Manglende kontakt og rød på både Locus og Nødnett.
             </button>
 
             <button
@@ -412,9 +410,7 @@
               data-criterion="2"
               aria-pressed="false"
             >
-              Helikopteret har ikke meldt landing innen 10 minutter
-              etter oppgitt ETA, og det foreligger samtidig manglende
-              kontakt eller andre indikasjoner på avvik.
+              Ingen landingsmelding 10 minutter etter ETA, samtidig manglende kontakt eller tegn til avvik.
             </button>
 
             <button
@@ -501,7 +497,7 @@
             class="action-button action-email"
           >
             <span aria-hidden="true">✉️</span>
-            <span>Opprett Outlook e-post</span>
+            <span>Tilbakemelding på skjema</span>
           </button>
         </div>
       </div>

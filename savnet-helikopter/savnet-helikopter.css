@@ -1,915 +1,753 @@
 :root {
-    --primary: #0066a1;
+  --primary: #0066a1;
+  --background: #eef2f5;
+  --surface: #ffffff;
+  --text: #17212b;
+  --muted: #667085;
+  --border: #d0d5dd;
+  --border-light: #e4e7ec;
 
-    --background: #eef2f5;
-    --surface: #ffffff;
+  --green: #16834b;
+  --green-dark: #0e6739;
+  --red: #c62828;
+  --red-dark: #a51e1e;
+  --blue-light: #dceef9;
+  --blue-light-hover: #c7e4f5;
+  --black: #202124;
 
-    --text: #17212b;
-    --muted: #667085;
+  --radius-small: 6px;
+  --radius-medium: 10px;
+  --radius-large: 14px;
 
-    --border: #d0d5dd;
-    --border-light: #e4e7ec;
-
-    --green: #16834b;
-    --green-dark: #0e6739;
-
-    --red: #c62828;
-    --red-dark: #a51e1e;
-
-    --blue-light: #dceef9;
-    --blue-light-hover: #c7e4f5;
-
-    --black: #202124;
-
-    --radius-small: 6px;
-    --radius-medium: 10px;
-    --radius-large: 14px;
+  --header-height: 70px;
+  --panel-gap: 12px;
 }
 
-
-/* =========================================================
-   RESET / GENERELT
-   ========================================================= */
+/* GENERELT */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(
+    var(--header-height) + var(--panel-gap)
+  );
 }
-
 
 body {
-    margin: 0;
-
-    background: var(--background);
-    color: var(--text);
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    line-height: 1.45;
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  line-height: 1.45;
 }
-
 
 button,
 input,
 textarea {
-    font: inherit;
+  font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
 
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* OVERSKRIFT */
 
 .app-header {
-    width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 
-    padding: 10px 20px;
+  display: flex;
+  align-items: center;
 
-    background: var(--surface);
+  width: 100%;
+  height: var(--header-height);
+  padding: 10px 20px;
 
-    border-bottom: 1px solid var(--border-light);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-light);
 }
-
 
 .app-eyebrow {
-    margin: 0 0 2px;
-
-    color: var(--muted);
-
-    font-size: 12px;
-    font-weight: 700;
-
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
-
 
 .app-header h1 {
-    margin: 0;
-
-    font-size: 24px;
-    line-height: 1.2;
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.2;
 }
 
-
-
-/* =========================================================
-   HOVEDLAYOUT
-
-   PC:
-   MENY | SKJEMA | RAPPORT
-   ========================================================= */
+/* HOVEDLAYOUT: MENY | SKJEMA | RAPPORT */
 
 .app-shell {
-    display: grid;
+  display: grid;
+  grid-template-columns:
+    190px
+    minmax(0, 1fr)
+    340px;
+  grid-template-areas: "navigation form report";
 
-    grid-template-columns:
-        190px
-        minmax(0, 1fr)
-        340px;
+  gap: 16px;
+  align-items: start;
 
-    grid-template-areas:
-        "navigation form report";
-
-    gap: 16px;
-
-    align-items: start;
-
-    width: calc(100% - 24px);
-    max-width: 1800px;
-
-    margin: 12px auto 24px;
+  width: calc(100% - 24px);
+  max-width: 1800px;
+  margin: var(--panel-gap) auto;
 }
 
-
-
-/* =========================================================
-   VENSTREMENY
-   ========================================================= */
+/* VENSTREMENY */
 
 .form-navigation {
-    grid-area: navigation;
-
-    min-width: 0;
+  grid-area: navigation;
+  position: sticky;
+  top: calc(var(--header-height) + var(--panel-gap));
+  align-self: start;
+  min-width: 0;
 }
-
 
 .form-navigation-inner {
-    position: sticky;
-
-    top: 12px;
-
-    padding: 10px;
-
-    background: var(--surface);
-
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-large);
-
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  position: static;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-large);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
-
 
 .form-navigation-label {
-    margin: 4px 8px 10px;
-
-    color: var(--muted);
-
-    font-size: 12px;
-    font-weight: 700;
-
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  margin: 4px 8px 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-
 
 .form-nav-list {
-    display: grid;
-
-    gap: 6px;
-
-    margin: 0;
-    padding: 0;
-
-    list-style: none;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-
 
 .form-nav-link {
-    display: flex;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    align-items: center;
+  min-height: 42px;
+  padding: 8px 9px;
 
-    gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
 
-    min-height: 42px;
-
-    padding: 8px 9px;
-
-    border: 1px solid transparent;
-    border-radius: 9px;
-
-    color: var(--text);
-
-    font-size: 14px;
-    font-weight: 600;
-
-    text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
 }
-
 
 .form-nav-link:hover {
-    background: #f3f6f8;
-
-    border-color: var(--border-light);
+  background: #f3f6f8;
+  border-color: var(--border-light);
 }
-
 
 .form-nav-link[aria-current="page"] {
-    background: #eaf5fb;
-
-    border-color: #c5e1f1;
-
-    color: var(--primary);
+  background: #eaf5fb;
+  border-color: #c5e1f1;
+  color: var(--primary);
 }
-
 
 .form-nav-icon {
-    width: 24px;
-
-    flex: 0 0 24px;
-
-    text-align: center;
-
-    font-size: 18px;
+  width: 24px;
+  flex: 0 0 24px;
+  text-align: center;
+  font-size: 18px;
 }
 
+.form-nav-copy {
+  min-width: 0;
+}
 
-
-/* =========================================================
-   MIDTKOLONNE
-   ========================================================= */
+/* SKJEMA */
 
 .form-panel {
-    grid-area: form;
-
-    min-width: 0;
+  grid-area: form;
+  min-width: 0;
 }
-
-
-
-/* =========================================================
-   SKJEMASEKSJONER
-   ========================================================= */
 
 .form-section {
-    margin: 0 0 10px;
-
-    padding: 14px;
-
-    background: var(--surface);
-
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-large);
-
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  margin: 0 0 10px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-large);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
+.form-section:last-child {
+  margin-bottom: 0;
+}
 
 .form-section h2 {
-    margin: 0 0 12px;
-
-    font-size: 18px;
-    line-height: 1.2;
+  margin: 0 0 12px;
+  font-size: 18px;
+  line-height: 1.2;
 }
 
-
-
-/* =========================================================
-   FELTER
-   ========================================================= */
+/* FELTER */
 
 .form-grid {
-    display: grid;
-
-    gap: 10px;
-
-    margin-bottom: 10px;
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
 }
-
 
 .form-grid-2 {
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-
 
 .form-grid-3 {
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-
 
 .tg-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-    gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
-
 
 .form-field {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
-    min-width: 0;
-
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin-bottom: 10px;
 }
 
-
-.form-grid .form-field {
-    margin-bottom: 0;
-}
-
-
+.form-grid .form-field,
 .form-field:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
-
 
 label,
 .field-label {
-    color: #344054;
-
-    font-size: 13px;
-    font-weight: 650;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 650;
 }
 
-
-
-/* =========================================================
-   INPUT
-   ========================================================= */
+/* INPUT OG TEKSTFELTER */
 
 input,
 textarea {
-    width: 100%;
-    min-width: 0;
-
-    border: 1px solid var(--border);
-    border-radius: var(--radius-small);
-
-    background: var(--surface);
-    color: var(--text);
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--text);
 }
-
 
 input {
-    height: 36px;
-
-    padding: 0 9px;
+  height: 36px;
+  padding: 0 9px;
 }
-
 
 textarea {
-    padding: 8px 9px;
-
-    resize: vertical;
+  padding: 8px 9px;
+  resize: vertical;
 }
-
 
 input:focus,
 textarea:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
 }
-
 
 input::placeholder,
 textarea::placeholder {
-    color: #98a2b3;
+  color: #98a2b3;
 }
 
-
-
-/* =========================================================
-   TALEGRUPPER
-   ========================================================= */
+/* TALEGRUPPER */
 
 .field-card {
-    min-width: 0;
-
-    padding: 9px;
-
-    background: #fafbfc;
-
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-medium);
+  min-width: 0;
+  padding: 9px;
+  background: #fafbfc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-medium);
 }
-
 
 .field-card > label {
-    display: block;
-
-    margin-bottom: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
-
 
 .other-tg-input {
-    margin-bottom: 6px;
+  margin-bottom: 6px;
 }
-
 
 .other-tg-input:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
-
-
-/* =========================================================
-   POB CHIPS
-   ========================================================= */
+/* POB */
 
 .pob-field {
-    margin-bottom: 14px;
+  margin-bottom: 14px;
 }
-
 
 .chip-group {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
-
 
 .chip {
-    min-width: 36px;
-    min-height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0 10px;
 
-    padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
 
-    border: 1px solid var(--border);
-    border-radius: 999px;
-
-    background: var(--surface);
-
-    color: #344054;
-
-    cursor: pointer;
+  background: var(--surface);
+  color: #344054;
 }
-
 
 .chip:hover {
-    border-color: var(--primary);
+  border-color: var(--primary);
 }
-
 
 .chip.is-selected {
-    background: var(--primary);
-
-    border-color: var(--primary);
-
-    color: #ffffff;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
 }
 
-
-
-/* =========================================================
-   CREX / PERSONER
-   ========================================================= */
+/* CREX MANIFEST */
 
 .person-row {
-    display: grid;
-
-    grid-template-columns:
-        145px
-        minmax(0, 1fr)
-        140px;
-
-    gap: 8px;
-
-    align-items: center;
-
-    padding: 7px 0;
-
-    border-bottom: 1px solid var(--border-light);
+  display: grid;
+  grid-template-columns:
+    145px
+    minmax(0, 1fr)
+    140px;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-light);
 }
-
 
 .person-row:last-child {
-    border-bottom: 0;
+  border-bottom: 0;
 }
-
 
 .person-role {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    min-width: 0;
-
-    font-size: 14px;
-    font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
 }
-
 
 .person-ikon,
-.person-role img {
-    width: 24px;
-    height: 24px;
-
-    object-fit: contain;
-
-    flex: 0 0 24px;
+.person-role img,
+.person-role .role-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  object-fit: contain;
 }
 
+.person-role .role-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
 
-
-/* =========================================================
-   UTLØSENDE KRITERIUM
-   ========================================================= */
+/* UTLØSENDE KRITERIUM */
 
 .criteria-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
-
 
 .criteria-chip {
-    width: 100%;
+  width: 100%;
+  padding: 9px 10px;
 
-    padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
 
-    border: 1px solid var(--border);
-    border-radius: var(--radius-medium);
-
-    background: var(--surface);
-
-    color: var(--text);
-
-    text-align: left;
-
-    cursor: pointer;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
 }
-
 
 .criteria-chip:hover {
-    border-color: var(--primary);
+  border-color: var(--primary);
 }
-
 
 .criteria-chip.is-selected {
-    background: #eaf5fb;
-
-    border-color: var(--primary);
+  background: #eaf5fb;
+  border-color: var(--primary);
 }
-
 
 .conditional-field {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
+.conditional-field > label {
+  display: block;
+  margin-bottom: 5px;
+}
 
-
-/* =========================================================
-   FEIL
-   ========================================================= */
+/* FEILMELDINGER */
 
 .field-error {
-    min-height: 0;
-
-    margin: 0;
-
-    color: var(--red);
-
-    font-size: 13px;
+  min-height: 0;
+  margin: 0;
+  color: var(--red);
+  font-size: 13px;
 }
-
 
 .field-error:not(:empty) {
-    margin: 0 0 10px;
+  margin: 0 0 10px;
 }
 
-
-
-/* =========================================================
-   RAPPORT – HØYRE KOLONNE
-   ========================================================= */
+/* RAPPORTPANEL
+   Fyller vindushøyden under overskriften.
+   Hele panelet blir stående mens skjemaet scrolles. */
 
 .side-panel {
-    grid-area: report;
+  grid-area: report;
+  position: sticky;
+  top: calc(var(--header-height) + var(--panel-gap));
+  align-self: start;
 
-    min-width: 0;
+  min-width: 0;
+  min-height: 0;
+
+  height: calc(
+    100vh - var(--header-height) - var(--panel-gap) * 2
+  );
+  height: calc(
+    100dvh - var(--header-height) - var(--panel-gap) * 2
+  );
 }
-
 
 .side-panel-inner {
-    position: sticky;
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-    top: 12px;
+  height: 100%;
+  min-height: 0;
+  padding: 14px;
 
-    padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-large);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 
-    background: var(--surface);
-
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-large);
-
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* Gir tilgang til innholdet ved svært lav vindushøyde. */
+  overflow: auto;
 }
-
 
 .side-panel h2 {
-    margin: 0 0 10px;
-
-    font-size: 20px;
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
 }
 
+/* Rapportfeltet bruker all ledig plass over knappene. */
 
 .report-output {
-    display: block;
+  display: block;
+  flex: 1 1 0;
 
-    width: 100%;
+  width: 100%;
+  height: auto;
+  min-height: 100px;
+  max-height: none;
+  margin: 0;
+  padding: 10px;
 
-    height: clamp(
-        280px,
-        calc(100vh - 420px),
-        500px
-    );
+  background: #f8fafc;
 
-    min-height: 250px;
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+  font-size: 12px;
+  line-height: 1.5;
 
-    margin: 0 0 8px;
-
-    padding: 10px;
-
-    background: #f8fafc;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        monospace;
-
-    font-size: 12px;
-    line-height: 1.5;
-
-    resize: vertical;
+  resize: none;
+  overflow: auto;
 }
 
-
-
-/* =========================================================
-   RAPPORTKNAPPER
-   ========================================================= */
+/* RAPPORTKNAPPER */
 
 .action-buttons {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
 }
-
 
 .action-button {
-    display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
 
-    gap: 8px;
+  border: 0;
+  border-radius: var(--radius-medium);
 
-    width: 100%;
-
-    min-height: 44px;
-
-    padding: 10px 12px;
-
-    border: 0;
-    border-radius: var(--radius-medium);
-
-    font-weight: 700;
-
-    text-align: center;
-    text-decoration: none;
-
-    cursor: pointer;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
 }
-
 
 .action-copy {
-    background: var(--green);
-
-    color: white;
+  background: var(--green);
+  color: #ffffff;
 }
-
 
 .action-copy:hover {
-    background: var(--green-dark);
+  background: var(--green-dark);
 }
-
 
 .action-reset {
-    background: var(--red);
-
-    color: white;
+  background: var(--red);
+  color: #ffffff;
 }
-
 
 .action-reset:hover {
-    background: var(--red-dark);
+  background: var(--red-dark);
 }
-
 
 .action-procedure {
-    background: var(--blue-light);
-
-    color: #174a67;
+  background: var(--blue-light);
+  color: #174a67;
 }
-
 
 .action-procedure:hover {
-    background: var(--blue-light-hover);
+  background: var(--blue-light-hover);
 }
-
 
 .action-email {
-    background: var(--black);
-
-    color: white;
+  background: var(--black);
+  color: #ffffff;
 }
-
 
 .action-email:hover {
-    background: #000000;
+  background: #000000;
 }
-
 
 .action-space {
-    height: 5px;
+  height: 5px;
+  flex: 0 0 5px;
 }
-
 
 .copy-confirmation {
-    min-height: 18px;
-
-    color: var(--green);
-
-    font-size: 13px;
-    font-weight: 700;
-
-    text-align: center;
+  min-height: 18px;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
 }
 
-
-
-/* =========================================================
-   SKJUL
-   ========================================================= */
+/* SKJUL FELTER */
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
-
-
-/* =========================================================
-   MINDRE PC / LAPTOP
-
-   FORTSATT:
-   MENY | SKJEMA | RAPPORT
-   ========================================================= */
+/* MINDRE PC / LAPTOP */
 
 @media (max-width: 1200px) {
+  .app-shell {
+    grid-template-columns:
+      165px
+      minmax(0, 1fr)
+      300px;
+    gap: 10px;
+    width: calc(100% - 16px);
+  }
 
-    .app-shell {
-        grid-template-columns:
-            165px
-            minmax(0, 1fr)
-            300px;
+  .person-row {
+    grid-template-columns:
+      120px
+      minmax(0, 1fr)
+      115px;
+  }
 
-        gap: 10px;
+  .side-panel-inner {
+    padding: 10px;
+  }
 
-        width: calc(100% - 16px);
-    }
+  .report-output {
+    font-size: 11.5px;
+  }
+}
 
+/* SMAL SKJERM
+   Panelene legges under hverandre. */
 
+@media (max-width: 900px) {
+  .app-header {
+    position: static;
+    height: auto;
+    min-height: var(--header-height);
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "navigation"
+      "form"
+      "report";
+    width: calc(100% - 20px);
+  }
+
+  .form-navigation,
+  .side-panel {
+    position: static;
+    top: auto;
+    height: auto;
+  }
+
+  .form-navigation-inner,
+  .side-panel-inner {
+    position: static;
+  }
+
+  .form-navigation-label {
+    display: none;
+  }
+
+  .form-nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .form-nav-link {
+    width: auto;
+  }
+
+  .form-grid-2,
+  .form-grid-3,
+  .tg-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .person-row {
+    grid-template-columns: 1fr;
+  }
+
+  .side-panel-inner {
+    height: auto;
+    overflow: visible;
+  }
+
+  .report-output {
+    flex: 0 0 auto;
+    height: 400px;
+    min-height: 250px;
+    font-size: 12px;
+    resize: vertical;
+  }
+}
+
+/* TELEFON */
+
+@media (max-width: 560px) {
+  .app-header {
+    padding: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 21px;
+  }
+
+  .form-section {
+    padding: 11px;
+  }
+
+  input,
+  textarea {
+    font-size: 16px;
+  }
+
+  .report-output {
+    font-size: 14px;
+  }
+}
+
+/* Kortere crew-navnefelt og mer luft før mobilnummer. */
+
+@media (min-width: 901px) {
     .person-row {
         grid-template-columns:
             120px
-            minmax(0, 1fr)
-            115px;
+            minmax(0, 220px)
+            140px;
+
+        column-gap: 20px;
+        justify-content: start;
     }
-
-
-    .side-panel-inner {
-        padding: 10px;
-    }
-
-
-    .report-output {
-        font-size: 11.5px;
-    }
-
 }
 
+/* Tilpasning til mindre laptopvinduer. */
 
-
-/* =========================================================
-   MOBIL / SMAL SKJERM
-
-   Først her stabler vi.
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .app-shell {
-        grid-template-columns: 1fr;
-
-        grid-template-areas:
-            "navigation"
-            "form"
-            "report";
-
-        width: calc(100% - 20px);
-    }
-
-
-    .form-navigation-inner,
-    .side-panel-inner {
-        position: static;
-    }
-
-
-    .form-navigation-label {
-        display: none;
-    }
-
-
-    .form-nav-list {
-        display: flex;
-
-        flex-wrap: wrap;
-
-        gap: 6px;
-    }
-
-
-    .form-nav-link {
-        width: auto;
-    }
-
-
-    .form-grid-2,
-    .form-grid-3,
-    .tg-grid {
-        grid-template-columns: 1fr;
-    }
-
-
+@media (min-width: 901px) and (max-width: 1200px) {
     .person-row {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            110px
+            minmax(0, 180px)
+            115px;
+
+        column-gap: 12px;
     }
-
-
-    .report-output {
-        height: 340px;
-    }
-
-}
-
-
-
-/* =========================================================
-   TELEFON
-   ========================================================= */
-
-@media (max-width: 560px) {
-
-    .app-header {
-        padding: 12px;
-    }
-
-
-    .app-header h1 {
-        font-size: 21px;
-    }
-
-
-    .form-section {
-        padding: 11px;
-    }
-
-
-    input,
-    textarea {
-        font-size: 16px;
-    }
-
 }

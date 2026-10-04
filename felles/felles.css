@@ -1,0 +1,173 @@
+/* DAG- OG KVELDSMODUS */
+
+html {
+  color-scheme: light;
+}
+
+.app-header {
+  position: relative;
+  padding-right: 180px;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 38px;
+  padding: 8px 12px;
+
+  border: 1px solid var(--border, #d0d5dd);
+  border-radius: 10px;
+
+  background: var(--surface, #ffffff);
+  color: var(--text, #17212b);
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  filter: brightness(0.95);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--primary, #0066a1);
+  outline-offset: 3px;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --primary: #70bce8;
+  --background: #111820;
+  --surface: #1b2530;
+  --text: #e7edf4;
+  --muted: #a9b5c3;
+  --border: #4a596b;
+  --border-light: #344252;
+
+  --green: #176c43;
+  --green-dark: #1d8050;
+  --red: #a32929;
+  --red-dark: #bd3030;
+  --blue-light: #243f55;
+  --blue-light-hover: #30526d;
+  --black: #0c1117;
+}
+
+/* Overskriver også farger i sidens egen CSS. */
+
+html[data-theme="dark"] body {
+  background: var(--background);
+  color: var(--text);
+}
+
+html[data-theme="dark"] .app-header,
+html[data-theme="dark"] .form-navigation-inner,
+html[data-theme="dark"] .form-section,
+html[data-theme="dark"] .side-panel-inner {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-light);
+}
+
+html[data-theme="dark"] label,
+html[data-theme="dark"] .field-label {
+  color: #c8d3df;
+}
+
+html[data-theme="dark"] .app-eyebrow,
+html[data-theme="dark"] .form-navigation-label {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .field-card,
+html[data-theme="dark"] .report-output {
+  background: #151e28;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea {
+  background: #151e28;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #95a3b4;
+}
+
+html[data-theme="dark"] .form-nav-link,
+html[data-theme="dark"] .chip,
+html[data-theme="dark"] .criteria-chip {
+  color: var(--text);
+}
+
+html[data-theme="dark"] .form-nav-link:hover {
+  background: #263444;
+}
+
+html[data-theme="dark"] .form-nav-link[aria-current="page"],
+html[data-theme="dark"] .criteria-chip.is-selected {
+  background: #243f55;
+  color: #d8efff;
+  border-color: var(--primary);
+}
+
+html[data-theme="dark"] .chip {
+  background: #151e28;
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .chip.is-selected {
+  background: #275b7b;
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .criteria-chip {
+  background: #151e28;
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .criteria-chip.is-selected {
+  background: #243f55;
+  border-color: var(--primary);
+}
+
+html[data-theme="dark"] .action-procedure {
+  color: #d8efff;
+}
+
+html[data-theme="dark"] .copy-confirmation {
+  color: #7bd6a5;
+}
+
+html[data-theme="dark"] .field-error {
+  color: #ff9b9b;
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    padding-right: 145px;
+  }
+
+  .theme-toggle {
+    right: 12px;
+    gap: 5px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+}
