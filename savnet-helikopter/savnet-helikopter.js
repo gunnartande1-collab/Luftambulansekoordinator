@@ -89,21 +89,21 @@ const ICAO_LOCATIONS = {
 /* =========================================================
    TALEGRUPPER OG INDEKSNUMRE
 
-   Kilde: Bildene med indeksoversikt fra juli 2020.
-   Kontroller mot gjeldende oversikt før operativ bruk.
+   Startindekser fra den vedlagte oversikten (juli 2020).
+   X i oversikten betyr talegruppenummer.
 
-   Oppslaget ignorerer:
-   - Store og små bokstaver
-   - Mellomrom og bindestreker
-   - Punktum og understrek
-   - Forskjellen mellom ø/o, å/a og æ/ae
+   Område 01–09:
+   BAPS:    1–9
+   SAR:     1–4
+   SAMV:    1–5
+   SAMV-A:  A1–A2
+   SAMVUP:  11–29
 
-   Eksempel:
-   inn 3 / innlandet03 / Innlandet-03
-   -> Innlandet-03 (indeks 1713)
+   NOSE-EM: 1–8
+   NOSE-CO: 1–8
 
-   Rader med ukjente gruppenumre, angitt som x i kilden,
-   er ikke opprettet som konkrete talegrupper.
+   Oppslaget ignorerer store/små bokstaver, mellomrom,
+   bindestreker, punktum og understrek.
    ========================================================= */
 
 const TG_REGISTER = new Map();
@@ -125,18 +125,22 @@ function registerTg(name, index, aliases = []) {
         index: String(index)
     };
 
-    [name, ...aliases].forEach((alias) => {
+    for (const alias of [name, ...aliases]) {
         const key = normaliseTgKey(alias);
         const existing = TG_REGISTER.get(key);
 
-        if (existing && existing.name !== name) {
-            throw new Error(
-                "Tvetydig talegruppeforkortelse: " + alias
-            );
+        if (
+            existing &&
+            (
+                existing.name !== name ||
+                existing.index !== group.index
+            )
+        ) {
+            throw new Error("Tvetydig talegruppe: " + alias);
         }
 
         TG_REGISTER.set(key, group);
-    });
+    }
 }
 
 /* Regionale helsetalegrupper */
@@ -152,17 +156,17 @@ function registerTg(name, index, aliases = []) {
         const padded = String(number).padStart(2, "0");
 
         registerTg(
-            `${name}-${padded}`,
+            name + "-" + padded,
             base + number,
             [name, ...aliases].flatMap((prefix) => [
-                `${prefix}${number}`,
-                `${prefix}${padded}`
+                prefix + number,
+                prefix + padded
             ])
         );
     }
 });
 
-/* LA, FKS og konkrete SAR-/FINO-grupper */
+/* LA, FKS, HRS, SAR sjø og særskilte FINO-grupper */
 
 [
     ["LA-SØR-ØST1", 1, ["la so 1", "la sor ost 1"]],
@@ -206,9 +210,9 @@ function registerTg(name, index, aliases = []) {
     ["5-4", "KKN", 54]
 ].forEach(([resource, base, index]) => {
     registerTg(
-        `LA RW ${resource} ${base}`,
+        "LA RW " + resource + " " + base,
         index,
-        [`LA RW ${resource}`]
+        ["LA RW " + resource]
     );
 });
 
@@ -235,10 +239,10 @@ function registerTg(name, index, aliases = []) {
     ["85", 85]
 ].forEach(([suffix, index]) => {
     registerTg(
-        `LA-FW-${suffix}`,
+        "LA-FW-" + suffix,
         index,
         suffix.endsWith("-NAT")
-            ? [`LA-FW-${suffix}T`]
+            ? ["LA-FW-" + suffix + "T"]
             : []
     );
 });
@@ -254,68 +258,98 @@ function registerTg(name, index, aliases = []) {
     ["BANAK", 106]
 ].forEach(([base, index]) => {
     registerTg(
-        `330-${base}-3`,
+        "330-" + base + "-3",
         index,
-        [`330 ${base}`]
+        ["330 " + base]
     );
 });
 
-/* SAMV og SAMVUP */
+/*
+ * Område, BAPS-base, felles base for SAR/SAMV/SAMVUP.
+ *
+ * Eksempel område 08:
+ * BAPS-6   = 5170 + 6      = 5176
+ * SAR-4    = 5200 + 40 + 4 = 5244
+ * SAMV-1   = 5200 + 10 + 1 = 5211
+ * SAMV-A1  = 5200 + 15 + 1 = 5216
+ * SAMVUP-11 = 5200 + 10 + 11 = 5221
+ */
 
-[
-    [1, 1100],
-    [2, 1500],
-    [3, 1800],
-    [4, 2700],
-    [5, 3100],
-    [6, 3700],
-    [7, 4400],
-    [8, 5200],
-    [9, 5600]
-].forEach(([district, base]) => {
-    const padded = String(district).padStart(2, "0");
+const TG_AREAS = [
+    [1, 1070, 1100],
+    [2, 1470, 1500],
+    [3, 1770, 1800],
+    [4, 2670, 2700],
+    [5, 3070, 3100],
+    [6, 3670, 3700],
+    [7, 4370, 4400],
+    [8, 5170, 5200],
+    [9, 5570, 5600]
+];
+
+TG_AREAS.forEach(([area, bapsBase, sharedBase]) => {
+    const padded = String(area).padStart(2, "0");
+
+    const add = (
+        series,
+        number,
+        index,
+        extraSeries = []
+    ) => {
+        const aliases = [series, ...extraSeries]
+            .flatMap((prefix) => [
+                area + "-" + prefix + "-" + number,
+                padded + "-" + prefix + "-" + number
+            ]);
+
+        registerTg(
+            padded + "-" + series + "-" + number,
+            index,
+            aliases
+        );
+    };
+
+    for (let number = 1; number <= 9; number++) {
+        add("BAPS", number, bapsBase + number);
+    }
+
+    for (let number = 1; number <= 4; number++) {
+        add("SAR", number, sharedBase + 40 + number);
+    }
 
     for (let number = 1; number <= 5; number++) {
-        registerTg(
-            `${padded}-SAMV-${number}`,
-            base + 10 + number,
-            [
-                `${district} samv ${number}`,
-                `${district} samvirke ${number}`,
-                `${padded} samvirke ${number}`
-            ]
+        add(
+            "SAMV",
+            number,
+            sharedBase + 10 + number,
+            ["SAMVIRKE"]
         );
     }
 
     for (let number = 1; number <= 2; number++) {
-        registerTg(
-            `${padded}-SAMV-A${number}`,
-            base + 15 + number,
-            [
-                `${district} samv a${number}`,
-                `${district} samvirke a${number}`,
-                `${padded} samvirke a${number}`
-            ]
+        add(
+            "SAMV",
+            "A" + number,
+            sharedBase + 15 + number,
+            ["SAMVIRKE"]
         );
     }
 
     for (let number = 11; number <= 29; number++) {
-        registerTg(
-            `${padded}-SAMVUP-${number}`,
-            base + 10 + number,
-            [`${district} samvup ${number}`]
-        );
+        add("SAMVUP", number, sharedBase + 10 + number);
     }
 });
 
-/* Sverige og Finland */
+/* Sverige */
 
 for (let number = 1; number <= 8; number++) {
-    registerTg(`NOSE-H-${number}`, 9010 + number);
+    registerTg("NOSE-H-" + number, 9010 + number);
+    registerTg("NOSE-EM-" + number, 9070 + number);
+    registerTg("NOSE-CO-" + number, 9080 + number);
 }
 
 [10, 20, 30, 40, 50, 60, 70].forEach((number, index) => {
-    registerTg(`NOSE-H-${number}`, 9019 + index);
+    registerTg("NOSE-H-" + number, 9019 + index);
 });
 
 [
@@ -323,13 +357,17 @@ for (let number = 1; number <= 8; number++) {
     21, 22, 23, 24,
     31, 32, 33, 34
 ].forEach((number, index) => {
-    registerTg(`NOSE-SAR-${number}`, 9091 + index);
+    registerTg("NOSE-SAR-" + number, 9091 + index);
 });
 
+/* Finland */
+
 for (let number = 1; number <= 4; number++) {
-    registerTg(`FINO-H-${number}`, 9210 + number);
-    registerTg(`FINO-SAR-${number}`, 9290 + number);
+    registerTg("FINO-H-" + number, 9210 + number);
+    registerTg("FINO-SAR-" + number, 9290 + number);
 }
+
+/* Talegruppetekst i rapporten */
 
 function formatTgForReport(value) {
     const text = String(value ?? "").trim();
@@ -341,8 +379,8 @@ function formatTgForReport(value) {
     const group = TG_REGISTER.get(normaliseTgKey(text));
 
     return group
-        ? `${group.name} (indeks ${group.index})`
-        : `${text} (indeks ikke funnet)`;
+        ? group.name + " (indeks " + group.index + ")"
+        : text + " (indeks ikke funnet)";
 }
 
 /* =========================================================
@@ -483,12 +521,9 @@ function handleInput(event) {
         target.id === "utmPosition" ||
         target.id === "dmmPosition"
     ) {
-        // Feltet er nå manuelt redigert.
         delete target.dataset.generatedCoordinate;
         delete target.dataset.coordinateSource;
 
-        // Fjern gammel automatisk beregnet motposisjon.
-        // Manuelt innhold i det andre feltet beholdes.
         const otherId =
             target.id === "utmPosition"
                 ? "dmmPosition"
@@ -501,8 +536,7 @@ function handleInput(event) {
             other.dataset.coordinateSource === target.id
         ) {
             if (
-                other.value ===
-                other.dataset.generatedCoordinate
+                other.value === other.dataset.generatedCoordinate
             ) {
                 other.value = "";
             }
@@ -612,9 +646,7 @@ function getTgValues() {
         )
     ];
 
-    return values
-        .filter(Boolean)
-        .map(formatTgForReport);
+    return values.filter(Boolean).map(formatTgForReport);
 }
 
 /* =========================================================
@@ -782,10 +814,7 @@ function formatTime(value) {
 }
 
 function validateTimes() {
-    const invalid = [
-        "departureTime",
-        "etaTime"
-    ].some((id) => {
+    const invalid = ["departureTime", "etaTime"].some((id) => {
         const text = $("#" + id)?.value.trim() ?? "";
 
         return text && !formatTime(text);
@@ -853,8 +882,7 @@ function formatLocation(value) {
 
 /* =========================================================
    LES KOORDINATER
-
-   Ukjent format gir null og behandles som fritekst.
+   Ukjent format behandles som fritekst.
    ========================================================= */
 
 function parseUtm(value) {
@@ -944,7 +972,6 @@ function splitDegrees(value) {
     const absolute = Math.abs(value);
 
     let degrees = Math.floor(absolute);
-
     let minutes = Number(
         ((absolute - degrees) * 60).toFixed(3)
     );
@@ -1170,7 +1197,7 @@ function latLonToUtm32(latitude, longitude) {
    KOORDINATKONVERTERING
 
    Fritekst beholdes uten koordinatfeilmelding.
-   Konvertering fyller bare tomme eller automatisk fylte felt.
+   Fyller bare tomme eller automatisk fylte felt.
    ========================================================= */
 
 function clearCoordinateError() {
@@ -1255,8 +1282,6 @@ function convertCoordinates(sourceId) {
             return;
         }
 
-        // Automatisk konvertering brukes innenfor sone 32N.
-        // Andre posisjoner beholdes uten feilmelding.
         if (
             parsed.latitude < 0 ||
             parsed.latitude > 84 ||
@@ -1356,9 +1381,7 @@ function personReportLine(role, name, phone) {
 
 function generateReport() {
     const value = (id) => $("#" + id)?.value.trim() ?? "";
-
-    const separator =
-        "----------------------------------------";
+    const separator = "----------------------------------------";
 
     const reportTime = (id) => {
         const raw = value(id);
@@ -1367,8 +1390,7 @@ function generateReport() {
             return "";
         }
 
-        return formatTime(raw) ||
-            "[kontroller klokkeslett]";
+        return formatTime(raw) || "[kontroller klokkeslett]";
     };
 
     const lines = [
@@ -1429,12 +1451,10 @@ function generateReport() {
 
     $$(".trainee-row").forEach((row, index) => {
         const name =
-            row.querySelector(".trainee-name")
-                ?.value.trim() ?? "";
+            row.querySelector(".trainee-name")?.value.trim() ?? "";
 
         const phone =
-            row.querySelector(".trainee-phone")
-                ?.value.trim() ?? "";
+            row.querySelector(".trainee-phone")?.value.trim() ?? "";
 
         if (!name && !phone) {
             return;
@@ -1520,10 +1540,7 @@ async function copyReport() {
             confirmation.textContent = "Tekst kopiert";
         }
 
-        copyTimer = setTimeout(
-            clearCopyConfirmation,
-            2500
-        );
+        copyTimer = setTimeout(clearCopyConfirmation, 2500);
     } else if (confirmation) {
         confirmation.textContent =
             "Kopiering ble blokkert. Marker og kopier rapportteksten manuelt.";
@@ -1553,11 +1570,7 @@ function createEmail() {
     updateReport();
 
     const report = $("#reportOutput")?.value ?? "";
-
-    const subject = encodeURIComponent(
-        "Savnet helikopter"
-    );
-
+    const subject = encodeURIComponent("Savnet helikopter");
     const body = encodeURIComponent(report);
 
     window.location.href =
