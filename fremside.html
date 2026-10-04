@@ -1,506 +1,579 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Luftambulansekoordinator</title>
+  <title>Luftambulansekoordinator</title>
 
-    <style>
-        :root {
-            --background: #eef2f5;
-            --surface: #ffffff;
-            --text: #17212b;
-            --muted: #667085;
-            --border: #dce2e8;
-            --primary: #0066a1;
-            --primary-light: #eaf5fb;
-            --sidebar-width: 240px;
-        }
+  <link rel="stylesheet" href="felles/felles.css">
+  <script src="felles/felles.js" defer></script>
 
-        * {
-            box-sizing: border-box;
-        }
+  <style>
+    :root {
+      --background: #eef2f5;
+      --surface: #ffffff;
+      --text: #17212b;
+      --muted: #667085;
+      --border: #dce2e8;
+      --primary: #0066a1;
+      --primary-light: #eaf5fb;
+      --hover-surface: #f3f6f8;
+      --active-border: #c5e1f1;
+      --button-background: #0066a1;
+      --button-hover: #004f7c;
+      --unavailable-background: #f0f3f5;
+      --sidebar-width: 240px;
 
-        body {
-            margin: 0;
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-            background: var(--background);
-            color: var(--text);
-            line-height: 1.5;
-        }
+      color-scheme: light;
+    }
 
-        a {
-            color: inherit;
-        }
+    html[data-theme="dark"] {
+      --background: #111820;
+      --surface: #1b2530;
+      --text: #e7edf4;
+      --muted: #a9b5c3;
+      --border: #344252;
+      --primary: #70bce8;
+      --primary-light: #243f55;
+      --hover-surface: #263444;
+      --active-border: #48799a;
+      --button-background: #275b7b;
+      --button-hover: #34769b;
+      --unavailable-background: #26323f;
 
-        button,
-        input {
-            font: inherit;
-        }
+      color-scheme: dark;
+    }
 
-        a:focus-visible {
-            outline: 3px solid var(--primary);
-            outline-offset: 4px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        .skip-link {
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            z-index: 10;
-            padding: 10px 16px;
-            border-radius: 8px;
-            background: var(--primary);
-            color: white;
-            transform: translateY(-160%);
-        }
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.5;
+    }
 
-        .skip-link:focus {
-            transform: translateY(0);
-        }
+    a {
+      color: inherit;
+    }
 
-        /* Felles overskrift */
+    button {
+      font: inherit;
+    }
 
-        .app-header {
-            padding: 22px 28px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-        }
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 4px;
+    }
 
-        .app-eyebrow {
-            margin: 0 0 4px;
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--button-background);
+      color: #ffffff;
+      transform: translateY(-160%);
+    }
 
-        .app-header h1 {
-            margin: 0;
-            font-size: 25px;
-        }
+    .skip-link:focus {
+      transform: translateY(0);
+    }
 
-        /* Venstremeny og hovedinnhold */
+    /* OVERSKRIFT OG MODUSKNAPP */
 
-        .app-layout {
-            display: grid;
-            grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-            min-height: calc(100vh - 105px);
-        }
+    .app-header {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
 
-        .sidebar {
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-        }
+      width: 100%;
+      height: auto;
+      min-height: 90px;
+      padding: 22px 28px;
 
-        .sidebar-inner {
-            position: sticky;
-            top: 0;
-            padding: 24px 16px;
-        }
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
 
-        .navigation-label {
-            margin: 22px 12px 10px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
+    .app-header h1 {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
 
-        .nav-list {
-            display: grid;
-            gap: 8px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
+    .app-header .theme-toggle {
+      position: static;
+      top: auto;
+      right: auto;
+      transform: none;
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-height: 46px;
-            padding: 11px 12px;
-            border: 1px solid transparent;
-            border-radius: 9px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            overflow-wrap: anywhere;
-        }
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      gap: 8px;
 
-        a.nav-link:hover {
-            background: #f3f6f8;
-            border-color: var(--border);
-        }
+      min-height: 38px;
+      padding: 8px 12px;
 
-        .nav-link[aria-current="page"] {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: #c5e1f1;
-        }
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
 
-        .nav-link.is-unavailable {
-            color: var(--muted);
-        }
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
 
-        .nav-icon {
-            width: 23px;
-            flex: 0 0 23px;
-            text-align: center;
-            font-size: 19px;
-        }
+    .app-header .theme-toggle:hover {
+      background: var(--hover-surface);
+      filter: none;
+    }
 
-        .nav-copy {
-            display: grid;
-            gap: 2px;
-        }
+    /* VENSTREMENY OG HOVEDINNHOLD */
 
-        .nav-status {
-            font-size: 11px;
-            font-weight: 400;
-        }
+    .app-layout {
+      display: grid;
+      grid-template-columns:
+        var(--sidebar-width)
+        minmax(0, 1fr);
+      min-height: calc(100vh - 90px);
+    }
 
-        /* Forside */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+    }
 
-        .main-content {
-            width: 100%;
-            max-width: 1250px;
-            padding: 38px;
-            min-width: 0;
-        }
+    .sidebar-inner {
+      position: sticky;
+      top: 0;
+      padding: 24px 16px;
+    }
 
-        .page-heading {
-            margin-bottom: 26px;
-        }
+    .navigation-label {
+      margin: 22px 12px 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
 
-        .page-heading h2 {
-            margin: 0 0 8px;
-            font-size: 28px;
-        }
+    .nav-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
 
-        .page-heading p {
-            margin: 0;
-            color: var(--muted);
-            max-width: 650px;
-        }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 11px 12px;
 
-        .form-cards {
-            display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(min(100%, 280px), 1fr)
-            );
-            align-items: stretch;
-            gap: 20px;
-        }
+      border: 1px solid transparent;
+      border-radius: 9px;
 
-        .form-card {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 26px;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            background: var(--surface);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-        }
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
 
-        .card-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            background: var(--primary-light);
-            color: var(--primary);
-            font-size: 27px;
-        }
+    a.nav-link:hover {
+      background: var(--hover-surface);
+      border-color: var(--border);
+    }
 
-        .form-card h3 {
-            margin: 0 0 9px;
-            font-size: 20px;
-        }
+    .nav-link[aria-current="page"] {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--active-border);
+    }
 
-        .form-card p {
-            margin: 0 0 24px;
-            color: var(--muted);
-        }
+    .nav-link.is-unavailable {
+      color: var(--muted);
+    }
 
-        .card-action {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            min-height: 44px;
-            margin-top: auto;
-            padding: 10px 17px;
-            border-radius: 8px;
-            background: var(--primary);
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-        }
+    .nav-icon {
+      width: 23px;
+      flex: 0 0 23px;
+      text-align: center;
+      font-size: 19px;
+    }
 
-        a.card-action:hover {
-            background: #004f7c;
-        }
+    .nav-copy {
+      display: grid;
+      gap: 2px;
+    }
 
-        .card-action.is-unavailable {
-            background: #f0f3f5;
-            color: var(--muted);
-        }
+    .nav-status {
+      font-size: 11px;
+      font-weight: 400;
+    }
 
-        .page-footer {
-            margin-top: 32px;
-            color: var(--muted);
-            font-size: 12px;
-        }
+    /* SKJEMAKORT */
 
-        /* Nettbrett og mobil */
+    .main-content {
+      width: 100%;
+      max-width: 1250px;
+      min-width: 0;
+      padding: 38px;
+    }
 
-        @media (max-width: 900px) {
-            :root {
-                --sidebar-width: 210px;
-            }
+    .page-heading {
+      margin-bottom: 26px;
+    }
 
-            .main-content {
-                padding: 26px;
-            }
-        }
+    .page-heading h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
 
-        @media (max-width: 650px) {
-            .app-header {
-                padding: 18px;
-            }
+    .page-heading p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+    }
 
-            .app-header h1 {
-                font-size: 22px;
-            }
+    .form-cards {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      align-items: stretch;
+      gap: 20px;
+    }
 
-            .app-layout {
-                grid-template-columns: 1fr;
-            }
+    .form-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 26px;
 
-            .sidebar {
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
-            }
+      border: 1px solid var(--border);
+      border-radius: 14px;
 
-            .sidebar-inner {
-                position: static;
-                padding: 12px;
-            }
+      background: var(--surface);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
 
-            .navigation-label {
-                margin: 14px 12px 8px;
-            }
+    .card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
-            .nav-list {
-                grid-template-columns: repeat(
-                    auto-fit,
-                    minmax(150px, 1fr)
-                );
-            }
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
 
-            .main-content {
-                padding: 24px 16px;
-            }
+      border-radius: 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 27px;
+    }
 
-            .page-heading h2 {
-                font-size: 24px;
-            }
+    .form-card h3 {
+      margin: 0 0 9px;
+      font-size: 20px;
+    }
 
-            .form-card {
-                padding: 22px;
-            }
-        }
-    </style>
+    .form-card p {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      min-height: 44px;
+      margin-top: auto;
+      padding: 10px 17px;
+
+      border-radius: 8px;
+      background: var(--button-background);
+      color: #ffffff;
+
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    a.card-action:hover {
+      background: var(--button-hover);
+    }
+
+    .card-action.is-unavailable {
+      background: var(--unavailable-background);
+      color: var(--muted);
+    }
+
+    .page-footer {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* NETTBRETT OG MOBIL */
+
+    @media (max-width: 900px) {
+      :root {
+        --sidebar-width: 210px;
+      }
+
+      .main-content {
+        padding: 26px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .app-header {
+        gap: 12px;
+        padding: 18px;
+      }
+
+      .app-header h1 {
+        font-size: 22px;
+      }
+
+      .app-header .theme-toggle {
+        gap: 5px;
+        padding: 7px 9px;
+        font-size: 12px;
+      }
+
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .sidebar-inner {
+        position: static;
+        padding: 12px;
+      }
+
+      .navigation-label {
+        margin: 14px 12px 8px;
+      }
+
+      .nav-list {
+        grid-template-columns:
+          repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .page-heading h2 {
+        font-size: 24px;
+      }
+
+      .form-card {
+        padding: 22px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <a class="skip-link" href="#mainContent">Gå til hovedinnhold</a>
+  <a class="skip-link" href="#mainContent">
+    Gå til hovedinnhold
+  </a>
 
-    <header class="app-header">
-        <h1>Luftambulansekoordinator</h1>
-    </header> <script src="felles/felles.js" defer></script>
+  <header class="app-header">
+    <h1>Luftambulansekoordinator</h1>
 
-    <div class="app-layout">
-        <aside class="sidebar">
-            <div class="sidebar-inner">
-                <nav aria-label="Hovedmeny">
-                    <a
-                        class="nav-link"
-                        href="fremside.html"
-                        aria-current="page"
-                    >
-                        <span class="nav-icon" aria-hidden="true">⌂</span>
-                        <span>Hjem</span>
-                    </a>
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-pressed="false"
+      aria-label="Slå på kveldsmodus"
+    >
+      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle-text">Kveldsmodus</span>
+    </button>
+  </header>
 
-                    <p class="navigation-label">Skjemaer</p>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-inner">
+        <nav aria-label="Hovedmeny">
+          <a
+            class="nav-link"
+            href="fremside.html"
+            aria-current="page"
+          >
+            <span class="nav-icon" aria-hidden="true">⌂</span>
+            <span>Hjem</span>
+          </a>
 
-                    <ul class="nav-list" id="formNavigation"></ul>
-                </nav>
-            </div>
-        </aside>
+          <p class="navigation-label">Skjemaer</p>
 
-        <main class="main-content" id="mainContent">
-            <div class="page-heading">
-                <h2>Skjemaer</h2>
-                <p>
-                    Velg skjema for hendelsen du skal dokumentere.
-                </p>
-            </div>
+          <ul class="nav-list" id="formNavigation"></ul>
+        </nav>
+      </div>
+    </aside>
 
-            <div class="form-cards" id="formCards"></div>
+    <main class="main-content" id="mainContent">
+      <div class="page-heading">
+        <h2>Skjemaer</h2>
+        <p>Velg skjema for hendelsen du skal dokumentere.</p>
+      </div>
 
-            <noscript>
-                <p>
-                    <a href="savnet-helikopter/savnet-helikopter.html">
+      <div class="form-cards" id="formCards"></div>
 
-                    </a>
-                        Åpne skjema for savnet helikopter
-                    </a>
-                </p>
-            </noscript>
+      <noscript>
+        <p>
+          <a href="savnet-helikopter/savnet-helikopter.html">
+            Åpne skjema for savnet helikopter
+          </a>
+        </p>
+      </noscript>
 
-            <footer class="page-footer">
-                Luftambulansekoordinator
-            </footer>
-        </main>
-    </div>
+      <footer class="page-footer">
+        Luftambulansekoordinator
+      </footer>
+    </main>
+  </div>
 
-    <script>
-        /*
-         * Legg til nye skjemaer i denne listen.
-         * Listen brukes både i venstremenyen og på forsiden.
-         *
-         * available: true  = siden er klar og kan åpnes
-         * available: false = viser «Kommer», uten aktiv lenke
-         */
+  <script>
+    (() => {
+      const FORMS = [
+        {
+          title: "Savnet helikopter",
+          description:
+            "Registrer siste kjente posisjon, flyrute, " +
+            "utløsende kriterium og personer om bord.",
+          href: "savnet-helikopter/savnet-helikopter.html",
+          icon: "✈",
+          available: true
+        },
+        {
+          title: "GPS-forstyrrelser",
+          description:
+            "Registrer tidspunkt, posisjon, høyde, " +
+            "luftfartøy og beskrivelse av forstyrrelsen.",
+          href: "gps-forstyrrelser/gps-forstyrrelser.html",
+          icon: "⌖",
+          available: false
+        }
+      ];
 
-        const FORMS = [
-            {
-                title: "Savnet helikopter",
-                description:
-                    "Registrer siste kjente posisjon, flyrute, " +
-                    "utløsende kriterium og personer om bord.",
-                href: "savnet-helikopter/savnet-helikopter.html",
-                icon: "✈",
-                available: true
-            },
-            {
-                title: "GPS-forstyrrelser",
-                description:
-                    "Registrer tidspunkt, posisjon, høyde, " +
-                    "luftfartøy og beskrivelse av forstyrrelsen.",
-                href: "gps-forstyrrelser/gps-forstyrrelser.html",
-                icon: "⌖",
-                available: false
-            }
-        ];
+      const navigation = document.getElementById("formNavigation");
+      const cards = document.getElementById("formCards");
 
-        const navigation = document.getElementById("formNavigation");
-        const cards = document.getElementById("formCards");
+      FORMS.forEach((form) => {
+        const listItem = document.createElement("li");
+        const navItem = document.createElement(
+          form.available ? "a" : "span"
+        );
 
-        FORMS.forEach((form) => {
-            /* Venstremeny */
+        navItem.className = "nav-link";
 
-            const listItem = document.createElement("li");
+        if (form.available) {
+          navItem.href = form.href;
+        } else {
+          navItem.classList.add("is-unavailable");
+        }
 
-            const navItem = document.createElement(
-                form.available ? "a" : "span"
-            );
+        const navIcon = document.createElement("span");
+        navIcon.className = "nav-icon";
+        navIcon.setAttribute("aria-hidden", "true");
+        navIcon.textContent = form.icon;
 
-            navItem.className = "nav-link";
+        const navCopy = document.createElement("span");
+        navCopy.className = "nav-copy";
 
-            if (form.available) {
-                navItem.href = form.href;
-            } else {
-                navItem.classList.add("is-unavailable");
-            }
+        const navTitle = document.createElement("span");
+        navTitle.textContent = form.title;
+        navCopy.appendChild(navTitle);
 
-            const navIcon = document.createElement("span");
-            navIcon.className = "nav-icon";
-            navIcon.setAttribute("aria-hidden", "true");
-            navIcon.textContent = form.icon;
+        if (!form.available) {
+          const status = document.createElement("span");
+          status.className = "nav-status";
+          status.textContent = "Kommer";
+          navCopy.appendChild(status);
+        }
 
-            const navCopy = document.createElement("span");
-            navCopy.className = "nav-copy";
+        navItem.append(navIcon, navCopy);
+        listItem.appendChild(navItem);
+        navigation.appendChild(listItem);
 
-            const navTitle = document.createElement("span");
-            navTitle.textContent = form.title;
+        const card = document.createElement("article");
+        card.className = "form-card";
 
-            navCopy.appendChild(navTitle);
+        const cardIcon = document.createElement("span");
+        cardIcon.className = "card-icon";
+        cardIcon.setAttribute("aria-hidden", "true");
+        cardIcon.textContent = form.icon;
 
-            if (!form.available) {
-                const status = document.createElement("span");
-                status.className = "nav-status";
-                status.textContent = "Kommer";
-                navCopy.appendChild(status);
-            }
+        const title = document.createElement("h3");
+        title.textContent = form.title;
 
-            navItem.append(navIcon, navCopy);
-            listItem.appendChild(navItem);
-            navigation.appendChild(listItem);
+        const description = document.createElement("p");
+        description.textContent = form.description;
 
-            /* Kort på forsiden */
+        const action = document.createElement(
+          form.available ? "a" : "span"
+        );
 
-            const card = document.createElement("article");
-            card.className = "form-card";
+        action.className = "card-action";
 
-            const cardIcon = document.createElement("span");
-            cardIcon.className = "card-icon";
-            cardIcon.setAttribute("aria-hidden", "true");
-            cardIcon.textContent = form.icon;
+        if (form.available) {
+          action.href = form.href;
+          action.setAttribute(
+            "aria-label",
+            "Åpne skjema: " + form.title
+          );
 
-            const title = document.createElement("h3");
-            title.textContent = form.title;
+          const text = document.createElement("span");
+          text.textContent = "Åpne skjema";
 
-            const description = document.createElement("p");
-            description.textContent = form.description;
+          const arrow = document.createElement("span");
+          arrow.setAttribute("aria-hidden", "true");
+          arrow.textContent = "→";
 
-            const action = document.createElement(
-                form.available ? "a" : "span"
-            );
+          action.append(text, arrow);
+        } else {
+          action.classList.add("is-unavailable");
+          action.textContent = "Kommer";
+        }
 
-            action.className = "card-action";
-
-            if (form.available) {
-                action.href = form.href;
-                action.setAttribute(
-                    "aria-label",
-                    "Åpne skjema: " + form.title
-                );
-
-                const text = document.createElement("span");
-                text.textContent = "Åpne skjema";
-
-                const arrow = document.createElement("span");
-                arrow.setAttribute("aria-hidden", "true");
-                arrow.textContent = "→";
-
-                action.append(text, arrow);
-            } else {
-                action.classList.add("is-unavailable");
-                action.textContent = "Kommer";
-            }
-
-            card.append(cardIcon, title, description, action);
-            cards.appendChild(card);
-        });
-    </script>
+        card.append(cardIcon, title, description, action);
+        cards.appendChild(card);
+      });
+    })();
+  </script>
 </body>
 </html>

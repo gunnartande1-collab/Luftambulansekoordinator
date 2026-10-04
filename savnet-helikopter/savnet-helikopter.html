@@ -6,15 +6,12 @@
 
   <title>Savnet helikopter | Luftambulansekoordinator</title>
 
-  <!-- Felles CSS ligger i mappen «felles». -->
   <link rel="stylesheet" href="../felles/felles.css">
-
-  <!-- Skjemaets CSS ligger i samme mappe som denne HTML-filen. -->
   <link rel="stylesheet" href="savnet-helikopter.css">
 
-  <!-- Skjemaets JavaScript ligger i samme mappe som denne HTML-filen. -->
+  <script src="../felles/felles.js" defer></script>
   <script src="savnet-helikopter.js" defer></script>
-</head><script src="../felles/felles.js" defer></script>
+</head>
 
 <body>
   <header class="app-header">
@@ -22,6 +19,17 @@
       <p class="app-eyebrow">Luftambulansekoordinator</p>
       <h1>Savnet helikopter</h1>
     </div>
+
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-pressed="false"
+      aria-label="Slå på kveldsmodus"
+    >
+      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle-text">Kveldsmodus</span>
+    </button>
   </header>
 
   <!-- Tre kolonner: venstremeny, skjema og rapport. -->

@@ -751,3 +751,24 @@ textarea::placeholder {
         column-gap: 12px;
     }
 }
+
+.app-header {
+  padding-right: 180px;
+}
+
+.app-header .theme-toggle {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    padding-right: 145px;
+  }
+
+  .app-header .theme-toggle {
+    right: 12px;
+  }
+}
