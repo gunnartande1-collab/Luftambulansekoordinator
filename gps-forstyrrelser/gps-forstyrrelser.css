@@ -1,890 +1,213 @@
-:root {
-  --primary: #0066a1;
-
-  --background: #eef2f5;
-  --surface: #ffffff;
-
-  --text: #17212b;
-  --muted: #667085;
-
-  --border: #d0d5dd;
-  --border-light: #e4e7ec;
-
-  --green: #16834b;
-  --green-dark: #0e6739;
-
-  --red: #c62828;
-  --red-dark: #a51e1e;
-
-  --blue-light: #dceef9;
-  --blue-light-hover: #c7e4f5;
-
-  --black: #202124;
-
-  --radius-small: 6px;
-  --radius-medium: 10px;
-  --radius-large: 14px;
-
-  --header-height: 70px;
-  --panel-gap: 12px;
-}
-
-
 /* =========================================================
-   GENERELT
+   GPS – LUFTFARTØY
    ========================================================= */
 
-* {
-  box-sizing: border-box;
-}
-
-
-html {
-  scroll-behavior: smooth;
-
-  scroll-padding-top:
-    calc(
-      var(--header-height) +
-      var(--panel-gap)
-    );
-}
-
-
-body {
-  margin: 0;
-
-  background: var(--background);
-  color: var(--text);
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-
-  line-height: 1.45;
-}
-
-
-button,
-input,
-textarea {
-  font: inherit;
-}
-
-
-button {
-  cursor: pointer;
-}
-
-
-button:focus-visible,
-a:focus-visible {
-  outline: 3px solid var(--primary);
-  outline-offset: 3px;
-}
-
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.app-header {
-  position: sticky;
-
-  top: 0;
-
-  z-index: 20;
-
-  display: flex;
-
-  align-items: center;
-
-  width: 100%;
-
-  height: var(--header-height);
-
-  padding:
-    10px
-    180px
-    10px
-    20px;
-
-  background: var(--surface);
-
-  border-bottom:
-    1px
-    solid
-    var(--border-light);
-}
-
-
-.app-eyebrow {
-  margin: 0 0 2px;
-
-  color: var(--muted);
-
-  font-size: 12px;
-  font-weight: 700;
-
-  letter-spacing: 0.07em;
-
-  text-transform: uppercase;
-}
-
-
-.app-header h1 {
-  margin: 0;
-
-  font-size: 24px;
-
-  line-height: 1.2;
-}
-
-
-.app-header .theme-toggle {
-  position: absolute;
-
-  top: 50%;
-  right: 20px;
-
-  transform: translateY(-50%);
-}
-
-
-/* =========================================================
-   HOVEDLAYOUT
-   ========================================================= */
-
-.app-shell {
-  display: grid;
-
+.aircraft-grid {
   grid-template-columns:
-    190px
-    minmax(0, 1fr)
-    340px;
-
-  grid-template-areas:
-    "navigation form report";
-
-  gap: 16px;
-
-  align-items: start;
-
-  width: calc(100% - 24px);
-
-  max-width: 1800px;
-
-  margin:
-    var(--panel-gap)
-    auto;
+    minmax(120px, 0.8fr)
+    minmax(140px, 1fr)
+    minmax(140px, 1fr);
 }
+
 
 
 /* =========================================================
-   VENSTREMENY
+   VARSLINGSLISTE
    ========================================================= */
 
-.form-navigation {
-  grid-area: navigation;
-
-  position: sticky;
-
-  top:
-    calc(
-      var(--header-height) +
-      var(--panel-gap)
-    );
-
-  align-self: start;
-
-  min-width: 0;
-}
-
-
-/*
- * Selve utseendet på menyen overstyres også av felles.css.
- * Disse reglene gjør fallback-versjonen riktig dersom det trengs.
- */
-
-.form-navigation-inner {
-  position: static;
-
-  padding: 10px;
-
-  background: var(--surface);
-
-  border:
-    1px
-    solid
-    var(--border-light);
-
-  border-radius:
-    var(--radius-large);
-
-  box-shadow:
-    0 1px 3px
-    rgba(0, 0, 0, 0.06);
-}
-
-
-.form-navigation-label {
-  margin:
-    4px
-    8px
-    10px;
-
-  color: var(--muted);
-
-  font-size: 12px;
-  font-weight: 700;
-
-  letter-spacing: 0.06em;
-
-  text-transform: uppercase;
-}
-
-
-.form-nav-list {
-  display: grid;
-
-  gap: 6px;
-
-  margin: 0;
-
-  padding: 0;
-
-  list-style: none;
-}
-
-
-.form-nav-link {
+.notification-list {
   display: flex;
-
-  align-items: center;
+  flex-direction: column;
 
   gap: 8px;
+}
 
-  min-height: 42px;
 
-  padding:
-    8px
-    9px;
+.notification-row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    112px;
+
+  gap: 12px;
+
+  align-items: center;
+
+  min-height: 52px;
+
+  padding: 8px 10px;
 
   border:
     1px
     solid
-    transparent;
+    var(--border-light);
 
-  border-radius: 9px;
+  border-radius:
+    var(--radius-medium);
 
-  color: var(--text);
+  background: #fafbfc;
+}
+
+
+.notification-copy {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
 
   font-size: 14px;
+
   font-weight: 600;
-
-  text-decoration: none;
 }
 
 
-.form-nav-link:hover {
-  background: #f3f6f8;
+.notification-number {
+  display: inline-flex;
 
-  border-color:
-    var(--border-light);
-}
+  align-items: center;
 
+  justify-content: center;
 
-.form-nav-link[aria-current="page"] {
+  flex: 0 0 26px;
+
+  width: 26px;
+  height: 26px;
+
+  border-radius: 50%;
+
   background: #eaf5fb;
 
-  border-color: #c5e1f1;
-
-  color: var(--primary);
-}
-
-
-.form-nav-icon {
-  width: 24px;
-
-  flex:
-    0
-    0
-    24px;
-
-  text-align: center;
-
-  font-size: 18px;
-}
-
-
-.form-nav-copy {
-  min-width: 0;
-}
-
-
-/* =========================================================
-   SKJEMAPANEL
-   ========================================================= */
-
-.form-panel-frame {
-  grid-area: form;
-
-  position: relative;
-
-  min-width: 0;
-
-  height:
-    calc(
-      100vh -
-      var(--header-height) -
-      var(--panel-gap) * 2
-    );
-
-  height:
-    calc(
-      100dvh -
-      var(--header-height) -
-      var(--panel-gap) * 2
-    );
-}
-
-
-.form-panel {
-  min-width: 0;
-}
-
-
-.form-panel-frame .form-panel {
-  height: 100%;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  scrollbar-gutter: stable;
-
-  scrollbar-width: auto;
-
-  scrollbar-color:
-    var(--primary)
-    var(--background);
-
-  padding-right: 5px;
-
-  overscroll-behavior-y: contain;
-}
-
-
-.form-panel::-webkit-scrollbar {
-  width: 12px;
-}
-
-
-.form-panel::-webkit-scrollbar-thumb {
-  background:
+  color:
     var(--primary);
-
-  border:
-    3px
-    solid
-    var(--background);
-
-  border-radius: 10px;
-}
-
-
-.form-panel::-webkit-scrollbar-track {
-  background:
-    var(--background);
-}
-
-
-.form-panel form {
-  padding-bottom: 48px;
-}
-
-
-/* =========================================================
-   RULLEINDIKATOR
-   ========================================================= */
-
-.form-scroll-hint {
-  position: absolute;
-
-  bottom: 10px;
-  right: 24px;
-
-  z-index: 5;
-
-  padding:
-    7px
-    12px;
-
-  color: var(--primary);
-
-  background:
-    var(--surface);
-
-  border:
-    1px
-    solid
-    var(--primary);
-
-  border-radius: 999px;
-
-  box-shadow:
-    0 3px 12px
-    #0002;
 
   font-size: 12px;
-  font-weight: 700;
+
+  font-weight: 800;
 }
 
 
-.form-scroll-hint[hidden] {
-  display: none;
-}
-
-
-/* =========================================================
-   SEKSJONER
-   ========================================================= */
-
-.form-section {
-  margin:
-    0
-    0
-    10px;
-
-  padding: 14px;
-
-  background:
-    var(--surface);
-
-  border:
-    1px
-    solid
-    var(--border-light);
-
-  border-radius:
-    var(--radius-large);
-
-  box-shadow:
-    0 1px 3px
-    rgba(0, 0, 0, 0.06);
-}
-
-
-.form-section:last-child {
-  margin-bottom: 0;
-}
-
-
-.form-section h2 {
-  margin:
-    0
-    0
-    12px;
-
-  font-size: 18px;
-
-  line-height: 1.2;
-}
-
-
-/* =========================================================
-   FELTER
-   ========================================================= */
-
-.form-grid {
-  display: grid;
-
-  gap: 10px;
-
-  margin-bottom: 10px;
-}
-
-
-.form-grid-2 {
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-}
-
-
-.form-field {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 5px;
-
-  min-width: 0;
-
-  margin-bottom: 10px;
-}
-
-
-.form-grid .form-field,
-.form-field:last-child {
-  margin-bottom: 0;
-}
-
-
-label,
-.field-label {
-  color: #344054;
-
-  font-size: 13px;
-
-  font-weight: 650;
-}
-
-
-input,
-textarea {
-  width: 100%;
-
-  min-width: 0;
-
-  border:
-    1px
-    solid
-    var(--border);
-
-  border-radius:
-    var(--radius-small);
-
-  background:
-    var(--surface);
-
-  color:
-    var(--text);
-}
-
-
-input {
-  height: 36px;
-
-  padding:
-    0
-    9px;
-}
-
-
-textarea {
-  padding:
-    8px
-    9px;
-
-  resize: vertical;
-}
-
-
-input:focus,
-textarea:focus {
-  outline:
-    2px
-    solid
-    var(--primary);
-
-  outline-offset: 1px;
-}
-
-
-input::placeholder,
-textarea::placeholder {
-  color: #98a2b3;
-}
-
-
-.field-help {
-  margin:
-    4px
-    0
-    0;
-
-  color:
-    var(--muted);
-
-  font-size: 12px;
-}
-
-
-/* =========================================================
-   CHIPS
-   ========================================================= */
-
-.gps-chip-row {
+.notification-police-copy {
   display: grid;
 
   grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
-  gap: 16px;
-}
-
-
-.chip-group {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 6px;
-}
-
-
-.chip {
-  min-width: 36px;
-
-  min-height: 36px;
-
-  padding:
-    0
-    10px;
-
-  border:
-    1px
-    solid
-    var(--border);
-
-  border-radius: 999px;
-
-  background:
-    var(--surface);
-
-  color: #344054;
-}
-
-
-.chip:hover {
-  border-color:
-    var(--primary);
-}
-
-
-.chip.is-selected {
-  background:
-    var(--primary);
-
-  border-color:
-    var(--primary);
-
-  color: #ffffff;
-}
-
-
-textarea:disabled {
-  opacity: 0.65;
-
-  cursor: not-allowed;
-}
-
-
-/* =========================================================
-   FEIL
-   ========================================================= */
-
-.field-error {
-  min-height: 0;
-
-  margin: 0;
-
-  color:
-    var(--red);
-
-  font-size: 13px;
-}
-
-
-.field-error:not(:empty) {
-  margin:
-    0
-    0
-    10px;
-}
-
-
-/* =========================================================
-   RAPPORTPANEL
-   ========================================================= */
-
-.side-panel {
-  grid-area: report;
-
-  position: sticky;
-
-  top:
-    calc(
-      var(--header-height) +
-      var(--panel-gap)
-    );
-
-  align-self: start;
-
-  min-width: 0;
-
-  min-height: 0;
-
-  height:
-    calc(
-      100vh -
-      var(--header-height) -
-      var(--panel-gap) * 2
-    );
-
-  height:
-    calc(
-      100dvh -
-      var(--header-height) -
-      var(--panel-gap) * 2
-    );
-}
-
-
-.side-panel-inner {
-  position: static;
-
-  display: flex;
-
-  flex-direction: column;
+    auto
+    minmax(110px, 180px);
 
   gap: 10px;
 
-  height: 100%;
+  align-items: center;
 
-  min-height: 0;
+  width: 100%;
+}
 
-  padding: 14px;
+
+.notification-inline-input {
+  height: 32px;
+
+  padding:
+    0
+    8px;
 
   background:
     var(--surface);
-
-  border:
-    1px
-    solid
-    var(--border-light);
-
-  border-radius:
-    var(--radius-large);
-
-  box-shadow:
-    0 4px 16px
-    rgba(0, 0, 0, 0.08);
-
-  overflow: auto;
 }
 
-
-.side-panel h2 {
-  flex:
-    0
-    0
-    auto;
-
-  margin: 0;
-
-  font-size: 20px;
-
-  line-height: 1.2;
-}
-
-
-.report-output {
-  display: block;
-
-  flex:
-    1
-    1
-    0;
-
-  width: 100%;
-
-  min-height: 100px;
-
-  margin: 0;
-
-  padding: 10px;
-
-  background: #f8fafc;
-
-  font-family:
-    "SFMono-Regular",
-    Consolas,
-    "Liberation Mono",
-    monospace;
-
-  font-size: 12px;
-
-  line-height: 1.5;
-
-  resize: none;
-
-  overflow: auto;
-}
 
 
 /* =========================================================
-   RAPPORTKNAPPER
+   TIDSSTEMPELKNAPP
    ========================================================= */
 
-.action-buttons {
-  display: flex;
-
-  flex:
-    0
-    0
-    auto;
-
-  flex-direction: column;
-
-  gap: 7px;
-
-  margin: 0;
-}
-
-
-.action-button {
+.notification-time-button {
   display: flex;
 
   align-items: center;
 
   justify-content: center;
 
-  gap: 8px;
+  gap: 6px;
 
   width: 100%;
 
-  min-height: 44px;
+  min-height: 36px;
 
   padding:
-    10px
-    12px;
+    6px
+    9px;
 
-  border: 0;
+  border:
+    1px
+    solid
+    var(--border);
 
   border-radius:
-    var(--radius-medium);
+    8px;
+
+  background:
+    var(--surface);
+
+  color:
+    var(--muted);
+
+  font-size: 12px;
 
   font-weight: 700;
-
-  text-align: center;
-
-  text-decoration: none;
-
-  cursor: pointer;
 }
 
 
-.action-copy {
+.notification-time-button:hover {
+  border-color:
+    var(--primary);
+
+  color:
+    var(--primary);
+}
+
+
+.notification-check {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  border:
+    1px
+    solid
+    var(--border);
+
+  border-radius: 5px;
+
+  color: transparent;
+
+  font-size: 12px;
+}
+
+
+.notification-time-button.is-selected {
+  border-color:
+    var(--green);
+
+  background: #edf8f2;
+
+  color:
+    var(--green-dark);
+}
+
+
+.notification-time-button.is-selected
+.notification-check {
+
+  border-color:
+    var(--green);
+
   background:
     var(--green);
 
@@ -892,313 +215,161 @@ textarea:disabled {
 }
 
 
-.action-copy:hover {
-  background:
-    var(--green-dark);
+
+/* =========================================================
+   SEND VARSLING
+   ========================================================= */
+
+.email-send-section {
+  margin:
+    18px
+    0
+    4px;
 }
 
 
-.action-reset {
+.send-notification-button {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  width: 100%;
+
+  min-height: 58px;
+
+  padding:
+    14px
+    20px;
+
+  border: 0;
+
+  border-radius:
+    var(--radius-large);
+
   background:
-    var(--red);
+    #202124;
 
   color: #ffffff;
+
+  box-shadow:
+    0 3px 10px
+    rgba(0, 0, 0, 0.16);
+
+  font-size: 16px;
+
+  font-weight: 750;
+
+  cursor: pointer;
 }
 
 
-.action-reset:hover {
-  background:
-    var(--red-dark);
-}
-
-
-.action-procedure {
-  background:
-    var(--blue-light);
-
-  color: #174a67;
-}
-
-
-.action-procedure:hover {
-  background:
-    var(--blue-light-hover);
-}
-
-
-.action-email {
-  background:
-    var(--black);
-
-  color: #ffffff;
-}
-
-
-.action-email:hover {
+.send-notification-button:hover {
   background: #000000;
+
+  transform:
+    translateY(-1px);
 }
 
 
-/*
- * Egen knapp for tilbakemelding.
- * Beholder samme formspråk, men skiller den fra selve Nkom-sendingen.
- */
-
-.action-feedback {
-  background: #59636e;
-
-  color: #ffffff;
+.send-notification-button:active {
+  transform:
+    translateY(0);
 }
 
 
-.action-feedback:hover {
-  background: #414a53;
+.send-notification-icon {
+  font-size: 21px;
 }
 
-
-.action-space {
-  height: 5px;
-
-  flex:
-    0
-    0
-    5px;
-}
 
 
 /* =========================================================
-   KOPIERINGSFEEDBACK
+   SKJULT LABEL FOR SKJERMLESER
    ========================================================= */
 
-.copy-flash {
-  animation:
-    copy-feedback
-    0.65s
-    ease-out;
+.visually-hidden {
+  position: absolute !important;
+
+  width: 1px !important;
+  height: 1px !important;
+
+  padding: 0 !important;
+  margin: -1px !important;
+
+  overflow: hidden !important;
+
+  clip:
+    rect(
+      0,
+      0,
+      0,
+      0
+    ) !important;
+
+  white-space: nowrap !important;
+
+  border: 0 !important;
 }
 
-
-@keyframes copy-feedback {
-
-  40% {
-
-    background: #35b977;
-
-    box-shadow:
-      0 0 0 4px
-      #16834b33;
-  }
-
-}
 
 
 /* =========================================================
-   MINDRE LAPTOP
+   RESPONSIVT
    ========================================================= */
 
-@media (max-width: 1200px) {
+@media (max-width: 1100px) {
 
-  .app-shell {
+  .aircraft-grid {
     grid-template-columns:
-      165px
-      minmax(0, 1fr)
-      300px;
-
-    gap: 10px;
-
-    width:
-      calc(100% - 16px);
+      1fr
+      1fr;
   }
 
 
-  .side-panel-inner {
-    padding: 10px;
+  .aircraft-grid
+  .form-field:last-child {
+
+    grid-column:
+      1 / -1;
+
   }
 
 
-  .report-output {
-    font-size: 11.5px;
-  }
-
-}
-
-
-/* =========================================================
-   NETTBRETT
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  .app-header {
-    position: static;
-
-    height: auto;
-
-    min-height:
-      var(--header-height);
-  }
-
-
-  .app-shell {
+  .notification-police-copy {
     grid-template-columns: 1fr;
-
-    grid-template-areas:
-      "navigation"
-      "form"
-      "report";
-
-    width:
-      calc(100% - 20px);
-  }
-
-
-  .form-navigation,
-  .side-panel {
-    position: static;
-
-    top: auto;
-
-    height: auto;
-  }
-
-
-  .form-navigation-label {
-    display: none;
-  }
-
-
-  .form-nav-list {
-    display: flex;
-
-    flex-wrap: wrap;
 
     gap: 6px;
   }
 
-
-  .form-nav-link {
-    width: auto;
-  }
+}
 
 
-  .form-grid-2,
-  .gps-chip-row {
+@media (max-width: 700px) {
+
+  .aircraft-grid {
     grid-template-columns: 1fr;
   }
 
 
-  .form-panel-frame {
-    height: auto;
+  .aircraft-grid
+  .form-field:last-child {
+
+    grid-column: auto;
+
   }
 
 
-  .form-panel-frame .form-panel {
-    height: auto;
-
-    overflow: visible;
-
-    padding-right: 0;
+  .notification-row {
+    grid-template-columns: 1fr;
   }
 
 
-  .form-panel form {
-    padding-bottom: 0;
-  }
-
-
-  .form-scroll-hint {
-    display: none;
-  }
-
-
-  .side-panel-inner {
-    height: auto;
-
-    overflow: visible;
-  }
-
-
-  .report-output {
-    flex:
-      0
-      0
-      auto;
-
-    height: 500px;
-
-    min-height: 300px;
-
-    font-size: 12px;
-
-    resize: vertical;
-  }
-
-}
-
-
-/* =========================================================
-   TELEFON
-   ========================================================= */
-
-@media (max-width: 560px) {
-
-  .app-header {
-    padding:
-      12px
-      145px
-      12px
-      12px;
-  }
-
-
-  .app-header h1 {
-    font-size: 21px;
-  }
-
-
-  .app-header .theme-toggle {
-    right: 12px;
-  }
-
-
-  .form-section {
-    padding: 11px;
-  }
-
-
-  input,
-  textarea {
-    font-size: 16px;
-  }
-
-
-  .report-output {
-    font-size: 14px;
-  }
-
-}
-
-
-/* =========================================================
-   REDUSERT BEVEGELSE
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  html {
-    scroll-behavior: auto;
-  }
-
-
-  .copy-flash {
-    animation: none;
-
-    outline:
-      2px
-      solid
-      #35b977;
-
-    outline-offset: 2px;
+  .notification-time-button {
+    width: 100%;
   }
 
 }

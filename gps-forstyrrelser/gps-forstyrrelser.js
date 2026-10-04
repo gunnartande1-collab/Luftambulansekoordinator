@@ -4,25 +4,105 @@
 const $ = (selector) =>
   document.querySelector(selector);
 
+
 const $$ = (selector) =>
   [...document.querySelectorAll(selector)];
 
 
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
 const state = {
+
   altitudeUnit: "",
+
   altitudeReference: "",
-  noFollowUp: false
+
+  noFollowUp: false,
+
+  notifications: {
+
+    flightFollowing: "",
+    police: "",
+    nkom: "",
+    opl: ""
+
+  }
+
 };
 
 
 let copyTimer = null;
 
 
+
+/* =========================================================
+   LUFTFARTØYREGISTER
+
+   Basert på oversikten som er lagt ved.
+
+   Nye registreringer kan senere legges til her.
+   ========================================================= */
+
+const AIRCRAFT_TYPES = {
+
+  /* H135 T3H */
+
+  "LN-OUD": "H135T3H",
+  "LN-OUE": "H135T3H",
+  "LN-OUF": "H135T3H",
+  "LN-OUG": "H135T3H",
+  "LN-OUH": "H135T3H",
+  "LN-OUJ": "H135T3H",
+
+
+  /* H145 D2 */
+
+  "LN-OOO": "H145 D2",
+  "LN-OOR": "H145 D2",
+  "LN-OOT": "H145 D2",
+  "LN-OOX": "H145 D2",
+
+
+  /* H145 D3 */
+
+  "LN-OOA": "H145 D3",
+  "LN-OOB": "H145 D3",
+  "LN-OOU": "H145 D3",
+
+  "LN-OTH": "H145 D3",
+  "LN-OTI": "H145 D3",
+  "LN-OTJ": "H145 D3",
+  "LN-OTK": "H145 D3",
+  "LN-OTN": "H145 D3",
+
+
+  /* AW139 */
+
+  "LN-ODL": "AW139",
+  "LN-ODM": "AW139",
+
+
+  /* POLITI */
+
+  "LN-ORA": "AW169",
+  "LN-ORB": "AW169",
+  "LN-ORC": "AW169"
+
+};
+
+
+
 /* =========================================================
    OPPSTART
    ========================================================= */
 
-if (document.readyState === "loading") {
+if (
+  document.readyState ===
+  "loading"
+) {
 
   document.addEventListener(
     "DOMContentLoaded",
@@ -36,15 +116,24 @@ if (document.readyState === "loading") {
 }
 
 
+
 function initialiseForm() {
 
-  const form = $("#gpsForm");
+  const form =
+    $("#gpsForm");
 
-  const panel = $(".form-panel");
+
+  const panel =
+    $(".form-panel");
 
 
-  if (!form || !panel) {
+  if (
+    !form ||
+    !panel
+  ) {
+
     return;
+
   }
 
 
@@ -53,7 +142,8 @@ function initialiseForm() {
 
   form.addEventListener(
     "submit",
-    (event) => event.preventDefault()
+    (event) =>
+      event.preventDefault()
   );
 
 
@@ -72,6 +162,8 @@ function initialiseForm() {
   initialiseAltitudeChips();
 
   initialiseFollowUp();
+
+  initialiseNotifications();
 
   initialiseScrollHint();
 
@@ -107,6 +199,7 @@ function initialiseForm() {
   updateReport();
 
 }
+
 
 
 /* =========================================================
@@ -156,9 +249,6 @@ function setToday() {
 }
 
 
-/* =========================================================
-   FORMATTER DATO
-   ========================================================= */
 
 function formatDate(value) {
 
@@ -167,20 +257,22 @@ function formatDate(value) {
   }
 
 
-  const parts =
-    value.split("-");
-
-
-  if (parts.length !== 3) {
-    return value;
-  }
-
-
   const [
     year,
     month,
     day
-  ] = parts;
+  ] = value.split("-");
+
+
+  if (
+    !year ||
+    !month ||
+    !day
+  ) {
+
+    return value;
+
+  }
 
 
   return (
@@ -190,14 +282,9 @@ function formatDate(value) {
 }
 
 
+
 /* =========================================================
    KLOKKESLETT
-
-   Tillater:
-   2350
-   23:50
-   950
-   09:50
    ========================================================= */
 
 function formatTime(value) {
@@ -214,7 +301,6 @@ function formatTime(value) {
 
 
   let hour;
-
   let minute;
 
 
@@ -276,44 +362,71 @@ function formatTime(value) {
 
   return (
     String(hour)
-      .padStart(2, "0") +
+      .padStart(
+        2,
+        "0"
+      ) +
     ":" +
     String(minute)
-      .padStart(2, "0")
+      .padStart(
+        2,
+        "0"
+      )
   );
 
 }
 
 
+
+/* =========================================================
+   NÅVÆRENDE KLOKKESLETT
+   ========================================================= */
+
+function currentTime() {
+
+  const now =
+    new Date();
+
+
+  return (
+    String(
+      now.getHours()
+    ).padStart(
+      2,
+      "0"
+    ) +
+    ":" +
+    String(
+      now.getMinutes()
+    ).padStart(
+      2,
+      "0"
+    )
+  );
+
+}
+
+
+
 /* =========================================================
    TIDSSONE
-
-   Bruker valgt dato og Europe/Oslo.
-   Resultat:
-   CET  = vintertid
-   CEST = sommertid
    ========================================================= */
 
 function getTimezone() {
 
-  const value =
+  const dateValue =
     $("#eventDate")
       ?.value;
 
 
-  if (!value) {
+  if (!dateValue) {
     return "";
   }
 
 
-  /*
-   * Kl. 12 UTC brukes bevisst for å unngå
-   * problemer akkurat rundt midnatt.
-   */
-
   const date =
     new Date(
-      `${value}T12:00:00Z`
+      `${dateValue}T12:00:00Z`
     );
 
 
@@ -321,11 +434,13 @@ function getTimezone() {
     new Intl.DateTimeFormat(
       "en-GB",
       {
+
         timeZone:
           "Europe/Oslo",
 
         timeZoneName:
           "shortOffset"
+
       }
     )
       .formatToParts(date);
@@ -359,22 +474,50 @@ function getTimezone() {
 }
 
 
+
 /* =========================================================
    INPUT
    ========================================================= */
 
-function handleInput() {
+function handleInput(event) {
+
+  const target =
+    event.target;
+
+
+  if (
+    target.id ===
+    "registration"
+  ) {
+
+    updateAircraftType();
+
+  }
+
+
+  if (
+    target.id ===
+    "aircraftType"
+  ) {
+
+    /*
+     * Dersom operatøren selv skriver i typefeltet,
+     * regnes det ikke lenger som automatisk utfylt.
+     */
+
+    delete target.dataset.autoFilled;
+
+  }
+
 
   updateReport();
 
 }
 
 
+
 /* =========================================================
    FOCUS OUT
-
-   Klokkeslett formateres først når brukeren
-   går ut av feltet.
    ========================================================= */
 
 function handleFocusOut(event) {
@@ -392,37 +535,39 @@ function handleFocusOut(event) {
   }
 
 
-  const timeFields = [
-    "eventTime",
-    "nkomTime",
-    "policeTime"
-  ];
+  if (
+    target.id ===
+    "eventTime"
+  ) {
+
+    const formatted =
+      formatTime(
+        target.value
+      );
+
+
+    if (formatted) {
+
+      target.value =
+        formatted;
+
+    }
+
+  }
 
 
   if (
-    timeFields.includes(
-      target.id
-    )
+    target.id ===
+    "registration"
   ) {
 
-    const raw =
-      target.value.trim();
+    target.value =
+      normaliseRegistration(
+        target.value
+      );
 
 
-    if (raw) {
-
-      const formatted =
-        formatTime(raw);
-
-
-      if (formatted) {
-
-        target.value =
-          formatted;
-
-      }
-
-    }
+    updateAircraftType();
 
   }
 
@@ -432,8 +577,134 @@ function handleFocusOut(event) {
 }
 
 
+
 /* =========================================================
-   VALIDER KLOKKESLETT
+   REGISTRERINGSNUMMER
+   ========================================================= */
+
+function normaliseRegistration(
+  value
+) {
+
+  const text =
+    String(value ?? "")
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, "");
+
+
+  if (
+    /^LN[A-Z]{3}$/.test(text)
+  ) {
+
+    return (
+      "LN-" +
+      text.slice(2)
+    );
+
+  }
+
+
+  if (
+    /^[A-Z]{3}$/.test(text)
+  ) {
+
+    return (
+      "LN-" +
+      text
+    );
+
+  }
+
+
+  return text;
+
+}
+
+
+
+/* =========================================================
+   AUTOMATISK LUFTFARTØYTYPE
+   ========================================================= */
+
+function updateAircraftType() {
+
+  const registrationField =
+    $("#registration");
+
+
+  const typeField =
+    $("#aircraftType");
+
+
+  if (
+    !registrationField ||
+    !typeField
+  ) {
+
+    return;
+
+  }
+
+
+  const registration =
+    normaliseRegistration(
+      registrationField.value
+    );
+
+
+  const type =
+    AIRCRAFT_TYPES[
+      registration
+    ];
+
+
+  /*
+   * Treffer registreringen i registeret:
+   * fyll type automatisk.
+   */
+
+  if (type) {
+
+    typeField.value =
+      type;
+
+
+    typeField.dataset.autoFilled =
+      "true";
+
+
+    return;
+
+  }
+
+
+  /*
+   * Dersom tidligere automatisk type ikke lenger
+   * passer registreringen, fjernes den.
+   *
+   * Manuelt skrevet type beholdes.
+   */
+
+  if (
+    typeField.dataset.autoFilled ===
+    "true"
+  ) {
+
+    typeField.value =
+      "";
+
+
+    delete typeField.dataset.autoFilled;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   VALIDER HENDELSESTID
    ========================================================= */
 
 function validateEventTime() {
@@ -494,8 +765,9 @@ function validateEventTime() {
 }
 
 
+
 /* =========================================================
-   HØYDECHIPS
+   HØYDE
    ========================================================= */
 
 function initialiseAltitudeChips() {
@@ -512,6 +784,7 @@ function initialiseAltitudeChips() {
   );
 
 }
+
 
 
 function initialiseSingleChoiceChips(
@@ -534,13 +807,9 @@ function initialiseSingleChoiceChips(
             button.dataset.value;
 
 
-          const wasSelected =
-            state[stateKey] ===
-            value;
-
-
           state[stateKey] =
-            wasSelected
+            state[stateKey] ===
+            value
               ? ""
               : value;
 
@@ -579,8 +848,123 @@ function initialiseSingleChoiceChips(
 }
 
 
+
 /* =========================================================
-   INGEN AVTALE
+   VARSLING
+   ========================================================= */
+
+function initialiseNotifications() {
+
+  $$(".notification-time-button")
+    .forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const key =
+              button.dataset.notification;
+
+
+            if (!key) {
+              return;
+            }
+
+
+            /*
+             * Første klikk setter tidspunkt nå.
+             *
+             * Klikker man igjen, fjernes registreringen.
+             * Dermed fungerer den som en avkrysningsboks.
+             */
+
+            if (
+              state.notifications[key]
+            ) {
+
+              state.notifications[key] =
+                "";
+
+            } else {
+
+              state.notifications[key] =
+                currentTime();
+
+            }
+
+
+            updateNotificationButtons();
+
+            updateReport();
+
+          }
+        );
+
+      }
+    );
+
+
+  updateNotificationButtons();
+
+}
+
+
+
+function updateNotificationButtons() {
+
+  $$(".notification-time-button")
+    .forEach(
+      (button) => {
+
+        const key =
+          button.dataset.notification;
+
+
+        const time =
+          state.notifications[key];
+
+
+        const selected =
+          Boolean(time);
+
+
+        button.classList.toggle(
+          "is-selected",
+          selected
+        );
+
+
+        button.setAttribute(
+          "aria-pressed",
+          String(selected)
+        );
+
+
+        const text =
+          button.querySelector(
+            ".notification-time-text"
+          );
+
+
+        if (text) {
+
+          text.textContent =
+            selected
+              ? time
+              : "Registrer";
+
+        }
+
+      }
+    );
+
+}
+
+
+
+/* =========================================================
+   VIDERE OPPFØLGING
    ========================================================= */
 
 function initialiseFollowUp() {
@@ -629,19 +1013,17 @@ function initialiseFollowUp() {
         state.noFollowUp
       ) {
 
-        field.value = "";
+        field.value =
+          "";
 
-        field.disabled = true;
 
-        field.placeholder =
-          "Ingen avtale valgt";
+        field.disabled =
+          true;
 
       } else {
 
-        field.disabled = false;
-
-        field.placeholder =
-          "Kort beskrivelse";
+        field.disabled =
+          false;
 
       }
 
@@ -654,8 +1036,9 @@ function initialiseFollowUp() {
 }
 
 
+
 /* =========================================================
-   HENT VERDI
+   FELTVERDI
    ========================================================= */
 
 function value(id) {
@@ -670,8 +1053,9 @@ function value(id) {
 }
 
 
+
 /* =========================================================
-   TIDSPUNKT I RAPPORT
+   RAPPORTTID
    ========================================================= */
 
 function reportTime(id) {
@@ -693,8 +1077,9 @@ function reportTime(id) {
 }
 
 
+
 /* =========================================================
-   POSISJON / OMRÅDE
+   POSISJON
    ========================================================= */
 
 function buildPosition() {
@@ -703,17 +1088,17 @@ function buildPosition() {
     value("position");
 
 
-  const placeName =
+  const area =
     value("placeName");
 
 
   if (
     position &&
-    placeName
+    area
   ) {
 
     return (
-      `${position} – ${placeName}`
+      `${position} – ${area}`
     );
 
   }
@@ -721,10 +1106,11 @@ function buildPosition() {
 
   return (
     position ||
-    placeName
+    area
   );
 
 }
+
 
 
 /* =========================================================
@@ -733,47 +1119,20 @@ function buildPosition() {
 
 function buildAltitude() {
 
-  const altitude =
-    value("altitude");
+  return [
 
+    value("altitude"),
 
-  const parts = [];
+    state.altitudeUnit,
 
-
-  if (altitude) {
-
-    parts.push(
-      altitude
-    );
-
-  }
-
-
-  if (
-    state.altitudeUnit
-  ) {
-
-    parts.push(
-      state.altitudeUnit
-    );
-
-  }
-
-
-  if (
     state.altitudeReference
-  ) {
 
-    parts.push(
-      state.altitudeReference
-    );
-
-  }
-
-
-  return parts.join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 
 }
+
 
 
 /* =========================================================
@@ -782,17 +1141,16 @@ function buildAltitude() {
 
 function buildAircraft() {
 
-  const callsign =
-    value("callsign");
-
-
-  const type =
-    value("aircraftType");
-
-
   return [
-    callsign,
-    type
+
+    normaliseRegistration(
+      value("registration")
+    ),
+
+    value("callsign"),
+
+    value("aircraftType")
+
   ]
     .filter(Boolean)
     .join(" – ");
@@ -800,73 +1158,86 @@ function buildAircraft() {
 }
 
 
+
 /* =========================================================
-   VARSLING
+   VARSLING I RAPPORT
    ========================================================= */
 
-function buildNotification() {
-
-  const nkomTime =
-    reportTime(
-      "nkomTime"
-    );
-
-
-  const policeDistrict =
-    value(
-      "policeDistrict"
-    );
-
-
-  const policeTime =
-    reportTime(
-      "policeTime"
-    );
-
+function buildNotificationReport() {
 
   const lines = [];
 
 
-  if (nkomTime) {
+  const flightFollowing =
+    state.notifications
+      .flightFollowing;
+
+
+  const police =
+    state.notifications
+      .police;
+
+
+  const nkom =
+    state.notifications
+      .nkom;
+
+
+  const opl =
+    state.notifications
+      .opl;
+
+
+  if (flightFollowing) {
 
     lines.push(
-      `Nkoms beredskapsvakt telefonvarslet kl. ${nkomTime}`
+      `HKP med flight following fått beskjed på TG kl. ${flightFollowing}`
     );
 
   }
 
 
-  if (
-    policeDistrict &&
-    policeTime
-  ) {
+  if (police) {
+
+    const district =
+      value(
+        "policeDistrict"
+      );
+
 
     lines.push(
-      `${policeDistrict} varslet kl. ${policeTime}`
-    );
-
-  } else if (
-    policeDistrict
-  ) {
-
-    lines.push(
-      `${policeDistrict} varslet`
-    );
-
-  } else if (
-    policeTime
-  ) {
-
-    lines.push(
-      `Politiet varslet kl. ${policeTime}`
+      district
+        ? `${district} operasjonssentral varslet kl. ${police}`
+        : `Politiets lokale operasjonssentral varslet kl. ${police}`
     );
 
   }
 
 
-  return lines.join(". ");
+  if (nkom) {
+
+    lines.push(
+      `Nkom beredskapsvakt varslet kl. ${nkom}`
+    );
+
+  }
+
+
+  if (opl) {
+
+    lines.push(
+      `OPL AMK Oslo varslet kl. ${opl}`
+    );
+
+  }
+
+
+  return lines.join(
+    ". "
+  );
 
 }
+
 
 
 /* =========================================================
@@ -891,11 +1262,9 @@ function buildFollowUp() {
 }
 
 
-/* =========================================================
-   RAPPORT
 
-   Navnet er IKKE et eget rapportpunkt.
-   Det brukes kun i signaturen.
+/* =========================================================
+   GENERER RAPPORT
    ========================================================= */
 
 function generateReport() {
@@ -944,9 +1313,9 @@ function generateReport() {
 
     `Operative konsekvenser og tiltak: ${value("consequences")}`,
 
-    `Gjennomført varsling: ${buildNotification()}`,
+    `Varsling: ${buildNotificationReport()}`,
 
-    `Avtalt videre oppfølging: ${buildFollowUp()}`,
+    `Videre oppfølging: ${buildFollowUp()}`,
 
     "",
 
@@ -976,6 +1345,7 @@ function generateReport() {
   return lines.join("\n");
 
 }
+
 
 
 /* =========================================================
@@ -1018,6 +1388,7 @@ function updateReport() {
 }
 
 
+
 /* =========================================================
    KOPIER RAPPORT
    ========================================================= */
@@ -1036,7 +1407,8 @@ async function copyReport() {
   }
 
 
-  let copied = false;
+  let copied =
+    false;
 
 
   try {
@@ -1046,25 +1418,24 @@ async function copyReport() {
         ?.writeText
     ) {
 
-      await navigator.clipboard.writeText(
-        report.value
-      );
+      await navigator.clipboard
+        .writeText(
+          report.value
+        );
 
 
-      copied = true;
+      copied =
+        true;
 
     }
 
   } catch {
 
-    copied = false;
+    copied =
+      false;
 
   }
 
-
-  /*
-   * Fallback for miljøer hvor clipboard-API ikke fungerer.
-   */
 
   if (!copied) {
 
@@ -1089,7 +1460,8 @@ async function copyReport() {
 
     } catch {
 
-      copied = false;
+      copied =
+        false;
 
     }
 
@@ -1161,6 +1533,7 @@ async function copyReport() {
 }
 
 
+
 function clearCopyConfirmation() {
 
   clearTimeout(
@@ -1188,8 +1561,9 @@ function clearCopyConfirmation() {
 }
 
 
+
 /* =========================================================
-   EMNE TIL NKOM
+   E-POSTEMNE
    ========================================================= */
 
 function buildEmailSubject() {
@@ -1218,11 +1592,9 @@ function buildEmailSubject() {
 }
 
 
-/* =========================================================
-   SEND E-POST TIL NKOM
 
-   Åpner standard e-postprogram.
-   Dersom Outlook er standard på OUS-PC-en, åpnes Outlook.
+/* =========================================================
+   SEND TIL NKOM
    ========================================================= */
 
 function createNkomEmail() {
@@ -1259,8 +1631,9 @@ function createNkomEmail() {
 }
 
 
+
 /* =========================================================
-   TILBAKEMELDING PÅ SKJEMA
+   TILBAKEMELDING
    ========================================================= */
 
 function createFeedbackEmail() {
@@ -1280,41 +1653,55 @@ function createFeedbackEmail() {
 }
 
 
+
 /* =========================================================
-   TØM SKJEMA
+   NULLSTILL SKJEMA
    ========================================================= */
 
 function resetForm() {
 
-  const form =
-    $("#gpsForm");
+  $("#gpsForm")
+    ?.reset();
 
 
-  form?.reset();
+  state.altitudeUnit =
+    "";
 
 
-  state.altitudeUnit = "";
-
-  state.altitudeReference = "";
-
-  state.noFollowUp = false;
+  state.altitudeReference =
+    "";
 
 
-  $$(".chip").forEach(
-    (button) => {
-
-      button.classList.remove(
-        "is-selected"
-      );
+  state.noFollowUp =
+    false;
 
 
-      button.setAttribute(
-        "aria-pressed",
-        "false"
-      );
+  state.notifications = {
 
-    }
-  );
+    flightFollowing: "",
+    police: "",
+    nkom: "",
+    opl: ""
+
+  };
+
+
+  $$(".chip")
+    .forEach(
+      (button) => {
+
+        button.classList.remove(
+          "is-selected"
+        );
+
+
+        button.setAttribute(
+          "aria-pressed",
+          "false"
+        );
+
+      }
+    );
 
 
   const followUp =
@@ -1323,12 +1710,26 @@ function resetForm() {
 
   if (followUp) {
 
-    followUp.disabled = false;
-
-    followUp.placeholder =
-      "Kort beskrivelse";
+    followUp.disabled =
+      false;
 
   }
+
+
+  const aircraftType =
+    $("#aircraftType");
+
+
+  if (aircraftType) {
+
+    delete aircraftType
+      .dataset
+      .autoFilled;
+
+  }
+
+
+  updateNotificationButtons();
 
 
   setToday();
@@ -1340,15 +1741,10 @@ function resetForm() {
   updateReport();
 
 
-  const report =
-    $("#reportOutput");
-
-
-  if (report) {
-
-    report.scrollTop = 0;
-
-  }
+  $("#reportOutput")
+    ?.scrollTo({
+      top: 0
+    });
 
 
   $(".form-panel")
@@ -1374,6 +1770,7 @@ function resetForm() {
 }
 
 
+
 /* =========================================================
    RULLEINDIKATOR
    ========================================================= */
@@ -1387,6 +1784,7 @@ function motionBehavior() {
     : "smooth";
 
 }
+
 
 
 function initialiseScrollHint() {
@@ -1471,6 +1869,7 @@ function initialiseScrollHint() {
   updateFormScrollHint();
 
 }
+
 
 
 function updateFormScrollHint() {

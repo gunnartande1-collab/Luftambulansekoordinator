@@ -18,6 +18,7 @@
 <body>
 
   <header class="app-header">
+
     <div>
       <p class="app-eyebrow">Luftambulansekoordinator</p>
       <h1>GPS-forstyrrelser</h1>
@@ -33,26 +34,28 @@
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
+
   </header>
 
 
   <main class="app-shell">
 
-    <!-- ===================================================
-         FELLES VENSTREMENY
 
-         meny.js erstatter innholdet med menyen fra fremside.html.
-         Innholdet under fungerer som fallback hvis menyen ikke kan hentes.
-         =================================================== -->
+    <!-- ==================================================
+         FELLES MENY
+         ================================================== -->
 
     <nav
       class="form-navigation"
       data-shared-menu
       aria-label="Skjemaer"
     >
+
       <div class="form-navigation-inner">
 
-        <p class="form-navigation-label">Skjemaer</p>
+        <p class="form-navigation-label">
+          Skjemaer
+        </p>
 
         <ul class="form-nav-list">
 
@@ -61,26 +64,32 @@
               href="../fremside.html"
               class="form-nav-link"
             >
-              <span class="form-nav-icon" aria-hidden="true">🏠</span>
+              <span class="form-nav-icon" aria-hidden="true">
+                🏠
+              </span>
 
               <span class="form-nav-copy">
-                <span>Fremside</span>
+                Fremside
               </span>
             </a>
           </li>
+
 
           <li>
             <a
               href="../savnet-helikopter/savnet-helikopter.html"
               class="form-nav-link"
             >
-              <span class="form-nav-icon" aria-hidden="true">🚁</span>
+              <span class="form-nav-icon" aria-hidden="true">
+                🚁
+              </span>
 
               <span class="form-nav-copy">
-                <span>Savnet helikopter</span>
+                Savnet helikopter
               </span>
             </a>
           </li>
+
 
           <li>
             <a
@@ -88,10 +97,12 @@
               class="form-nav-link"
               aria-current="page"
             >
-              <span class="form-nav-icon" aria-hidden="true">📡</span>
+              <span class="form-nav-icon" aria-hidden="true">
+                📡
+              </span>
 
               <span class="form-nav-copy">
-                <span>GPS-forstyrrelser</span>
+                GPS-forstyrrelser
               </span>
             </a>
           </li>
@@ -99,12 +110,14 @@
         </ul>
 
       </div>
+
     </nav>
 
 
-    <!-- ===================================================
+
+    <!-- ==================================================
          SKJEMA
-         =================================================== -->
+         ================================================== -->
 
     <div class="form-panel-frame">
 
@@ -115,16 +128,20 @@
         aria-label="Skjema for GPS-forstyrrelser"
       >
 
-        <form id="gpsForm" autocomplete="off">
+        <form
+          id="gpsForm"
+          autocomplete="off"
+        >
 
 
-          <!-- 1. TIDSPUNKT -->
+          <!-- TIDSPUNKT -->
 
-          <section class="form-section" id="tidspunkt">
+          <section class="form-section">
 
             <h2>Tidspunkt for forstyrrelsen</h2>
 
             <div class="form-grid form-grid-2">
+
 
               <div class="form-field">
 
@@ -161,6 +178,7 @@
 
             </div>
 
+
             <p
               id="timeError"
               class="field-error"
@@ -175,9 +193,10 @@
           </section>
 
 
-          <!-- 2. POSISJON / OMRÅDE -->
 
-          <section class="form-section" id="posisjon">
+          <!-- POSISJON -->
+
+          <section class="form-section">
 
             <h2>Posisjon / område</h2>
 
@@ -188,12 +207,12 @@
                 Posisjon
               </label>
 
-              <textarea
+              <input
+                type="text"
                 id="position"
                 name="position"
-                rows="3"
                 placeholder="Lim inn eller skriv posisjon"
-              ></textarea>
+              >
 
             </div>
 
@@ -208,7 +227,6 @@
                 type="text"
                 id="placeName"
                 name="placeName"
-                placeholder="Stedsnavn / område"
               >
 
             </div>
@@ -216,9 +234,10 @@
           </section>
 
 
-          <!-- 3. HØYDE -->
 
-          <section class="form-section" id="hoyde">
+          <!-- HØYDE -->
+
+          <section class="form-section">
 
             <h2>Høyde</h2>
 
@@ -235,13 +254,13 @@
                 name="altitude"
                 min="0"
                 inputmode="numeric"
-                placeholder="Høyde"
               >
 
             </div>
 
 
             <div class="gps-chip-row">
+
 
               <div class="form-field">
 
@@ -319,13 +338,31 @@
           </section>
 
 
-          <!-- 4. LUFTFARTØY -->
 
-          <section class="form-section" id="luftfartoy">
+          <!-- LUFTFARTØY -->
+
+          <section class="form-section">
 
             <h2>Luftfartøy</h2>
 
-            <div class="form-grid form-grid-2">
+            <div class="form-grid aircraft-grid">
+
+
+              <div class="form-field">
+
+                <label for="registration">
+                  Reg.nr.
+                </label>
+
+                <input
+                  type="text"
+                  id="registration"
+                  name="registration"
+                  autocomplete="off"
+                >
+
+              </div>
+
 
               <div class="form-field">
 
@@ -337,7 +374,6 @@
                   type="text"
                   id="callsign"
                   name="callsign"
-                  placeholder="Kallesignal"
                 >
 
               </div>
@@ -353,7 +389,6 @@
                   type="text"
                   id="aircraftType"
                   name="aircraftType"
-                  placeholder="Type"
                 >
 
               </div>
@@ -363,9 +398,10 @@
           </section>
 
 
-          <!-- 5. BESKRIVELSE -->
 
-          <section class="form-section" id="beskrivelse">
+          <!-- BESKRIVELSE -->
+
+          <section class="form-section">
 
             <h2>Beskrivelse</h2>
 
@@ -387,9 +423,10 @@
           </section>
 
 
-          <!-- 6. OPERATIVE KONSEKVENSER -->
 
-          <section class="form-section" id="konsekvenser">
+          <!-- KONSEKVENSER -->
+
+          <section class="form-section">
 
             <h2>Operative konsekvenser og tiltak</h2>
 
@@ -403,7 +440,6 @@
                 id="consequences"
                 name="consequences"
                 rows="4"
-                placeholder="Kort beskrivelse"
               ></textarea>
 
             </div>
@@ -411,76 +447,173 @@
           </section>
 
 
-          <!-- 7. GJENNOMFØRT VARSLING -->
 
-          <section class="form-section" id="varsling">
+          <!-- VARSLING -->
 
-            <h2>Gjennomført varsling</h2>
+          <section class="form-section">
 
+            <h2>Varsling</h2>
 
-            <div class="form-field">
-
-              <label for="nkomTime">
-                Telefonvarsling til Nkoms beredskapsvakt
-              </label>
-
-              <input
-                type="text"
-                id="nkomTime"
-                name="nkomTime"
-                maxlength="5"
-                inputmode="numeric"
-                placeholder="HH:MM"
-              >
-
-            </div>
+            <div class="notification-list">
 
 
-            <div class="form-grid form-grid-2">
+              <!-- 1 -->
 
-              <div class="form-field">
+              <div class="notification-row">
 
-                <label for="policeDistrict">
-                  Varslet politidistrikt
-                </label>
+                <div class="notification-copy">
 
-                <input
-                  type="text"
-                  id="policeDistrict"
-                  name="policeDistrict"
-                  placeholder="Politidistrikt"
+                  <span class="notification-number">
+                    1
+                  </span>
+
+                  <span>
+                    HKP med flight following fått beskjed på TG
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="notification-time-button"
+                  data-notification="flightFollowing"
+                  aria-pressed="false"
                 >
+                  <span class="notification-check">✓</span>
+                  <span class="notification-time-text">
+                    Registrer
+                  </span>
+                </button>
 
               </div>
 
 
-              <div class="form-field">
 
-                <label for="policeTime">
-                  Tidspunkt varslet
-                </label>
+              <!-- 2 -->
 
-                <input
-                  type="text"
-                  id="policeTime"
-                  name="policeTime"
-                  maxlength="5"
-                  inputmode="numeric"
-                  placeholder="HH:MM"
+              <div class="notification-row notification-row-police">
+
+                <div class="notification-copy">
+
+                  <span class="notification-number">
+                    2
+                  </span>
+
+                  <div class="notification-police-copy">
+
+                    <span>
+                      Ringe politiets lokale operasjonssentral
+                    </span>
+
+                    <label
+                      for="policeDistrict"
+                      class="visually-hidden"
+                    >
+                      Politidistrikt
+                    </label>
+
+                    <input
+                      type="text"
+                      id="policeDistrict"
+                      name="policeDistrict"
+                      class="notification-inline-input"
+                      aria-label="Politidistrikt"
+                    >
+
+                  </div>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="notification-time-button"
+                  data-notification="police"
+                  aria-pressed="false"
                 >
+                  <span class="notification-check">✓</span>
+                  <span class="notification-time-text">
+                    Registrer
+                  </span>
+                </button>
 
               </div>
+
+
+
+              <!-- 3 -->
+
+              <div class="notification-row">
+
+                <div class="notification-copy">
+
+                  <span class="notification-number">
+                    3
+                  </span>
+
+                  <span>
+                    Ringe Nkom beredskapsvakt
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="notification-time-button"
+                  data-notification="nkom"
+                  aria-pressed="false"
+                >
+                  <span class="notification-check">✓</span>
+                  <span class="notification-time-text">
+                    Registrer
+                  </span>
+                </button>
+
+              </div>
+
+
+
+              <!-- 4 -->
+
+              <div class="notification-row">
+
+                <div class="notification-copy">
+
+                  <span class="notification-number">
+                    4
+                  </span>
+
+                  <span>
+                    OPL AMK Oslo
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="notification-time-button"
+                  data-notification="opl"
+                  aria-pressed="false"
+                >
+                  <span class="notification-check">✓</span>
+                  <span class="notification-time-text">
+                    Registrer
+                  </span>
+                </button>
+
+              </div>
+
 
             </div>
 
           </section>
 
 
-          <!-- 8. VIDERE OPPFØLGING -->
 
-          <section class="form-section" id="oppfolging">
+          <!-- VIDERE OPPFØLGING -->
 
-            <h2>Avtalt videre oppfølging</h2>
+          <section class="form-section">
+
+            <h2>Videre oppfølging</h2>
 
 
             <div class="form-field">
@@ -488,8 +621,6 @@
               <div
                 id="followUpChips"
                 class="chip-group"
-                role="group"
-                aria-label="Velg videre oppfølging"
               >
 
                 <button
@@ -509,14 +640,13 @@
             <div class="form-field">
 
               <label for="followUp">
-                Videre oppfølging
+                Beskrivelse
               </label>
 
               <textarea
                 id="followUp"
                 name="followUp"
                 rows="3"
-                placeholder="Kort beskrivelse"
               ></textarea>
 
             </div>
@@ -524,26 +654,53 @@
           </section>
 
 
-          <!-- 9. SENDER -->
 
-          <section class="form-section" id="sender">
+          <!-- AVSENDER -->
 
-            <h2>Sender</h2>
+          <section class="form-section">
+
+            <h2>Avsender</h2>
 
             <div class="form-field">
 
               <label for="senderName">
-                Fullt navn på sender av skjema
+                Fullt navn
               </label>
 
               <input
                 type="text"
                 id="senderName"
                 name="senderName"
-                placeholder="Ditt fulle navn"
               >
 
             </div>
+
+          </section>
+
+
+
+          <!-- SEND VARSLING -->
+
+          <section class="email-send-section">
+
+            <button
+              type="button"
+              id="sendNkomButton"
+              class="send-notification-button"
+            >
+
+              <span
+                class="send-notification-icon"
+                aria-hidden="true"
+              >
+                ✉
+              </span>
+
+              <span>
+                Send varsling på e-post
+              </span>
+
+            </button>
 
           </section>
 
@@ -558,7 +715,6 @@
         id="formScrollHint"
         class="form-scroll-hint"
         hidden
-        aria-label="Rull videre ned i skjemaet"
       >
         Mer av skjemaet ↓
       </button>
@@ -566,9 +722,10 @@
     </div>
 
 
-    <!-- ===================================================
-         RAPPORTPANEL
-         =================================================== -->
+
+    <!-- ==================================================
+         RAPPORT
+         ================================================== -->
 
     <aside
       class="side-panel"
@@ -590,13 +747,16 @@
 
         <div class="action-buttons">
 
+
           <button
             type="button"
             id="copyButton"
             class="action-button action-copy"
           >
 
-            <span aria-hidden="true">📋</span>
+            <span aria-hidden="true">
+              📋
+            </span>
 
             <span
               id="copyButtonText"
@@ -615,8 +775,13 @@
             class="action-button action-reset"
           >
 
-            <span aria-hidden="true">🗑️</span>
-            <span>Tøm skjema</span>
+            <span aria-hidden="true">
+              🗑️
+            </span>
+
+            <span>
+              Tøm skjema
+            </span>
 
           </button>
 
@@ -634,32 +799,30 @@
             class="action-button action-procedure"
           >
 
-            <span aria-hidden="true">📘</span>
-            <span>Prosedyre GPS-forstyrrelser</span>
+            <span aria-hidden="true">
+              📘
+            </span>
+
+            <span>
+              Prosedyre GPS-forstyrrelser
+            </span>
 
           </a>
 
 
           <button
             type="button"
-            id="sendNkomButton"
+            id="feedbackButton"
             class="action-button action-email"
           >
 
-            <span aria-hidden="true">✉️</span>
-            <span>Send e-post til Nkom</span>
+            <span aria-hidden="true">
+              ✉️
+            </span>
 
-          </button>
-
-
-          <button
-            type="button"
-            id="feedbackButton"
-            class="action-button action-feedback"
-          >
-
-            <span aria-hidden="true">✉️</span>
-            <span>Tilbakemelding på skjema</span>
+            <span>
+              Tilbakemelding på skjema
+            </span>
 
           </button>
 
