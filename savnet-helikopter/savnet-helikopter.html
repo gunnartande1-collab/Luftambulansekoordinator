@@ -32,9 +32,7 @@
         </p>
 
         <h1>
-
             <span>Savnet helikopter</span>
-
         </h1>
 
     </header>
@@ -59,16 +57,12 @@
 
             <div class="form-navigation-inner">
 
-
                 <p class="form-navigation-label">
                     Skjemaer
                 </p>
 
-
                 <ul class="form-nav-list">
 
-
-                    <!-- FREMSIDE -->
 
                     <li>
 
@@ -85,19 +79,13 @@
                             </span>
 
                             <span class="form-nav-copy">
-
-                                <span>
-                                    Fremside
-                                </span>
-
+                                <span>Fremside</span>
                             </span>
 
                         </a>
 
                     </li>
 
-
-                    <!-- SAVNET HELIKOPTER -->
 
                     <li>
 
@@ -115,19 +103,13 @@
                             </span>
 
                             <span class="form-nav-copy">
-
-                                <span>
-                                    Savnet helikopter
-                                </span>
-
+                                <span>Savnet helikopter</span>
                             </span>
 
                         </a>
 
                     </li>
 
-
-                    <!-- GPS FORSTYRRELSER -->
 
                     <li>
 
@@ -144,17 +126,12 @@
                             </span>
 
                             <span class="form-nav-copy">
-
-                                <span>
-                                    GPS-forstyrrelser
-                                </span>
-
+                                <span>GPS-forstyrrelser</span>
                             </span>
 
                         </a>
 
                     </li>
-
 
                 </ul>
 
@@ -185,64 +162,61 @@
                     id="talegrupper"
                 >
 
-                    <h2>
-                        Talegrupper
-                    </h2>
+                    <h2>Talegrupper</h2>
 
 
                     <div class="tg-grid">
 
 
-                        <!-- NØDNETT -->
-
                         <div class="field-card">
 
-                            <label for="tgEmergency">
-                                Nødnett
+                            <label for="healthTg">
+                                Helse TG
                             </label>
 
                             <input
                                 type="text"
-                                id="tgEmergency"
-                                name="tgEmergency"
+                                id="healthTg"
+                                name="healthTg"
                                 placeholder="Talegruppe"
                             >
 
                         </div>
 
 
-                        <!-- SAMBAND -->
-
                         <div class="field-card">
 
-                            <label for="tgSamband">
-                                Samband
+                            <label for="sarTg">
+                                SAR TG
                             </label>
 
                             <input
                                 type="text"
-                                id="tgSamband"
-                                name="tgSamband"
+                                id="sarTg"
+                                name="sarTg"
                                 placeholder="Talegruppe"
                             >
 
                         </div>
 
 
-                        <!-- ANNEN TALEGRUPPE -->
-
                         <div class="field-card">
 
-                            <label for="tgOther">
-                                Annen talegruppe
+                            <label>
+                                Annen TG
                             </label>
 
-                            <input
-                                type="text"
-                                id="tgOther"
-                                name="tgOther"
-                                placeholder="Talegruppe"
-                            >
+                            <div id="otherTgContainer">
+
+                                <input
+                                    type="text"
+                                    id="otherTgFirst"
+                                    class="other-tg-input"
+                                    aria-label="Annen TG"
+                                    autocomplete="off"
+                                >
+
+                            </div>
 
                         </div>
 
@@ -261,45 +235,39 @@
                     id="posisjon"
                 >
 
-                    <h2>
-                        Posisjon
-                    </h2>
+                    <h2>Posisjon</h2>
 
 
                     <div class="form-grid form-grid-2">
 
 
-                        <!-- SIST KJENTE POSISJON -->
-
                         <div class="form-field">
 
-                            <label for="lastKnownPosition">
-                                Sist kjente posisjon
+                            <label for="utmPosition">
+                                UTM
                             </label>
 
                             <input
                                 type="text"
-                                id="lastKnownPosition"
-                                name="lastKnownPosition"
-                                placeholder="Grader og desimalminutter"
+                                id="utmPosition"
+                                name="utmPosition"
+                                placeholder="Ø 123 45, N 678 90 UTM32N"
                             >
 
                         </div>
 
 
-                        <!-- STED / OMRÅDE -->
-
                         <div class="form-field">
 
-                            <label for="positionArea">
-                                Sted / område
+                            <label for="dmmPosition">
+                                Grader og desimalminutter
                             </label>
 
                             <input
                                 type="text"
-                                id="positionArea"
-                                name="positionArea"
-                                placeholder="Stedsnavn eller område"
+                                id="dmmPosition"
+                                name="dmmPosition"
+                                placeholder="59° 55.123' N, 10° 44.456' Ø"
                             >
 
                         </div>
@@ -307,125 +275,23 @@
                     </div>
 
 
-                    <div class="form-grid form-grid-3">
+                    <p
+                        class="field-error"
+                        id="coordinateError"
+                    ></p>
 
-
-                        <!-- HØYDE -->
-
-                        <div class="form-field">
-
-                            <label for="altitude">
-                                Høyde
-                            </label>
-
-                            <input
-                                type="number"
-                                id="altitude"
-                                name="altitude"
-                                min="0"
-                                placeholder="Høyde"
-                            >
-
-                        </div>
-
-
-                        <!-- HØYDEENHET -->
-
-                        <div class="form-field">
-
-                            <span class="field-label">
-                                Enhet
-                            </span>
-
-                            <div
-                                class="chip-group"
-                                id="altitudeUnitChips"
-                            >
-
-                                <button
-                                    type="button"
-                                    class="chip"
-                                    data-value="FT"
-                                >
-                                    FT
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="chip"
-                                    data-value="M"
-                                >
-                                    M
-                                </button>
-
-                            </div>
-
-                            <input
-                                type="hidden"
-                                id="altitudeUnit"
-                                name="altitudeUnit"
-                            >
-
-                        </div>
-
-
-                        <!-- HØYDEREFERANSE -->
-
-                        <div class="form-field">
-
-                            <span class="field-label">
-                                Referanse
-                            </span>
-
-                            <div
-                                class="chip-group"
-                                id="altitudeReferenceChips"
-                            >
-
-                                <button
-                                    type="button"
-                                    class="chip"
-                                    data-value="MSL"
-                                >
-                                    MSL
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="chip"
-                                    data-value="AGL"
-                                >
-                                    AGL
-                                </button>
-
-                            </div>
-
-                            <input
-                                type="hidden"
-                                id="altitudeReference"
-                                name="altitudeReference"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- TIDSPUNKT SIST POSISJON -->
 
                     <div class="form-field">
 
-                        <label for="lastPositionTime">
-                            Tidspunkt for sist kjente posisjon
+                        <label for="placeName">
+                            Stedsnavn / område
                         </label>
 
                         <input
                             type="text"
-                            id="lastPositionTime"
-                            name="lastPositionTime"
-                            placeholder="TT:MM"
-                            maxlength="5"
-                            inputmode="numeric"
+                            id="placeName"
+                            name="placeName"
+                            placeholder="Stedsnavn eller område"
                         >
 
                     </div>
@@ -443,14 +309,12 @@
                     id="crex-manifest"
                 >
 
-                    <h2>
-                        CREX manifest
-                    </h2>
+                    <h2>CREX manifest</h2>
 
 
                     <!-- POB TOTALT -->
 
-                    <div class="form-field">
+                    <div class="form-field crex-pob-field">
 
                         <span class="field-label">
                             POB – totalt
@@ -459,110 +323,111 @@
 
                         <div
                             class="chip-group"
-                            id="pobTotalChips"
+                            id="pobChips"
                             role="group"
                             aria-label="Velg totalt antall personer om bord"
                         >
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="1"
+                                class="chip"
+                                data-pob="1"
+                                aria-pressed="false"
                             >
                                 1
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="2"
+                                class="chip"
+                                data-pob="2"
+                                aria-pressed="false"
                             >
                                 2
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="3"
+                                class="chip"
+                                data-pob="3"
+                                aria-pressed="false"
                             >
                                 3
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="4"
+                                class="chip"
+                                data-pob="4"
+                                aria-pressed="false"
                             >
                                 4
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="5"
+                                class="chip"
+                                data-pob="5"
+                                aria-pressed="false"
                             >
                                 5
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="6"
+                                class="chip"
+                                data-pob="6"
+                                aria-pressed="false"
                             >
                                 6
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="7"
+                                class="chip"
+                                data-pob="7"
+                                aria-pressed="false"
                             >
                                 7
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="8"
+                                class="chip"
+                                data-pob="8"
+                                aria-pressed="false"
                             >
                                 8
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="9"
+                                class="chip"
+                                data-pob="9"
+                                aria-pressed="false"
                             >
                                 9
                             </button>
 
                             <button
                                 type="button"
-                                class="chip pob-chip"
-                                data-value="10"
+                                class="chip"
+                                data-pob="10"
+                                aria-pressed="false"
                             >
                                 10
                             </button>
 
                         </div>
 
-
-                        <input
-                            type="hidden"
-                            id="pobTotal"
-                            name="pobTotal"
-                        >
-
                     </div>
 
 
 
-                    <!-- LUFTFARTØY -->
+                    <!-- LUFTFARTØY-ID -->
 
                     <div class="form-grid form-grid-3">
 
-
-                        <!-- RESSURS-ID -->
 
                         <div class="form-field">
 
@@ -574,13 +439,11 @@
                                 type="text"
                                 id="resourceId"
                                 name="resourceId"
-                                placeholder="F.eks. LA1"
+                                placeholder="F.eks. LA 1-1"
                             >
 
                         </div>
 
-
-                        <!-- REGISTRERINGSNUMMER -->
 
                         <div class="form-field">
 
@@ -597,8 +460,6 @@
 
                         </div>
 
-
-                        <!-- CALLSIGN -->
 
                         <div class="form-field">
 
@@ -631,12 +492,9 @@
                                 aria-hidden="true"
                             >
 
-                            <span>
-                                Pilot
-                            </span>
+                            <span>Pilot</span>
 
                         </div>
-
 
                         <input
                             type="text"
@@ -645,13 +503,11 @@
                             placeholder="Navn"
                         >
 
-
                         <input
-                            type="text"
+                            type="tel"
                             id="pilotPhone"
                             name="pilotPhone"
-                            placeholder="Telefon"
-                            inputmode="tel"
+                            placeholder="Mobilnummer"
                         >
 
                     </div>
@@ -670,12 +526,9 @@
                                 aria-hidden="true"
                             >
 
-                            <span>
-                                Redningsmann
-                            </span>
+                            <span>Redningsmann</span>
 
                         </div>
-
 
                         <input
                             type="text"
@@ -684,13 +537,11 @@
                             placeholder="Navn"
                         >
 
-
                         <input
-                            type="text"
+                            type="tel"
                             id="rescuerPhone"
                             name="rescuerPhone"
-                            placeholder="Telefon"
-                            inputmode="tel"
+                            placeholder="Mobilnummer"
                         >
 
                     </div>
@@ -709,12 +560,9 @@
                                 aria-hidden="true"
                             >
 
-                            <span>
-                                Lege
-                            </span>
+                            <span>Lege</span>
 
                         </div>
-
 
                         <input
                             type="text"
@@ -723,13 +571,11 @@
                             placeholder="Navn"
                         >
 
-
                         <input
-                            type="text"
+                            type="tel"
                             id="doctorPhone"
                             name="doctorPhone"
-                            placeholder="Telefon"
-                            inputmode="tel"
+                            placeholder="Mobilnummer"
                         >
 
                     </div>
@@ -738,38 +584,44 @@
 
                     <!-- PAX -->
 
-                    <div class="person-row">
+                    <div
+                        id="traineeContainer"
+                        class="pax-container"
+                    >
 
-                        <div class="person-role">
+                        <div class="person-row trainee-row">
 
-                            <img
-                                src="../img/pax.svg"
-                                alt=""
-                                aria-hidden="true"
+                            <div class="person-role">
+
+                                <img
+                                    src="../img/pax.svg"
+                                    alt=""
+                                    aria-hidden="true"
+                                >
+
+                                <span class="pax-label">
+                                    PAX 1
+                                </span>
+
+                            </div>
+
+                            <input
+                                type="text"
+                                class="trainee-name"
+                                aria-label="PAX 1 fullt navn"
+                                placeholder="Navn"
+                                autocomplete="off"
                             >
 
-                            <span>
-                                PAX
-                            </span>
+                            <input
+                                type="tel"
+                                class="trainee-phone"
+                                aria-label="PAX 1 mobilnummer"
+                                placeholder="Mobilnummer"
+                                autocomplete="off"
+                            >
 
                         </div>
-
-
-                        <input
-                            type="text"
-                            id="paxName"
-                            name="paxName"
-                            placeholder="Navn / beskrivelse"
-                        >
-
-
-                        <input
-                            type="text"
-                            id="paxPhone"
-                            name="paxPhone"
-                            placeholder="Telefon"
-                            inputmode="tel"
-                        >
 
                     </div>
 
@@ -786,27 +638,23 @@
                     id="flyrute"
                 >
 
-                    <h2>
-                        Flyrute
-                    </h2>
+                    <h2>Flyrute</h2>
 
-
-                    <!-- FRA / TIL -->
 
                     <div class="form-grid form-grid-2">
 
 
                         <div class="form-field">
 
-                            <label for="flightFrom">
+                            <label for="fromLocation">
                                 Fra
                             </label>
 
                             <input
                                 type="text"
-                                id="flightFrom"
-                                name="flightFrom"
-                                placeholder="Fra"
+                                id="fromLocation"
+                                name="fromLocation"
+                                placeholder="ICAO-kode eller sted"
                             >
 
                         </div>
@@ -814,15 +662,15 @@
 
                         <div class="form-field">
 
-                            <label for="flightTo">
+                            <label for="toLocation">
                                 Til
                             </label>
 
                             <input
                                 type="text"
-                                id="flightTo"
-                                name="flightTo"
-                                placeholder="Til"
+                                id="toLocation"
+                                name="toLocation"
+                                placeholder="ICAO-kode eller sted"
                             >
 
                         </div>
@@ -830,41 +678,37 @@
                     </div>
 
 
-                    <!-- BESKRIVELSE -->
-
                     <div class="form-field">
 
-                        <label for="flightDescription">
+                        <label for="plannedRoute">
                             Beskrivelse
                         </label>
 
                         <textarea
-                            id="flightDescription"
-                            name="flightDescription"
+                            id="plannedRoute"
+                            name="plannedRoute"
                             rows="3"
-                            placeholder="Beskrivelse av flyruten"
+                            placeholder="Beskrivelse av planlagt flyrute"
                         ></textarea>
 
                     </div>
 
-
-                    <!-- TATT AV / ETA -->
 
                     <div class="form-grid form-grid-2">
 
 
                         <div class="form-field">
 
-                            <label for="takeoffTime">
+                            <label for="departureTime">
                                 Tatt av
                             </label>
 
                             <input
                                 type="text"
-                                id="takeoffTime"
-                                name="takeoffTime"
+                                id="departureTime"
+                                name="departureTime"
                                 placeholder="TT:MM"
-                                maxlength="5"
+                                maxlength="8"
                                 inputmode="numeric"
                             >
 
@@ -873,22 +717,28 @@
 
                         <div class="form-field">
 
-                            <label for="eta">
+                            <label for="etaTime">
                                 ETA
                             </label>
 
                             <input
                                 type="text"
-                                id="eta"
-                                name="eta"
+                                id="etaTime"
+                                name="etaTime"
                                 placeholder="TT:MM"
-                                maxlength="5"
+                                maxlength="8"
                                 inputmode="numeric"
                             >
 
                         </div>
 
                     </div>
+
+
+                    <p
+                        class="field-error"
+                        id="timeError"
+                    ></p>
 
                 </section>
 
@@ -903,78 +753,58 @@
                     id="utlosende-kriterium"
                 >
 
-                    <h2>
-                        Utløsende kriterium
-                    </h2>
+                    <h2>Utløsende kriterium</h2>
 
 
-                    <div
-                        class="criteria-list"
-                        id="criteriaList"
-                    >
+                    <div class="criteria-list">
 
 
                         <button
                             type="button"
                             class="criteria-chip"
-                            data-value="Manglende samband"
+                            data-criterion="1"
+                            aria-pressed="false"
                         >
-                            Manglende samband
+                            Helikopteret svarer ikke på anrop eller planlagt rapportering i henhold til flight following, og vises som rød både på Locus og Nødnett.
                         </button>
 
 
                         <button
                             type="button"
                             class="criteria-chip"
-                            data-value="Manglende flight following"
+                            data-criterion="2"
+                            aria-pressed="false"
                         >
-                            Manglende flight following / posisjonsoppdatering
+                            Helikopteret har ikke meldt landing innen 10 minutter etter oppgitt ETA, og det foreligger samtidig manglende kontakt eller andre indikasjoner på avvik.
                         </button>
 
 
                         <button
                             type="button"
                             class="criteria-chip"
-                            data-value="Ikke ankommet som forventet"
+                            data-criterion="3"
+                            aria-pressed="false"
                         >
-                            Ikke ankommet som forventet
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="criteria-chip"
-                            data-value="Annet"
-                        >
-                            Annet
+                            Observasjoner/meldinger som gir grunn til å mistenke/bekrefte havari.
                         </button>
 
                     </div>
 
 
-                    <input
-                        type="hidden"
-                        id="triggerCriterion"
-                        name="triggerCriterion"
-                    >
-
-
-                    <!-- ANNET -->
-
                     <div
                         class="conditional-field hidden"
-                        id="otherCriterionField"
+                        id="observationWrapper"
                     >
 
-                        <label for="otherCriterion">
-                            Beskriv annet kriterium
+                        <label for="observations">
+                            Observasjoner / meldinger
                         </label>
 
                         <textarea
-                            id="otherCriterion"
-                            name="otherCriterion"
-                            rows="3"
-                            placeholder="Beskrivelse"
+                            id="observations"
+                            name="observations"
+                            rows="4"
+                            placeholder="Beskriv observasjoner eller meldinger"
                         ></textarea>
 
                     </div>
@@ -997,9 +827,7 @@
             <div class="side-panel-inner">
 
 
-                <h2>
-                    Rapporttekst
-                </h2>
+                <h2>Rapporttekst</h2>
 
 
                 <textarea
@@ -1010,15 +838,12 @@
                 ></textarea>
 
 
-
-                <!-- KOPIER -->
-
                 <div class="action-buttons">
 
 
                     <button
                         type="button"
-                        id="copyReportButton"
+                        id="copyButton"
                         class="action-button action-copy"
                     >
 
@@ -1029,7 +854,7 @@
                             📋
                         </span>
 
-                        <span>
+                        <span id="copyButtonText">
                             Kopier tekst
                         </span>
 
@@ -1043,12 +868,9 @@
                     ></div>
 
 
-
-                    <!-- TØM -->
-
                     <button
                         type="button"
-                        id="resetFormButton"
+                        id="resetButton"
                         class="action-button action-reset"
                     >
 
@@ -1066,12 +888,8 @@
                     </button>
 
 
-
                     <div class="action-space"></div>
 
-
-
-                    <!-- PROSEDYRE -->
 
                     <a
                         href="https://ehandbok.ous-hf.no/document/144250"
@@ -1093,9 +911,6 @@
 
                     </a>
 
-
-
-                    <!-- OUTLOOK -->
 
                     <button
                         type="button"
@@ -1126,11 +941,6 @@
 
     </main>
 
-
-
-    <!-- =====================================================
-         JAVASCRIPT
-         ===================================================== -->
 
     <script src="../js/savnet-helikopter.js"></script>
 

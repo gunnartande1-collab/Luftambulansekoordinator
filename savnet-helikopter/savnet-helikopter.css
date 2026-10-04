@@ -67,7 +67,7 @@ textarea {
 
 
 /* =========================================================
-   HEADER / OVERSKRIFT
+   HEADER
    ========================================================= */
 
 .app-header {
@@ -103,22 +103,10 @@ textarea {
     letter-spacing: 0.07em;
 }
 
-.header-separator {
-    color: var(--color-muted);
-}
-
-.header-form-name {
-    font-size: 0.8em;
-    font-weight: 500;
-}
-
 
 /* =========================================================
    HOVEDLAYOUT
-
-   VENSTRE = MENY
-   MIDTEN  = SKJEMA
-   HØYRE   = RAPPORT
+   MENY | SKJEMA | RAPPORT
    ========================================================= */
 
 .app-shell {
@@ -168,7 +156,7 @@ textarea {
 }
 
 .form-navigation-label {
-    margin: 20px 10px 8px;
+    margin: 8px 10px 8px;
 
     color: var(--color-muted);
 
@@ -177,10 +165,6 @@ textarea {
 
     text-transform: uppercase;
     letter-spacing: 0.06em;
-}
-
-.form-navigation-label:first-child {
-    margin-top: 8px;
 }
 
 .form-nav-list {
@@ -230,10 +214,6 @@ a.form-nav-link:hover {
     border-color: #c5e1f1;
 }
 
-.form-nav-link.is-unavailable {
-    color: var(--color-muted);
-}
-
 .form-nav-icon {
     flex: 0 0 23px;
 
@@ -248,14 +228,9 @@ a.form-nav-link:hover {
     gap: 2px;
 }
 
-.form-nav-status {
-    font-size: 11px;
-    font-weight: 400;
-}
-
 
 /* =========================================================
-   SKJEMA – MIDTKOLONNE
+   SKJEMA
    ========================================================= */
 
 .form-panel {
@@ -344,7 +319,7 @@ label,
 
 
 /* =========================================================
-   SKRIVEFELT
+   INPUT
    ========================================================= */
 
 input,
@@ -428,7 +403,7 @@ textarea::placeholder {
 
 
 /* =========================================================
-   CHIPS / POB-KNAPPER
+   CHIPS
    ========================================================= */
 
 .chip-group {
@@ -469,60 +444,12 @@ textarea::placeholder {
 
 
 /* =========================================================
-   UTLØSENDE KRITERIUM
+   CREX MANIFEST
    ========================================================= */
 
-.criteria-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 6px;
+.crex-pob-field {
+    margin-bottom: 14px;
 }
-
-.criteria-chip {
-    width: 100%;
-
-    padding: 8px 10px;
-
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-medium);
-
-    background: var(--color-surface);
-
-    color: var(--color-text);
-
-    text-align: left;
-
-    cursor: pointer;
-}
-
-.criteria-chip:hover {
-    border-color: var(--color-primary);
-}
-
-.criteria-chip.is-selected {
-    border-color: var(--color-primary);
-
-    background: #eaf5fb;
-
-    box-shadow: 0 0 0 2px rgba(0, 102, 161, 0.08);
-}
-
-.conditional-field {
-    margin-top: 8px;
-}
-
-.conditional-field label {
-    display: block;
-
-    margin-bottom: 4px;
-}
-
-
-/* =========================================================
-   PERSONER OM BORD / CREX MANIFEST
-   ========================================================= */
 
 .person-row {
     display: grid;
@@ -580,7 +507,59 @@ textarea::placeholder {
 
 
 /* =========================================================
-   RAPPORTPANEL – HØYRE KOLONNE
+   UTLØSENDE KRITERIUM
+   ========================================================= */
+
+.criteria-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.criteria-chip {
+    width: 100%;
+
+    padding: 8px 10px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+
+    background: var(--color-surface);
+
+    color: var(--color-text);
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.criteria-chip:hover {
+    border-color: var(--color-primary);
+}
+
+.criteria-chip.is-selected {
+    border-color: var(--color-primary);
+
+    background: #eaf5fb;
+
+    box-shadow: 0 0 0 2px rgba(0, 102, 161, 0.08);
+}
+
+.conditional-field {
+    margin-top: 8px;
+}
+
+.conditional-field label {
+    display: block;
+
+    margin-bottom: 4px;
+}
+
+
+/* =========================================================
+   RAPPORTPANEL
    ========================================================= */
 
 .side-panel {
@@ -646,7 +625,7 @@ textarea::placeholder {
 
 
 /* =========================================================
-   HANDLINGSKNAPPER
+   KNAPPER
    ========================================================= */
 
 .action-buttons {
@@ -760,7 +739,7 @@ textarea::placeholder {
 
 
 /* =========================================================
-   SKJULTE FELT
+   SKJULT
    ========================================================= */
 
 .hidden {
@@ -769,11 +748,7 @@ textarea::placeholder {
 
 
 /* =========================================================
-   MELLOMSTOR PC / LAPTOP
-
-   Viktig:
-   Beholder fremdeles tre kolonner.
-   Men kolonnene gjøres litt smalere.
+   MELLOMSTOR SKJERM
    ========================================================= */
 
 @media (max-width: 1350px) {
@@ -808,9 +783,6 @@ textarea::placeholder {
 
 /* =========================================================
    SMAL LAPTOP / NETTBRETT
-
-   Her blir menyen liggende til venstre,
-   mens rapporten flyttes under skjemaet.
    ========================================================= */
 
 @media (max-width: 1050px) {
@@ -842,9 +814,7 @@ textarea::placeholder {
 
 
 /* =========================================================
-   MOBIL / SVÆRT SMAL SKJERM
-
-   Alt legges i én kolonne.
+   MOBIL
    ========================================================= */
 
 @media (max-width: 760px) {
@@ -876,9 +846,6 @@ textarea::placeholder {
         gap: 8px;
     }
 
-
-    /* MENY */
-
     .form-navigation-inner {
         position: static;
 
@@ -903,9 +870,6 @@ textarea::placeholder {
         padding: 8px 10px;
     }
 
-
-    /* FELTER */
-
     .form-grid-2,
     .form-grid-3,
     .tg-grid,
@@ -919,9 +883,6 @@ textarea::placeholder {
         padding: 10px 0;
     }
 
-
-    /* RAPPORT */
-
     .side-panel-inner {
         position: static;
     }
@@ -931,9 +892,6 @@ textarea::placeholder {
 
         min-height: 260px;
     }
-
-
-    /* BEDRE INPUT PÅ MOBIL */
 
     input,
     textarea {
