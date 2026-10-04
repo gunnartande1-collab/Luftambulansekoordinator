@@ -1,18 +1,24 @@
 :root {
     --color-primary: #0066a1;
+
     --color-background: #eef2f5;
     --color-surface: #ffffff;
+
     --color-text: #17212b;
     --color-muted: #667085;
+
     --color-border: #d0d5dd;
     --color-border-light: #e4e7ec;
 
     --color-green: #16834b;
     --color-green-dark: #0e6739;
+
     --color-red: #c62828;
     --color-red-dark: #a51e1e;
+
     --color-blue-light: #dceef9;
     --color-blue-light-hover: #c7e4f5;
+
     --color-black: #202124;
 
     --radius-small: 6px;
@@ -21,6 +27,11 @@
 
     --input-height: 34px;
 }
+
+
+/* =========================================================
+   GENERELT
+   ========================================================= */
 
 * {
     box-sizing: border-box;
@@ -32,6 +43,7 @@ html {
 
 body {
     margin: 0;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -40,8 +52,10 @@ body {
         Helvetica,
         Arial,
         sans-serif;
+
     color: var(--color-text);
     background: var(--color-background);
+
     line-height: 1.45;
 }
 
@@ -51,11 +65,16 @@ textarea {
     font: inherit;
 }
 
-/* Overskrift */
+
+/* =========================================================
+   HEADER / OVERSKRIFT
+   ========================================================= */
 
 .app-header {
     padding: 10px 20px;
+
     background: var(--color-surface);
+
     border-bottom: 1px solid var(--color-border-light);
 }
 
@@ -63,17 +82,23 @@ textarea {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
+
     gap: 12px;
+
     margin: 0;
+
     font-size: 24px;
     font-weight: 700;
 }
 
 .app-eyebrow {
     margin: 0 0 3px;
+
     color: var(--color-muted);
+
     font-size: 12px;
     font-weight: 700;
+
     text-transform: uppercase;
     letter-spacing: 0.07em;
 }
@@ -87,72 +112,121 @@ textarea {
     font-weight: 500;
 }
 
-/* Skjema og rapportpanel */
+
+/* =========================================================
+   HOVEDLAYOUT
+
+   VENSTRE = MENY
+   MIDTEN  = SKJEMA
+   HØYRE   = RAPPORT
+   ========================================================= */
 
 .app-shell {
     display: grid;
-    grid-template-columns: 190px minmax(0, 1fr) 260px;
+
+    grid-template-columns:
+        190px
+        minmax(520px, 1fr)
+        minmax(320px, 380px);
+
+    grid-template-areas:
+        "navigation form report";
+
     align-items: start;
-    gap: 12px;
-    width: min(1700px, calc(100% - 24px));
+
+    gap: 16px;
+
+    width: min(1800px, calc(100% - 24px));
+
     margin: 12px auto 24px;
 }
 
-/* Venstremeny */
+
+/* =========================================================
+   VENSTREMENY
+   ========================================================= */
 
 .form-navigation {
+    grid-area: navigation;
+
     min-width: 0;
+
     align-self: stretch;
 }
 
 .form-navigation-inner {
     position: sticky;
+
     top: 12px;
+
     padding: 12px 8px;
+
     background: var(--color-surface);
+
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
 }
 
 .form-navigation-label {
     margin: 20px 10px 8px;
+
     color: var(--color-muted);
+
     font-size: 12px;
     font-weight: 700;
+
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
+.form-navigation-label:first-child {
+    margin-top: 8px;
+}
+
 .form-nav-list {
     display: grid;
+
     gap: 8px;
+
     margin: 0;
     padding: 0;
+
     list-style: none;
 }
 
 .form-nav-link {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     min-height: 44px;
+
     padding: 10px 8px;
+
     border: 1px solid transparent;
     border-radius: 9px;
+
     color: var(--color-text);
+
     font-size: 14px;
     font-weight: 600;
+
     text-decoration: none;
 }
 
 a.form-nav-link:hover {
     background: #f3f6f8;
+
     border-color: var(--color-border-light);
 }
 
 .form-nav-link[aria-current="page"] {
     background: #eaf5fb;
+
     color: var(--color-primary);
+
     border-color: #c5e1f1;
 }
 
@@ -162,12 +236,15 @@ a.form-nav-link:hover {
 
 .form-nav-icon {
     flex: 0 0 23px;
+
     text-align: center;
+
     font-size: 19px;
 }
 
 .form-nav-copy {
     display: grid;
+
     gap: 2px;
 }
 
@@ -176,54 +253,79 @@ a.form-nav-link:hover {
     font-weight: 400;
 }
 
-.form-panel,
-.side-panel {
+
+/* =========================================================
+   SKJEMA – MIDTKOLONNE
+   ========================================================= */
+
+.form-panel {
+    grid-area: form;
+
     min-width: 0;
 }
 
-/* Seksjoner */
+
+/* =========================================================
+   SEKSJONER
+   ========================================================= */
 
 .form-section {
     margin-bottom: 8px;
+
     padding: 12px;
+
     background: var(--color-surface);
+
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
+
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .form-section h2 {
     margin: 0 0 8px;
+
     font-size: 17px;
     font-weight: 700;
 }
 
-/* Feltrader */
+
+/* =========================================================
+   FELTRADER
+   ========================================================= */
 
 .form-grid {
     display: grid;
+
     gap: 8px;
+
     margin-bottom: 8px;
 }
 
 .form-grid-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 }
 
 .form-grid-3,
 .tg-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
 }
 
 .tg-grid {
     display: grid;
+
     gap: 8px;
 }
 
 .form-field {
     display: flex;
+
     flex-direction: column;
+
     gap: 4px;
+
     margin-bottom: 8px;
 }
 
@@ -235,20 +337,29 @@ a.form-nav-link:hover {
 label,
 .field-label {
     color: #344054;
+
     font-size: 13px;
     font-weight: 650;
 }
 
-/* Skrivefelt */
+
+/* =========================================================
+   SKRIVEFELT
+   ========================================================= */
 
 input,
 textarea {
     width: 100%;
+
     min-width: 0;
+
     border: 1px solid var(--color-border);
     border-radius: var(--radius-small);
+
     background: var(--color-surface);
+
     color: var(--color-text);
+
     transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
@@ -256,23 +367,27 @@ textarea {
 
 input {
     height: var(--input-height);
+
     padding: 0 8px;
 }
 
 textarea {
     padding: 8px;
+
     resize: vertical;
 }
 
 input:focus,
 textarea:focus {
     outline: 2px solid var(--color-primary);
+
     outline-offset: 1px;
 }
 
 button:focus-visible,
 a:focus-visible {
     outline: 3px solid var(--color-primary);
+
     outline-offset: 3px;
 }
 
@@ -281,18 +396,25 @@ textarea::placeholder {
     color: #98a2b3;
 }
 
-/* Talegrupper */
+
+/* =========================================================
+   TALEGRUPPER
+   ========================================================= */
 
 .field-card {
     padding: 8px;
+
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-medium);
+
     background: #fafbfc;
 }
 
 .field-card > label {
     display: block;
+
     margin-bottom: 4px;
+
     font-weight: 700;
 }
 
@@ -304,22 +426,32 @@ textarea::placeholder {
     margin-bottom: 0;
 }
 
-/* POB-knapper */
+
+/* =========================================================
+   CHIPS / POB-KNAPPER
+   ========================================================= */
 
 .chip-group {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 6px;
 }
 
 .chip {
     min-width: 34px;
     min-height: 34px;
+
     padding: 0 9px;
+
     border: 1px solid var(--color-border);
     border-radius: 999px;
+
     background: var(--color-surface);
+
     color: #344054;
+
     cursor: pointer;
 }
 
@@ -329,26 +461,39 @@ textarea::placeholder {
 
 .chip.is-selected {
     border-color: var(--color-primary);
+
     background: var(--color-primary);
+
     color: #ffffff;
 }
 
-/* Utløsende kriterium */
+
+/* =========================================================
+   UTLØSENDE KRITERIUM
+   ========================================================= */
 
 .criteria-list {
     display: flex;
+
     flex-direction: column;
+
     gap: 6px;
 }
 
 .criteria-chip {
     width: 100%;
+
     padding: 8px 10px;
+
     border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
+
     background: var(--color-surface);
+
     color: var(--color-text);
+
     text-align: left;
+
     cursor: pointer;
 }
 
@@ -358,7 +503,9 @@ textarea::placeholder {
 
 .criteria-chip.is-selected {
     border-color: var(--color-primary);
+
     background: #eaf5fb;
+
     box-shadow: 0 0 0 2px rgba(0, 102, 161, 0.08);
 }
 
@@ -368,105 +515,176 @@ textarea::placeholder {
 
 .conditional-field label {
     display: block;
+
     margin-bottom: 4px;
 }
 
-/* Personer om bord */
+
+/* =========================================================
+   PERSONER OM BORD / CREX MANIFEST
+   ========================================================= */
 
 .person-row {
     display: grid;
-    grid-template-columns: 140px minmax(0, 1fr) 135px;
+
+    grid-template-columns:
+        140px
+        minmax(0, 1fr)
+        135px;
+
     gap: 8px;
+
     align-items: center;
+
     padding: 6px 0;
+
     border-bottom: 1px solid var(--color-border-light);
+}
+
+.person-row:last-child {
+    border-bottom: 0;
 }
 
 .person-role {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     font-size: 14px;
     font-weight: 700;
 }
 
-.person-role img {
+.person-role img,
+.person-ikon {
     width: 24px;
     height: 24px;
+
     object-fit: contain;
+
     flex-shrink: 0;
 }
 
 .role-icon {
     display: inline-flex;
+
     justify-content: center;
+
     width: 24px;
+
     font-size: 20px;
+
     flex-shrink: 0;
 }
 
-/* Rapportpanel */
+
+/* =========================================================
+   RAPPORTPANEL – HØYRE KOLONNE
+   ========================================================= */
 
 .side-panel {
-    align-self: stretch;
+    grid-area: report;
+
+    min-width: 0;
+
+    align-self: start;
 }
 
 .side-panel-inner {
     position: sticky;
+
     top: 12px;
+
     padding: 12px;
+
     background: var(--color-surface);
+
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-large);
+
     box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
 }
 
 .side-panel h2 {
     margin: 0 0 8px;
+
     font-size: 21px;
 }
 
 .report-output {
-    height: clamp(180px, calc(100dvh - 420px), 430px);
+    width: 100%;
+
+    height: clamp(
+        260px,
+        calc(100dvh - 410px),
+        480px
+    );
+
+    min-height: 220px;
+
     margin-bottom: 8px;
+
     padding: 10px;
+
     border-radius: var(--radius-medium);
+
     background: #f8fafc;
+
     font-family:
         "SFMono-Regular",
         Consolas,
         "Liberation Mono",
         monospace;
+
     font-size: 12.5px;
+
     line-height: 1.5;
+
     resize: vertical;
 }
 
-/* Handlingsknapper */
+
+/* =========================================================
+   HANDLINGSKNAPPER
+   ========================================================= */
 
 .action-buttons {
     display: flex;
+
     flex-direction: column;
+
     gap: 6px;
 }
 
 .action-button {
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     gap: 9px;
+
+    width: 100%;
+
     min-height: 44px;
+
     padding: 10px 14px;
+
     border: 0;
     border-radius: var(--radius-medium);
+
     font-weight: 700;
+
     text-align: center;
     text-decoration: none;
+
     cursor: pointer;
 }
 
 .action-copy {
     background: var(--color-green);
+
     color: #ffffff;
 }
 
@@ -476,6 +694,7 @@ textarea::placeholder {
 
 .action-reset {
     background: var(--color-red);
+
     color: #ffffff;
 }
 
@@ -485,6 +704,7 @@ textarea::placeholder {
 
 .action-procedure {
     background: var(--color-blue-light);
+
     color: #174a67;
 }
 
@@ -494,6 +714,7 @@ textarea::placeholder {
 
 .action-email {
     background: var(--color-black);
+
     color: #ffffff;
 }
 
@@ -511,17 +732,25 @@ textarea::placeholder {
 
 .copy-confirmation {
     min-height: 18px;
+
     color: var(--color-green);
+
     font-size: 13px;
     font-weight: 700;
+
     text-align: center;
 }
 
-/* Feilmeldinger og skjulte felt */
+
+/* =========================================================
+   FEILMELDINGER
+   ========================================================= */
 
 .field-error {
     margin: 0;
+
     color: var(--color-red);
+
     font-size: 13px;
 }
 
@@ -529,52 +758,111 @@ textarea::placeholder {
     margin-bottom: 8px;
 }
 
+
+/* =========================================================
+   SKJULTE FELT
+   ========================================================= */
+
 .hidden {
     display: none !important;
 }
 
-/* Mobil og smale vinduer */
 
-/* Smalere PC-vinduer */
+/* =========================================================
+   MELLOMSTOR PC / LAPTOP
 
-@media (max-width: 1200px) {
+   Viktig:
+   Beholder fremdeles tre kolonner.
+   Men kolonnene gjøres litt smalere.
+   ========================================================= */
+
+@media (max-width: 1350px) {
+
     .app-shell {
-        grid-template-columns: minmax(0, 1fr) 260px;
+        grid-template-columns:
+            175px
+            minmax(470px, 1fr)
+            300px;
+
+        gap: 12px;
+
+        width: calc(100% - 20px);
     }
 
-    .form-navigation {
-        grid-column: 1 / -1;
+    .person-row {
+        grid-template-columns:
+            125px
+            minmax(0, 1fr)
+            120px;
     }
 
-    .form-navigation-inner {
-        position: static;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
+    .side-panel h2 {
+        font-size: 19px;
     }
 
-    .form-navigation-label {
-        display: none;
-    }
-
-    .form-nav-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
+    .report-output {
+        font-size: 12px;
     }
 }
 
-/* Mobil og svært smale vinduer */
+
+/* =========================================================
+   SMAL LAPTOP / NETTBRETT
+
+   Her blir menyen liggende til venstre,
+   mens rapporten flyttes under skjemaet.
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .app-shell {
+        grid-template-columns:
+            180px
+            minmax(0, 1fr);
+
+        grid-template-areas:
+            "navigation form"
+            "navigation report";
+    }
+
+    .form-navigation-inner {
+        position: sticky;
+
+        top: 12px;
+    }
+
+    .side-panel-inner {
+        position: static;
+    }
+
+    .report-output {
+        height: 300px;
+    }
+}
+
+
+/* =========================================================
+   MOBIL / SVÆRT SMAL SKJERM
+
+   Alt legges i én kolonne.
+   ========================================================= */
 
 @media (max-width: 760px) {
+
     :root {
         --input-height: 42px;
     }
 
     .app-shell {
         grid-template-columns: 1fr;
+
+        grid-template-areas:
+            "navigation"
+            "form"
+            "report";
+
         width: calc(100% - 24px);
+
         margin-top: 12px;
     }
 
@@ -584,8 +872,39 @@ textarea::placeholder {
 
     .app-header h1 {
         font-size: 21px;
+
         gap: 8px;
     }
+
+
+    /* MENY */
+
+    .form-navigation-inner {
+        position: static;
+
+        padding: 10px;
+    }
+
+    .form-navigation-label {
+        display: none;
+    }
+
+    .form-nav-list {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 6px;
+    }
+
+    .form-nav-link {
+        min-height: 40px;
+
+        padding: 8px 10px;
+    }
+
+
+    /* FELTER */
 
     .form-grid-2,
     .form-grid-3,
@@ -594,13 +913,27 @@ textarea::placeholder {
         grid-template-columns: 1fr;
     }
 
+    .person-row {
+        gap: 6px;
+
+        padding: 10px 0;
+    }
+
+
+    /* RAPPORT */
+
     .side-panel-inner {
         position: static;
     }
 
     .report-output {
         height: 320px;
+
+        min-height: 260px;
     }
+
+
+    /* BEDRE INPUT PÅ MOBIL */
 
     input,
     textarea {
