@@ -1,4 +1,6 @@
-/* DAG- OG KVELDSMODUS */
+/* =========================================================
+   DAG- OG KVELDSMODUS
+   ========================================================= */
 
 html {
   color-scheme: light;
@@ -64,15 +66,12 @@ html[data-theme="dark"] {
   --black: #0c1117;
 }
 
-/* Overskriver også farger i sidens egen CSS. */
-
 html[data-theme="dark"] body {
   background: var(--background);
   color: var(--text);
 }
 
 html[data-theme="dark"] .app-header,
-html[data-theme="dark"] .form-navigation-inner,
 html[data-theme="dark"] .form-section,
 html[data-theme="dark"] .side-panel-inner {
   background: var(--surface);
@@ -85,18 +84,12 @@ html[data-theme="dark"] .field-label {
   color: #c8d3df;
 }
 
-html[data-theme="dark"] .app-eyebrow,
-html[data-theme="dark"] .form-navigation-label {
+html[data-theme="dark"] .app-eyebrow {
   color: var(--muted);
 }
 
 html[data-theme="dark"] .field-card,
-html[data-theme="dark"] .report-output {
-  background: #151e28;
-  color: var(--text);
-  border-color: var(--border);
-}
-
+html[data-theme="dark"] .report-output,
 html[data-theme="dark"] input,
 html[data-theme="dark"] textarea {
   background: #151e28;
@@ -109,26 +102,11 @@ html[data-theme="dark"] textarea::placeholder {
   color: #95a3b4;
 }
 
-html[data-theme="dark"] .form-nav-link,
 html[data-theme="dark"] .chip,
 html[data-theme="dark"] .criteria-chip {
-  color: var(--text);
-}
-
-html[data-theme="dark"] .form-nav-link:hover {
-  background: #263444;
-}
-
-html[data-theme="dark"] .form-nav-link[aria-current="page"],
-html[data-theme="dark"] .criteria-chip.is-selected {
-  background: #243f55;
-  color: #d8efff;
-  border-color: var(--primary);
-}
-
-html[data-theme="dark"] .chip {
   background: #151e28;
   border-color: var(--border);
+  color: var(--text);
 }
 
 html[data-theme="dark"] .chip.is-selected {
@@ -137,13 +115,9 @@ html[data-theme="dark"] .chip.is-selected {
   color: #ffffff;
 }
 
-html[data-theme="dark"] .criteria-chip {
-  background: #151e28;
-  border-color: var(--border);
-}
-
 html[data-theme="dark"] .criteria-chip.is-selected {
   background: #243f55;
+  color: #d8efff;
   border-color: var(--primary);
 }
 
@@ -172,41 +146,73 @@ html[data-theme="dark"] .field-error {
   }
 }
 
-/* FELLES VENSTREMENY */
+/* =========================================================
+   FELLES VENSTREMENY
 
-.form-navigation {
+   Disse reglene overstyrer de gamle menyreglene i
+   savnet-helikopter.css.
+   ========================================================= */
+
+html body .form-navigation {
   min-width: 0;
   align-self: start;
+
   position: sticky;
   top: calc(var(--header-height, 70px) + 12px);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  line-height: 1.45;
 }
 
-.form-navigation-inner {
+html body .form-navigation-inner {
+  position: static;
+
   padding: 10px;
+
   background: var(--surface, #ffffff);
-  border: 1px solid var(--border-light, #e4e7ec);
+  color: var(--text, #17212b);
+
+  border: 1px solid #e4e7ec;
   border-radius: 14px;
+
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.form-navigation-label {
+html body .form-navigation-label {
+  display: block;
+
   margin: 4px 8px 10px;
+
   color: var(--muted, #667085);
+
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.form-nav-list {
+html body .form-navigation-label:not(:first-child) {
+  margin-top: 22px;
+}
+
+html body .form-nav-list {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 6px;
+
   margin: 0;
   padding: 0;
+
   list-style: none;
 }
 
-.form-nav-link {
+html body .form-nav-link {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -218,56 +224,120 @@ html[data-theme="dark"] .field-error {
   border-radius: 9px;
 
   color: var(--text, #17212b);
+
   font-size: 14px;
   font-weight: 600;
   line-height: 1.45;
+
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
-.form-nav-link:hover {
+html body a.form-nav-link:hover {
   background: #f3f6f8;
-  border-color: var(--border-light, #e4e7ec);
+  border-color: #e4e7ec;
 }
 
-.form-nav-link[aria-current="page"] {
+html body .form-nav-link[aria-current="page"] {
   background: #eaf5fb;
   border-color: #c5e1f1;
-  color: var(--primary, #0066a1);
+  color: #0066a1;
 }
 
-.form-nav-icon {
+html body .form-nav-link.is-unavailable {
+  color: var(--muted, #667085);
+  cursor: default;
+}
+
+html body .form-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   width: 24px;
+  height: 24px;
   flex: 0 0 24px;
+
   text-align: center;
   font-size: 18px;
 }
 
-.form-nav-copy {
+html body .form-nav-icon img,
+html body .form-nav-icon svg {
+  display: block;
+
+  width: 24px;
+  height: 24px;
+
+  object-fit: contain;
+}
+
+html body .form-nav-copy {
   min-width: 0;
 }
 
-html[data-theme="dark"] .form-nav-link:hover {
-  background: #263444;
+/* MENY I KVELDSMODUS */
+
+html[data-theme="dark"] body .form-navigation-inner {
+  border-color: #344252;
 }
 
-html[data-theme="dark"] .form-nav-link[aria-current="page"] {
+html[data-theme="dark"] body a.form-nav-link:hover {
+  background: #263444;
+  border-color: #344252;
+}
+
+html[data-theme="dark"] body .form-nav-link[aria-current="page"] {
   background: #243f55;
-  border-color: var(--primary);
+  border-color: #70bce8;
   color: #d8efff;
 }
 
-@media (max-width: 900px) {
-  .form-navigation {
-    position: static;
+/* =========================================================
+   SAMME MENYBREDDE PÅ FREMSIDE OG SAVNET HELIKOPTER
+   ========================================================= */
+
+html body .app-layout {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+html body .app-shell {
+  grid-template-columns: 240px minmax(0, 1fr) 340px;
+}
+
+@media (max-width: 1200px) {
+  html body .app-layout {
+    grid-template-columns: 210px minmax(0, 1fr);
   }
 
-  .form-navigation-label {
-    display: none;
-  }
-
-  .form-nav-list {
-    display: flex;
-    flex-wrap: wrap;
+  html body .app-shell {
+    grid-template-columns: 210px minmax(0, 1fr) 300px;
   }
 }
 
+/* MENY PÅ SMAL SKJERM */
+
+@media (max-width: 900px) {
+  html body .app-layout,
+  html body .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  html body .form-navigation {
+    position: static;
+    top: auto;
+  }
+
+  html body .form-navigation-label {
+    display: block;
+  }
+
+  html body .form-nav-list {
+    display: grid;
+
+    grid-template-columns:
+      repeat(auto-fit, minmax(150px, 1fr));
+
+    gap: 6px;
+  }
+}
