@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flight Following</title>
+
+    <style>
+
+        /* =========================================================
+           GENERELT
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f3f6f9;
+            color: #172033;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page {
+            max-width: 1550px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 24px;
+        }
+
+        .page-title-area {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .page-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 16px;
+
+            background: #e5effa;
+            color: #2868a8;
+
+            font-size: 28px;
+        }
+
+        .page-title {
+            margin: 0;
+
+            font-size: 30px;
+            line-height: 1.1;
+
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .page-subtitle {
+            margin-top: 5px;
+
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .new-ff-btn {
+            min-height: 48px;
+
+            padding: 0 20px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #16863c;
+            color: white;
+
+            font-size: 14px;
+            font-weight: 750;
+
+            cursor: pointer;
+
+            box-shadow: 0 3px 10px rgba(22, 134, 60, 0.18);
+
+            transition:
+                background 0.15s ease,
+                transform 0.15s ease;
+        }
+
+        .new-ff-btn:hover {
+            background: #116d31;
+        }
+
+        .new-ff-btn:active {
+            transform: translateY(1px);
+        }
+
+
+        /* =========================================================
+           HOVEDOMRÅDE
+        ========================================================= */
+
+        #ffContainer {
+            display: flex;
+            flex-direction: column;
+
+            gap: 17px;
+        }
+
+
+        /* =========================================================
+           TOM VISNING
+        ========================================================= */
+
+        .empty-state {
+            padding: 55px 20px;
+
+            border: 1px dashed #c9d4df;
+            border-radius: 14px;
+
+            background: rgba(255, 255, 255, 0.6);
+
+            text-align: center;
+
+            color: #667085;
+        }
+
+        .empty-state strong {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #344054;
+
+            font-size: 17px;
+        }
+
+
+        /* =========================================================
+           RESSURSKORT
+        ========================================================= */
+
+        .resource-card {
+            overflow: hidden;
+
+            border: 1px solid #d5dfe8;
+            border-radius: 14px;
+
+            background: white;
+
+            box-shadow:
+                0 1px 2px rgba(16, 24, 40, 0.03),
+                0 5px 18px rgba(16, 24, 40, 0.035);
+        }
+
+        .resource-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 15px 19px;
+
+            border-bottom: 1px solid #dae7de;
+
+            background: #f4faf6;
+        }
+
+        .resource-card.collapsed .resource-header {
+            border-bottom: none;
+        }
+
+        .resource-header-left {
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+        }
+
+        .resource-dot {
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            background: #1f9148;
+        }
+
+        .resource-name {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .resource-status {
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            background: #dcefe2;
+            color: #167438;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.2px;
+        }
+
+        .resource-header-actions {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .collapse-btn {
+            width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+            border-radius: 8px;
+
+            background: transparent;
+            color: #344054;
+
+            font-size: 19px;
+
+            cursor: pointer;
+        }
+
+        .collapse-btn:hover {
+            background: rgba(52, 64, 84, 0.06);
+        }
+
+
+        /* =========================================================
+           MINIMERT RESSURS
+        ========================================================= */
+
+        .resource-summary {
+            display: none;
+
+            padding: 0 19px 14px 19px;
+
+            background: #f4faf6;
+
+            color: #475467;
+
+            font-size: 13px;
+        }
+
+        .resource-card.collapsed .resource-summary {
+            display: block;
+        }
+
+        .resource-card.collapsed .resource-body {
+            display: none;
+        }
+
+
+        /* =========================================================
+           RESSURSBODY
+        ========================================================= */
+
+        .resource-body {
+            padding: 17px;
+        }
+
+        .flight-list {
+            display: flex;
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+
+        /* =========================================================
+           FLIGHT-RAD
+        ========================================================= */
+
+        .flight-row {
+            position: relative;
+
+            padding: 15px;
+
+            border: 1px solid #dde4eb;
+            border-radius: 11px;
+
+            background: #ffffff;
+        }
+
+        .flight-row.completed {
+            border-color: #c6ddcc;
+            background: #f8fcf9;
+        }
+
+        .flight-row.aborted {
+            border-color: #e8c2c2;
+            background: #fff8f8;
+        }
+
+        .flight-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 12px;
+
+            margin-bottom: 12px;
+        }
+
+        .flight-number {
+            color: #667085;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.35px;
+            text-transform: uppercase;
+        }
+
+        .flight-result {
+            font-size: 12px;
+            font-weight: 700;
+
+            color: #667085;
+        }
+
+        .completed .flight-result {
+            color: #18753a;
+        }
+
+        .aborted .flight-result {
+            color: #b62f2f;
+        }
+
+
+        /* =========================================================
+           ØVERSTE RAD
+        ========================================================= */
+
+        .flight-grid-top {
+            display: grid;
+
+            grid-template-columns:
+                minmax(115px, 1fr)
+                minmax(115px, 1fr)
+                minmax(280px, 3fr);
+
+            gap: 13px;
+
+            margin-bottom: 14px;
+        }
+
+
+        /* =========================================================
+           NEDERSTE RAD
+        ========================================================= */
+
+        .flight-grid-bottom {
+            display: grid;
+
+            grid-template-columns:
+                minmax(120px, 1fr)
+                minmax(70px, 0.65fr)
+                minmax(105px, 0.9fr)
+                minmax(105px, 0.9fr)
+                minmax(135px, 1.15fr);
+
+            gap: 13px;
+
+            align-items: end;
+        }
+
+
+        /* =========================================================
+           FELT
+        ========================================================= */
+
+        .field {
+            display: flex;
+            flex-direction: column;
+
+            gap: 6px;
+        }
+
+        .field label {
+            color: #344054;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.35px;
+            text-transform: uppercase;
+        }
+
+        .field input {
+            width: 100%;
+            height: 45px;
+
+            padding: 0 11px;
+
+            border: 1px solid #ccd5df;
+            border-radius: 8px;
+
+            background: white;
+            color: #182230;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                background 0.15s ease;
+        }
+
+        .field input::placeholder {
+            color: #98a2b3;
+        }
+
+        .field input:focus {
+            border-color: #4d8fcf;
+
+            box-shadow:
+                0 0 0 3px rgba(77, 143, 207, 0.11);
+        }
+
+        .field input[readonly] {
+            background: #f1f4f7;
+            color: #475467;
+        }
+
+        .field input.time-click {
+            cursor: pointer;
+        }
+
+        .field input.time-click:hover {
+            background: #f7fafc;
+        }
+
+        .flight-row.completed input,
+        .flight-row.aborted input {
+            color: #5a6575;
+        }
+
+
+        /* =========================================================
+           HANDLINGSKNAPPER
+        ========================================================= */
+
+        .flight-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-top: 14px;
+        }
+
+        .flight-status-text {
+            color: #667085;
+
+            font-size: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+        .land-btn,
+        .abort-btn,
+        .end-ff-btn {
+            min-height: 40px;
+
+            padding: 0 14px;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s ease,
+                border-color 0.15s ease,
+                opacity 0.15s ease;
+        }
+
+        .land-btn {
+            border: 1px solid #17843d;
+
+            background: #17843d;
+            color: white;
+        }
+
+        .land-btn:hover {
+            background: #106d31;
+        }
+
+        .abort-btn {
+            border: 1px solid #d94444;
+
+            background: white;
+            color: #c53232;
+        }
+
+        .abort-btn:hover {
+            background: #fff1f1;
+        }
+
+        .end-ff-btn {
+            border: 1px solid #344054;
+
+            background: #344054;
+            color: white;
+        }
+
+        .end-ff-btn:hover {
+            background: #202938;
+        }
+
+        .land-btn:disabled,
+        .abort-btn:disabled,
+        .end-ff-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 16px;
+
+            background: rgba(15, 23, 42, 0.44);
+
+            z-index: 9999;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(440px, 100%);
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            background: white;
+
+            box-shadow:
+                0 25px 70px rgba(15, 23, 42, 0.25);
+        }
+
+        .modal-title {
+            margin: 0 0 5px 0;
+
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .modal-description {
+            margin: 0 0 20px 0;
+
+            color: #667085;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .modal label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #344054;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 0.35px;
+            text-transform: uppercase;
+        }
+
+        .modal select {
+            width: 100%;
+            height: 48px;
+
+            margin-bottom: 20px;
+
+            padding: 0 11px;
+
+            border: 1px solid #ccd5df;
+            border-radius: 8px;
+
+            background: white;
+            color: #182230;
+
+            outline: none;
+        }
+
+        .modal select:focus {
+            border-color: #4d8fcf;
+
+            box-shadow:
+                0 0 0 3px rgba(77, 143, 207, 0.11);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+
+            gap: 8px;
+        }
+
+        .modal-cancel-btn,
+        .modal-start-btn {
+            min-height: 42px;
+
+            padding: 0 15px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 750;
+
+            cursor: pointer;
+        }
+
+        .modal-cancel-btn {
+            border: 1px solid #ccd5df;
+
+            background: white;
+            color: #344054;
+        }
+
+        .modal-start-btn {
+            border: none;
+
+            background: #17843d;
+            color: white;
+        }
+
+        .modal-start-btn:hover {
+            background: #106d31;
+        }
+
+
+        /* =========================================================
+           CONFIRM-DIALOG
+        ========================================================= */
+
+        .confirm-backdrop {
+            position: fixed;
+            inset: 0;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 16px;
+
+            background: rgba(15, 23, 42, 0.44);
+
+            z-index: 10000;
+        }
+
+        .confirm-backdrop.open {
+            display: flex;
+        }
+
+        .confirm-box {
+            width: min(420px, 100%);
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            background: white;
+
+            box-shadow:
+                0 25px 70px rgba(15, 23, 42, 0.25);
+        }
+
+        .confirm-box h2 {
+            margin: 0 0 7px 0;
+
+            font-size: 20px;
+        }
+
+        .confirm-box p {
+            margin: 0 0 20px 0;
+
+            color: #667085;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            justify-content: flex-end;
+
+            gap: 8px;
+        }
+
+        .confirm-no,
+        .confirm-yes {
+            min-height: 42px;
+
+            padding: 0 15px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 750;
+
+            cursor: pointer;
+        }
+
+        .confirm-no {
+            border: 1px solid #ccd5df;
+
+            background: white;
+        }
+
+        .confirm-yes {
+            border: none;
+
+            background: #344054;
+            color: white;
+        }
+
+
+        /* =========================================================
+           RESPONSIV
+        ========================================================= */
+
+        @media (max-width: 1050px) {
+
+            .flight-grid-bottom {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 760px) {
+
+            .page {
+                padding: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .new-ff-btn {
+                width: 100%;
+            }
+
+            .flight-grid-top,
+            .flight-grid-bottom {
+                grid-template-columns: 1fr;
+            }
+
+            .flight-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .action-buttons button {
+                flex: 1;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="page-header">
+
+        <div class="page-title-area">
+
+            <div class="page-icon">
+                ✈
+            </div>
+
+            <div>
+
+                <h1 class="page-title">
+                    Flight Following
+                </h1>
+
+                <div class="page-subtitle">
+                    Operativ oppfølging av luftambulanseressurser
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="new-ff-btn"
+            id="newFFBtn"
+        >
+            ＋ Ny FF
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         FLIGHT FOLLOWING
+    ========================================================== -->
+
+    <main id="ffContainer">
+
+        <div
+            class="empty-state"
+            id="emptyState"
+        >
+
+            <strong>
+                Ingen aktiv Flight Following
+            </strong>
+
+            Klikk «Ny FF» for å velge ressurs.
+
+        </div>
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =============================================================
+     MODAL - VELG RESSURS
+============================================================== -->
+
+<div
+    class="modal-backdrop"
+    id="newFFModal"
+>
+
+    <div class="modal">
+
+        <h2 class="modal-title">
+            Start ny Flight Following
+        </h2>
+
+        <p class="modal-description">
+            Velg ressursen som skal flight followes.
+        </p>
+
+
+        <label for="resourceSelect">
+            Ressurs
+        </label>
+
+        <select id="resourceSelect">
+
+            <option value="">
+                Velg ressurs
+            </option>
+
+            <option value="LA 1">
+                LA 1
+            </option>
+
+            <option value="LA 2">
+                LA 2
+            </option>
+
+            <option value="LA 3">
+                LA 3
+            </option>
+
+            <option value="LA 4">
+                LA 4
+            </option>
+
+            <option value="LA 5">
+                LA 5
+            </option>
+
+            <option value="RH Rygge">
+                RH Rygge
+            </option>
+
+            <option value="IA">
+                IA
+            </option>
+
+        </select>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="modal-cancel-btn"
+                id="cancelNewFFBtn"
+            >
+                Avbryt
+            </button>
+
+            <button
+                type="button"
+                class="modal-start-btn"
+                id="startNewFFBtn"
+            >
+                Start FF
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =============================================================
+     MODAL - AVSLUTT FF
+============================================================== -->
+
+<div
+    class="confirm-backdrop"
+    id="endFFConfirm"
+>
+
+    <div class="confirm-box">
+
+        <h2>
+            Avslutt Flight Following
+        </h2>
+
+        <p id="endFFConfirmText">
+            Vil du avslutte Flight Following?
+        </p>
+
+
+        <div class="confirm-actions">
+
+            <button
+                type="button"
+                class="confirm-no"
+                id="endFFNoBtn"
+            >
+                Nei
+            </button>
+
+            <button
+                type="button"
+                class="confirm-yes"
+                id="endFFYesBtn"
+            >
+                Avslutt FF
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================================================
+       ELEMENTER
+    ========================================================= */
+
+    const ffContainer =
+        document.getElementById("ffContainer");
+
+    const emptyState =
+        document.getElementById("emptyState");
+
+
+    const newFFBtn =
+        document.getElementById("newFFBtn");
+
+    const newFFModal =
+        document.getElementById("newFFModal");
+
+    const resourceSelect =
+        document.getElementById("resourceSelect");
+
+    const cancelNewFFBtn =
+        document.getElementById("cancelNewFFBtn");
+
+    const startNewFFBtn =
+        document.getElementById("startNewFFBtn");
+
+
+    const endFFConfirm =
+        document.getElementById("endFFConfirm");
+
+    const endFFConfirmText =
+        document.getElementById("endFFConfirmText");
+
+    const endFFNoBtn =
+        document.getElementById("endFFNoBtn");
+
+    const endFFYesBtn =
+        document.getElementById("endFFYesBtn");
+
+
+    let cardWaitingForEnd = null;
+
+
+
+    /* =========================================================
+       KLOKKESLETT
+    ========================================================= */
+
+    function getCurrentTime() {
+
+        const now =
+            new Date();
+
+
+        const hours =
+            String(
+                now.getHours()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const minutes =
+            String(
+                now.getMinutes()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        return `${hours}:${minutes}`;
+
+    }
+
+
+
+    /* =========================================================
+       NY FF - ÅPNE MODAL
+    ========================================================= */
+
+    newFFBtn.addEventListener(
+        "click",
+        function() {
+
+            updateResourceOptions();
+
+            resourceSelect.value =
+                "";
+
+            newFFModal.classList.add(
+                "open"
+            );
+
+        }
+    );
+
+
+
+    /* =========================================================
+       NY FF - LUKK MODAL
+    ========================================================= */
+
+    cancelNewFFBtn.addEventListener(
+        "click",
+        function() {
+
+            newFFModal.classList.remove(
+                "open"
+            );
+
+        }
+    );
+
+
+    newFFModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === newFFModal
+            ) {
+
+                newFFModal.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =========================================================
+       START FF
+    ========================================================= */
+
+    startNewFFBtn.addEventListener(
+        "click",
+        function() {
+
+            const resource =
+                resourceSelect.value;
+
+
+            if (!resource) {
+
+                alert(
+                    "Velg ressurs."
+                );
+
+                return;
+
+            }
+
+
+            const existingCard =
+                document.querySelector(
+                    `.resource-card[data-resource="${resource}"]`
+                );
+
+
+            if (existingCard) {
+
+                alert(
+                    `${resource} har allerede aktiv Flight Following.`
+                );
+
+                return;
+
+            }
+
+
+            createResourceCard(
+                resource
+            );
+
+
+            newFFModal.classList.remove(
+                "open"
+            );
+
+        }
+    );
+
+
+
+    /* =========================================================
+       SKJUL RESSURSER SOM ALLEREDE HAR FF
+    ========================================================= */
+
+    function updateResourceOptions() {
+
+        const options =
+            resourceSelect.querySelectorAll(
+                "option"
+            );
+
+
+        options.forEach(
+            function(option) {
+
+                if (!option.value) {
+                    return;
+                }
+
+
+                const active =
+                    document.querySelector(
+                        `.resource-card[data-resource="${option.value}"]`
+                    );
+
+
+                option.disabled =
+                    Boolean(active);
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       OPPRETT RESSURSKORT
+    ========================================================= */
+
+    function createResourceCard(resource) {
+
+        emptyState.style.display =
+            "none";
+
+
+        const card =
+            document.createElement(
+                "section"
+            );
+
+
+        card.className =
+            "resource-card";
+
+
+        card.dataset.resource =
+            resource;
+
+
+        card.innerHTML = `
+
+            <div class="resource-header">
+
+                <div class="resource-header-left">
+
+                    <div class="resource-dot"></div>
+
+                    <div class="resource-name">
+                        ${resource}
+                    </div>
+
+                    <div class="resource-status">
+                        FF AKTIV
+                    </div>
+
+                </div>
+
+
+                <div class="resource-header-actions">
+
+                    <button
+                        type="button"
+                        class="collapse-btn"
+                        title="Minimer"
+                    >
+                        −
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="resource-summary">
+            </div>
+
+
+            <div class="resource-body">
+
+                <div class="flight-list">
+                </div>
+
+            </div>
+
+        `;
+
+
+        ffContainer.appendChild(
+            card
+        );
+
+
+        const collapseBtn =
+            card.querySelector(
+                ".collapse-btn"
+            );
+
+
+        collapseBtn.addEventListener(
+            "click",
+            function() {
+
+                card.classList.toggle(
+                    "collapsed"
+                );
+
+
+                collapseBtn.textContent =
+                    card.classList.contains(
+                        "collapsed"
+                    )
+                    ? "+"
+                    : "−";
+
+
+                updateResourceSummary(
+                    card
+                );
+
+            }
+        );
+
+
+        createFlightRow(
+            card
+        );
+
+
+        checkEmptyState();
+
+    }
+
+
+
+    /* =========================================================
+       OPPRETT FLIGHT
+    ========================================================= */
+
+    function createFlightRow(card) {
+
+        const flightList =
+            card.querySelector(
+                ".flight-list"
+            );
+
+
+        const previousRows =
+            flightList.querySelectorAll(
+                ".flight-row"
+            );
+
+
+        /*
+            Fjern "Avslutt FF" fra tidligere flights.
+            Knappen skal bare ligge på aktiv flight.
+        */
+
+        previousRows.forEach(
+            function(row) {
+
+                const endButton =
+                    row.querySelector(
+                        ".end-ff-btn"
+                    );
+
+
+                if (endButton) {
+
+                    endButton.remove();
+
+                }
+
+            }
+        );
+
+
+        const flightNumber =
+            previousRows.length + 1;
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "flight-row";
+
+
+        row.innerHTML = `
+
+            <div class="flight-heading">
+
+                <div class="flight-number">
+                    Flight ${flightNumber}
+                </div>
+
+                <div class="flight-result">
+                    Aktiv
+                </div>
+
+            </div>
+
+
+            <div class="flight-grid-top">
+
+
+                <div class="field">
+
+                    <label>
+                        Fra
+                    </label>
+
+                    <input
+                        type="text"
+                        class="from-input"
+                        placeholder="F.eks. ENRH"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Til
+                    </label>
+
+                    <input
+                        type="text"
+                        class="to-input"
+                        placeholder="F.eks. ENUH"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Beskrivelse
+                    </label>
+
+                    <input
+                        type="text"
+                        class="description-input"
+                        placeholder="Pasienttransport, retur base, reposisjonering ..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="flight-grid-bottom">
+
+
+                <div class="field">
+
+                    <label>
+                        Tatt av
+                    </label>
+
+                    <input
+                        type="text"
+                        class="departure-input time-click"
+                        placeholder="Klikk"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        POB
+                    </label>
+
+                    <input
+                        type="number"
+                        class="pob-input"
+                        min="0"
+                        max="30"
+                        placeholder="0"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        ETE
+                    </label>
+
+                    <input
+                        type="text"
+                        class="ete-input"
+                        placeholder="F.eks. 28"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        ETA
+                    </label>
+
+                    <input
+                        type="text"
+                        class="eta-input"
+                        placeholder="--:--"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Bekreftet landet
+                    </label>
+
+                    <input
+                        type="text"
+                        class="landed-input time-click"
+                        placeholder="Klikk"
+                        readonly
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="flight-actions">
+
+
+                <div class="flight-status-text">
+                    Flight Following aktiv
+                </div>
+
+
+                <div class="action-buttons">
+
+
+                    <button
+                        type="button"
+                        class="land-btn"
+                    >
+                        ✓ Bekreftet landet
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="abort-btn"
+                    >
+                        ✕ Avbrutt
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="end-ff-btn"
+                    >
+                        Avslutt FF
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+        `;
+
+
+        flightList.appendChild(
+            row
+        );
+
+
+        setupFlightRow(
+            card,
+            row
+        );
+
+
+        updateResourceSummary(
+            card
+        );
+
+    }
+
+
+
+    /* =========================================================
+       SETT OPP FLIGHT
+    ========================================================= */
+
+    function setupFlightRow(
+        card,
+        row
+    ) {
+
+        const departureInput =
+            row.querySelector(
+                ".departure-input"
+            );
+
+
+        const eteInput =
+            row.querySelector(
+                ".ete-input"
+            );
+
+
+        const landedInput =
+            row.querySelector(
+                ".landed-input"
+            );
+
+
+        const landButton =
+            row.querySelector(
+                ".land-btn"
+            );
+
+
+        const abortButton =
+            row.querySelector(
+                ".abort-btn"
+            );
+
+
+        const endFFButton =
+            row.querySelector(
+                ".end-ff-btn"
+            );
+
+
+        const editableInputs =
+            row.querySelectorAll(
+                ".from-input, .to-input, .description-input, .pob-input, .ete-input"
+            );
+
+
+        /*
+            TATT AV
+        */
+
+        departureInput.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    row.classList.contains("completed") ||
+                    row.classList.contains("aborted")
+                ) {
+                    return;
+                }
+
+
+                departureInput.value =
+                    getCurrentTime();
+
+
+                calculateETA(
+                    row
+                );
+
+
+                updateResourceSummary(
+                    card
+                );
+
+            }
+        );
+
+
+        /*
+            ETE
+        */
+
+        eteInput.addEventListener(
+            "input",
+            function() {
+
+                calculateETA(
+                    row
+                );
+
+
+                updateResourceSummary(
+                    card
+                );
+
+            }
+        );
+
+
+        /*
+            BEKREFTET LANDET - FELT
+        */
+
+        landedInput.addEventListener(
+            "click",
+            function() {
+
+                completeFlight(
+                    card,
+                    row
+                );
+
+            }
+        );
+
+
+        /*
+            BEKREFTET LANDET - KNAPP
+        */
+
+        landButton.addEventListener(
+            "click",
+            function() {
+
+                completeFlight(
+                    card,
+                    row
+                );
+
+            }
+        );
+
+
+        /*
+            AVBRUTT
+        */
+
+        abortButton.addEventListener(
+            "click",
+            function() {
+
+                abortFlight(
+                    card,
+                    row
+                );
+
+            }
+        );
+
+
+        /*
+            AVSLUTT HELE FF
+        */
+
+        endFFButton.addEventListener(
+            "click",
+            function() {
+
+                openEndFFConfirmation(
+                    card
+                );
+
+            }
+        );
+
+
+        /*
+            OPPDATER MINIMERT VISNING
+        */
+
+        editableInputs.forEach(
+            function(input) {
+
+                input.addEventListener(
+                    "input",
+                    function() {
+
+                        updateResourceSummary(
+                            card
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       BEKREFT LANDET
+    ========================================================= */
+
+    function completeFlight(
+        card,
+        row
+    ) {
+
+        if (
+            row.classList.contains("completed") ||
+            row.classList.contains("aborted")
+        ) {
+            return;
+        }
+
+
+        const landedInput =
+            row.querySelector(
+                ".landed-input"
+            );
+
+
+        const flightResult =
+            row.querySelector(
+                ".flight-result"
+            );
+
+
+        const statusText =
+            row.querySelector(
+                ".flight-status-text"
+            );
+
+
+        const time =
+            getCurrentTime();
+
+
+        landedInput.value =
+            time;
+
+
+        row.classList.add(
+            "completed"
+        );
+
+
+        flightResult.textContent =
+            `Landet ${time}`;
+
+
+        statusText.textContent =
+            `Bekreftet landet ${time}`;
+
+
+        lockCompletedFlight(
+            row
+        );
+
+
+        /*
+            Lag automatisk ny flight-rad
+        */
+
+        createFlightRow(
+            card
+        );
+
+
+        updateResourceSummary(
+            card
+        );
+
+    }
+
+
+
+    /* =========================================================
+       AVBRYT FLIGHT
+    ========================================================= */
+
+    function abortFlight(
+        card,
+        row
+    ) {
+
+        if (
+            row.classList.contains("completed") ||
+            row.classList.contains("aborted")
+        ) {
+            return;
+        }
+
+
+        const flightResult =
+            row.querySelector(
+                ".flight-result"
+            );
+
+
+        const statusText =
+            row.querySelector(
+                ".flight-status-text"
+            );
+
+
+        const time =
+            getCurrentTime();
+
+
+        row.classList.add(
+            "aborted"
+        );
+
+
+        flightResult.textContent =
+            `Avbrutt ${time}`;
+
+
+        statusText.textContent =
+            `Flight avbrutt ${time}`;
+
+
+        lockCompletedFlight(
+            row
+        );
+
+
+        /*
+            Lag ny flight-rad også etter avbrutt.
+        */
+
+        createFlightRow(
+            card
+        );
+
+
+        updateResourceSummary(
+            card
+        );
+
+    }
+
+
+
+    /* =========================================================
+       LÅS FERDIG FLIGHT
+    ========================================================= */
+
+    function lockCompletedFlight(row) {
+
+        const inputs =
+            row.querySelectorAll(
+                "input"
+            );
+
+
+        inputs.forEach(
+            function(input) {
+
+                input.readOnly =
+                    true;
+
+            }
+        );
+
+
+        const landButton =
+            row.querySelector(
+                ".land-btn"
+            );
+
+
+        const abortButton =
+            row.querySelector(
+                ".abort-btn"
+            );
+
+
+        const endFFButton =
+            row.querySelector(
+                ".end-ff-btn"
+            );
+
+
+        if (landButton) {
+
+            landButton.disabled =
+                true;
+
+        }
+
+
+        if (abortButton) {
+
+            abortButton.disabled =
+                true;
+
+        }
+
+
+        if (endFFButton) {
+
+            endFFButton.remove();
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       BEREGN ETA
+    ========================================================= */
+
+    function calculateETA(row) {
+
+        const departureInput =
+            row.querySelector(
+                ".departure-input"
+            );
+
+
+        const eteInput =
+            row.querySelector(
+                ".ete-input"
+            );
+
+
+        const etaInput =
+            row.querySelector(
+                ".eta-input"
+            );
+
+
+        const departure =
+            departureInput.value.trim();
+
+
+        const ete =
+            eteInput.value.trim();
+
+
+        if (
+            !departure ||
+            !ete
+        ) {
+
+            etaInput.value =
+                "";
+
+            return;
+
+        }
+
+
+        const departureParts =
+            departure.split(":");
+
+
+        if (
+            departureParts.length !== 2
+        ) {
+
+            etaInput.value =
+                "";
+
+            return;
+
+        }
+
+
+        const departureHours =
+            parseInt(
+                departureParts[0],
+                10
+            );
+
+
+        const departureMinutes =
+            parseInt(
+                departureParts[1],
+                10
+            );
+
+
+        if (
+            Number.isNaN(departureHours) ||
+            Number.isNaN(departureMinutes)
+        ) {
+
+            etaInput.value =
+                "";
+
+            return;
+
+        }
+
+
+        let eteMinutes =
+            0;
+
+
+        /*
+            Godtar:
+
+            28
+            28 min
+            00:28
+            1:15
+        */
+
+        if (
+            ete.includes(":")
+        ) {
+
+            const eteParts =
+                ete.split(":");
+
+
+            const hours =
+                parseInt(
+                    eteParts[0],
+                    10
+                ) || 0;
+
+
+            const minutes =
+                parseInt(
+                    eteParts[1],
+                    10
+                ) || 0;
+
+
+            eteMinutes =
+                hours * 60 + minutes;
+
+        }
+
+        else {
+
+            const numbersOnly =
+                ete.replace(
+                    /\D/g,
+                    ""
+                );
+
+
+            eteMinutes =
+                parseInt(
+                    numbersOnly,
+                    10
+                ) || 0;
+
+        }
+
+
+        if (
+            eteMinutes <= 0
+        ) {
+
+            etaInput.value =
+                "";
+
+            return;
+
+        }
+
+
+        const eta =
+            new Date();
+
+
+        eta.setHours(
+            departureHours,
+            departureMinutes,
+            0,
+            0
+        );
+
+
+        eta.setMinutes(
+            eta.getMinutes() + eteMinutes
+        );
+
+
+        const etaHours =
+            String(
+                eta.getHours()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const etaMinutesText =
+            String(
+                eta.getMinutes()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        etaInput.value =
+            `${etaHours}:${etaMinutesText}`;
+
+    }
+
+
+
+    /* =========================================================
+       MINIMERT VISNING
+    ========================================================= */
+
+    function updateResourceSummary(card) {
+
+        const summary =
+            card.querySelector(
+                ".resource-summary"
+            );
+
+
+        const activeRows =
+            Array.from(
+                card.querySelectorAll(
+                    ".flight-row"
+                )
+            );
+
+
+        const activeRow =
+            activeRows
+                .slice()
+                .reverse()
+                .find(
+                    function(row) {
+
+                        return (
+                            !row.classList.contains("completed") &&
+                            !row.classList.contains("aborted")
+                        );
+
+                    }
+                );
+
+
+        if (!activeRow) {
+
+            summary.textContent =
+                "Ingen aktiv flight.";
+
+            return;
+
+        }
+
+
+        const from =
+            activeRow.querySelector(
+                ".from-input"
+            ).value || "—";
+
+
+        const to =
+            activeRow.querySelector(
+                ".to-input"
+            ).value || "—";
+
+
+        const description =
+            activeRow.querySelector(
+                ".description-input"
+            ).value || "Ingen beskrivelse";
+
+
+        const departure =
+            activeRow.querySelector(
+                ".departure-input"
+            ).value || "--:--";
+
+
+        const pob =
+            activeRow.querySelector(
+                ".pob-input"
+            ).value || "—";
+
+
+        const ete =
+            activeRow.querySelector(
+                ".ete-input"
+            ).value || "—";
+
+
+        const eta =
+            activeRow.querySelector(
+                ".eta-input"
+            ).value || "--:--";
+
+
+        summary.textContent =
+            `${from} → ${to}   |   ${description}   |   Tatt av: ${departure}   |   POB: ${pob}   |   ETE: ${ete}   |   ETA: ${eta}`;
+
+    }
+
+
+
+    /* =========================================================
+       AVSLUTT FF - BEKREFTELSE
+    ========================================================= */
+
+    function openEndFFConfirmation(card) {
+
+        cardWaitingForEnd =
+            card;
+
+
+        const resource =
+            card.dataset.resource;
+
+
+        endFFConfirmText.textContent =
+            `Vil du avslutte Flight Following for ${resource}? Ressursen fjernes fra den aktive oversikten.`;
+
+
+        endFFConfirm.classList.add(
+            "open"
+        );
+
+    }
+
+
+
+    endFFNoBtn.addEventListener(
+        "click",
+        function() {
+
+            cardWaitingForEnd =
+                null;
+
+
+            endFFConfirm.classList.remove(
+                "open"
+            );
+
+        }
+    );
+
+
+
+    endFFYesBtn.addEventListener(
+        "click",
+        function() {
+
+            if (
+                cardWaitingForEnd
+            ) {
+
+                cardWaitingForEnd.remove();
+
+            }
+
+
+            cardWaitingForEnd =
+                null;
+
+
+            endFFConfirm.classList.remove(
+                "open"
+            );
+
+
+            checkEmptyState();
+
+        }
+    );
+
+
+
+    endFFConfirm.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === endFFConfirm
+            ) {
+
+                cardWaitingForEnd =
+                    null;
+
+
+                endFFConfirm.classList.remove(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =========================================================
+       TOM VISNING
+    ========================================================= */
+
+    function checkEmptyState() {
+
+        const resourceCards =
+            ffContainer.querySelectorAll(
+                ".resource-card"
+            );
+
+
+        if (
+            resourceCards.length === 0
+        ) {
+
+            emptyState.style.display =
+                "block";
+
+        }
+
+        else {
+
+            emptyState.style.display =
+                "none";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       ESC LUKKER MODALER
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key !== "Escape"
+            ) {
+                return;
+            }
+
+
+            newFFModal.classList.remove(
+                "open"
+            );
+
+
+            endFFConfirm.classList.remove(
+                "open"
+            );
+
+
+            cardWaitingForEnd =
+                null;
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+</html>
