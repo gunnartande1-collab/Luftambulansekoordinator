@@ -1,29 +1,22 @@
+
 <!DOCTYPE html>
 <html lang="no">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Norgeskart LA og RH | Luftambulansekoordinator</title>
 
-  <!-- FELLES CSS -->
   <link rel="stylesheet" href="../felles/felles.css">
-
-  <!-- EGEN CSS FOR KARTSIDEN -->
   <link rel="stylesheet" href="la kart.css">
 
-  <!-- FELLES JAVASCRIPT -->
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
 </head>
 
+<body class="kart-side">
 
-<body>
-
-  <!-- TOPP -->
   <header class="app-header">
-
     <div>
       <p class="app-eyebrow">Luftambulansekoordinator</p>
       <h1>Norgeskart LA og RH</h1>
@@ -39,90 +32,23 @@
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
-
   </header>
 
+  <main class="app-shell kart-layout">
 
-  <main class="app-shell">
+    <!-- FELLES VENSTREMENY -->
+    <aside class="kart-sidebar">
+      <div id="shared-menu"></div>
+    </aside>
 
-    <!-- VENSTREMENY -->
-    <nav
-      class="form-navigation"
-      data-shared-menu
-      aria-label="Skjemaer"
-    >
-
-      <div class="form-navigation-inner">
-
-        <p class="form-navigation-label">Skjemaer</p>
-
-        <ul class="form-nav-list">
-
-          <li>
-            <a
-              href="../fremside.html"
-              class="form-nav-link"
-            >
-              <span
-                class="form-nav-icon"
-                aria-hidden="true"
-              >🏠</span>
-
-              <span class="form-nav-copy">
-                <span>Fremside</span>
-              </span>
-            </a>
-          </li>
-
-
-          <li>
-            <a
-              href="../savnet-helikopter/savnet-helikopter.html"
-              class="form-nav-link"
-            >
-              <span
-                class="form-nav-icon"
-                aria-hidden="true"
-              >🚁</span>
-
-              <span class="form-nav-copy">
-                <span>Savnet helikopter</span>
-              </span>
-            </a>
-          </li>
-
-
-          <li>
-            <a
-              href="../gps-forstyrrelser/gps-forstyrrelser.html"
-              class="form-nav-link"
-            >
-              <span
-                class="form-nav-icon"
-                aria-hidden="true"
-              >📡</span>
-
-              <span class="form-nav-copy">
-                <span>GPS-forstyrrelser</span>
-              </span>
-            </a>
-          </li>
-
-        </ul>
-
-      </div>
-
-    </nav>
-
-
-    <!-- KART -->
-    <section class="kart-panel">
+    <!-- KARTOMRÅDE -->
+    <section class="kart-panel" aria-label="Norgeskart">
 
       <div class="kart-panel-inner">
 
         <img
           src="../img/la-og-rh-norgeskart.jpg"
-          alt="Norgeskart med luftambulanse og redningshelikopter"
+          alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
           class="kart-bilde"
         >
 
@@ -133,5 +59,4 @@
   </main>
 
 </body>
-
 </html>
