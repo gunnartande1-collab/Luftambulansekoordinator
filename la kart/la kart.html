@@ -12,6 +12,7 @@
 
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
+  <script src="la-kart-zoom.js" defer></script>
 </head>
 
 <body class="kart-side">
@@ -42,20 +43,70 @@
   <div id="shared-menu"></div>
 </aside>
 
-    <!-- KARTOMRÅDE -->
-    <section class="kart-panel" aria-label="Norgeskart">
 
-      <div class="kart-panel-inner">
+<!-- KARTOMRÅDE -->
+<section class="kart-panel" aria-label="Norgeskart">
 
-        <img
-          src="../img/la-og-rh-norgeskart.jpg"
-          alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
-          class="kart-bilde"
-        >
+  <div class="kart-panel-inner">
+
+    <!-- VERKTØYLINJE -->
+    <div class="kart-toolbar">
+
+      <span class="kart-toolbar-title">
+        Norgeskart LA og RH
+      </span>
+
+      <div class="kart-controls">
+
+        <button type="button" id="zoomOut"
+          class="kart-control-btn"
+          aria-label="Zoom ut"
+          title="Zoom ut">
+          −
+        </button>
+
+        <span id="zoomLevel" class="kart-zoom-level">
+          100 %
+        </span>
+
+        <button type="button" id="zoomIn"
+          class="kart-control-btn"
+          aria-label="Zoom inn"
+          title="Zoom inn">
+          +
+        </button>
+
+        <button type="button" id="zoomReset"
+          class="kart-control-btn kart-reset-btn"
+          title="Vis hele kartet">
+          Tilbakestill
+        </button>
 
       </div>
 
-    </section>
+    </div>
+
+    <!-- ZOOMBART KART -->
+    <div class="kart-viewport" id="kartViewport">
+
+      <img
+        src="../img/la-og-rh-norgeskart.jpg"
+        alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
+        class="kart-bilde"
+        id="kartBilde"
+        draggable="false"
+      >
+
+    </div>
+
+    <p class="kart-hint">
+      Bruk musehjulet for å zoome.
+      Hold museknappen inne for å flytte kartet.
+    </p>
+
+  </div>
+
+</section>
 
   </main>
 
