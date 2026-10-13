@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sekundæroppdrag | Luftambulansekoordinator</title>
+
+  <link rel="stylesheet" href="../felles/felles.css">
+  <link rel="stylesheet" href="sekundæroppdrag/sekundæroppdrag.css?v=1">
+
+  <script src="../felles/felles.js" defer></script>
+  <script src="../felles/meny.js" defer></script>
+  <script src="sekundæroppdrag.js?v=1" defer></script>
+</head>
+
+<body class="secondary-page">
+
+  <a class="skip-link" href="#mainContent">
+    Gå til skjema
+  </a>
+
+  <header class="app-header">
+    <div class="header-title">
+      <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
+      <h1>Sekundæroppdrag</h1>
+    </div>
+
+    <button type="button"
+            id="themeToggle"
+            class="theme-toggle"
+            aria-pressed="false">
+      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle-text">Kveldsmodus</span>
+    </button>
+  </header>
+
+  <div class="app-shell">
+
+    <!-- FELLES VENSTREMENY -->
+    <aside class="sidebar">
+      <div id="shared-menu"></div>
+    </aside>
+
+    <!-- SKJEMA I MIDTEN -->
+    <main class="main-content" id="mainContent">
+
+      <div class="page-intro">
+        <h2>Intensiv- og helikoptertransport</h2>
+        <p>Informasjonsinnhenting ved sekundæroppdrag.</p>
+      </div>
+
+      <form id="transportForm" autocomplete="off">
+
+        <!-- 1. HASTEGRAD -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">01</span>
+            <div>
+              <h3>Rekvirert hastegrad</h3>
+              <p>Velg hastegrad oppgitt av rekvirent.</p>
+            </div>
+          </div>
+
+          <div class="urgency-grid">
+            <label class="urgency urgency-acute">
+              <input type="radio" name="hastegrad" value="Akutt">
+              <span class="urgency-title">Akutt</span>
+              <small>Umiddelbar intervensjon eller kritisk tidsvindu.</small>
+            </label>
+
+            <label class="urgency urgency-urgent">
+              <input type="radio" name="hastegrad" value="Haster">
+              <span class="urgency-title">Haster</span>
+              <small>Vurdering for intervensjon. Transport så raskt som mulig.</small>
+            </label>
+
+            <label class="urgency urgency-day">
+              <input type="radio" name="hastegrad" value="Samme døgn (V1)">
+              <span class="urgency-title">Samme døgn</span>
+              <small>Transport bør gjennomføres samme dag.</small>
+            </label>
+
+            <label class="urgency urgency-planned">
+              <input type="radio" name="hastegrad" value="Planlagt transport (V2)">
+              <span class="urgency-title">Planlagt</span>
+              <small>Transport kan planlegges frem i tid.</small>
+            </label>
+          </div>
+        </section>
+
+        <!-- 2. TRANSPORT -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">02</span>
+            <div>
+              <h3>Transportopplysninger</h3>
+              <p>Rekvirerende og mottakende enhet.</p>
+            </div>
+          </div>
+
+          <div class="field-grid two">
+            <label class="field">
+              <span>Fra sykehus / avdeling</span>
+              <input name="fra" placeholder="Rekvirerende enhet">
+            </label>
+
+            <label class="field">
+              <span>Til sykehus / avdeling</span>
+              <input name="til" placeholder="Mottakende enhet">
+            </label>
+          </div>
+
+          <div class="field-grid three">
+            <label class="field">
+              <span>Dato</span>
+              <input type="date" id="oppdragDato" name="dato">
+            </label>
+
+            <label class="field">
+              <span>Klokkeslett</span>
+              <input type="time" name="tidspunkt">
+            </label>
+
+            <label class="field">
+              <span>Ressurs-ID</span>
+              <input name="ressurs" placeholder="LA / RH">
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Transportrelaterte opplysninger</span>
+            <textarea name="transportMerknad"
+              rows="2"
+              placeholder="Praktiske forhold, utstyr, logistikk eller andre behov"></textarea>
+          </label>
+        </section>
+
+        <!-- 3. FØLGEBEHOV -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">03</span>
+            <div>
+              <h3>Anbefalt følgebehov fra rekvirent</h3>
+              <p>Registrer opplyst følgebehov.</p>
+            </div>
+          </div>
+
+          <div class="chip-grid" data-exclusive-group="folge">
+            <label class="choice">
+              <input type="checkbox" name="folge" value="Ikke behov"
+                     data-none>
+              <span>Ikke behov</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="folge" value="Ambulansepersonell">
+              <span>Ambulansepersonell</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="folge"
+                     value="Anestesi-/intensivsykepleier">
+              <span>Anestesi-/intensivsykepleier</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="folge" value="Anestesilege">
+              <span>Anestesilege</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="folge" value="Jordmor">
+              <span>Jordmor</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- 4. SPESIALTRANSPORT -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">04</span>
+            <div>
+              <h3>Spesialtransport</h3>
+              <p>Oppgi spesialutstyr eller særskilte transportbehov.</p>
+            </div>
+          </div>
+
+          <div class="chip-grid" data-exclusive-group="spesial">
+            <label class="choice">
+              <input type="checkbox" name="spesial"
+                     value="Ikke aktuelt" data-none>
+              <span>Ikke aktuelt</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="spesial" value="ECMO">
+              <span title="Ekstrakorporal membranoksygenering">ECMO</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="spesial" value="IABP">
+              <span title="Intra-aorta ballongpumpe">IABP</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="spesial" value="Impella">
+              <span>Impella</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="spesial" value="NO">
+              <span title="Nitrogenmonoksid">NO</span>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Merknad spesialtransport</span>
+            <input name="spesialMerknad"
+                   placeholder="Utstyrsbehov og andre opplysninger">
+          </label>
+        </section>
+
+        <!-- 5. PASIENT / BARN -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">05</span>
+            <div>
+              <h3>Pasientopplysninger</h3>
+              <p>Registrer relevante pasient- og barneopplysninger.</p>
+            </div>
+          </div>
+
+          <div class="field-grid three">
+            <label class="field">
+              <span>Alder</span>
+              <input name="alder" placeholder="Alder">
+            </label>
+            <label class="field">
+              <span>Kjønn</span>
+              <select name="kjonn">
+                <option value="">Ikke oppgitt</option>
+                <option>Mann</option>
+                <option>Kvinne</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Vekt (kg)</span>
+              <input name="vekt" inputmode="decimal" placeholder="kg">
+            </label>
+          </div>
+
+          <label class="field-label">Barn?</label>
+          <div class="chip-grid">
+            <label class="choice">
+              <input type="radio" name="barn" value="Nei">
+              <span>Nei</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="barn" value="Nyfødt">
+              <span title="0–4 uker">Nyfødt</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="barn" value="Spedbarn">
+              <span title="1 måned–1 år">Spedbarn</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="barn" value="Barn">
+              <span title="1–18 år">Barn</span>
+            </label>
+          </div>
+
+          <div id="childDetails" class="conditional" hidden>
+            <div class="field-grid two">
+              <label class="field">
+                <span>Gestasjonsalder – uker</span>
+                <input name="gaUker" inputmode="numeric">
+              </label>
+              <label class="field">
+                <span>Gestasjonsalder – dager</span>
+                <input name="gaDager" inputmode="numeric">
+              </label>
+            </div>
+
+            <label class="field-label">Transportform</label>
+            <div class="chip-grid">
+              <label class="choice">
+                <input type="radio" name="barnTransport" value="Kuvøse">
+                <span>Kuvøse</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="barnTransport" value="Pedimate">
+                <span>Pedimate</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="barnTransport" value="Barn i bag">
+                <span>Barn i bag</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. AKTUELT / TIDLIGERE -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">06</span>
+            <div>
+              <h3>Medisinsk problemstilling</h3>
+              <p>Aktuell tilstand og tidligere sykehistorie.</p>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Aktuelt</span>
+            <textarea name="aktuelt" rows="3"
+                      placeholder="Aktuell problemstilling"></textarea>
+          </label>
+
+          <label class="field">
+            <span>Tidligere</span>
+            <textarea name="tidligere" rows="3"
+                      placeholder="Relevant sykehistorie"></textarea>
+          </label>
+        </section>
+
+        <!-- 7. LUFTVEIER -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">07</span>
+            <div>
+              <h3>Luftveier og respirasjon</h3>
+              <p>Velg luftveishåndtering og registrer relevante innstillinger.</p>
+            </div>
+          </div>
+
+          <div class="chip-grid">
+            <label class="choice">
+              <input type="radio" name="luftvei" value="Spontan uten O2">
+              <span>Spontan uten O2</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="luftvei" value="Spontan med O2">
+              <span>Spontan med O2</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="luftvei" value="High flow">
+              <span>High flow</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="luftvei" value="NIV (CPAP/BiPAP)">
+              <span>NIV (CPAP/BiPAP)</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="luftvei" value="Intubert">
+              <span>Intubert</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="luftvei" value="Trakeostomi">
+              <span>Trakeostomi</span>
+            </label>
+          </div>
+
+          <div id="oxygenDetails" class="conditional" hidden>
+            <div class="field-grid three">
+              <label class="field" id="flowField">
+                <span>O2 / flow (l/min)</span>
+                <input name="flow" inputmode="decimal">
+              </label>
+
+              <label class="field" id="fio2Field">
+                <span>FiO2 (%)</span>
+                <input name="fio2" inputmode="decimal">
+              </label>
+
+              <label class="field" id="peepField">
+                <span>PEEP</span>
+                <input name="peep" inputmode="decimal">
+              </label>
+
+              <label class="field" id="peakField">
+                <span>Topptrykk</span>
+                <input name="topptrykk" inputmode="decimal">
+              </label>
+            </div>
+
+            <div id="trachDetails" hidden>
+              <label class="field-label">Trakeostomi – respirasjonsform</label>
+              <div class="chip-grid">
+                <label class="choice">
+                  <input type="radio" name="trachForm"
+                         value="Spontan via trakeostomi">
+                  <span>Spontan via trakeostomi</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="trachForm"
+                         value="O2 via trakeostomi">
+                  <span>O2 via trakeostomi</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="trachForm"
+                         value="Respirator via trakeostomi">
+                  <span>Respirator via trakeostomi</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. VITALPARAMETRE -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">08</span>
+            <div>
+              <h3>Vitalparametre</h3>
+              <p>Verdier oppgitt av rekvirent.</p>
+            </div>
+          </div>
+
+          <div class="field-grid vitals">
+            <label class="field"><span>RF</span>
+              <input name="rf" inputmode="numeric">
+            </label>
+            <label class="field"><span>SpO2 (%)</span>
+              <input name="spo2" inputmode="numeric">
+            </label>
+            <label class="field"><span>Puls</span>
+              <input name="puls" inputmode="numeric">
+            </label>
+            <label class="field"><span>BT systolisk</span>
+              <input name="sys" inputmode="numeric">
+            </label>
+            <label class="field"><span>BT diastolisk</span>
+              <input name="dia" inputmode="numeric">
+            </label>
+            <label class="field"><span>MAP</span>
+              <input name="map" inputmode="numeric">
+            </label>
+            <label class="field"><span>Temperatur (°C)</span>
+              <input name="temp" inputmode="decimal">
+            </label>
+            <label class="field"><span>GCS</span>
+              <input name="gcs" placeholder="3–15">
+            </label>
+          </div>
+        </section>
+
+        <!-- 9. MEDIKAMENTER -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">09</span>
+            <div>
+              <h3>Medikamenter og infusjoner</h3>
+              <p>Registrer oppgitte preparater og eventuelle infusjoner.</p>
+            </div>
+          </div>
+
+          <label class="field-label">Sedasjon / analgesi</label>
+          <div class="chip-grid" data-exclusive-group="sedasjon">
+            <label class="choice">
+              <input type="checkbox" name="sedasjon"
+                     value="Nei" data-none>
+              <span>Nei</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="sedasjon" value="Fentanyl">
+              <span>Fentanyl</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="sedasjon" value="Ketamin">
+              <span>Ketamin</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="sedasjon" value="Midazolam">
+              <span>Midazolam</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="sedasjon" value="Sufentanil">
+              <span>Sufentanil</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="sedasjon" value="Propofol">
+              <span>Propofol</span>
+            </label>
+          </div>
+
+          <div class="dynamic-editor">
+            <label class="field-label">Sedasjon – preparat og infusjon</label>
+            <div id="sedationRows" class="dynamic-list"></div>
+            <button type="button" class="add-btn"
+                    data-add="sedationRows">+ Legg til</button>
+          </div>
+
+          <div class="dynamic-editor">
+            <label class="field-label">Vasoaktive medikamenter</label>
+            <div id="pressorRows" class="dynamic-list"></div>
+            <button type="button" class="add-btn"
+                    data-add="pressorRows">+ Legg til</button>
+          </div>
+
+          <div class="dynamic-editor">
+            <label class="field-label">Andre infusjoner / medikamenter</label>
+            <div id="otherMedicationRows" class="dynamic-list"></div>
+            <button type="button" class="add-btn"
+                    data-add="otherMedicationRows">+ Legg til</button>
+          </div>
+        </section>
+
+        <!-- 10. TILGANGER -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">10</span>
+            <div>
+              <h3>Tilganger</h3>
+              <p>Intravaskulære tilganger og annet.</p>
+            </div>
+          </div>
+
+          <div class="chip-grid" data-exclusive-group="tilganger">
+            <label class="choice">
+              <input type="checkbox" name="tilganger"
+                     value="Ingen" data-none>
+              <span>Ingen</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="tilganger" value="CVK">
+              <span>CVK</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="tilganger" value="PVK">
+              <span>PVK</span>
+            </label>
+          </div>
+
+          <div id="accessDetails" class="conditional" hidden>
+            <div class="field-grid two">
+              <label class="field" id="cvkField">
+                <span>CVK – antall lumen</span>
+                <select name="cvkLumen">
+                  <option value="">Ikke angitt</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
+              <label class="field" id="pvkField">
+                <span>PVK – antall</span>
+                <select name="pvkAntall">
+                  <option value="">Ikke angitt</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="dynamic-editor">
+            <label class="field-label">Andre tilganger</label>
+            <div id="accessRows" class="dynamic-list"></div>
+            <button type="button" class="add-btn"
+                    data-add="accessRows">+ Legg til</button>
+          </div>
+        </section>
+
+        <!-- 11. UTSTYR -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">11</span>
+            <div>
+              <h3>Medisinsk utstyr</h3>
+              <p>Utstyr som følger pasienten.</p>
+            </div>
+          </div>
+
+          <div class="chip-grid" data-exclusive-group="utstyr">
+            <label class="choice">
+              <input type="checkbox" name="utstyr"
+                     value="Ingen" data-none>
+              <span>Ingen</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="utstyr" value="Arteriekran">
+              <span>Arteriekran</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="utstyr" value="Thoraxdren">
+              <span>Thoraxdren</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="utstyr" value="Sprøytepumper">
+              <span>Sprøytepumper</span>
+            </label>
+          </div>
+
+          <div id="pumpDetails" class="conditional" hidden>
+            <label class="field">
+              <span>Antall sprøytepumper</span>
+              <select name="pumperAntall">
+                <option value="">Ikke oppgitt</option>
+                <option>1</option><option>2</option>
+                <option>3</option><option>4</option>
+                <option>5</option><option>6</option>
+                <option>7</option><option>8</option>
+                <option>9</option><option>10</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="dynamic-editor">
+            <label class="field-label">Annet utstyr</label>
+            <div id="equipmentRows" class="dynamic-list"></div>
+            <button type="button" class="add-btn"
+                    data-add="equipmentRows">+ Legg til</button>
+          </div>
+        </section>
+
+        <!-- 12. SIKKERHET -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">12</span>
+            <div>
+              <h3>Smitte og CAVE</h3>
+              <p>Opplysninger som er relevante for transporten.</p>
+            </div>
+          </div>
+
+          <label class="field-label">Smitte</label>
+          <div class="chip-grid">
+            <label class="choice">
+              <input type="radio" name="smitte" value="Ingen kjente">
+              <span>Ingen kjente</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="smitte" value="Kontaktsmitte">
+              <span>Kontaktsmitte</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="smitte" value="Dråpesmitte">
+              <span>Dråpesmitte</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="smitte" value="Luftsmitte">
+              <span>Luftsmitte</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="blodsmitte" value="Blodsmitte">
+              <span>Blodsmitte</span>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Spesifisering smitte</span>
+            <input name="smitteMerknad">
+          </label>
+
+          <label class="field-label">CAVE</label>
+          <div class="chip-grid">
+            <label class="choice">
+              <input type="radio" name="cave" value="Nei">
+              <span>Nei</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="cave" value="Ja">
+              <span>Ja</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="cave" value="Ukjent">
+              <span>Ukjent</span>
+            </label>
+          </div>
+
+          <label class="field" id="caveDetails" hidden>
+            <span>Beskrivelse CAVE</span>
+            <input name="caveMerknad" placeholder="Spesifiser">
+          </label>
+        </section>
+
+        <!-- 13. LEGEKONTAKT -->
+        <section class="form-section">
+          <div class="section-heading">
+            <span class="section-number">13</span>
+            <div>
+              <h3>Legekontakt</h3>
+              <p>Kontaktopplysninger ved rekvirerende og mottakende enhet.</p>
+            </div>
+          </div>
+
+          <h4 class="subheading">Rekvirerende lege</h4>
+          <div class="field-grid two">
+            <label class="field">
+              <span>Navn</span>
+              <input name="rekLege" placeholder="Navn">
+            </label>
+            <label class="field">
+              <span>Telefon</span>
+              <input name="rekTlf" type="tel" placeholder="Telefonnummer">
+            </label>
+          </div>
+
+          <h4 class="subheading">Mottakende lege</h4>
+          <div class="field-grid two">
+            <label class="field">
+              <span>Navn</span>
+              <input name="mottLege" placeholder="Navn">
+            </label>
+            <label class="field">
+              <span>Telefon</span>
+              <input name="mottTlf" type="tel" placeholder="Telefonnummer">
+            </label>
+          </div>
+        </section>
+
+      </form>
+
+      <footer class="page-footer">
+        Luftambulansekoordinator
+      </footer>
+    </main>
+
+    <!-- RAPPORT TIL HØYRE -->
+    <aside class="report-panel" aria-label="Rapportpanel">
+      <div class="report-panel-inner">
+
+        <div class="report-heading">
+          <h2>Rapporttekst</h2>
+          <p>Oppdateres automatisk fra skjemaet.</p>
+        </div>
+
+        <textarea
+          id="rapport"
+          class="report-output"
+          readonly
+          aria-label="Generert rapport"
+          placeholder="Velg hastegrad og fyll ut skjemaet…"></textarea>
+
+        <div class="report-actions">
+          <button type="button" id="copyBtn" class="action-btn copy-btn">
+            <span aria-hidden="true">⧉</span>
+            <span>Kopier tekst</span>
+          </button>
+
+          <button type="button" id="resetBtn" class="action-btn reset-btn">
+            <span aria-hidden="true">⌫</span>
+            <span>Tøm skjema</span>
+          </button>
+
+          <a class="action-btn feedback-btn"
+             href="https://outlook.office.com/mail/deeplink/compose?to=b32838@ous-hf.no&amp;subject=Tilbakemelding%20sekund%C3%A6roppdrag"
+             target="_blank"
+             rel="noopener noreferrer">
+            Send tilbakemelding
+          </a>
+
+          <p id="copyMsg" class="copy-message"
+             role="status" aria-live="polite"></p>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+</body>
+</html>
