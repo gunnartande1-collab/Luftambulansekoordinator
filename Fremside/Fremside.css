@@ -1,94 +1,217 @@
 
-/* =====================================
+/* =========================================================
    LUFTAMBULANSEKOORDINATOR
-   FREMSIDE
-   ===================================== */
+   FREMSIDE.CSS
+
+   Eget design for fremsiden.
+   Felles venstremeny og dag-/kveldsmodus videreføres.
+
+   Oppsett:
+   - Toppfelt
+   - Venstremeny
+   - Store bildeknapper
+   - Mindre bildeknapper
+   - Nyttige hjelpemidler
+   - Responsivt design
+   ========================================================= */
+
+
+/* =========================================================
+   1. FARGER OG VARIABLER
+   ========================================================= */
 
 :root {
-  --home-bg: #eef2f5;
-  --home-surface: #ffffff;
-  --home-text: #17212b;
-  --home-muted: #667085;
-  --home-border: #dce2e8;
-  --home-blue: #0066a1;
+  --background: #eef2f5;
+  --surface: #ffffff;
+  --text: #17212b;
+  --muted: #667085;
+  --border: #dce2e8;
+  --primary: #0066a1;
+  --primary-hover: #004f7c;
+
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  --home-sidebar-width: 190px;
+  --home-gap: 16px;
 }
+
+
+/* KVELDSMODUS */
 
 html[data-theme="dark"] {
-  --home-bg: #111820;
-  --home-surface: #1b2530;
-  --home-text: #e7edf4;
-  --home-muted: #a9b5c3;
-  --home-border: #344252;
-  --home-blue: #70bce8;
+  --background: #111820;
+  --surface: #1b2530;
+  --text: #e7edf4;
+  --muted: #a9b5c3;
+  --border: #344252;
+  --primary: #70bce8;
+  --primary-hover: #93d0f2;
+
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.20);
 }
 
-* {
+
+/* =========================================================
+   2. GRUNNOPPSETT
+   ========================================================= */
+
+html {
+  min-height: 100%;
+}
+
+html body.home-page {
+  margin: 0;
+  min-height: 100vh;
+
+  background: var(--background);
+  color: var(--text);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.home-page *,
+.home-page *::before,
+.home-page *::after {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background: var(--home-bg);
-  color: var(--home-text);
-  font-family: -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Arial, sans-serif;
+.home-page a {
+  color: inherit;
 }
 
-/* =====================================
-   TOPPFELT
-   ===================================== */
+.home-page a:focus-visible,
+.home-page button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
 
-.app-header {
+
+/* =========================================================
+   3. TOPPFELT
+   Samme uttrykk som Savnet helikopter
+   ========================================================= */
+
+html body.home-page .app-header {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
 
   width: 100%;
-  min-height: 80px;
-  padding: 18px 28px;
+  min-height: 70px;
 
-  background: var(--home-surface);
-  border-bottom: 1px solid var(--home-border);
+  padding: 7px 180px 10px 18px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border-bottom: 1px solid var(--border);
 }
 
-.app-header h1 {
+
+/* Tittelgruppe */
+
+.home-page .header-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+
+  min-width: 0;
+}
+
+
+/* Liten tekst over sidetittel */
+
+.home-page .app-eyebrow {
+  margin: 0 0 2px;
+
+  color: var(--muted);
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  line-height: 1.3;
+}
+
+
+/* Stor sidetittel */
+
+.home-page .app-header h1 {
   margin: 0;
-  font-size: 25px;
+
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: 27px;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
 }
 
-.app-header .theme-toggle {
-  position: static;
-  transform: none;
+
+/* =========================================================
+   4. DAG- OG KVELDSMODUS
+   ========================================================= */
+
+html body.home-page .app-header .theme-toggle {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+
+  transform: translateY(-50%);
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 
-  padding: 9px 13px;
-  border: 1px solid var(--home-border);
-  border-radius: 9px;
+  min-height: 40px;
+  padding: 8px 13px;
 
-  background: var(--home-surface);
-  color: var(--home-text);
+  background: var(--surface);
+  color: var(--text);
 
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  font-family: inherit;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+
+  white-space: nowrap;
   cursor: pointer;
 }
 
-/* =====================================
-   HOVEDLAYOUT - TO KOLONNER
-   ===================================== */
+.home-page .theme-toggle:hover {
+  filter: brightness(0.96);
+}
 
-body > .app-layout {
-  display: grid !important;
+
+/* =========================================================
+   5. HOVEDLAYOUT
+   Venstremeny + hovedinnhold
+   ========================================================= */
+
+html body.home-page .app-layout {
+  display: grid;
 
   grid-template-columns:
-    190px minmax(0, 1fr) !important;
+    var(--home-sidebar-width)
+    minmax(0, 1fr);
 
   align-items: start;
-  gap: 16px;
+  gap: var(--home-gap);
 
   width: calc(100% - 24px);
   max-width: 1800px;
@@ -97,301 +220,512 @@ body > .app-layout {
   padding: 0;
 }
 
-/* =====================================
-   VENSTREMENY
-   ===================================== */
 
-.app-layout > .form-navigation {
+/* =========================================================
+   6. VENSTREMENY
+   Ingen logoer eller ikoner
+   ========================================================= */
+
+html body.home-page .app-layout > .form-navigation {
   grid-column: 1;
+  grid-row: 1;
 
-  position: relative !important;
-  inset: auto !important;
+  position: sticky;
+  top: 12px;
 
-  display: block !important;
+  display: block;
 
-  width: 100% !important;
-  max-width: 190px !important;
-  min-width: 0 !important;
+  width: 100%;
+  max-width: var(--home-sidebar-width);
+  min-width: 0;
 
   height: auto;
   min-height: 0;
+
   margin: 0;
-  overflow: hidden;
+  padding: 0;
+
+  align-self: start;
 }
 
-.form-navigation .form-navigation-inner {
+
+/* Menyens hvite boks */
+
+html body.home-page .form-navigation-inner {
   width: 100%;
-  max-width: 100%;
   min-width: 0;
+
+  padding: 10px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  box-shadow: var(--card-shadow);
 }
 
-/* Skjul alle menyikoner */
 
-.form-navigation .form-nav-icon,
-.form-navigation .form-nav-link > img {
-  display: none !important;
+/* Fjern ikoner i venstremeny */
+
+html body.home-page .form-nav-icon,
+html body.home-page .form-nav-link > img {
+  display: none;
 }
 
-/* Menytekst */
 
-.form-navigation .form-nav-link {
+/* Menylenker */
+
+html body.home-page .form-nav-link {
   display: flex;
   align-items: center;
 
-  min-width: 0;
   width: 100%;
+  min-width: 0;
+  min-height: 42px;
+
   gap: 0;
+
+  padding: 8px 9px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
 }
 
-.form-navigation .form-nav-copy {
+
+/* Menytekst */
+
+html body.home-page .form-nav-copy {
   display: block;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-/* =====================================
-   HOVEDINNHOLD
-   ===================================== */
 
-.app-layout > .main-content {
+/* =========================================================
+   7. HOVEDINNHOLD
+   ========================================================= */
+
+html body.home-page .app-layout > .main-content {
   grid-column: 2;
+  grid-row: 1;
 
   display: block;
 
   width: 100%;
-  max-width: 1100px;
+  max-width: 1150px;
   min-width: 0;
 
   margin: 0;
-  padding: 18px 24px 35px;
+  padding: 18px 24px 36px;
+
+  color: var(--text);
+  font-family: inherit;
 }
 
-.page-heading {
-  margin-bottom: 28px;
+
+/* =========================================================
+   8. SIDEOVERSKRIFT
+   ========================================================= */
+
+.home-page .page-heading {
+  margin-bottom: 26px;
 }
 
-.page-heading h2 {
+.home-page .page-heading h2 {
   margin: 0 0 6px;
-  font-size: 27px;
+
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
 }
 
-.page-heading p {
+.home-page .page-heading p {
   margin: 0;
-  color: var(--home-muted);
+
+  color: var(--muted);
+
+  font-family: inherit;
   font-size: 14px;
 }
 
-.home-section {
-  margin-bottom: 35px;
+
+/* =========================================================
+   9. SEKSJONER
+   ========================================================= */
+
+.home-page .home-section {
+  margin-bottom: 32px;
 }
 
-.section-title {
-  margin: 0 0 17px;
-  font-size: 17px;
+.home-page .section-title {
+  margin: 0 0 16px;
+
+  color: var(--text);
+
+  font-family: inherit;
+  font-size: 18px;
   font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
-/* =====================================
-   FELLES BILDEKNAPPER
-   ===================================== */
 
-.image-button {
+/* =========================================================
+   10. FELLES STIL FOR BILDEKNAPPER
+
+   Hele bildet er klikkbart.
+   Ingen ekstra tekst eller knapper.
+   ========================================================= */
+
+html body.home-page .image-button {
   display: block;
 
   width: 100%;
+  max-width: 100%;
   min-width: 0;
 
   padding: 0;
   margin: 0;
 
-  border: 0;
-  border-radius: 18px;
+  border: none;
+  border-radius: 14px;
 
   background: transparent;
   text-decoration: none;
 
+  overflow: hidden;
   cursor: pointer;
 
   transition:
-    transform 0.2s ease,
-    filter 0.2s ease;
+    transform 0.18s ease,
+    filter 0.18s ease;
 }
 
-.image-button:hover {
+
+/* Hover */
+
+html body.home-page .image-button:hover {
   transform: translateY(-4px);
   filter: brightness(0.97);
 }
 
-.image-button:focus-visible {
-  outline: 3px solid var(--home-blue);
+
+/* Tastaturnavigasjon */
+
+html body.home-page .image-button:focus-visible {
+  outline: 3px solid var(--primary);
   outline-offset: 4px;
 }
 
-/* Viktig: Hindrer gigantiske bilder */
 
-.image-button img {
-  display: block !important;
+/* Bildestørrelse */
 
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
+html body.home-page .image-button img {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  margin: 0;
+  padding: 0;
 
   object-fit: contain;
-
-  padding: 0;
-  margin: 0;
-  border-radius: 18px;
+  border-radius: 14px;
 }
 
-/* =====================================
-   STORE BILDEKNAPPER
-   ===================================== */
 
-.primary-buttons {
+/* =========================================================
+   11. STORE BILDEKNAPPER
+
+   Savnet helikopter
+   GPS-forstyrrelser
+   ========================================================= */
+
+html body.home-page .primary-buttons {
   display: grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 240px));
+    repeat(2, minmax(0, 230px));
 
   justify-content: start;
   align-items: start;
 
-  gap: 25px;
+  gap: 24px;
+
+  width: 100%;
+  max-width: 100%;
 }
 
-.image-button-large {
-  max-width: 240px;
+html body.home-page .image-button-large {
+  width: 230px;
+  max-width: 100%;
 }
 
-/* =====================================
-   MINDRE BILDEKNAPPER
-   ===================================== */
 
-.secondary-buttons {
+/* =========================================================
+   12. MINDRE BILDEKNAPPER
+
+   Flight following
+   Primæroppdrag
+   Sekundæroppdrag
+   ========================================================= */
+
+html body.home-page .secondary-buttons {
   display: grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 165px));
+    repeat(3, minmax(0, 160px));
 
   justify-content: start;
   align-items: start;
 
-  gap: 22px;
+  gap: 20px;
+
+  width: 100%;
+  max-width: 100%;
 }
 
-.image-button-small {
-  max-width: 165px;
+html body.home-page .image-button-small {
+  width: 160px;
+  max-width: 100%;
 }
 
-/* =====================================
-   NORGESKART
-   ===================================== */
 
-.map-button {
+/* =========================================================
+   13. NYTTIGE HJELPEMIDLER
+   Norgeskart LA og RH
+   ========================================================= */
+
+html body.home-page .map-button {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  justify-content: flex-start;
 
-  min-height: 60px;
-  padding: 13px 20px;
+  gap: 12px;
 
-  background: var(--home-surface);
-  border: 1px solid var(--home-border);
+  min-height: 54px;
+  padding: 12px 18px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
   border-radius: 12px;
 
-  color: var(--home-text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
   text-decoration: none;
-  font-size: 15px;
-  font-weight: 600;
+
+  box-shadow: var(--card-shadow);
 
   transition:
-    border-color 0.2s,
-    transform 0.2s;
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.map-button:hover {
-  border-color: var(--home-blue);
+html body.home-page .map-button:hover {
+  border-color: var(--primary);
   transform: translateY(-2px);
 }
 
-/* =====================================
-   BUNNTEKST
-   ===================================== */
+.home-page .map-button span:first-child {
+  color: var(--primary);
+  font-size: 23px;
+}
 
-.page-footer {
-  margin-top: 40px;
-  color: var(--home-muted);
+.home-page .map-button span:last-child {
+  color: var(--primary);
+  font-size: 20px;
+}
+
+
+/* =========================================================
+   14. BUNNTEKST
+   ========================================================= */
+
+.home-page .page-footer {
+  margin-top: 35px;
+
+  color: var(--muted);
+
+  font-family: inherit;
   font-size: 12px;
 }
 
-/* =====================================
-   RESPONSIVT OPPSETT
-   ===================================== */
+
+/* =========================================================
+   15. KVELDSMODUS - TILLEGG
+   ========================================================= */
+
+html[data-theme="dark"] body.home-page {
+  background: var(--background);
+  color: var(--text);
+}
+
+html[data-theme="dark"] body.home-page .app-header,
+html[data-theme="dark"] body.home-page .form-navigation-inner {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] body.home-page .map-button {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] body.home-page .map-button:hover {
+  border-color: var(--primary);
+}
+
+
+/* =========================================================
+   16. NETTBRETT
+   ========================================================= */
 
 @media (max-width: 1200px) {
-  body > .app-layout {
-    grid-template-columns:
-      165px minmax(0, 1fr) !important;
-    gap: 10px;
+
+  :root {
+    --home-sidebar-width: 165px;
+    --home-gap: 10px;
   }
 
-  .app-layout > .form-navigation {
-    max-width: 165px !important;
-  }
-
-  .app-layout > .main-content {
+  html body.home-page .app-layout > .main-content {
     padding: 18px;
   }
+
 }
+
+
+/* =========================================================
+   17. SMAL SKJERM
+   ========================================================= */
 
 @media (max-width: 900px) {
-  body > .app-layout {
-    grid-template-columns:
-      minmax(0, 1fr) !important;
+
+  html body.home-page .app-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .app-layout > .form-navigation {
+  html body.home-page .app-layout > .form-navigation {
     grid-column: 1;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+    grid-row: auto;
 
-  .app-layout > .main-content {
-    grid-column: 1;
-  }
-}
+    position: static;
 
-@media (max-width: 600px) {
-  .app-header {
-    padding: 15px;
-  }
-
-  .app-header h1 {
-    font-size: 19px;
-  }
-
-  .app-layout > .main-content {
-    padding: 16px 5px;
-  }
-
-  .primary-buttons {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .secondary-buttons {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .image-button-large,
-  .image-button-small {
+    width: 100%;
     max-width: 100%;
   }
 
-  .section-title {
+  html body.home-page .app-layout > .main-content {
+    grid-column: 1;
+    grid-row: auto;
+
+    width: 100%;
+    max-width: 100%;
+
+    padding: 18px;
+  }
+
+  html body.home-page .primary-buttons {
+    grid-template-columns:
+      repeat(2, minmax(0, 230px));
+  }
+
+  html body.home-page .secondary-buttons {
+    grid-template-columns:
+      repeat(3, minmax(0, 160px));
+  }
+
+}
+
+
+/* =========================================================
+   18. MOBIL
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  html body.home-page .app-header {
+    min-height: 70px;
+    padding: 10px 145px 10px 14px;
+  }
+
+  .home-page .app-eyebrow {
+    font-size: 10px;
+  }
+
+  .home-page .app-header h1 {
+    font-size: 22px;
+  }
+
+  html body.home-page .app-header .theme-toggle {
+    right: 12px;
+    gap: 5px;
+
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  html body.home-page .app-layout > .main-content {
+    padding: 16px 5px;
+  }
+
+  .home-page .page-heading h2 {
+    font-size: 23px;
+  }
+
+  .home-page .section-title {
     font-size: 16px;
   }
+
+  html body.home-page .primary-buttons {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+
+  html body.home-page .secondary-buttons {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+  }
+
+  html body.home-page .image-button-large,
+  html body.home-page .image-button-small {
+    width: 100%;
+  }
+
+  .home-page .home-section {
+    margin-bottom: 25px;
+  }
+
+}
+
+
+/* =========================================================
+   19. EKSTRA SMÅ SKJERMER
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  html body.home-page .secondary-buttons {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
 }

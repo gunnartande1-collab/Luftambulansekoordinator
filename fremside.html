@@ -10,86 +10,19 @@
   <link rel="stylesheet" href="felles/felles.css">
   <link rel="stylesheet" href="fremside.css">
 
-<style>
-  /* Midlertidig kontroll av oppsettet */
-
-  body > .app-layout {
-    display: grid !important;
-    grid-template-columns: 190px minmax(0, 1fr) !important;
-    gap: 16px !important;
-    align-items: start !important;
-  }
-
-  body > .app-layout > .form-navigation {
-    position: static !important;
-    grid-column: 1 !important;
-    width: 190px !important;
-    max-width: 190px !important;
-    min-width: 0 !important;
-    height: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-  }
-
-  body > .app-layout > .main-content {
-    position: static !important;
-    grid-column: 2 !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 1100px !important;
-  }
-
-  .primary-buttons {
-    display: grid !important;
-    grid-template-columns: repeat(2, 220px) !important;
-    gap: 24px !important;
-  }
-
-  .secondary-buttons {
-    display: grid !important;
-    grid-template-columns: repeat(3, 150px) !important;
-    gap: 20px !important;
-  }
-
-  .image-button,
-  .image-button img {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  @media (max-width: 900px) {
-    body > .app-layout {
-      grid-template-columns: minmax(0, 1fr) !important;
-    }
-
-    body > .app-layout > .form-navigation,
-    body > .app-layout > .main-content {
-      grid-column: 1 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    .primary-buttons {
-      grid-template-columns: repeat(2, minmax(0, 220px)) !important;
-    }
-
-    .secondary-buttons {
-      grid-template-columns: repeat(3, minmax(0, 150px)) !important;
-    }
-  }
-</style>
 
 
   <script src="felles/felles.js" defer></script>
 </head>
 
-<body>
+<body class="home-page">
+  
+<header class="app-header">
 
-  <header class="app-header">
-
-    <h1>Luftambulansekoordinator</h1>
+  <div class="header-title">
+    <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
+    <h1>Fremside</h1>
+  </div>
 
     <button
       type="button"
