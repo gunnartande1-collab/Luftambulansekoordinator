@@ -1,34 +1,56 @@
 
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Norgeskart LA og RH | Luftambulansekoordinator</title>
 
-  <!-- FELLES STIL -->
+  <!-- =====================================
+       FELLES STIL OG KARTETS STIL
+       ===================================== -->
+
   <link rel="stylesheet" href="../felles/felles.css">
+  <link rel="stylesheet" href="la kart.css">
 
-  <!-- KARTETS STIL -->
-  <link rel="stylesheet" href="la kart/la kart.css">
+  <!-- =====================================
+       FELLES JAVASCRIPT
+       ===================================== -->
 
-  <!-- FELLES FUNKSJONER -->
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
 
-  <!-- ZOOM OG FLYTTING -->
-  <script src="la kart/la-kart-zoom.js" defer></script>
+  <!-- =====================================
+       KARTETS JAVASCRIPT
+       ===================================== -->
+
+  <script src="la kart.js" defer></script>
+
 </head>
 
 <body class="kart-side">
 
-  <!-- TOPPFELT -->
+  <!-- =====================================
+       TOPPFELT
+       ===================================== -->
+
   <header class="app-header">
-    <div>
-      <p class="app-eyebrow">Luftambulansekoordinator</p>
-      <h1>Norgeskart LA og RH</h1>
+
+    <div class="app-header-content">
+
+      <p class="app-eyebrow">
+        Luftambulansekoordinator
+      </p>
+
+      <h1>
+        Norgeskart LA og RH
+      </h1>
+
     </div>
+
+    <!-- DAG- OG KVELDSMODUS -->
 
     <button
       type="button"
@@ -37,38 +59,72 @@
       aria-pressed="false"
       aria-label="Slå på kveldsmodus"
     >
-      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
-      <span class="theme-toggle-text">Kveldsmodus</span>
+      <span
+        class="theme-toggle-icon"
+        aria-hidden="true"
+      >🌙</span>
+
+      <span class="theme-toggle-text">
+        Kveldsmodus
+      </span>
     </button>
+
   </header>
 
-  <!-- HOVEDLAYOUT -->
+
+  <!-- =====================================
+       HOVEDLAYOUT
+       ===================================== -->
+
   <main class="app-shell kart-layout">
 
-    <!-- FELLES VENSTREMENY -->
-    <aside class="kart-sidebar">
+
+    <!-- ===================================
+         FELLES VENSTREMENY
+         =================================== -->
+
+    <aside
+      class="kart-sidebar"
+      aria-label="Hovedmeny"
+    >
+
       <div id="shared-menu"></div>
+
     </aside>
 
-    <!-- KARTPANEL -->
-    <section class="kart-panel" aria-label="Norgeskart">
+
+    <!-- ===================================
+         HOVEDOMRÅDE - NORGESKART
+         =================================== -->
+
+    <section
+      class="kart-panel"
+      aria-label="Norgeskart over luftambulanse og redningshelikopter"
+    >
 
       <div class="kart-panel-inner">
 
-        <!-- ZOOMBART KART -->
+
+        <!-- ===============================
+             INTERAKTIVT KART
+             =============================== -->
+
         <div
           class="kart-viewport"
           id="kartViewport"
-          aria-label="Interaktivt kart over luftambulanse- og redningshelikopterbaser"
+          aria-label="Kart som kan forstørres og flyttes"
         >
+
           <img
             src="../img/la-og-rh-norgeskart.jpg"
-            alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
+            alt="Norgeskart som viser luftambulansebaser og redningshelikopterbaser i Norge"
             class="kart-bilde"
             id="kartBilde"
             draggable="false"
           >
+
         </div>
+
 
       </div>
 
