@@ -11,16 +11,12 @@
   <link rel="stylesheet" href="fremside.css">
 
   <script src="felles/felles.js" defer></script>
-  <script src="fremside.js" defer></script>
 </head>
 
 <body>
 
-  <a class="skip-link" href="#mainContent">
-    Gå til hovedinnhold
-  </a>
-
   <header class="app-header">
+
     <h1>Luftambulansekoordinator</h1>
 
     <button
@@ -33,40 +29,56 @@
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
+
   </header>
 
   <div class="app-layout">
 
     <!-- FELLES VENSTREMENY -->
-    <!-- meny.js på de andre sidene henter denne menyen -->
+    <!-- Denne brukes også av meny.js på andre sider -->
 
-    <nav class="form-navigation" data-shared-menu aria-label="Skjemaer">
+    <nav
+      class="form-navigation"
+      data-shared-menu
+      aria-label="Navigasjon"
+    >
+
       <div class="form-navigation-inner">
 
-        <p class="form-navigation-label">Skjemaer</p>
+        <p class="form-navigation-label">
+          Skjemaer
+        </p>
 
         <ul class="form-nav-list">
+
           <li>
-            <a href="fremside.html"
-               class="form-nav-link"
-               aria-current="page">
+            <a
+              href="fremside.html"
+              class="form-nav-link"
+              aria-current="page"
+            >
               <span class="form-nav-copy">Fremside</span>
             </a>
           </li>
 
           <li>
-            <a href="savnet-helikopter/savnet-helikopter.html"
-               class="form-nav-link">
+            <a
+              href="savnet-helikopter/savnet-helikopter.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">Savnet helikopter</span>
             </a>
           </li>
 
           <li>
-            <a href="gps-forstyrrelser/gps-forstyrrelser.html"
-               class="form-nav-link">
+            <a
+              href="gps-forstyrrelser/gps-forstyrrelser.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">GPS-forstyrrelser</span>
             </a>
           </li>
+
         </ul>
 
         <p class="form-navigation-label">
@@ -74,26 +86,34 @@
         </p>
 
         <ul class="form-nav-list">
+
           <li>
-            <a href="flight following/flight following.html"
-               class="form-nav-link">
+            <a
+              href="flight following/flight following.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">Flight following</span>
             </a>
           </li>
 
           <li>
-            <a href="primæroppdrag/primæroppdrag.html"
-               class="form-nav-link">
+            <a
+              href="primæroppdrag/primæroppdrag.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">Primæroppdrag</span>
             </a>
           </li>
 
           <li>
-            <a href="sekundæroppdrag/sekundæroppdrag.html"
-               class="form-nav-link">
+            <a
+              href="sekundæroppdrag/sekundæroppdrag.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">Sekundæroppdrag</span>
             </a>
           </li>
+
         </ul>
 
         <p class="form-navigation-label">
@@ -101,12 +121,16 @@
         </p>
 
         <ul class="form-nav-list">
+
           <li>
-            <a href="la kart/la kart.html"
-               class="form-nav-link">
+            <a
+              href="la kart/la kart.html"
+              class="form-nav-link"
+            >
               <span class="form-nav-copy">Norgeskart LA og RH</span>
             </a>
           </li>
+
         </ul>
 
       </div>
@@ -118,105 +142,109 @@
 
       <div class="page-heading">
         <h2>Operative skjemaer</h2>
-        <p>Velg skjema eller reserveløsning.</p>
+        <p>Velg ønsket skjema eller reserveløsning.</p>
       </div>
 
-      <!-- STORE KNAPPER -->
+      <!-- STORE BILDEKNAPPER -->
 
-      <section class="section-block" aria-labelledby="operativeTitle">
-        <h3 class="section-title" id="operativeTitle">
+      <section class="home-section">
+
+        <h3 class="section-title">
           Hendelser og varsling
         </h3>
 
-        <div class="featured-grid">
+        <div class="primary-buttons">
 
-          <a class="feature-card"
-             href="savnet-helikopter/savnet-helikopter.html">
-
-            <img src="img/savnet heli ferdig.png"
-                 alt=""
-                 class="feature-image">
-
-            <div class="feature-copy">
-              <h4>Savnet helikopter</h4>
-              <p>Registrering og håndtering av savnet luftfartøy.</p>
-              <span class="feature-action">Åpne skjema <span aria-hidden="true">→</span></span>
-            </div>
+          <a
+            href="savnet-helikopter/savnet-helikopter.html"
+            class="image-button image-button-large"
+            aria-label="Åpne Savnet helikopter"
+          >
+            <img
+              src="img/savnet heli ferdig.png"
+              alt="Savnet helikopter"
+            >
           </a>
 
-          <a class="feature-card"
-             href="gps-forstyrrelser/gps-forstyrrelser.html">
-
-            <img src="img/GPS forstyrrelse ferdig.png"
-                 alt=""
-                 class="feature-image">
-
-            <div class="feature-copy">
-              <h4>GPS-forstyrrelser</h4>
-              <p>Dokumentasjon og varsling av GPS-forstyrrelser.</p>
-              <span class="feature-action">Åpne skjema <span aria-hidden="true">→</span></span>
-            </div>
+          <a
+            href="gps-forstyrrelser/gps-forstyrrelser.html"
+            class="image-button image-button-large"
+            aria-label="Åpne GPS-forstyrrelser"
+          >
+            <img
+              src="img/GPS forstyrrelse ferdig.png"
+              alt="GPS-forstyrrelser"
+            >
           </a>
 
         </div>
+
       </section>
 
-      <!-- MINDRE KNAPPER -->
+      <!-- MINDRE BILDEKNAPPER -->
 
-      <section class="section-block" aria-labelledby="reserveTitle">
-        <h3 class="section-title" id="reserveTitle">
+      <section class="home-section">
+
+        <h3 class="section-title">
           Reserveløsning dokumentasjon
         </h3>
 
-        <div class="reserve-grid">
+        <div class="secondary-buttons">
 
-          <a class="reserve-card"
-             href="flight following/flight following.html">
-            <img src="img/FF ferdig.png"
-                 alt=""
-                 class="reserve-image">
-            <h4>Flight following</h4>
-            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          <a
+            href="flight following/flight following.html"
+            class="image-button image-button-small"
+            aria-label="Åpne Flight following"
+          >
+            <img
+              src="img/FF ferdig.png"
+              alt="Flight following"
+            >
           </a>
 
-          <a class="reserve-card"
-             href="primæroppdrag/primæroppdrag.html">
-            <img src="img/primæroppdragv2.png"
-                 alt=""
-                 class="reserve-image">
-            <h4>Primæroppdrag</h4>
-            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          <a
+            href="primæroppdrag/primæroppdrag.html"
+            class="image-button image-button-small"
+            aria-label="Åpne Primæroppdrag"
+          >
+            <img
+              src="img/primæroppdragv2.png"
+              alt="Primæroppdrag"
+            >
           </a>
 
-          <a class="reserve-card"
-             href="sekundæroppdrag/sekundæroppdrag.html">
-            <img src="img/sekundær-min.png"
-                 alt=""
-                 class="reserve-image">
-            <h4>Sekundæroppdrag</h4>
-            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          <a
+            href="sekundæroppdrag/sekundæroppdrag.html"
+            class="image-button image-button-small"
+            aria-label="Åpne Sekundæroppdrag"
+          >
+            <img
+              src="img/sekundær-min.png"
+              alt="Sekundæroppdrag"
+            >
           </a>
 
         </div>
+
       </section>
 
       <!-- NYTTIGE HJELPEMIDLER -->
 
-      <section class="section-block" aria-labelledby="toolsTitle">
-        <h3 class="section-title" id="toolsTitle">
+      <section class="home-section">
+
+        <h3 class="section-title">
           Nyttige hjelpemidler
         </h3>
 
-        <a class="tool-card" href="la kart/la kart.html">
-          <span class="tool-icon" aria-hidden="true">⌖</span>
-
-          <span class="tool-copy">
-            <strong>Norgeskart LA og RH</strong>
-            <span>Oversikt over luftambulanse- og redningshelikopterressurser.</span>
-          </span>
-
-          <span class="tool-arrow" aria-hidden="true">→</span>
+        <a
+          href="la kart/la kart.html"
+          class="map-button"
+        >
+          <span aria-hidden="true">⌖</span>
+          <span>Norgeskart LA og RH</span>
+          <span aria-hidden="true">→</span>
         </a>
+
       </section>
 
       <footer class="page-footer">
@@ -224,6 +252,7 @@
       </footer>
 
     </main>
+
   </div>
 
 </body>
