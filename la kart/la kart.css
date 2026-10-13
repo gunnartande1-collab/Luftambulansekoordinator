@@ -1,10 +1,41 @@
 
-/* ======================================
+/* ==========================================
    NORGESKART LA OG RH
-   ====================================== */
+   ========================================== */
 
 .kart-side {
   min-height: 100vh;
+  background: #eaf4fa;
+  color: #1b2733;
+}
+
+/* TOPPFELT */
+
+.kart-side .app-header {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 28px 32px 12px;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.kart-side .app-eyebrow {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #56758c;
+}
+
+.kart-side .app-header h1 {
+  margin: 0;
+  font-size: clamp(25px, 2.5vw, 34px);
+  line-height: 1.2;
+  color: #18364c;
 }
 
 /* HOVEDLAYOUT */
@@ -13,12 +44,14 @@
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
   gap: 24px;
-  align-items: start;
+
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 24px 32px 40px;
   box-sizing: border-box;
+
+  align-items: start;
 }
 
 /* VENSTREMENY */
@@ -44,56 +77,122 @@
 /* KARTPANEL */
 
 .kart-side .kart-panel {
-  min-width: 0;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  box-sizing: border-box;
+  min-width: 0;
+  display: block;
 }
 
-/* RAMME RUNDT KARTET */
+/* HVIT RAMME */
 
 .kart-side .kart-panel-inner {
   width: 100%;
-  max-width: 1050px;
   min-width: 0;
-  margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
 
-  background: var(--card-bg, transparent);
-  border: 1px solid var(--border-color, #dce2e8);
-  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #dce5ed;
+  border-radius: 18px;
+
+  box-shadow: 0 4px 18px rgba(25, 55, 80, 0.07);
 }
 
-/* SELVE BILDET */
+/* KARTOMRÅDE */
+
+.kart-side .kart-viewport {
+  position: relative;
+  width: 100%;
+  height: min(75vh, 850px);
+  min-height: 420px;
+
+  overflow: hidden;
+  background: #d8edf8;
+  border-radius: 12px;
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+/* SELVE KARTBILDET */
 
 .kart-side .kart-bilde {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
   display: block;
   width: 100%;
-  max-width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
-  border-radius: 8px;
+
+  max-width: none;
+  border-radius: 0;
+
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* VED FLYTTING */
+
+.kart-side .kart-viewport.dragging {
+  cursor: grabbing;
+}
+
+/* KVELDSMODUS */
+
+body.kart-side[data-theme="dark"],
+body.kart-side.dark-mode,
+body.kart-side.theme-dark {
+  background: #101c2a;
+  color: #e8eff5;
+}
+
+body.kart-side[data-theme="dark"] .kart-panel-inner,
+body.kart-side.dark-mode .kart-panel-inner,
+body.kart-side.theme-dark .kart-panel-inner {
+  background: #1b2a3a;
+  border-color: #35485c;
+}
+
+body.kart-side[data-theme="dark"] .app-header h1,
+body.kart-side.dark-mode .app-header h1,
+body.kart-side.theme-dark .app-header h1 {
+  color: #f0f6fb;
+}
+
+body.kart-side[data-theme="dark"] .app-eyebrow,
+body.kart-side.dark-mode .app-eyebrow,
+body.kart-side.theme-dark .app-eyebrow {
+  color: #a9c3d8;
 }
 
 /* MELLOMSTORE SKJERMER */
 
 @media (max-width: 1000px) {
-
   .kart-side .kart-layout {
     grid-template-columns: 210px minmax(0, 1fr);
     gap: 16px;
     padding: 16px;
   }
 
+  .kart-side .app-header {
+    padding: 24px 16px 8px;
+  }
+
+  .kart-side .kart-panel-inner {
+    padding: 10px;
+  }
 }
 
 /* MOBIL */
 
 @media (max-width: 700px) {
-
   .kart-side .kart-layout {
     display: flex;
     flex-direction: column;
@@ -113,4 +212,13 @@
     padding: 8px;
   }
 
+  .kart-side .kart-viewport {
+    height: 65vh;
+    min-height: 350px;
+  }
+
+  .kart-side .app-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
 }

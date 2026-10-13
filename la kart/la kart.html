@@ -7,16 +7,23 @@
 
   <title>Norgeskart LA og RH | Luftambulansekoordinator</title>
 
+  <!-- FELLES STIL -->
   <link rel="stylesheet" href="../felles/felles.css">
-  <link rel="stylesheet" href="la kart.css">
 
+  <!-- KARTETS STIL -->
+  <link rel="stylesheet" href="la kart/la kart.css">
+
+  <!-- FELLES FUNKSJONER -->
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
-  <script src="la-kart-zoom.js" defer></script>
+
+  <!-- ZOOM OG FLYTTING -->
+  <script src="la kart/la-kart-zoom.js" defer></script>
 </head>
 
 <body class="kart-side">
 
+  <!-- TOPPFELT -->
   <header class="app-header">
     <div>
       <p class="app-eyebrow">Luftambulansekoordinator</p>
@@ -35,78 +42,37 @@
     </button>
   </header>
 
+  <!-- HOVEDLAYOUT -->
   <main class="app-shell kart-layout">
 
+    <!-- FELLES VENSTREMENY -->
+    <aside class="kart-sidebar">
+      <div id="shared-menu"></div>
+    </aside>
 
-<!-- FELLES VENSTREMENY -->
-<aside class="kart-sidebar">
-  <div id="shared-menu"></div>
-</aside>
+    <!-- KARTPANEL -->
+    <section class="kart-panel" aria-label="Norgeskart">
 
+      <div class="kart-panel-inner">
 
-<!-- KARTOMRÅDE -->
-<section class="kart-panel" aria-label="Norgeskart">
-
-  <div class="kart-panel-inner">
-
-    <!-- VERKTØYLINJE -->
-    <div class="kart-toolbar">
-
-      <span class="kart-toolbar-title">
-        Norgeskart LA og RH
-      </span>
-
-      <div class="kart-controls">
-
-        <button type="button" id="zoomOut"
-          class="kart-control-btn"
-          aria-label="Zoom ut"
-          title="Zoom ut">
-          −
-        </button>
-
-        <span id="zoomLevel" class="kart-zoom-level">
-          100 %
-        </span>
-
-        <button type="button" id="zoomIn"
-          class="kart-control-btn"
-          aria-label="Zoom inn"
-          title="Zoom inn">
-          +
-        </button>
-
-        <button type="button" id="zoomReset"
-          class="kart-control-btn kart-reset-btn"
-          title="Vis hele kartet">
-          Tilbakestill
-        </button>
+        <!-- ZOOMBART KART -->
+        <div
+          class="kart-viewport"
+          id="kartViewport"
+          aria-label="Interaktivt kart over luftambulanse- og redningshelikopterbaser"
+        >
+          <img
+            src="../img/la-og-rh-norgeskart.jpg"
+            alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
+            class="kart-bilde"
+            id="kartBilde"
+            draggable="false"
+          >
+        </div>
 
       </div>
 
-    </div>
-
-    <!-- ZOOMBART KART -->
-    <div class="kart-viewport" id="kartViewport">
-
-      <img
-        src="../img/la-og-rh-norgeskart.jpg"
-        alt="Norgeskart med luftambulanse- og redningshelikopterbaser"
-        class="kart-bilde"
-        id="kartBilde"
-        draggable="false"
-      >
-
-    </div>
-
-    <p class="kart-hint">
-      Bruk musehjulet for å zoome.
-      Hold museknappen inne for å flytte kartet.
-    </p>
-
-  </div>
-
-</section>
+    </section>
 
   </main>
 
