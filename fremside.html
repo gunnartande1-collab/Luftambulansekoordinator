@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -7,321 +8,14 @@
   <title>Luftambulansekoordinator</title>
 
   <link rel="stylesheet" href="felles/felles.css">
+  <link rel="stylesheet" href="fremside.css">
+
   <script src="felles/felles.js" defer></script>
-
-  <style>
-    :root {
-      --background: #eef2f5;
-      --surface: #ffffff;
-      --text: #17212b;
-      --muted: #667085;
-      --border: #dce2e8;
-
-      --primary: #0066a1;
-      --primary-light: #eaf5fb;
-      --hover-surface: #f3f6f8;
-      --active-border: #c5e1f1;
-
-      --button-background: #0066a1;
-      --button-hover: #004f7c;
-      --unavailable-background: #f0f3f5;
-
-      --sidebar-width: 240px;
-
-      color-scheme: light;
-    }
-
-    html[data-theme="dark"] {
-      --background: #111820;
-      --surface: #1b2530;
-      --text: #e7edf4;
-      --muted: #a9b5c3;
-      --border: #344252;
-
-      --primary: #70bce8;
-      --primary-light: #243f55;
-      --hover-surface: #263444;
-      --active-border: #48799a;
-
-      --button-background: #275b7b;
-      --button-hover: #34769b;
-      --unavailable-background: #26323f;
-
-      color-scheme: dark;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-      background: var(--background);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 3px solid var(--primary);
-      outline-offset: 4px;
-    }
-
-    .skip-link {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      z-index: 100;
-
-      padding: 10px 16px;
-      border-radius: 8px;
-
-      background: var(--button-background);
-      color: #ffffff;
-
-      transform: translateY(-160%);
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    /* OVERSKRIFT */
-
-    .app-header {
-      position: relative;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-
-      width: 100%;
-      height: auto;
-      min-height: 90px;
-      padding: 22px 28px;
-
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .app-header h1 {
-      margin: 0;
-      font-size: 25px;
-      line-height: 1.25;
-      overflow-wrap: anywhere;
-    }
-
-    .app-header .theme-toggle {
-      position: static;
-      top: auto;
-      right: auto;
-      transform: none;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 auto;
-      gap: 8px;
-
-      min-height: 38px;
-      padding: 8px 12px;
-
-      border: 1px solid var(--border);
-      border-radius: 10px;
-
-      background: var(--surface);
-      color: var(--text);
-
-      font-size: 13px;
-      font-weight: 700;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .app-header .theme-toggle:hover {
-      background: var(--hover-surface);
-      filter: none;
-    }
-
-    /* LAYOUT */
-
-    .app-layout {
-      display: grid;
-
-      grid-template-columns:
-        var(--sidebar-width)
-        minmax(0, 1fr);
-
-      min-height: calc(100vh - 90px);
-    }
-
-    /* Menyens utseende styres av felles/felles.css. */
-
-    .main-content {
-      width: 100%;
-      max-width: 1250px;
-      min-width: 0;
-      padding: 38px;
-    }
-
-    .page-heading {
-      margin-bottom: 26px;
-    }
-
-    .page-heading h2 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    .page-heading p {
-      max-width: 650px;
-      margin: 0;
-      color: var(--muted);
-    }
-
-    /* SKJEMAKORT */
-
-    .form-cards {
-      display: grid;
-
-      grid-template-columns:
-        repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-
-      align-items: stretch;
-      gap: 20px;
-    }
-
-    .form-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 26px;
-
-      border: 1px solid var(--border);
-      border-radius: 14px;
-
-      background: var(--surface);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    }
-
-    .card-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      width: 48px;
-      height: 48px;
-      margin-bottom: 20px;
-
-      border-radius: 12px;
-
-      background: var(--primary-light);
-      color: var(--primary);
-      font-size: 27px;
-    }
-
-    .form-card h3 {
-      margin: 0 0 9px;
-      font-size: 20px;
-    }
-
-    .form-card p {
-      margin: 0 0 24px;
-      color: var(--muted);
-    }
-
-    .card-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-
-      min-height: 44px;
-      margin-top: auto;
-      padding: 10px 17px;
-
-      border-radius: 8px;
-
-      background: var(--button-background);
-      color: #ffffff;
-
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    a.card-action:hover {
-      background: var(--button-hover);
-    }
-
-    .card-action.is-unavailable {
-      background: var(--unavailable-background);
-      color: var(--muted);
-    }
-
-    .page-footer {
-      margin-top: 32px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* NETTBRETT OG MOBIL */
-
-    @media (max-width: 900px) {
-      .main-content {
-        padding: 26px;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .app-header {
-        gap: 12px;
-        padding: 18px;
-      }
-
-      .app-header h1 {
-        font-size: 22px;
-      }
-
-      .app-header .theme-toggle {
-        gap: 5px;
-        padding: 7px 9px;
-        font-size: 12px;
-      }
-
-      .main-content {
-        padding: 24px 16px;
-      }
-
-      .page-heading h2 {
-        font-size: 24px;
-      }
-
-      .form-card {
-        padding: 22px;
-      }
-    }
-  </style>
+  <script src="fremside.js" defer></script>
 </head>
 
 <body>
+
   <a class="skip-link" href="#mainContent">
     Gå til hovedinnhold
   </a>
@@ -343,203 +37,194 @@
 
   <div class="app-layout">
 
-    <!--
-      FELLES MENYKILDE
+    <!-- FELLES VENSTREMENY -->
+    <!-- meny.js på de andre sidene henter denne menyen -->
 
-      meny.js henter denne menyen til Savnet helikopter.
-      Nye menyvalg legges inn her.
-    -->
-    <nav class="form-navigation" aria-label="Skjemaer">
+    <nav class="form-navigation" data-shared-menu aria-label="Skjemaer">
       <div class="form-navigation-inner">
+
         <p class="form-navigation-label">Skjemaer</p>
 
         <ul class="form-nav-list">
           <li>
-            <a
-              href="fremside.html"
-              class="form-nav-link"
-              aria-current="page"
-            >
-              <span class="form-nav-icon" aria-hidden="true">🏠</span>
+            <a href="fremside.html"
+               class="form-nav-link"
+               aria-current="page">
               <span class="form-nav-copy">Fremside</span>
             </a>
           </li>
 
           <li>
-            <a
-              href="savnet-helikopter/savnet-helikopter.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">
-              <img src="img/savnet heli ferdig.png" alt="Savnet helikopter"></span>
+            <a href="savnet-helikopter/savnet-helikopter.html"
+               class="form-nav-link">
               <span class="form-nav-copy">Savnet helikopter</span>
             </a>
           </li>
 
           <li>
-            <a
-              href="gps-forstyrrelser/gps-forstyrrelser.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">📡</span>
+            <a href="gps-forstyrrelser/gps-forstyrrelser.html"
+               class="form-nav-link">
               <span class="form-nav-copy">GPS-forstyrrelser</span>
             </a>
           </li>
         </ul>
 
-        <p class="form-navigation-label">Reserveløsning dokumentasjon</p>
+        <p class="form-navigation-label">
+          Reserveløsning dokumentasjon
+        </p>
 
         <ul class="form-nav-list">
           <li>
-            <a
-              href="flight following/flight following.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">X</span>
-              <span class="form-nav-copy">Flight following
-              </span>
+            <a href="flight following/flight following.html"
+               class="form-nav-link">
+              <span class="form-nav-copy">Flight following</span>
             </a>
           </li>
 
           <li>
-            <a
-              href="primæroppdrag/primæroppdrag.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">X</span>
-              <span class="form-nav-copy">Primær oppdrag
-              </span>
+            <a href="primæroppdrag/primæroppdrag.html"
+               class="form-nav-link">
+              <span class="form-nav-copy">Primæroppdrag</span>
             </a>
           </li>
 
           <li>
-            <a
-              href="sekundæroppdrag/sekundæroppdrag.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">X</span>
-              <span class="form-nav-copy">Sekundær oppdrag
-              </span>
+            <a href="sekundæroppdrag/sekundæroppdrag.html"
+               class="form-nav-link">
+              <span class="form-nav-copy">Sekundæroppdrag</span>
             </a>
           </li>
         </ul>
 
-                <p class="form-navigation-label">Nyttig hjelpemidler</p>
+        <p class="form-navigation-label">
+          Nyttige hjelpemidler
+        </p>
 
         <ul class="form-nav-list">
           <li>
-            <a
-              href="la kart/la kart.html"
-              class="form-nav-link"
-            >
-              <span class="form-nav-icon" aria-hidden="true">X</span>
-              <span class="form-nav-copy">Norgeskart LA og RH 
-              </span>
+            <a href="la kart/la kart.html"
+               class="form-nav-link">
+              <span class="form-nav-copy">Norgeskart LA og RH</span>
             </a>
           </li>
+        </ul>
 
       </div>
     </nav>
 
+    <!-- HOVEDINNHOLD -->
+
     <main class="main-content" id="mainContent">
+
       <div class="page-heading">
-        <h2>Skjemaer</h2>
-        <p>Velg skjema for hendelsen du skal dokumentere.</p>
+        <h2>Operative skjemaer</h2>
+        <p>Velg skjema eller reserveløsning.</p>
       </div>
 
-      <div class="form-cards" id="formCards"></div>
+      <!-- STORE KNAPPER -->
 
-      <noscript>
-        <p>
-          <a href="savnet-helikopter/savnet-helikopter.html">
-            Åpne skjema for savnet helikopter
+      <section class="section-block" aria-labelledby="operativeTitle">
+        <h3 class="section-title" id="operativeTitle">
+          Hendelser og varsling
+        </h3>
+
+        <div class="featured-grid">
+
+          <a class="feature-card"
+             href="savnet-helikopter/savnet-helikopter.html">
+
+            <img src="img/savnet heli ferdig.png"
+                 alt=""
+                 class="feature-image">
+
+            <div class="feature-copy">
+              <h4>Savnet helikopter</h4>
+              <p>Registrering og håndtering av savnet luftfartøy.</p>
+              <span class="feature-action">Åpne skjema <span aria-hidden="true">→</span></span>
+            </div>
           </a>
-        </p>
-      </noscript>
+
+          <a class="feature-card"
+             href="gps-forstyrrelser/gps-forstyrrelser.html">
+
+            <img src="img/GPS forstyrrelse ferdig.png"
+                 alt=""
+                 class="feature-image">
+
+            <div class="feature-copy">
+              <h4>GPS-forstyrrelser</h4>
+              <p>Dokumentasjon og varsling av GPS-forstyrrelser.</p>
+              <span class="feature-action">Åpne skjema <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- MINDRE KNAPPER -->
+
+      <section class="section-block" aria-labelledby="reserveTitle">
+        <h3 class="section-title" id="reserveTitle">
+          Reserveløsning dokumentasjon
+        </h3>
+
+        <div class="reserve-grid">
+
+          <a class="reserve-card"
+             href="flight following/flight following.html">
+            <img src="img/FF ferdig.png"
+                 alt=""
+                 class="reserve-image">
+            <h4>Flight following</h4>
+            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a class="reserve-card"
+             href="primæroppdrag/primæroppdrag.html">
+            <img src="img/primæroppdragv2.png"
+                 alt=""
+                 class="reserve-image">
+            <h4>Primæroppdrag</h4>
+            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          </a>
+
+          <a class="reserve-card"
+             href="sekundæroppdrag/sekundæroppdrag.html">
+            <img src="img/sekundær-min.png"
+                 alt=""
+                 class="reserve-image">
+            <h4>Sekundæroppdrag</h4>
+            <span class="reserve-action">Åpne <span aria-hidden="true">→</span></span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- NYTTIGE HJELPEMIDLER -->
+
+      <section class="section-block" aria-labelledby="toolsTitle">
+        <h3 class="section-title" id="toolsTitle">
+          Nyttige hjelpemidler
+        </h3>
+
+        <a class="tool-card" href="la kart/la kart.html">
+          <span class="tool-icon" aria-hidden="true">⌖</span>
+
+          <span class="tool-copy">
+            <strong>Norgeskart LA og RH</strong>
+            <span>Oversikt over luftambulanse- og redningshelikopterressurser.</span>
+          </span>
+
+          <span class="tool-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
 
       <footer class="page-footer">
         Luftambulansekoordinator
       </footer>
+
     </main>
   </div>
 
-  <script>
-    (() => {
-      const FORMS = [
-        {
-          title: "Savnet helikopter",
-          description:
-            "Registrer siste kjente posisjon, flyrute, " +
-            "utløsende kriterium og personer om bord.",
-          href: "savnet-helikopter/savnet-helikopter.html",
-          icon: "✈",
-          available: true
-        },
-        {
-          title: "GPS-forstyrrelser",
-          description:
-            "Registrer tidspunkt, posisjon, høyde, " +
-            "luftfartøy og beskrivelse av forstyrrelsen.",
-          href: "gps-forstyrrelser/gps-forstyrrelser.html",
-          icon: "⌖",
-          available: true
-        }
-      ];
-
-      const cards = document.getElementById("formCards");
-
-      FORMS.forEach((form) => {
-        const card = document.createElement("article");
-        card.className = "form-card";
-
-        const cardIcon = document.createElement("span");
-        cardIcon.className = "card-icon";
-        cardIcon.setAttribute("aria-hidden", "true");
-        cardIcon.textContent = form.icon;
-
-        const title = document.createElement("h3");
-        title.textContent = form.title;
-
-        const description = document.createElement("p");
-        description.textContent = form.description;
-
-        const action = document.createElement(
-          form.available ? "a" : "span"
-        );
-
-        action.className = "card-action";
-
-        if (form.available) {
-          action.href = form.href;
-
-          action.setAttribute(
-            "aria-label",
-            "Åpne skjema: " + form.title
-          );
-
-          const text = document.createElement("span");
-          text.textContent = "Åpne skjema";
-
-          const arrow = document.createElement("span");
-          arrow.setAttribute("aria-hidden", "true");
-          arrow.textContent = "→";
-
-          action.append(text, arrow);
-        } else {
-          action.classList.add("is-unavailable");
-          action.textContent = "Kommer";
-        }
-
-        card.append(
-          cardIcon,
-          title,
-          description,
-          action
-        );
-
-        cards.appendChild(card);
-      });
-    })();
-  </script>
 </body>
 </html>
