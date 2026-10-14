@@ -1,7 +1,6 @@
 
 <!DOCTYPE html>
 <html lang="no">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,35 +12,20 @@
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
 
-  <!--
-    ALL CSS FOR FLIGHT FOLLOWING LIGGER HER.
-    DU TRENGER IKKE EGEN CSS-FIL.
-  -->
   <style>
-
-    /* =========================================
-       GENERELT
-    ========================================= */
-
     * {
       box-sizing: border-box;
     }
 
-    html {
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
     body {
       margin: 0;
-      background: #edf2f5;
-      color: #182230;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 14px;
+      background: #edf2f5;
+      color: #182230;
     }
 
-    button,
-    input,
-    select {
+    button, input, textarea {
       font: inherit;
     }
 
@@ -49,192 +33,161 @@
       cursor: pointer;
     }
 
-    /* =========================================
-       FELLES TOPPFELT
-       SAMME UTTRYKK SOM FREMSIDEN
-    ========================================= */
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid #67a5ed;
+      outline-offset: 2px;
+    }
+
+    /* TOPPFELT */
 
     body > .app-header {
-      width: 100%;
       min-height: 76px;
+      padding: 12px 22px;
+      background: #fff;
+      border-bottom: 1px solid #dce3e9;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      padding: 8px 22px;
-      background: #ffffff;
-      border-bottom: 1px solid #dce3e9;
-      color: #182230;
+      gap: 15px;
     }
 
-    body > .app-header > div {
-      min-width: 0;
-    }
-
-    body > .app-header .app-eyebrow {
+    .app-eyebrow {
       margin: 0 0 5px;
-      font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.7px;
-      line-height: 1.2;
-      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .7px;
       color: #667085;
+      text-transform: uppercase;
     }
 
-    body > .app-header h1 {
+    .app-header h1 {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 30px;
+      font-size: 29px;
       font-weight: 800;
-      letter-spacing: -0.8px;
-      line-height: 1.1;
-      color: #182230;
     }
 
-    body > .app-header .theme-toggle {
-      display: inline-flex;
+    .theme-toggle {
+      min-height: 44px;
+      padding: 0 15px;
+      display: flex;
       align-items: center;
-      justify-content: center;
       gap: 9px;
-      min-height: 48px;
-      padding: 0 16px;
+      border-radius: 11px;
       border: 1px solid #d5dfe8;
-      border-radius: 13px;
-      background: #ffffff;
+      background: #fff;
       color: #182230;
-      font-size: 13px;
       font-weight: 700;
-      white-space: nowrap;
     }
 
-    body > .app-header .theme-toggle-icon {
-      font-size: 19px;
-    }
-
-    /* =========================================
-       HOVEDOPPSETT
-       VENSTREMENY + ARBEIDSOMRÅDE
-    ========================================= */
+    /* HOVEDOPPSETT */
 
     .ff-layout {
       display: grid;
-      grid-template-columns:
-        296px minmax(0, 1fr);
-      gap: 32px;
-      width: 100%;
-      min-height: calc(100vh - 76px);
+      grid-template-columns: 296px minmax(0, 1fr);
+      gap: 28px;
       padding: 16px;
+      min-height: calc(100vh - 76px);
       align-items: start;
-      background: transparent;
     }
 
     #shared-menu {
-      min-width: 0;
       width: 100%;
+      min-width: 0;
     }
 
     .ff-main {
-      min-width: 0;
       width: 100%;
-      padding: 24px 0;
+      min-width: 0;
+      padding: 20px 0;
     }
-
-    /* =========================================
-       OVERSKRIFT I ARBEIDSOMRÅDET
-    ========================================= */
 
     .ff-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
-      margin-bottom: 26px;
-    }
-
-    .ff-toolbar-text {
-      min-width: 0;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
     }
 
     .ff-toolbar h2 {
-      margin: 0 0 8px;
-      color: #182230;
+      margin: 0 0 6px;
       font-size: 25px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
     }
 
     .ff-description {
       margin: 0;
       color: #667085;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .ff-new-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 47px;
-      padding: 0 22px;
-      border: none;
-      border-radius: 11px;
-      background: #16863c;
-      color: #ffffff;
       font-size: 14px;
-      font-weight: 750;
-      white-space: nowrap;
     }
 
-    .ff-new-button:hover {
+    .ff-toolbar-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .ff-primary-btn,
+    .ff-print-btn {
+      min-height: 44px;
+      padding: 0 17px;
+      border-radius: 9px;
+      font-weight: 800;
+      border: none;
+    }
+
+    .ff-primary-btn {
+      background: #16863c;
+      color: white;
+    }
+
+    .ff-print-btn {
+      background: #344054;
+      color: white;
+    }
+
+    .ff-primary-btn:hover {
       background: #116d31;
     }
 
-    /* =========================================
-       FLIGHT FOLLOWING CONTAINER
-    ========================================= */
+    /* RESSURSOVERSIKT */
 
     #ffContainer {
       display: flex;
       flex-direction: column;
-      gap: 17px;
-      min-width: 0;
+      gap: 13px;
     }
 
     .ff-empty {
-      padding: 55px 20px;
-      border: 1px dashed #c6d3df;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.55);
+      padding: 45px 20px;
+      background: white;
+      border: 1px dashed #bccbd8;
+      border-radius: 14px;
       text-align: center;
       color: #667085;
-      line-height: 1.6;
     }
 
     .ff-empty strong {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: #344054;
       font-size: 17px;
     }
 
-    /* =========================================
-       RESSURSKORT
-    ========================================= */
-
     .ff-resource-card {
-      overflow: hidden;
+      background: white;
       border: 1px solid #d7e0e8;
-      border-radius: 14px;
-      background: #ffffff;
-      box-shadow: 0 3px 12px rgba(16,24,40,0.045);
+      border-radius: 13px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(16,24,40,.04);
     }
 
     .ff-resource-header {
+      padding: 12px 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
-      padding: 15px 19px;
       background: #f4faf6;
       border-bottom: 1px solid #dae7de;
     }
@@ -243,94 +196,94 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 11px;
+      gap: 10px;
     }
 
     .ff-resource-dot {
       width: 11px;
       height: 11px;
       border-radius: 50%;
-      background: #1f9148;
+      background: #16863c;
     }
 
     .ff-resource-name {
       font-size: 21px;
       font-weight: 800;
-      color: #182230;
     }
 
     .ff-resource-status {
-      padding: 5px 9px;
-      border-radius: 999px;
       background: #dcefe2;
       color: #167438;
+      border-radius: 20px;
+      padding: 5px 9px;
       font-size: 11px;
       font-weight: 800;
     }
 
-    .ff-collapse-button {
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #344054;
-      font-size: 20px;
+    .ff-resource-status.waiting {
+      background: #fff1d5;
+      color: #925d00;
     }
 
-    .ff-collapse-button:hover {
-      background: #e5efe8;
+    .ff-resource-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .ff-small-btn {
+      min-height: 34px;
+      padding: 0 11px;
+      border-radius: 7px;
+      border: 1px solid #b8c9d8;
+      background: white;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ff-small-btn.green {
+      border-color: #16863c;
+      background: #16863c;
+      color: white;
+    }
+
+    .ff-small-btn.danger {
+      border-color: #d94444;
+      color: #b62f2f;
     }
 
     .ff-resource-body {
-      padding: 17px;
+      padding: 12px;
     }
-
-    .ff-resource-summary {
-      display: none;
-      padding: 0 19px 14px;
-      background: #f4faf6;
-      color: #475467;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .ff-resource-card.collapsed .ff-resource-body {
-      display: none;
-    }
-
-    .ff-resource-card.collapsed .ff-resource-summary {
-      display: block;
-    }
-
-    .ff-resource-card.collapsed .ff-resource-header {
-      border-bottom: none;
-    }
-
-    /* =========================================
-       FLIGHT-RADER
-    ========================================= */
 
     .ff-flight-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 9px;
     }
+
+    /* AKTIVT LEGG */
 
     .ff-flight-row {
       padding: 15px;
-      border: 1px solid #dde4eb;
-      border-radius: 11px;
-      background: #ffffff;
+      background: white;
+      border: 1px solid #dce4eb;
+      border-radius: 10px;
+    }
+
+    .ff-flight-row.active {
+      border-left: 4px solid #16863c;
     }
 
     .ff-flight-row.completed {
-      border-color: #c6ddcc;
+      border-left: 4px solid #16863c;
       background: #f8fcf9;
     }
 
     .ff-flight-row.aborted {
-      border-color: #e8c2c2;
+      border-left: 4px solid #d94444;
       background: #fff8f8;
     }
 
@@ -338,114 +291,105 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 13px;
     }
 
     .ff-flight-number {
-      color: #667085;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
-      letter-spacing: 0.35px;
-      text-transform: uppercase;
+      color: #667085;
     }
 
     .ff-flight-result {
-      color: #667085;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
+      color: #16863c;
     }
-
-    .completed .ff-flight-result {
-      color: #18753a;
-    }
-
-    .aborted .ff-flight-result {
-      color: #b62f2f;
-    }
-
-    /* =========================================
-       SKJEMAFELTER
-    ========================================= */
 
     .ff-grid-top {
       display: grid;
-      grid-template-columns:
-        minmax(110px,1fr)
-        minmax(110px,1fr)
-        minmax(200px,3fr);
-      gap: 13px;
-      margin-bottom: 14px;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .ff-grid-bottom {
       display: grid;
-      grid-template-columns:
-        minmax(100px,1fr)
-        minmax(65px,0.65fr)
-        minmax(90px,0.9fr)
-        minmax(90px,0.9fr)
-        minmax(120px,1.15fr);
-      gap: 13px;
-      align-items: end;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .ff-grid-extra {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 12px;
     }
 
     .ff-field {
       display: flex;
       flex-direction: column;
-      gap: 6px;
       min-width: 0;
+      gap: 6px;
     }
 
     .ff-field label {
-      color: #344054;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.35px;
       text-transform: uppercase;
+      color: #344054;
     }
 
     .ff-field input {
       width: 100%;
-      min-width: 0;
-      height: 45px;
-      padding: 0 11px;
+      height: 42px;
+      padding: 0 10px;
+      background: white;
       border: 1px solid #ccd5df;
-      border-radius: 8px;
-      background: #ffffff;
+      border-radius: 7px;
       color: #182230;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .ff-field input:focus {
-      border-color: #4d8fcf;
-      box-shadow: 0 0 0 3px rgba(77,143,207,0.11);
-    }
-
-    .ff-field input::placeholder {
-      color: #98a2b3;
+      min-width: 0;
     }
 
     .ff-field input[readonly] {
       background: #f1f4f7;
-      color: #475467;
     }
 
-    .ff-field input.ff-time-click {
+    .ff-field .ff-time-click {
       cursor: pointer;
     }
 
-    /* =========================================
-       HANDLINGSKNAPPER
-    ========================================= */
+    .ff-inline-time {
+      display: flex;
+      gap: 7px;
+    }
+
+    .ff-inline-time input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ff-time-button {
+      flex-shrink: 0;
+      padding: 0 10px;
+      border-radius: 7px;
+      border: 1px solid #16863c;
+      background: #e6f5ea;
+      color: #126b31;
+      font-weight: 800;
+      font-size: 12px;
+    }
 
     .ff-flight-actions {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid #e5eaf0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      margin-top: 15px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .ff-status-text {
@@ -460,63 +404,104 @@
     }
 
     .ff-land-button,
-    .ff-abort-button,
-    .ff-end-button {
-      min-height: 40px;
+    .ff-abort-button {
+      min-height: 39px;
       padding: 0 14px;
       border-radius: 8px;
-      font-size: 12px;
       font-weight: 800;
+      font-size: 12px;
     }
 
     .ff-land-button {
-      border: 1px solid #17843d;
-      background: #17843d;
-      color: #ffffff;
-    }
-
-    .ff-land-button:hover {
-      background: #106d31;
+      background: #16863c;
+      border: 1px solid #16863c;
+      color: white;
     }
 
     .ff-abort-button {
+      background: white;
       border: 1px solid #d94444;
-      background: #ffffff;
       color: #c53232;
     }
 
-    .ff-abort-button:hover {
-      background: #fff1f1;
+    /* KOMPAKT FERDIG LEGG */
+
+    .ff-flight-row.finished {
+      padding: 0;
     }
 
-    .ff-end-button {
-      border: 1px solid #344054;
-      background: #344054;
-      color: #ffffff;
+    .ff-finished-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 13px;
+      flex-wrap: wrap;
+      cursor: pointer;
+      width: 100%;
+      background: transparent;
+      border: none;
+      text-align: left;
+      color: inherit;
     }
 
-    .ff-end-button:hover {
-      background: #202938;
+    .ff-finished-line:hover {
+      background: rgba(50,100,70,.05);
     }
 
-    .ff-buttons button:disabled {
-      opacity: 0.4;
-      cursor: default;
+    .ff-finished-number {
+      font-weight: 800;
+      white-space: nowrap;
+      color: #344054;
     }
 
-    /* =========================================
-       MODALER
-    ========================================= */
+    .ff-finished-route {
+      font-weight: 800;
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .ff-finished-time {
+      color: #667085;
+      font-size: 12px;
+    }
+
+    .ff-finished-status {
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .completed .ff-finished-status {
+      color: #16863c;
+    }
+
+    .aborted .ff-finished-status {
+      color: #c53232;
+    }
+
+    .ff-finished-details {
+      display: none;
+      padding: 12px 15px 15px;
+      border-top: 1px solid #e4e8ec;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .ff-flight-row.expanded .ff-finished-details {
+      display: block;
+    }
+
+    /* MODAL */
 
     .ff-modal-backdrop {
       position: fixed;
       inset: 0;
+      z-index: 9999;
       display: none;
       align-items: center;
       justify-content: center;
+      background: rgba(15,23,42,.48);
       padding: 16px;
-      background: rgba(15,23,42,0.44);
-      z-index: 9999;
     }
 
     .ff-modal-backdrop.open {
@@ -525,83 +510,64 @@
 
     .ff-modal {
       width: min(440px,100%);
-      padding: 22px;
+      padding: 23px;
+      background: white;
       border-radius: 14px;
-      background: #ffffff;
-      box-shadow: 0 25px 70px rgba(15,23,42,0.25);
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
     }
 
     .ff-modal h2 {
-      margin: 0 0 8px;
-      color: #172033;
+      margin: 0 0 9px;
       font-size: 21px;
-      font-weight: 800;
     }
 
     .ff-modal p {
-      margin: 0 0 20px;
       color: #667085;
-      font-size: 13px;
       line-height: 1.5;
     }
 
     .ff-modal label {
       display: block;
-      margin-bottom: 7px;
-      color: #344054;
-      font-size: 11px;
+      margin: 16px 0 7px;
       font-weight: 800;
-      text-transform: uppercase;
+      font-size: 12px;
     }
 
-    .ff-modal select {
+    .ff-modal input {
+      height: 46px;
       width: 100%;
-      height: 48px;
-      margin-bottom: 20px;
-      padding: 0 11px;
-      border: 1px solid #ccd5df;
+      padding: 0 12px;
       border-radius: 8px;
-      background: #ffffff;
-      color: #182230;
+      border: 1px solid #ccd5df;
     }
 
     .ff-modal-actions {
+      margin-top: 20px;
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
+      gap: 9px;
     }
 
     .ff-modal-actions button {
       min-height: 42px;
       padding: 0 15px;
       border-radius: 8px;
-      font-size: 13px;
-      font-weight: 750;
+      font-weight: 800;
     }
 
     .ff-cancel-button {
+      background: white;
       border: 1px solid #ccd5df;
-      background: #ffffff;
       color: #344054;
     }
 
-    .ff-start-button {
-      border: none;
-      background: #17843d;
-      color: #ffffff;
-    }
-
     .ff-confirm-button {
+      background: #16863c;
       border: none;
-      background: #344054;
-      color: #ffffff;
+      color: white;
     }
 
-    /* =========================================
-       KVELDSMODUS
-
-       STØTTER FLERE VANLIGE TEMAKLASSER
-    ========================================= */
+    /* KVELDSMODUS */
 
     body.dark-mode,
     body.theme-dark,
@@ -610,187 +576,189 @@
       color: #e5eaf1;
     }
 
-    body.dark-mode > .app-header,
-    body.theme-dark > .app-header,
-    body[data-theme="dark"] > .app-header {
-      background: #1d2939;
-      border-color: #405066;
-    }
-
-    body.dark-mode .app-header h1,
-    body.theme-dark .app-header h1,
-    body[data-theme="dark"] .app-header h1 {
-      color: #f3f6fa;
-    }
-
-    body.dark-mode .ff-toolbar h2,
-    body.theme-dark .ff-toolbar h2,
-    body[data-theme="dark"] .ff-toolbar h2 {
-      color: #f3f6fa;
-    }
-
-    body.dark-mode .ff-description,
-    body.dark-mode .ff-status-text,
-    body.theme-dark .ff-description,
-    body.theme-dark .ff-status-text,
-    body[data-theme="dark"] .ff-description,
-    body[data-theme="dark"] .ff-status-text {
-      color: #aebbd0;
-    }
-
-    body.dark-mode .ff-empty,
     body.dark-mode .ff-resource-card,
     body.dark-mode .ff-flight-row,
     body.dark-mode .ff-modal,
-    body.theme-dark .ff-empty,
+    body.dark-mode .ff-empty,
     body.theme-dark .ff-resource-card,
     body.theme-dark .ff-flight-row,
     body.theme-dark .ff-modal,
-    body[data-theme="dark"] .ff-empty,
+    body.theme-dark .ff-empty,
     body[data-theme="dark"] .ff-resource-card,
     body[data-theme="dark"] .ff-flight-row,
-    body[data-theme="dark"] .ff-modal {
+    body[data-theme="dark"] .ff-modal,
+    body[data-theme="dark"] .ff-empty {
       background: #1d2939;
-      border-color: #405066;
       color: #e5eaf1;
+      border-color: #405066;
     }
 
     body.dark-mode .ff-resource-header,
-    body.dark-mode .ff-resource-summary,
     body.theme-dark .ff-resource-header,
-    body.theme-dark .ff-resource-summary,
-    body[data-theme="dark"] .ff-resource-header,
-    body[data-theme="dark"] .ff-resource-summary {
+    body[data-theme="dark"] .ff-resource-header {
       background: #25364a;
       border-color: #405066;
-      color: #e5eaf1;
-    }
-
-    body.dark-mode .ff-resource-name,
-    body.dark-mode .ff-empty strong,
-    body.dark-mode .ff-modal h2,
-    body.theme-dark .ff-resource-name,
-    body.theme-dark .ff-empty strong,
-    body.theme-dark .ff-modal h2,
-    body[data-theme="dark"] .ff-resource-name,
-    body[data-theme="dark"] .ff-empty strong,
-    body[data-theme="dark"] .ff-modal h2 {
-      color: #ffffff;
     }
 
     body.dark-mode .ff-field label,
-    body.dark-mode .ff-modal label,
     body.theme-dark .ff-field label,
-    body.theme-dark .ff-modal label,
-    body[data-theme="dark"] .ff-field label,
-    body[data-theme="dark"] .ff-modal label {
+    body[data-theme="dark"] .ff-field label {
       color: #d8e1ed;
     }
 
     body.dark-mode .ff-field input,
-    body.dark-mode .ff-modal select,
+    body.dark-mode .ff-modal input,
     body.theme-dark .ff-field input,
-    body.theme-dark .ff-modal select,
+    body.theme-dark .ff-modal input,
     body[data-theme="dark"] .ff-field input,
-    body[data-theme="dark"] .ff-modal select {
+    body[data-theme="dark"] .ff-modal input {
       background: #28394e;
+      color: white;
       border-color: #53657c;
-      color: #ffffff;
     }
 
-    body.dark-mode .ff-field input[readonly],
-    body.theme-dark .ff-field input[readonly],
-    body[data-theme="dark"] .ff-field input[readonly] {
-      background: #344256;
+    body.dark-mode .ff-toolbar h2,
+    body.dark-mode .ff-resource-name,
+    body.theme-dark .ff-toolbar h2,
+    body.theme-dark .ff-resource-name,
+    body[data-theme="dark"] .ff-toolbar h2,
+    body[data-theme="dark"] .ff-resource-name {
+      color: #f3f6fa;
     }
 
-    /* =========================================
-       RESPONSIVT DESIGN
-    ========================================= */
+    body.dark-mode .ff-finished-number,
+    body.dark-mode .ff-empty strong,
+    body.theme-dark .ff-finished-number,
+    body.theme-dark .ff-empty strong,
+    body[data-theme="dark"] .ff-finished-number,
+    body[data-theme="dark"] .ff-empty strong {
+      color: #f3f6fa;
+    }
 
-    @media (max-width: 1250px) {
+    /* RESPONSIVT */
+
+    @media(max-width:1200px) {
       .ff-grid-bottom {
-        grid-template-columns:
-          repeat(3,minmax(0,1fr));
+        grid-template-columns: repeat(3,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 1000px) {
-      .ff-grid-top {
-        grid-template-columns:
-          repeat(2,minmax(0,1fr));
-      }
-
-      .ff-grid-top .ff-field:last-child {
-        grid-column: 1 / -1;
+    @media(max-width:950px) {
+      .ff-grid-top,
+      .ff-grid-extra {
+        grid-template-columns: repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 760px) {
+    @media(max-width:760px) {
       .ff-layout {
         grid-template-columns: minmax(0,1fr);
-        gap: 18px;
-        padding: 15px;
-      }
-
-      .ff-main {
-        padding: 8px 0;
-      }
-
-      .ff-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .ff-new-button {
-        width: 100%;
+        gap: 15px;
       }
 
       .ff-grid-top,
-      .ff-grid-bottom {
-        grid-template-columns: minmax(0,1fr);
+      .ff-grid-bottom,
+      .ff-grid-extra {
+        grid-template-columns: 1fr;
       }
 
-      .ff-grid-top .ff-field:last-child {
-        grid-column: auto;
+      .ff-resource-header {
+        flex-wrap: wrap;
       }
 
-      .ff-flight-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .ff-buttons button {
-        flex: 1;
-      }
-
-      body > .app-header h1 {
+      .app-header h1 {
         font-size: 23px;
-      }
-
-      body > .app-header {
-        padding: 12px 15px;
       }
     }
 
+    /* UTSKRIFT */
+
+    #printArea {
+      display: none;
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 12mm;
+      }
+
+      body {
+        background: white !important;
+        color: black !important;
+      }
+
+      .app-header,
+      .ff-layout,
+      .ff-modal-backdrop {
+        display: none !important;
+      }
+
+      #printArea {
+        display: block !important;
+        color: black;
+        font-family: Arial, sans-serif;
+      }
+
+      .print-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        border-bottom: 2px solid #222;
+        margin-bottom: 16px;
+      }
+
+      .print-heading h1 {
+        font-size: 20px;
+      }
+
+      .print-resource {
+        margin-bottom: 18px;
+        break-inside: avoid;
+      }
+
+      .print-resource h2 {
+        font-size: 15px;
+        margin: 0 0 7px;
+      }
+
+      .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 10px;
+      }
+
+      .print-table th,
+      .print-table td {
+        border: 1px solid #555;
+        padding: 7px 5px;
+        text-align: left;
+        overflow-wrap: anywhere;
+      }
+
+      .print-table th {
+        background: #eee !important;
+        color: black;
+      }
+
+      .print-table .blank-row td {
+        height: 32px;
+      }
+
+      .print-note {
+        font-size: 10px;
+        margin-top: 10px;
+      }
+    }
   </style>
 </head>
 
-
 <body>
 
-  <!-- =========================================
-       TOPPFELT
-       SAMME STRUKTUR SOM PRIMÆROPPDRAG
-  ========================================== -->
-
   <header class="app-header">
-
     <div>
-      <p class="app-eyebrow">
-        Luftambulansekoordinator
-      </p>
-
+      <p class="app-eyebrow">Luftambulansekoordinator</p>
       <h1>Flight Following</h1>
     </div>
 
@@ -801,205 +769,125 @@
       aria-pressed="false"
       aria-label="Slå på kveldsmodus"
     >
-      <span
-        class="theme-toggle-icon"
-        aria-hidden="true"
-      >🌙</span>
-
-      <span class="theme-toggle-text">
-        Kveldsmodus
-      </span>
+      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
-
   </header>
-
-
-  <!-- =========================================
-       HOVEDLAYOUT
-  ========================================== -->
 
   <main class="ff-layout">
 
     <!-- FELLES VENSTREMENY -->
     <div id="shared-menu"></div>
 
-
-    <!-- HOVEDINNHOLD -->
-    <section
-      class="ff-main"
-      aria-label="Flight Following"
-    >
+    <section class="ff-main">
 
       <div class="ff-toolbar">
-
-        <div class="ff-toolbar-text">
-
+        <div>
           <h2>Flight Following</h2>
-
           <p class="ff-description">
             Operativ oppfølging av luftambulanseressurser
           </p>
-
         </div>
 
-        <button
-          type="button"
-          class="ff-new-button"
-          id="newFFBtn"
-        >
-          ＋ Ny FF
-        </button>
+        <div class="ff-toolbar-buttons">
+          <button type="button" class="ff-print-btn" id="printFFBtn">
+            Skriv ut
+          </button>
 
+          <button type="button" class="ff-primary-btn" id="newFFBtn">
+            + Ny FF
+          </button>
+        </div>
       </div>
 
-
-      <!-- RESSURSOVERSIKT -->
       <div id="ffContainer">
-
         <div class="ff-empty" id="emptyState">
-
-          <strong>
-            Ingen aktiv Flight Following
-          </strong>
-
-          Klikk «Ny FF» for å velge ressurs.
-
+          <strong>Ingen aktiv Flight Following</strong>
+          Klikk «Ny FF» for å registrere en ressurs.
         </div>
-
       </div>
 
     </section>
-
   </main>
 
+  <!-- MODAL FOR NY RESSURS -->
 
-  <!-- =========================================
-       MODAL - NY FLIGHT FOLLOWING
-  ========================================== -->
+  <div class="ff-modal-backdrop" id="newFFModal">
+    <div class="ff-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="newFFTitle">
 
-  <div
-    class="ff-modal-backdrop"
-    id="newFFModal"
-  >
-
-    <div
-      class="ff-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="newFFTitle"
-    >
-
-      <h2 id="newFFTitle">
-        Start ny Flight Following
-      </h2>
+      <h2 id="newFFTitle">Start ny Flight Following</h2>
 
       <p>
-        Velg ressursen som skal flight followes.
+        Skriv ressurs-ID, for eksempel 1-1.
+        Systemet legger automatisk til LA.
+        Andre ressursbetegnelser kan skrives fullt ut.
       </p>
 
-      <label for="resourceSelect">
-        Ressurs
-      </label>
+      <label for="resourceInput">Ressurs-ID</label>
 
-      <select id="resourceSelect">
-
-        <option value="">Velg ressurs</option>
-        <option value="LA 1">LA 1</option>
-        <option value="LA 2">LA 2</option>
-        <option value="LA 3">LA 3</option>
-        <option value="LA 4">LA 4</option>
-        <option value="LA 5">LA 5</option>
-        <option value="RH Rygge">RH Rygge</option>
-        <option value="IA">IA</option>
-
-      </select>
+      <input
+        id="resourceInput"
+        type="text"
+        placeholder="F.eks. 1-1"
+        autocomplete="off"
+      >
 
       <div class="ff-modal-actions">
-
-        <button
-          type="button"
-          class="ff-cancel-button"
-          id="cancelNewFFBtn"
-        >
+        <button class="ff-cancel-button"
+                type="button"
+                id="cancelNewFFBtn">
           Avbryt
         </button>
 
-        <button
-          type="button"
-          class="ff-start-button"
-          id="startNewFFBtn"
-        >
+        <button class="ff-confirm-button"
+                type="button"
+                id="startNewFFBtn">
           Start FF
         </button>
-
       </div>
 
     </div>
-
   </div>
 
+  <!-- MODAL FOR AVSLUTT -->
 
-  <!-- =========================================
-       MODAL - AVSLUTT FLIGHT FOLLOWING
-  ========================================== -->
+  <div class="ff-modal-backdrop" id="endFFModal">
+    <div class="ff-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="endFFTitle">
 
-  <div
-    class="ff-modal-backdrop"
-    id="endFFConfirm"
-  >
+      <h2 id="endFFTitle">Avslutt Flight Following</h2>
 
-    <div
-      class="ff-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="endFFTitle"
-    >
-
-      <h2 id="endFFTitle">
-        Avslutt Flight Following
-      </h2>
-
-      <p id="endFFConfirmText">
-        Vil du avslutte Flight Following?
-      </p>
+      <p id="endFFText"></p>
 
       <div class="ff-modal-actions">
-
-        <button
-          type="button"
-          class="ff-cancel-button"
-          id="endFFNoBtn"
-        >
-          Nei
+        <button type="button"
+                class="ff-cancel-button"
+                id="cancelEndFFBtn">
+          Avbryt
         </button>
 
-        <button
-          type="button"
-          class="ff-confirm-button"
-          id="endFFYesBtn"
-        >
+        <button type="button"
+                class="ff-confirm-button"
+                id="confirmEndFFBtn">
           Avslutt FF
         </button>
-
       </div>
-
     </div>
-
   </div>
 
-
-  <!-- =========================================
-       JAVASCRIPT
-       ALL FF-JAVASCRIPT LIGGER HER
-  ========================================== -->
+  <div id="printArea"></div>
 
   <script>
-
     "use strict";
 
-    /* =========================================
-       ELEMENTER
-    ========================================= */
+    /* ==========================================
+       FLIGHT FOLLOWING
+       ========================================== */
 
     const ffContainer =
       document.getElementById("ffContainer");
@@ -1007,42 +895,22 @@
     const emptyState =
       document.getElementById("emptyState");
 
-    const newFFBtn =
-      document.getElementById("newFFBtn");
-
     const newFFModal =
       document.getElementById("newFFModal");
 
-    const resourceSelect =
-      document.getElementById("resourceSelect");
+    const endFFModal =
+      document.getElementById("endFFModal");
 
-    const cancelNewFFBtn =
-      document.getElementById("cancelNewFFBtn");
+    const resourceInput =
+      document.getElementById("resourceInput");
 
-    const startNewFFBtn =
-      document.getElementById("startNewFFBtn");
+    const resources = new Map();
 
-    const endFFConfirm =
-      document.getElementById("endFFConfirm");
+    let resourceToEnd = null;
 
-    const endFFConfirmText =
-      document.getElementById("endFFConfirmText");
-
-    const endFFNoBtn =
-      document.getElementById("endFFNoBtn");
-
-    const endFFYesBtn =
-      document.getElementById("endFFYesBtn");
-
-    let cardWaitingForEnd = null;
-
-
-    /* =========================================
-       KLOKKESLETT
-    ========================================= */
+    /* KLOKKE */
 
     function getCurrentTime() {
-
       const now = new Date();
 
       return (
@@ -1050,835 +918,889 @@
         ":" +
         String(now.getMinutes()).padStart(2, "0")
       );
-
     }
 
+    function getCurrentDate() {
+      return new Date().toLocaleDateString("nb-NO");
+    }
 
-    /* =========================================
-       ÅPNE NY FF
-    ========================================= */
+    /* RESSURS-ID */
 
-    newFFBtn.addEventListener("click", () => {
+    function normalizeResource(value) {
+      let text = value.trim().toUpperCase();
 
-      updateResourceOptions();
+      text = text.replace(/\s+/g, " ");
 
-      resourceSelect.value = "";
+      // 1-1 blir LA 1-1.
+      // 01-01 blir også LA 1-1.
 
-      newFFModal.classList.add("open");
+      const match = text.match(
+        /^(?:LA\s*)?0*(\d+)\s*-\s*0*(\d+)$/
+      );
 
-      resourceSelect.focus();
+      if (match) {
+        return "LA " +
+          Number(match[1]) +
+          "-" +
+          Number(match[2]);
+      }
 
-    });
+      return text;
+    }
 
+    function resourceSort(a, b) {
+      return a.localeCompare(
+        b,
+        "nb",
+        {
+          numeric: true,
+          sensitivity: "base"
+        }
+      );
+    }
+
+    /* DATA */
+
+    function newFlight() {
+      return {
+        from: "",
+        to: "",
+        description: "",
+        departure: "",
+        pob: "",
+        ete: "",
+        eta: "",
+        landingPlace: "",
+        etaNotified: "",
+        landed: "",
+        aborted: "",
+        status: "active",
+        expanded: false
+      };
+    }
+
+    /* SIKKER TEKSTVISNING */
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function displayValue(value) {
+      return escapeHTML(value || "—");
+    }
+
+    /* ETA-BEREGNING */
+
+    function calculateETA(flight) {
+      const departure = flight.departure;
+      const ete = String(flight.ete).trim();
+
+      flight.eta = "";
+
+      if (!/^\d{2}:\d{2}$/.test(departure)) {
+        return;
+      }
+
+      const [hours, minutes] =
+        departure.split(":").map(Number);
+
+      if (hours > 23 || minutes > 59) {
+        return;
+      }
+
+      let eteMinutes;
+
+      if (/^\d+$/.test(ete)) {
+        eteMinutes = Number(ete);
+      } else if (/^\d+:\d{1,2}$/.test(ete)) {
+        const parts = ete.split(":").map(Number);
+
+        if (parts[1] > 59) return;
+
+        eteMinutes = parts[0] * 60 + parts[1];
+      } else {
+        return;
+      }
+
+      if (!Number.isFinite(eteMinutes) ||
+          eteMinutes <= 0) {
+        return;
+      }
+
+      const total =
+        (hours * 60 + minutes + eteMinutes) % 1440;
+
+      const etaHours = Math.floor(total / 60);
+      const etaMinutes = total % 60;
+
+      flight.eta =
+        String(etaHours).padStart(2, "0") +
+        ":" +
+        String(etaMinutes).padStart(2, "0");
+    }
+
+    /* NY FF */
+
+    document.getElementById("newFFBtn")
+      .addEventListener("click", () => {
+        resourceInput.value = "";
+        newFFModal.classList.add("open");
+        resourceInput.focus();
+      });
+
+    document.getElementById("cancelNewFFBtn")
+      .addEventListener("click", closeNewFF);
 
     function closeNewFF() {
       newFFModal.classList.remove("open");
     }
 
-
-    cancelNewFFBtn.addEventListener(
-      "click",
-      closeNewFF
-    );
-
-
-    newFFModal.addEventListener("click", event => {
-
-      if (event.target === newFFModal) {
-        closeNewFF();
-      }
-
-    });
-
-
-    /* =========================================
-       START FF
-    ========================================= */
-
-    startNewFFBtn.addEventListener("click", () => {
-
-      const resource = resourceSelect.value;
-
-      if (!resource) {
-        alert("Velg ressurs.");
-        return;
-      }
-
-      const existing = Array.from(
-        ffContainer.querySelectorAll(
-          ".ff-resource-card"
-        )
-      ).some(
-        card => card.dataset.resource === resource
+    function startNewFF() {
+      const resource = normalizeResource(
+        resourceInput.value
       );
 
-      if (existing) {
+      if (!resource) {
+        alert("Skriv inn ressurs-ID.");
+        return;
+      }
+
+      if (resources.has(resource)) {
         alert(
           resource +
-          " har allerede aktiv Flight Following."
+          " finnes allerede i aktiv Flight Following."
         );
         return;
       }
 
-      createResourceCard(resource);
+      resources.set(resource, {
+        id: resource,
+        flights: [newFlight()],
+        collapsed: false
+      });
 
       closeNewFF();
+      renderAll();
+    }
 
+    document.getElementById("startNewFFBtn")
+      .addEventListener("click", startNewFF);
+
+    resourceInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") {
+        startNewFF();
+      }
     });
 
+    resourceInput.addEventListener("blur", () => {
+      resourceInput.value =
+        normalizeResource(resourceInput.value);
+    });
 
-    /* =========================================
-       OPPDATER RESSURSVALG
-    ========================================= */
+    /* NYTT LEGG - MANUELT */
 
-    function updateResourceOptions() {
+    function addNewLeg(resourceId) {
+      const resource = resources.get(resourceId);
 
-      const activeResources = Array.from(
-        ffContainer.querySelectorAll(
-          ".ff-resource-card"
-        )
-      ).map(card => card.dataset.resource);
+      if (!resource) return;
 
-      resourceSelect.querySelectorAll(
-        "option"
-      ).forEach(option => {
+      const hasActive = resource.flights.some(
+        flight => flight.status === "active"
+      );
 
-        if (!option.value) return;
-
-        option.disabled =
-          activeResources.includes(option.value);
-
-      });
-
-    }
-
-
-    /* =========================================
-       OPPRETT RESSURSKORT
-    ========================================= */
-
-    function createResourceCard(resource) {
-
-      const card =
-        document.createElement("section");
-
-      card.className = "ff-resource-card";
-      card.dataset.resource = resource;
-
-      const header =
-        document.createElement("div");
-
-      header.className = "ff-resource-header";
-
-      const left =
-        document.createElement("div");
-
-      left.className = "ff-resource-left";
-
-      const dot =
-        document.createElement("div");
-
-      dot.className = "ff-resource-dot";
-
-      const name =
-        document.createElement("div");
-
-      name.className = "ff-resource-name";
-      name.textContent = resource;
-
-      const status =
-        document.createElement("div");
-
-      status.className = "ff-resource-status";
-      status.textContent = "FF AKTIV";
-
-      left.append(dot, name, status);
-
-      const collapseBtn =
-        document.createElement("button");
-
-      collapseBtn.type = "button";
-      collapseBtn.className = "ff-collapse-button";
-      collapseBtn.title = "Minimer";
-      collapseBtn.textContent = "−";
-
-      header.append(left, collapseBtn);
-
-      const summary =
-        document.createElement("div");
-
-      summary.className = "ff-resource-summary";
-
-      const body =
-        document.createElement("div");
-
-      body.className = "ff-resource-body";
-
-      const flightList =
-        document.createElement("div");
-
-      flightList.className = "ff-flight-list";
-
-      body.appendChild(flightList);
-
-      card.append(header, summary, body);
-
-      ffContainer.appendChild(card);
-
-
-      /* MINIMER / UTVID */
-
-      collapseBtn.addEventListener("click", () => {
-
-        card.classList.toggle("collapsed");
-
-        const collapsed =
-          card.classList.contains("collapsed");
-
-        collapseBtn.textContent =
-          collapsed ? "+" : "−";
-
-        collapseBtn.title =
-          collapsed ? "Utvid" : "Minimer";
-
-        updateResourceSummary(card);
-
-      });
-
-      createFlightRow(card);
-      checkEmptyState();
-
-    }
-
-
-    /* =========================================
-       OPPRETT FLIGHT-RAD
-    ========================================= */
-
-    function createFlightRow(card) {
-
-      const flightList =
-        card.querySelector(".ff-flight-list");
-
-      const previousRows =
-        flightList.querySelectorAll(
-          ".ff-flight-row"
+      if (hasActive) {
+        alert(
+          "Ressursen har allerede et aktivt legg. " +
+          "Bekreft landet eller avbryt først."
         );
+        return;
+      }
 
-      previousRows.forEach(oldRow => {
+      resource.flights.push(newFlight());
+      resource.collapsed = false;
 
-        oldRow.querySelector(
-          ".ff-end-button"
-        )?.remove();
+      renderAll();
+    }
 
-      });
+    /* AVSLUTT LEGG */
 
-      const flightNumber =
-        previousRows.length + 1;
+    function finishFlight(resourceId, index, status) {
+      const resource = resources.get(resourceId);
 
-      const row =
-        document.createElement("div");
+      if (!resource) return;
 
-      row.className = "ff-flight-row";
+      const flight = resource.flights[index];
+
+      if (!flight || flight.status !== "active") {
+        return;
+      }
+
+      if (status === "completed") {
+        flight.landed = getCurrentTime();
+      } else {
+        flight.aborted = getCurrentTime();
+      }
+
+      flight.status = status;
+      flight.expanded = false;
+
+      // IKKE opprett automatisk nytt legg.
+      // Brukeren gjør det manuelt.
+
+      renderAll();
+    }
+
+    /* OPPDATER FELT */
+
+    function updateFlightField(
+      resourceId,
+      index,
+      field,
+      value,
+      row
+    ) {
+      const resource = resources.get(resourceId);
+
+      if (!resource) return;
+
+      const flight = resource.flights[index];
+
+      if (!flight || flight.status !== "active") {
+        return;
+      }
+
+      flight[field] = value;
+
+      if (field === "departure" || field === "ete") {
+        calculateETA(flight);
+
+        const etaInput = row.querySelector(".ff-eta");
+
+        if (etaInput) {
+          etaInput.value = flight.eta;
+        }
+      }
+    }
+
+    function setTimeField(resourceId, index, field) {
+      const resource = resources.get(resourceId);
+
+      if (!resource) return;
+
+      const flight = resource.flights[index];
+
+      if (!flight || flight.status !== "active") {
+        return;
+      }
+
+      flight[field] = getCurrentTime();
+
+      if (field === "departure") {
+        calculateETA(flight);
+      }
+
+      renderAll();
+    }
+
+    /* OPPRETT AKTIVT LEGG */
+
+    function renderActiveFlight(
+      resourceId,
+      flight,
+      index
+    ) {
+      const row = document.createElement("div");
+
+      row.className = "ff-flight-row active";
 
       row.innerHTML = `
-
         <div class="ff-flight-heading">
-
           <div class="ff-flight-number">
-            Flight ${flightNumber}
+            Legg ${index + 1}
           </div>
 
           <div class="ff-flight-result">
-            Aktiv
+            ● AKTIVT LEGG
           </div>
-
         </div>
-
 
         <div class="ff-grid-top">
-
           <div class="ff-field">
-
             <label>Fra</label>
-
-            <input
-              type="text"
-              class="ff-from"
-              placeholder="F.eks. ENRH"
-              autocomplete="off"
-            >
-
+            <input class="ff-from"
+                   data-field="from"
+                   placeholder="F.eks. ENRH"
+                   value="${escapeHTML(flight.from)}">
           </div>
 
-
           <div class="ff-field">
-
             <label>Til</label>
-
-            <input
-              type="text"
-              class="ff-to"
-              placeholder="F.eks. ENUH"
-              autocomplete="off"
-            >
-
+            <input class="ff-to"
+                   data-field="to"
+                   placeholder="F.eks. ENUH"
+                   value="${escapeHTML(flight.to)}">
           </div>
-
 
           <div class="ff-field">
-
             <label>Beskrivelse</label>
-
             <input
-              type="text"
-              class="ff-description-input"
-              placeholder="Pasienttransport, retur base, reposisjonering ..."
-              autocomplete="off"
-            >
-
+              data-field="description"
+              placeholder="Pasienttransport, retur base ..."
+              value="${escapeHTML(flight.description)}">
           </div>
-
         </div>
-
 
         <div class="ff-grid-bottom">
-
           <div class="ff-field">
-
             <label>Tatt av</label>
-
-            <input
-              type="text"
-              class="ff-departure ff-time-click"
-              placeholder="Klikk"
-              readonly
-            >
-
+            <input class="ff-time-click"
+                   data-time="departure"
+                   title="Klikk for nåtid"
+                   placeholder="Klikk"
+                   readonly
+                   value="${escapeHTML(flight.departure)}">
           </div>
 
-
           <div class="ff-field">
-
             <label>POB</label>
-
-            <input
-              type="number"
-              class="ff-pob"
-              min="0"
-              max="30"
-              placeholder="0"
-            >
-
+            <input type="number"
+                   min="0"
+                   max="30"
+                   data-field="pob"
+                   placeholder="0"
+                   value="${escapeHTML(flight.pob)}">
           </div>
 
-
           <div class="ff-field">
-
-            <label>ETE</label>
-
-            <input
-              type="text"
-              class="ff-ete"
-              placeholder="F.eks. 28"
-              autocomplete="off"
-            >
-
+            <label>ETE (min)</label>
+            <input data-field="ete"
+                   placeholder="F.eks. 28"
+                   value="${escapeHTML(flight.ete)}">
           </div>
 
-
           <div class="ff-field">
-
             <label>ETA</label>
-
-            <input
-              type="text"
-              class="ff-eta"
-              placeholder="--:--"
-              readonly
-            >
-
+            <input class="ff-eta"
+                   readonly
+                   value="${escapeHTML(flight.eta)}">
           </div>
-
 
           <div class="ff-field">
-
             <label>Bekreftet landet</label>
-
-            <input
-              type="text"
-              class="ff-landed ff-time-click"
-              placeholder="Klikk"
-              readonly
-            >
-
+            <input class="ff-time-click"
+                   data-action="land"
+                   placeholder="Klikk"
+                   title="Bekreft landet"
+                   readonly>
           </div>
-
         </div>
 
+        <div class="ff-grid-extra">
+          <div class="ff-field">
+            <label>Landingssted</label>
+            <input
+              data-field="landingPlace"
+              placeholder="F.eks. Ullevål / Rikshospitalet"
+              value="${escapeHTML(flight.landingPlace)}">
+          </div>
+
+          <div class="ff-field">
+            <label>ETA varslet helikopter</label>
+
+            <div class="ff-inline-time">
+              <input
+                readonly
+                value="${escapeHTML(flight.etaNotified)}"
+                placeholder="Ikke varslet">
+
+              <button type="button"
+                      class="ff-time-button"
+                      data-time="etaNotified">
+                Varslet
+              </button>
+            </div>
+          </div>
+
+          <div class="ff-field">
+            <label>Status</label>
+            <input readonly value="Flight Following aktiv">
+          </div>
+        </div>
 
         <div class="ff-flight-actions">
-
           <div class="ff-status-text">
-            Flight Following aktiv
+            Aktiv Flight Following
           </div>
 
           <div class="ff-buttons">
-
-            <button
-              type="button"
-              class="ff-land-button"
-            >
+            <button type="button"
+                    class="ff-land-button"
+                    data-action="land">
               ✓ Bekreftet landet
             </button>
 
-            <button
-              type="button"
-              class="ff-abort-button"
-            >
+            <button type="button"
+                    class="ff-abort-button"
+                    data-action="abort">
               ✕ Avbrutt
             </button>
-
-            <button
-              type="button"
-              class="ff-end-button"
-            >
-              Avslutt FF
-            </button>
-
           </div>
-
         </div>
-
       `;
 
-      flightList.appendChild(row);
+      /* FELTER */
 
-      setupFlightRow(card, row);
+      row.querySelectorAll("[data-field]")
+        .forEach(input => {
+          input.addEventListener("input", () => {
+            updateFlightField(
+              resourceId,
+              index,
+              input.dataset.field,
+              input.value,
+              row
+            );
+          });
+        });
 
-      updateResourceSummary(card);
+      /* TIDSSTEMPLER */
 
-    }
+      row.querySelectorAll("[data-time]")
+        .forEach(element => {
+          element.addEventListener("click", () => {
+            setTimeField(
+              resourceId,
+              index,
+              element.dataset.time
+            );
+          });
+        });
 
+      /* LANDET */
 
-    /* =========================================
-       KNYTT FUNKSJONER TIL FLIGHT
-    ========================================= */
-
-    function setupFlightRow(card, row) {
-
-      const departure =
-        row.querySelector(".ff-departure");
-
-      const ete =
-        row.querySelector(".ff-ete");
-
-      const landed =
-        row.querySelector(".ff-landed");
-
-
-      /* TATT AV */
-
-      departure.addEventListener("click", () => {
-
-        if (isFinished(row)) return;
-
-        departure.value = getCurrentTime();
-
-        calculateETA(row);
-
-        updateResourceSummary(card);
-
-      });
-
-
-      /* ETE */
-
-      ete.addEventListener("input", () => {
-
-        calculateETA(row);
-
-        updateResourceSummary(card);
-
-      });
-
-
-      /* LANDET - KLIKK PÅ FELT */
-
-      landed.addEventListener("click", () => {
-
-        completeFlight(card, row);
-
-      });
-
-
-      /* LANDET - KNAPP */
-
-      row.querySelector(
-        ".ff-land-button"
-      ).addEventListener("click", () => {
-
-        completeFlight(card, row);
-
-      });
-
+      row.querySelectorAll('[data-action="land"]')
+        .forEach(element => {
+          element.addEventListener("click", () => {
+            finishFlight(
+              resourceId,
+              index,
+              "completed"
+            );
+          });
+        });
 
       /* AVBRUTT */
 
-      row.querySelector(
-        ".ff-abort-button"
-      ).addEventListener("click", () => {
-
-        abortFlight(card, row);
-
-      });
-
-
-      /* AVSLUTT FF */
-
-      row.querySelector(
-        ".ff-end-button"
-      ).addEventListener("click", () => {
-
-        openEndFFConfirmation(card);
-
-      });
-
-
-      /* OPPDATER SAMMENDRAG */
-
-      row.querySelectorAll(
-        ".ff-from, .ff-to, .ff-description-input, .ff-pob, .ff-ete"
-      ).forEach(input => {
-
-        input.addEventListener("input", () => {
-
-          updateResourceSummary(card);
-
+      row.querySelector('[data-action="abort"]')
+        .addEventListener("click", () => {
+          finishFlight(
+            resourceId,
+            index,
+            "aborted"
+          );
         });
 
-      });
-
+      return row;
     }
 
+    /* KOMPAKT FERDIG LEGG */
 
-    /* =========================================
-       KONTROLLER STATUS
-    ========================================= */
+    function renderFinishedFlight(
+      resourceId,
+      flight,
+      index
+    ) {
+      const row = document.createElement("div");
 
-    function isFinished(row) {
+      row.className =
+        "ff-flight-row finished " + flight.status;
 
-      return (
-        row.classList.contains("completed") ||
-        row.classList.contains("aborted")
-      );
-
-    }
-
-
-    /* =========================================
-       BEKREFT LANDET
-    ========================================= */
-
-    function completeFlight(card, row) {
-
-      if (isFinished(row)) return;
-
-      const time = getCurrentTime();
-
-      row.querySelector(
-        ".ff-landed"
-      ).value = time;
-
-      row.classList.add("completed");
-
-      row.querySelector(
-        ".ff-flight-result"
-      ).textContent = "Landet " + time;
-
-      row.querySelector(
-        ".ff-status-text"
-      ).textContent = "Bekreftet landet " + time;
-
-      lockCompletedFlight(row);
-
-      createFlightRow(card);
-
-      updateResourceSummary(card);
-
-    }
-
-
-    /* =========================================
-       AVBRYT FLIGHT
-    ========================================= */
-
-    function abortFlight(card, row) {
-
-      if (isFinished(row)) return;
-
-      const time = getCurrentTime();
-
-      row.classList.add("aborted");
-
-      row.querySelector(
-        ".ff-flight-result"
-      ).textContent = "Avbrutt " + time;
-
-      row.querySelector(
-        ".ff-status-text"
-      ).textContent = "Flight avbrutt " + time;
-
-      lockCompletedFlight(row);
-
-      createFlightRow(card);
-
-      updateResourceSummary(card);
-
-    }
-
-
-    /* =========================================
-       LÅS FERDIG FLIGHT
-    ========================================= */
-
-    function lockCompletedFlight(row) {
-
-      row.querySelectorAll(
-        "input"
-      ).forEach(input => {
-
-        input.readOnly = true;
-
-      });
-
-      row.querySelector(
-        ".ff-land-button"
-      ).disabled = true;
-
-      row.querySelector(
-        ".ff-abort-button"
-      ).disabled = true;
-
-      row.querySelector(
-        ".ff-end-button"
-      )?.remove();
-
-    }
-
-
-    /* =========================================
-       BEREGN ETA
-    ========================================= */
-
-    function calculateETA(row) {
-
-      const departure =
-        row.querySelector(
-          ".ff-departure"
-        ).value.trim();
-
-      const ete =
-        row.querySelector(
-          ".ff-ete"
-        ).value.trim();
-
-      const etaInput =
-        row.querySelector(".ff-eta");
-
-      etaInput.value = "";
-
-      if (!departure || !ete) return;
-
-      const match =
-        departure.match(/^(\d{2}):(\d{2})$/);
-
-      if (!match) return;
-
-      const hours = Number(match[1]);
-      const minutes = Number(match[2]);
-
-      if (hours > 23 || minutes > 59) return;
-
-      let eteMinutes = 0;
-
-      if (/^\d+:\d{1,2}$/.test(ete)) {
-
-        const parts = ete.split(":").map(Number);
-
-        if (parts[1] > 59) return;
-
-        eteMinutes =
-          parts[0] * 60 + parts[1];
-
-      } else if (/^\d+\s*(min)?$/i.test(ete)) {
-
-        eteMinutes = parseInt(ete, 10);
-
-      } else {
-
-        return;
-
+      if (flight.expanded) {
+        row.classList.add("expanded");
       }
 
-      if (
-        !Number.isFinite(eteMinutes) ||
-        eteMinutes <= 0
-      ) return;
+      const finishedTime =
+        flight.status === "completed"
+          ? flight.landed
+          : flight.aborted;
 
-      const total =
-        (hours * 60 + minutes + eteMinutes) % 1440;
+      const statusText =
+        flight.status === "completed"
+          ? "LANDET"
+          : "AVBRUTT";
 
-      const etaHours =
-        Math.floor(total / 60);
+      row.innerHTML = `
+        <button type="button"
+                class="ff-finished-line"
+                aria-expanded="${flight.expanded}">
 
-      const etaMinutes =
-        total % 60;
+          <span class="ff-finished-number">
+            Legg ${index + 1}
+          </span>
 
-      etaInput.value =
-        String(etaHours).padStart(2, "0") +
-        ":" +
-        String(etaMinutes).padStart(2, "0");
+          <span class="ff-finished-route">
+            ${displayValue(flight.from)}
+            →
+            ${displayValue(flight.to)}
+          </span>
 
+          <span class="ff-finished-time">
+            Avgang:
+            ${displayValue(flight.departure)}
+          </span>
+
+          <span class="ff-finished-time">
+            ETA:
+            ${displayValue(flight.eta)}
+          </span>
+
+          <span class="ff-finished-status">
+            ${statusText}
+            ${displayValue(finishedTime)}
+          </span>
+
+          <span aria-hidden="true">
+            ${flight.expanded ? "▲" : "▼"}
+          </span>
+        </button>
+
+        <div class="ff-finished-details">
+          <strong>Beskrivelse:</strong>
+          ${displayValue(flight.description)}
+
+          <div>
+            <strong>POB:</strong>
+            ${displayValue(flight.pob)}
+            &nbsp; | &nbsp;
+            <strong>ETE:</strong>
+            ${displayValue(flight.ete)}
+            &nbsp; | &nbsp;
+            <strong>ETA:</strong>
+            ${displayValue(flight.eta)}
+          </div>
+
+          <div>
+            <strong>Landingssted:</strong>
+            ${displayValue(flight.landingPlace)}
+          </div>
+
+          <div>
+            <strong>ETA varslet helikopter:</strong>
+            ${displayValue(flight.etaNotified)}
+          </div>
+
+          <div>
+            <strong>Status:</strong>
+            ${statusText} ${displayValue(finishedTime)}
+          </div>
+        </div>
+      `;
+
+      row.querySelector(".ff-finished-line")
+        .addEventListener("click", () => {
+          flight.expanded = !flight.expanded;
+          renderAll();
+        });
+
+      return row;
     }
 
+    /* RESSURSKORT */
 
-    /* =========================================
-       MINIMERT VISNING
-    ========================================= */
+    function renderResource(resource) {
+      const card = document.createElement("section");
 
-    function updateResourceSummary(card) {
+      card.className = "ff-resource-card";
+      card.dataset.resource = resource.id;
 
-      const summary =
-        card.querySelector(
-          ".ff-resource-summary"
-        );
-
-      const rows = Array.from(
-        card.querySelectorAll(
-          ".ff-flight-row"
-        )
+      const hasActive = resource.flights.some(
+        flight => flight.status === "active"
       );
 
-      const activeRow =
-        rows.reverse().find(
-          row => !isFinished(row)
-        );
+      const header = document.createElement("div");
+      header.className = "ff-resource-header";
 
-      if (!activeRow) {
+      header.innerHTML = `
+        <div class="ff-resource-left">
+          <span class="ff-resource-dot"></span>
 
-        summary.textContent =
-          "Ingen aktiv flight.";
+          <span class="ff-resource-name">
+            ${escapeHTML(resource.id)}
+          </span>
 
+          <span class="ff-resource-status
+            ${hasActive ? "" : "waiting"}">
+            ${hasActive ? "FF AKTIV" : "AVVENTER NYTT LEGG"}
+          </span>
+        </div>
+
+        <div class="ff-resource-actions">
+          <button class="ff-small-btn green"
+                  type="button"
+                  data-resource-action="newleg"
+                  ${hasActive ? "disabled" : ""}>
+            + Nytt legg
+          </button>
+
+          <button class="ff-small-btn danger"
+                  type="button"
+                  data-resource-action="end">
+            Avslutt FF
+          </button>
+
+          <button class="ff-small-btn"
+                  type="button"
+                  data-resource-action="collapse">
+            ${resource.collapsed ? "Vis" : "Skjul"}
+          </button>
+        </div>
+      `;
+
+      card.appendChild(header);
+
+      const body = document.createElement("div");
+      body.className = "ff-resource-body";
+
+      if (resource.collapsed) {
+        body.hidden = true;
+      }
+
+      const flightList = document.createElement("div");
+      flightList.className = "ff-flight-list";
+
+      // Nyeste legg øverst.
+      for (
+        let index = resource.flights.length - 1;
+        index >= 0;
+        index--
+      ) {
+        const flight = resource.flights[index];
+
+        const row =
+          flight.status === "active"
+            ? renderActiveFlight(
+                resource.id, flight, index
+              )
+            : renderFinishedFlight(
+                resource.id, flight, index
+              );
+
+        flightList.appendChild(row);
+      }
+
+      body.appendChild(flightList);
+      card.appendChild(body);
+
+      header.querySelector('[data-resource-action="newleg"]')
+        .addEventListener("click", () => {
+          addNewLeg(resource.id);
+        });
+
+      header.querySelector('[data-resource-action="end"]')
+        .addEventListener("click", () => {
+          openEndFF(resource.id);
+        });
+
+      header.querySelector('[data-resource-action="collapse"]')
+        .addEventListener("click", () => {
+          resource.collapsed = !resource.collapsed;
+          renderAll();
+        });
+
+      return card;
+    }
+
+    /* OPPDATER HELE OVERSIKTEN */
+
+    function renderAll() {
+      ffContainer.innerHTML = "";
+
+      const sortedResources = Array.from(
+        resources.keys()
+      ).sort(resourceSort);
+
+      if (sortedResources.length === 0) {
+        ffContainer.appendChild(emptyState);
+        emptyState.style.display = "block";
         return;
       }
 
-      const value = selector =>
-        activeRow.querySelector(selector)?.value || "—";
-
-      summary.textContent =
-        value(".ff-from") + " → " +
-        value(".ff-to") + " | " +
-        value(".ff-description-input") + " | " +
-        "Tatt av: " + value(".ff-departure") + " | " +
-        "POB: " + value(".ff-pob") + " | " +
-        "ETE: " + value(".ff-ete") + " | " +
-        "ETA: " + value(".ff-eta");
-
+      sortedResources.forEach(id => {
+        const card = renderResource(resources.get(id));
+        ffContainer.appendChild(card);
+      });
     }
 
+    /* AVSLUTT FF */
 
-    /* =========================================
-       AVSLUTT HELE FF
-    ========================================= */
+    function openEndFF(resourceId) {
+      resourceToEnd = resourceId;
 
-    function openEndFFConfirmation(card) {
+      document.getElementById("endFFText")
+        .textContent =
+          "Vil du avslutte Flight Following for " +
+          resourceId +
+          "? Ressursen og alle registrerte legg " +
+          "fjernes fra den aktive oversikten. " +
+          "Skriv ut først dersom opplysningene skal beholdes.";
 
-      cardWaitingForEnd = card;
-
-      endFFConfirmText.textContent =
-        "Vil du avslutte Flight Following for " +
-        card.dataset.resource +
-        "? Ressursen fjernes fra den aktive oversikten.";
-
-      endFFConfirm.classList.add("open");
-
+      endFFModal.classList.add("open");
     }
-
 
     function closeEndFF() {
-
-      cardWaitingForEnd = null;
-
-      endFFConfirm.classList.remove("open");
-
+      endFFModal.classList.remove("open");
+      resourceToEnd = null;
     }
 
+    document.getElementById("cancelEndFFBtn")
+      .addEventListener("click", closeEndFF);
 
-    endFFNoBtn.addEventListener(
-      "click",
-      closeEndFF
-    );
-
-
-    endFFYesBtn.addEventListener("click", () => {
-
-      if (cardWaitingForEnd) {
-
-        cardWaitingForEnd.remove();
-
-      }
-
-      closeEndFF();
-
-      checkEmptyState();
-
-    });
-
-
-    endFFConfirm.addEventListener("click", event => {
-
-      if (event.target === endFFConfirm) {
+    document.getElementById("confirmEndFFBtn")
+      .addEventListener("click", () => {
+        if (resourceToEnd) {
+          resources.delete(resourceToEnd);
+        }
 
         closeEndFF();
+        renderAll();
+      });
 
+    /* UTSKRIFT */
+
+    document.getElementById("printFFBtn")
+      .addEventListener("click", printFlightFollowing);
+
+    function printFlightFollowing() {
+      const printArea = document.getElementById(
+        "printArea"
+      );
+
+      const sortedResources =
+        Array.from(resources.keys()).sort(resourceSort);
+
+      if (!sortedResources.length) {
+        alert("Ingen Flight Following å skrive ut.");
+        return;
       }
 
-    });
+      let html = `
+        <div class="print-heading">
+          <h1>Flight Following – Luftambulansekoordinator</h1>
+          <span>Utskrift: ${getCurrentDate()} kl. ${getCurrentTime()}</span>
+        </div>
+      `;
 
+      sortedResources.forEach(resourceId => {
+        const resource = resources.get(resourceId);
 
-    /* =========================================
-       TOM VISNING
-    ========================================= */
+        html += `
+          <section class="print-resource">
+            <h2>${escapeHTML(resourceId)}</h2>
 
-    function checkEmptyState() {
+            <table class="print-table">
+              <thead>
+                <tr>
+                  <th>Legg</th>
+                  <th>Fra</th>
+                  <th>Til</th>
+                  <th>Beskrivelse</th>
+                  <th>Tatt av</th>
+                  <th>POB</th>
+                  <th>ETE</th>
+                  <th>ETA</th>
+                  <th>Landingssted</th>
+                  <th>ETA varslet</th>
+                  <th>Landet</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
 
-      const count =
-        ffContainer.querySelectorAll(
-          ".ff-resource-card"
-        ).length;
+        resource.flights.forEach((flight, index) => {
+          const status =
+            flight.status === "active"
+              ? "Aktiv"
+              : flight.status === "completed"
+                ? "Landet"
+                : "Avbrutt " + flight.aborted;
 
-      emptyState.style.display =
-        count === 0 ? "block" : "none";
+          html += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${displayValue(flight.from)}</td>
+              <td>${displayValue(flight.to)}</td>
+              <td>${displayValue(flight.description)}</td>
+              <td>${displayValue(flight.departure)}</td>
+              <td>${displayValue(flight.pob)}</td>
+              <td>${displayValue(flight.ete)}</td>
+              <td>${displayValue(flight.eta)}</td>
+              <td>${displayValue(flight.landingPlace)}</td>
+              <td>${displayValue(flight.etaNotified)}</td>
+              <td>${displayValue(flight.landed)}</td>
+              <td>${escapeHTML(status)}</td>
+            </tr>
+          `;
+        });
 
+        // Tomme linjer for videreføring med penn.
+        for (let i = 0; i < 4; i++) {
+          html += `
+            <tr class="blank-row">
+              ${"<td></td>".repeat(12)}
+            </tr>
+          `;
+        }
+
+        html += `
+              </tbody>
+            </table>
+          </section>
+        `;
+      });
+
+      html += `
+        <p class="print-note">
+          Ved manuell videreføring: registrer relevante
+          klokkeslett, status og eventuelle endringer.
+        </p>
+      `;
+
+      printArea.innerHTML = html;
+
+      window.print();
     }
 
+    /* LUKK MODALER */
 
-    /* =========================================
-       ESC LUKKER MODALER
-    ========================================= */
-
-    document.addEventListener("keydown", event => {
-
-      if (event.key !== "Escape") return;
-
-      closeNewFF();
-
-      closeEndFF();
-
+    newFFModal.addEventListener("click", event => {
+      if (event.target === newFFModal) {
+        closeNewFF();
+      }
     });
 
-  </script>
+    endFFModal.addEventListener("click", event => {
+      if (event.target === endFFModal) {
+        closeEndFF();
+      }
+    });
 
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeNewFF();
+        closeEndFF();
+      }
+    });
+
+    /* START */
+
+    renderAll();
+
+  </script>
 </body>
 </html>
