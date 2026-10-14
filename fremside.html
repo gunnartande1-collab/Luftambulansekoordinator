@@ -19,7 +19,7 @@
 
   <div class="header-title">
     <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
-    <h1>Fremside</h1>
+    <h1>Fremside. !!TESTVERSJON OG SKAL IKKE BRUKES I PRODUKSJON!!</h1>
   </div>
 
     <button
@@ -148,41 +148,63 @@
         <p>Velg ønsket skjema eller reserveløsning.</p>
       </div>
 
-      <!-- STORE BILDEKNAPPER -->
 
-      <section class="home-section">
+<!-- STORE BILDEKNAPPER -->
 
-        <h3 class="section-title">
-          Hendelser og varsling
-        </h3>
+<section class="home-section">
 
-        <div class="primary-buttons">
+  <h3 class="section-title">
+    Hendelser og varsling
+  </h3>
 
-          <a
-            href="savnet-helikopter/savnet-helikopter.html"
-            class="image-button image-button-large"
-            aria-label="Åpne Savnet helikopter"
-          >
-            <img
-              src="img/savnet heli ferdig.png"
-              alt="Savnet helikopter"
-            >
-          </a>
+  <div class="primary-buttons">
 
-          <a
-            href="gps-forstyrrelser/gps-forstyrrelser.html"
-            class="image-button image-button-large"
-            aria-label="Åpne GPS-forstyrrelser"
-          >
-            <img
-              src="img/GPS forstyrrelse ferdig.png"
-              alt="GPS-forstyrrelser"
-            >
-          </a>
+    <!-- SAVNET HELIKOPTER -->
 
-        </div>
+    <a
+      href="savnet-helikopter/savnet-helikopter.html"
+      class="image-button image-button-large"
+      aria-label="Åpne Savnet helikopter"
+    >
+      <img
+        src="img/savnet heli ferdig.png"
+        alt="Savnet helikopter"
+      >
+    </a>
 
-      </section>
+    <!-- GPS-FORSTYRRELSER -->
+
+    <a
+      href="gps-forstyrrelser/gps-forstyrrelser.html"
+      class="image-button image-button-large"
+      aria-label="Åpne GPS-forstyrrelser"
+    >
+      <img
+        src="img/GPS forstyrrelse ferdig.png"
+        alt="GPS-forstyrrelser"
+      >
+    </a>
+
+    <!-- LANDINGSVARSEL RH -->
+
+    <button
+      type="button"
+      class="image-button image-button-large landing-button"
+      onclick="openLandingsvarsel()"
+      aria-label="Åpne Landingsvarsel RH"
+    >
+      <span class="landing-button-content">
+        <span class="landing-button-icon" aria-hidden="true">
+          🔔
+        </span>
+        <strong>Landingsvarsel RH</strong>
+        <small>3 minutter til landing</small>
+      </span>
+    </button>
+
+  </div>
+
+</section>
 
       <!-- MINDRE BILDEKNAPPER -->
 
@@ -256,7 +278,55 @@
 
     </main>
 
+
   </div>
+
+  <!-- ÅPNE LANDINGSVARSEL I EGET VINDU -->
+
+  <script>
+    let landingsvarselWindow = null;
+
+    function openLandingsvarsel() {
+
+      // Dersom klokken allerede er åpen,
+      // hent frem eksisterende vindu.
+      if (landingsvarselWindow &&
+          !landingsvarselWindow.closed) {
+        landingsvarselWindow.focus();
+        return;
+      }
+
+      const width = 510;
+      const height = 600;
+
+      const left = Math.max(
+        0,
+        Math.round((screen.availWidth - width) / 2)
+      );
+
+      const top = Math.max(
+        0,
+        Math.round((screen.availHeight - height) / 2)
+      );
+
+
+  landingsvarselWindow = window.open(
+  "landingsvarsling/landingsvarsling.html",
+  "LandingsvarselRH",
+  `popup=yes,width=${width},height=${height},` +
+  `left=${left},top=${top},resizable=yes,scrollbars=yes`
+);
+
+      if (landingsvarselWindow) {
+        landingsvarselWindow.focus();
+      } else {
+        alert(
+          "Nettleseren blokkerte vinduet. " +
+          "Tillat popup-vinduer for denne siden."
+        );
+      }
+    }
+  </script>
 
 </body>
 </html>

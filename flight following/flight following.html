@@ -1,2541 +1,1884 @@
+
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Flight Following</title>
-
-    <style>
-
-        /* =========================================================
-           GENERELT
-        ========================================================= */
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            background: #f3f6f9;
-            color: #172033;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        button {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .page {
-            max-width: 1550px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-
-
-        /* =========================================================
-           HEADER
-        ========================================================= */
-
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 20px;
-
-            margin-bottom: 24px;
-        }
-
-        .page-title-area {
-            display: flex;
-            align-items: center;
-
-            gap: 15px;
-        }
-
-        .page-icon {
-            width: 58px;
-            height: 58px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 16px;
-
-            background: #e5effa;
-            color: #2868a8;
-
-            font-size: 28px;
-        }
-
-        .page-title {
-            margin: 0;
-
-            font-size: 30px;
-            line-height: 1.1;
-
-            font-weight: 800;
-            letter-spacing: -0.4px;
-        }
-
-        .page-subtitle {
-            margin-top: 5px;
-
-            color: #667085;
-            font-size: 14px;
-        }
-
-        .new-ff-btn {
-            min-height: 48px;
-
-            padding: 0 20px;
-
-            border: none;
-            border-radius: 10px;
-
-            background: #16863c;
-            color: white;
-
-            font-size: 14px;
-            font-weight: 750;
-
-            cursor: pointer;
-
-            box-shadow: 0 3px 10px rgba(22, 134, 60, 0.18);
-
-            transition:
-                background 0.15s ease,
-                transform 0.15s ease;
-        }
-
-        .new-ff-btn:hover {
-            background: #116d31;
-        }
-
-        .new-ff-btn:active {
-            transform: translateY(1px);
-        }
-
-
-        /* =========================================================
-           HOVEDOMRÅDE
-        ========================================================= */
-
-        #ffContainer {
-            display: flex;
-            flex-direction: column;
-
-            gap: 17px;
-        }
-
-
-        /* =========================================================
-           TOM VISNING
-        ========================================================= */
-
-        .empty-state {
-            padding: 55px 20px;
-
-            border: 1px dashed #c9d4df;
-            border-radius: 14px;
-
-            background: rgba(255, 255, 255, 0.6);
-
-            text-align: center;
-
-            color: #667085;
-        }
-
-        .empty-state strong {
-            display: block;
-
-            margin-bottom: 8px;
-
-            color: #344054;
-
-            font-size: 17px;
-        }
-
-
-        /* =========================================================
-           RESSURSKORT
-        ========================================================= */
-
-        .resource-card {
-            overflow: hidden;
-
-            border: 1px solid #d5dfe8;
-            border-radius: 14px;
-
-            background: white;
-
-            box-shadow:
-                0 1px 2px rgba(16, 24, 40, 0.03),
-                0 5px 18px rgba(16, 24, 40, 0.035);
-        }
-
-        .resource-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 15px 19px;
-
-            border-bottom: 1px solid #dae7de;
-
-            background: #f4faf6;
-        }
-
-        .resource-card.collapsed .resource-header {
-            border-bottom: none;
-        }
-
-        .resource-header-left {
-            display: flex;
-            align-items: center;
-
-            gap: 11px;
-        }
-
-        .resource-dot {
-            width: 11px;
-            height: 11px;
-
-            border-radius: 50%;
-
-            background: #1f9148;
-        }
-
-        .resource-name {
-            font-size: 21px;
-            font-weight: 800;
-        }
-
-        .resource-status {
-            padding: 5px 9px;
-
-            border-radius: 999px;
-
-            background: #dcefe2;
-            color: #167438;
-
-            font-size: 11px;
-            font-weight: 800;
-
-            letter-spacing: 0.2px;
-        }
-
-        .resource-header-actions {
-            display: flex;
-            align-items: center;
-
-            gap: 8px;
-        }
-
-        .collapse-btn {
-            width: 36px;
-            height: 36px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border: none;
-            border-radius: 8px;
-
-            background: transparent;
-            color: #344054;
-
-            font-size: 19px;
-
-            cursor: pointer;
-        }
-
-        .collapse-btn:hover {
-            background: rgba(52, 64, 84, 0.06);
-        }
-
-
-        /* =========================================================
-           MINIMERT RESSURS
-        ========================================================= */
-
-        .resource-summary {
-            display: none;
-
-            padding: 0 19px 14px 19px;
-
-            background: #f4faf6;
-
-            color: #475467;
-
-            font-size: 13px;
-        }
-
-        .resource-card.collapsed .resource-summary {
-            display: block;
-        }
-
-        .resource-card.collapsed .resource-body {
-            display: none;
-        }
-
-
-        /* =========================================================
-           RESSURSBODY
-        ========================================================= */
-
-        .resource-body {
-            padding: 17px;
-        }
-
-        .flight-list {
-            display: flex;
-            flex-direction: column;
-
-            gap: 12px;
-        }
-
-
-        /* =========================================================
-           FLIGHT-RAD
-        ========================================================= */
-
-        .flight-row {
-            position: relative;
-
-            padding: 15px;
-
-            border: 1px solid #dde4eb;
-            border-radius: 11px;
-
-            background: #ffffff;
-        }
-
-        .flight-row.completed {
-            border-color: #c6ddcc;
-            background: #f8fcf9;
-        }
-
-        .flight-row.aborted {
-            border-color: #e8c2c2;
-            background: #fff8f8;
-        }
-
-        .flight-heading {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 12px;
-
-            margin-bottom: 12px;
-        }
-
-        .flight-number {
-            color: #667085;
-
-            font-size: 11px;
-            font-weight: 800;
-
-            letter-spacing: 0.35px;
-            text-transform: uppercase;
-        }
-
-        .flight-result {
-            font-size: 12px;
-            font-weight: 700;
-
-            color: #667085;
-        }
-
-        .completed .flight-result {
-            color: #18753a;
-        }
-
-        .aborted .flight-result {
-            color: #b62f2f;
-        }
-
-
-        /* =========================================================
-           ØVERSTE RAD
-        ========================================================= */
-
-        .flight-grid-top {
-            display: grid;
-
-            grid-template-columns:
-                minmax(115px, 1fr)
-                minmax(115px, 1fr)
-                minmax(280px, 3fr);
-
-            gap: 13px;
-
-            margin-bottom: 14px;
-        }
-
-
-        /* =========================================================
-           NEDERSTE RAD
-        ========================================================= */
-
-        .flight-grid-bottom {
-            display: grid;
-
-            grid-template-columns:
-                minmax(120px, 1fr)
-                minmax(70px, 0.65fr)
-                minmax(105px, 0.9fr)
-                minmax(105px, 0.9fr)
-                minmax(135px, 1.15fr);
-
-            gap: 13px;
-
-            align-items: end;
-        }
-
-
-        /* =========================================================
-           FELT
-        ========================================================= */
-
-        .field {
-            display: flex;
-            flex-direction: column;
-
-            gap: 6px;
-        }
-
-        .field label {
-            color: #344054;
-
-            font-size: 11px;
-            font-weight: 800;
-
-            letter-spacing: 0.35px;
-            text-transform: uppercase;
-        }
-
-        .field input {
-            width: 100%;
-            height: 45px;
-
-            padding: 0 11px;
-
-            border: 1px solid #ccd5df;
-            border-radius: 8px;
-
-            background: white;
-            color: #182230;
-
-            font-size: 14px;
-
-            outline: none;
-
-            transition:
-                border-color 0.15s ease,
-                box-shadow 0.15s ease,
-                background 0.15s ease;
-        }
-
-        .field input::placeholder {
-            color: #98a2b3;
-        }
-
-        .field input:focus {
-            border-color: #4d8fcf;
-
-            box-shadow:
-                0 0 0 3px rgba(77, 143, 207, 0.11);
-        }
-
-        .field input[readonly] {
-            background: #f1f4f7;
-            color: #475467;
-        }
-
-        .field input.time-click {
-            cursor: pointer;
-        }
-
-        .field input.time-click:hover {
-            background: #f7fafc;
-        }
-
-        .flight-row.completed input,
-        .flight-row.aborted input {
-            color: #5a6575;
-        }
-
-
-        /* =========================================================
-           HANDLINGSKNAPPER
-        ========================================================= */
-
-        .flight-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 15px;
-
-            margin-top: 14px;
-        }
-
-        .flight-status-text {
-            color: #667085;
-
-            font-size: 12px;
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-
-            gap: 8px;
-        }
-
-        .land-btn,
-        .abort-btn,
-        .end-ff-btn {
-            min-height: 40px;
-
-            padding: 0 14px;
-
-            border-radius: 8px;
-
-            font-size: 12px;
-            font-weight: 800;
-
-            cursor: pointer;
-
-            transition:
-                background 0.15s ease,
-                border-color 0.15s ease,
-                opacity 0.15s ease;
-        }
-
-        .land-btn {
-            border: 1px solid #17843d;
-
-            background: #17843d;
-            color: white;
-        }
-
-        .land-btn:hover {
-            background: #106d31;
-        }
-
-        .abort-btn {
-            border: 1px solid #d94444;
-
-            background: white;
-            color: #c53232;
-        }
-
-        .abort-btn:hover {
-            background: #fff1f1;
-        }
-
-        .end-ff-btn {
-            border: 1px solid #344054;
-
-            background: #344054;
-            color: white;
-        }
-
-        .end-ff-btn:hover {
-            background: #202938;
-        }
-
-        .land-btn:disabled,
-        .abort-btn:disabled,
-        .end-ff-btn:disabled {
-            opacity: 0.4;
-            cursor: default;
-        }
-
-
-        /* =========================================================
-           MODAL
-        ========================================================= */
-
-        .modal-backdrop {
-            position: fixed;
-            inset: 0;
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 16px;
-
-            background: rgba(15, 23, 42, 0.44);
-
-            z-index: 9999;
-        }
-
-        .modal-backdrop.open {
-            display: flex;
-        }
-
-        .modal {
-            width: min(440px, 100%);
-
-            padding: 22px;
-
-            border-radius: 14px;
-
-            background: white;
-
-            box-shadow:
-                0 25px 70px rgba(15, 23, 42, 0.25);
-        }
-
-        .modal-title {
-            margin: 0 0 5px 0;
-
-            font-size: 21px;
-            font-weight: 800;
-        }
-
-        .modal-description {
-            margin: 0 0 20px 0;
-
-            color: #667085;
-
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .modal label {
-            display: block;
-
-            margin-bottom: 7px;
-
-            color: #344054;
-
-            font-size: 11px;
-            font-weight: 800;
-
-            letter-spacing: 0.35px;
-            text-transform: uppercase;
-        }
-
-        .modal select {
-            width: 100%;
-            height: 48px;
-
-            margin-bottom: 20px;
-
-            padding: 0 11px;
-
-            border: 1px solid #ccd5df;
-            border-radius: 8px;
-
-            background: white;
-            color: #182230;
-
-            outline: none;
-        }
-
-        .modal select:focus {
-            border-color: #4d8fcf;
-
-            box-shadow:
-                0 0 0 3px rgba(77, 143, 207, 0.11);
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-
-            gap: 8px;
-        }
-
-        .modal-cancel-btn,
-        .modal-start-btn {
-            min-height: 42px;
-
-            padding: 0 15px;
-
-            border-radius: 8px;
-
-            font-size: 13px;
-            font-weight: 750;
-
-            cursor: pointer;
-        }
-
-        .modal-cancel-btn {
-            border: 1px solid #ccd5df;
-
-            background: white;
-            color: #344054;
-        }
-
-        .modal-start-btn {
-            border: none;
-
-            background: #17843d;
-            color: white;
-        }
-
-        .modal-start-btn:hover {
-            background: #106d31;
-        }
-
-
-        /* =========================================================
-           CONFIRM-DIALOG
-        ========================================================= */
-
-        .confirm-backdrop {
-            position: fixed;
-            inset: 0;
-
-            display: none;
-            align-items: center;
-            justify-content: center;
-
-            padding: 16px;
-
-            background: rgba(15, 23, 42, 0.44);
-
-            z-index: 10000;
-        }
-
-        .confirm-backdrop.open {
-            display: flex;
-        }
-
-        .confirm-box {
-            width: min(420px, 100%);
-
-            padding: 22px;
-
-            border-radius: 14px;
-
-            background: white;
-
-            box-shadow:
-                0 25px 70px rgba(15, 23, 42, 0.25);
-        }
-
-        .confirm-box h2 {
-            margin: 0 0 7px 0;
-
-            font-size: 20px;
-        }
-
-        .confirm-box p {
-            margin: 0 0 20px 0;
-
-            color: #667085;
-
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .confirm-actions {
-            display: flex;
-            justify-content: flex-end;
-
-            gap: 8px;
-        }
-
-        .confirm-no,
-        .confirm-yes {
-            min-height: 42px;
-
-            padding: 0 15px;
-
-            border-radius: 8px;
-
-            font-size: 13px;
-            font-weight: 750;
-
-            cursor: pointer;
-        }
-
-        .confirm-no {
-            border: 1px solid #ccd5df;
-
-            background: white;
-        }
-
-        .confirm-yes {
-            border: none;
-
-            background: #344054;
-            color: white;
-        }
-
-
-        /* =========================================================
-           RESPONSIV
-        ========================================================= */
-
-        @media (max-width: 1050px) {
-
-            .flight-grid-bottom {
-                grid-template-columns:
-                    repeat(3, 1fr);
-            }
-
-        }
-
-        @media (max-width: 760px) {
-
-            .page {
-                padding: 15px;
-            }
-
-            .page-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .new-ff-btn {
-                width: 100%;
-            }
-
-            .flight-grid-top,
-            .flight-grid-bottom {
-                grid-template-columns: 1fr;
-            }
-
-            .flight-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .action-buttons {
-                width: 100%;
-            }
-
-            .action-buttons button {
-                flex: 1;
-            }
-
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Flight Following | Luftambulansekoordinator</title>
+
+  <!-- FELLESFILER -->
+  <link rel="stylesheet" href="../felles/felles.css">
+  <script src="../felles/felles.js" defer></script>
+  <script src="../felles/meny.js" defer></script>
+
+  <!--
+    ALL CSS FOR FLIGHT FOLLOWING LIGGER HER.
+    DU TRENGER IKKE EGEN CSS-FIL.
+  -->
+  <style>
+
+    /* =========================================
+       GENERELT
+    ========================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #edf2f5;
+      color: #182230;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================
+       FELLES TOPPFELT
+       SAMME UTTRYKK SOM FREMSIDEN
+    ========================================= */
+
+    body > .app-header {
+      width: 100%;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 8px 22px;
+      background: #ffffff;
+      border-bottom: 1px solid #dce3e9;
+      color: #182230;
+    }
+
+    body > .app-header > div {
+      min-width: 0;
+    }
+
+    body > .app-header .app-eyebrow {
+      margin: 0 0 5px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+      line-height: 1.2;
+      text-transform: uppercase;
+      color: #667085;
+    }
+
+    body > .app-header h1 {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.1;
+      color: #182230;
+    }
+
+    body > .app-header .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 1px solid #d5dfe8;
+      border-radius: 13px;
+      background: #ffffff;
+      color: #182230;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    body > .app-header .theme-toggle-icon {
+      font-size: 19px;
+    }
+
+    /* =========================================
+       HOVEDOPPSETT
+       VENSTREMENY + ARBEIDSOMRÅDE
+    ========================================= */
+
+    .ff-layout {
+      display: grid;
+      grid-template-columns:
+        296px minmax(0, 1fr);
+      gap: 32px;
+      width: 100%;
+      min-height: calc(100vh - 76px);
+      padding: 16px;
+      align-items: start;
+      background: transparent;
+    }
+
+    #shared-menu {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .ff-main {
+      min-width: 0;
+      width: 100%;
+      padding: 24px 0;
+    }
+
+    /* =========================================
+       OVERSKRIFT I ARBEIDSOMRÅDET
+    ========================================= */
+
+    .ff-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 26px;
+    }
+
+    .ff-toolbar-text {
+      min-width: 0;
+    }
+
+    .ff-toolbar h2 {
+      margin: 0 0 8px;
+      color: #182230;
+      font-size: 25px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .ff-description {
+      margin: 0;
+      color: #667085;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .ff-new-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 47px;
+      padding: 0 22px;
+      border: none;
+      border-radius: 11px;
+      background: #16863c;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .ff-new-button:hover {
+      background: #116d31;
+    }
+
+    /* =========================================
+       FLIGHT FOLLOWING CONTAINER
+    ========================================= */
+
+    #ffContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+      min-width: 0;
+    }
+
+    .ff-empty {
+      padding: 55px 20px;
+      border: 1px dashed #c6d3df;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.55);
+      text-align: center;
+      color: #667085;
+      line-height: 1.6;
+    }
+
+    .ff-empty strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #344054;
+      font-size: 17px;
+    }
+
+    /* =========================================
+       RESSURSKORT
+    ========================================= */
+
+    .ff-resource-card {
+      overflow: hidden;
+      border: 1px solid #d7e0e8;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 3px 12px rgba(16,24,40,0.045);
+    }
+
+    .ff-resource-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 19px;
+      background: #f4faf6;
+      border-bottom: 1px solid #dae7de;
+    }
+
+    .ff-resource-left {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 11px;
+    }
+
+    .ff-resource-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #1f9148;
+    }
+
+    .ff-resource-name {
+      font-size: 21px;
+      font-weight: 800;
+      color: #182230;
+    }
+
+    .ff-resource-status {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #dcefe2;
+      color: #167438;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .ff-collapse-button {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #344054;
+      font-size: 20px;
+    }
+
+    .ff-collapse-button:hover {
+      background: #e5efe8;
+    }
+
+    .ff-resource-body {
+      padding: 17px;
+    }
+
+    .ff-resource-summary {
+      display: none;
+      padding: 0 19px 14px;
+      background: #f4faf6;
+      color: #475467;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .ff-resource-card.collapsed .ff-resource-body {
+      display: none;
+    }
+
+    .ff-resource-card.collapsed .ff-resource-summary {
+      display: block;
+    }
+
+    .ff-resource-card.collapsed .ff-resource-header {
+      border-bottom: none;
+    }
+
+    /* =========================================
+       FLIGHT-RADER
+    ========================================= */
+
+    .ff-flight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ff-flight-row {
+      padding: 15px;
+      border: 1px solid #dde4eb;
+      border-radius: 11px;
+      background: #ffffff;
+    }
+
+    .ff-flight-row.completed {
+      border-color: #c6ddcc;
+      background: #f8fcf9;
+    }
+
+    .ff-flight-row.aborted {
+      border-color: #e8c2c2;
+      background: #fff8f8;
+    }
+
+    .ff-flight-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 13px;
+    }
+
+    .ff-flight-number {
+      color: #667085;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+    }
+
+    .ff-flight-result {
+      color: #667085;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .completed .ff-flight-result {
+      color: #18753a;
+    }
+
+    .aborted .ff-flight-result {
+      color: #b62f2f;
+    }
+
+    /* =========================================
+       SKJEMAFELTER
+    ========================================= */
+
+    .ff-grid-top {
+      display: grid;
+      grid-template-columns:
+        minmax(110px,1fr)
+        minmax(110px,1fr)
+        minmax(200px,3fr);
+      gap: 13px;
+      margin-bottom: 14px;
+    }
+
+    .ff-grid-bottom {
+      display: grid;
+      grid-template-columns:
+        minmax(100px,1fr)
+        minmax(65px,0.65fr)
+        minmax(90px,0.9fr)
+        minmax(90px,0.9fr)
+        minmax(120px,1.15fr);
+      gap: 13px;
+      align-items: end;
+    }
+
+    .ff-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .ff-field label {
+      color: #344054;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.35px;
+      text-transform: uppercase;
+    }
+
+    .ff-field input {
+      width: 100%;
+      min-width: 0;
+      height: 45px;
+      padding: 0 11px;
+      border: 1px solid #ccd5df;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #182230;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .ff-field input:focus {
+      border-color: #4d8fcf;
+      box-shadow: 0 0 0 3px rgba(77,143,207,0.11);
+    }
+
+    .ff-field input::placeholder {
+      color: #98a2b3;
+    }
+
+    .ff-field input[readonly] {
+      background: #f1f4f7;
+      color: #475467;
+    }
+
+    .ff-field input.ff-time-click {
+      cursor: pointer;
+    }
+
+    /* =========================================
+       HANDLINGSKNAPPER
+    ========================================= */
+
+    .ff-flight-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .ff-status-text {
+      color: #667085;
+      font-size: 12px;
+    }
+
+    .ff-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ff-land-button,
+    .ff-abort-button,
+    .ff-end-button {
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ff-land-button {
+      border: 1px solid #17843d;
+      background: #17843d;
+      color: #ffffff;
+    }
+
+    .ff-land-button:hover {
+      background: #106d31;
+    }
+
+    .ff-abort-button {
+      border: 1px solid #d94444;
+      background: #ffffff;
+      color: #c53232;
+    }
+
+    .ff-abort-button:hover {
+      background: #fff1f1;
+    }
+
+    .ff-end-button {
+      border: 1px solid #344054;
+      background: #344054;
+      color: #ffffff;
+    }
+
+    .ff-end-button:hover {
+      background: #202938;
+    }
+
+    .ff-buttons button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* =========================================
+       MODALER
+    ========================================= */
+
+    .ff-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15,23,42,0.44);
+      z-index: 9999;
+    }
+
+    .ff-modal-backdrop.open {
+      display: flex;
+    }
+
+    .ff-modal {
+      width: min(440px,100%);
+      padding: 22px;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 25px 70px rgba(15,23,42,0.25);
+    }
+
+    .ff-modal h2 {
+      margin: 0 0 8px;
+      color: #172033;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .ff-modal p {
+      margin: 0 0 20px;
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .ff-modal label {
+      display: block;
+      margin-bottom: 7px;
+      color: #344054;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .ff-modal select {
+      width: 100%;
+      height: 48px;
+      margin-bottom: 20px;
+      padding: 0 11px;
+      border: 1px solid #ccd5df;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #182230;
+    }
+
+    .ff-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .ff-modal-actions button {
+      min-height: 42px;
+      padding: 0 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .ff-cancel-button {
+      border: 1px solid #ccd5df;
+      background: #ffffff;
+      color: #344054;
+    }
+
+    .ff-start-button {
+      border: none;
+      background: #17843d;
+      color: #ffffff;
+    }
+
+    .ff-confirm-button {
+      border: none;
+      background: #344054;
+      color: #ffffff;
+    }
+
+    /* =========================================
+       KVELDSMODUS
+
+       STØTTER FLERE VANLIGE TEMAKLASSER
+    ========================================= */
+
+    body.dark-mode,
+    body.theme-dark,
+    body[data-theme="dark"] {
+      background: #111827;
+      color: #e5eaf1;
+    }
+
+    body.dark-mode > .app-header,
+    body.theme-dark > .app-header,
+    body[data-theme="dark"] > .app-header {
+      background: #1d2939;
+      border-color: #405066;
+    }
+
+    body.dark-mode .app-header h1,
+    body.theme-dark .app-header h1,
+    body[data-theme="dark"] .app-header h1 {
+      color: #f3f6fa;
+    }
+
+    body.dark-mode .ff-toolbar h2,
+    body.theme-dark .ff-toolbar h2,
+    body[data-theme="dark"] .ff-toolbar h2 {
+      color: #f3f6fa;
+    }
+
+    body.dark-mode .ff-description,
+    body.dark-mode .ff-status-text,
+    body.theme-dark .ff-description,
+    body.theme-dark .ff-status-text,
+    body[data-theme="dark"] .ff-description,
+    body[data-theme="dark"] .ff-status-text {
+      color: #aebbd0;
+    }
+
+    body.dark-mode .ff-empty,
+    body.dark-mode .ff-resource-card,
+    body.dark-mode .ff-flight-row,
+    body.dark-mode .ff-modal,
+    body.theme-dark .ff-empty,
+    body.theme-dark .ff-resource-card,
+    body.theme-dark .ff-flight-row,
+    body.theme-dark .ff-modal,
+    body[data-theme="dark"] .ff-empty,
+    body[data-theme="dark"] .ff-resource-card,
+    body[data-theme="dark"] .ff-flight-row,
+    body[data-theme="dark"] .ff-modal {
+      background: #1d2939;
+      border-color: #405066;
+      color: #e5eaf1;
+    }
+
+    body.dark-mode .ff-resource-header,
+    body.dark-mode .ff-resource-summary,
+    body.theme-dark .ff-resource-header,
+    body.theme-dark .ff-resource-summary,
+    body[data-theme="dark"] .ff-resource-header,
+    body[data-theme="dark"] .ff-resource-summary {
+      background: #25364a;
+      border-color: #405066;
+      color: #e5eaf1;
+    }
+
+    body.dark-mode .ff-resource-name,
+    body.dark-mode .ff-empty strong,
+    body.dark-mode .ff-modal h2,
+    body.theme-dark .ff-resource-name,
+    body.theme-dark .ff-empty strong,
+    body.theme-dark .ff-modal h2,
+    body[data-theme="dark"] .ff-resource-name,
+    body[data-theme="dark"] .ff-empty strong,
+    body[data-theme="dark"] .ff-modal h2 {
+      color: #ffffff;
+    }
+
+    body.dark-mode .ff-field label,
+    body.dark-mode .ff-modal label,
+    body.theme-dark .ff-field label,
+    body.theme-dark .ff-modal label,
+    body[data-theme="dark"] .ff-field label,
+    body[data-theme="dark"] .ff-modal label {
+      color: #d8e1ed;
+    }
+
+    body.dark-mode .ff-field input,
+    body.dark-mode .ff-modal select,
+    body.theme-dark .ff-field input,
+    body.theme-dark .ff-modal select,
+    body[data-theme="dark"] .ff-field input,
+    body[data-theme="dark"] .ff-modal select {
+      background: #28394e;
+      border-color: #53657c;
+      color: #ffffff;
+    }
+
+    body.dark-mode .ff-field input[readonly],
+    body.theme-dark .ff-field input[readonly],
+    body[data-theme="dark"] .ff-field input[readonly] {
+      background: #344256;
+    }
+
+    /* =========================================
+       RESPONSIVT DESIGN
+    ========================================= */
+
+    @media (max-width: 1250px) {
+      .ff-grid-bottom {
+        grid-template-columns:
+          repeat(3,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .ff-grid-top {
+        grid-template-columns:
+          repeat(2,minmax(0,1fr));
+      }
+
+      .ff-grid-top .ff-field:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .ff-layout {
+        grid-template-columns: minmax(0,1fr);
+        gap: 18px;
+        padding: 15px;
+      }
+
+      .ff-main {
+        padding: 8px 0;
+      }
+
+      .ff-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .ff-new-button {
+        width: 100%;
+      }
+
+      .ff-grid-top,
+      .ff-grid-bottom {
+        grid-template-columns: minmax(0,1fr);
+      }
+
+      .ff-grid-top .ff-field:last-child {
+        grid-column: auto;
+      }
+
+      .ff-flight-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .ff-buttons button {
+        flex: 1;
+      }
+
+      body > .app-header h1 {
+        font-size: 23px;
+      }
+
+      body > .app-header {
+        padding: 12px 15px;
+      }
+    }
+
+  </style>
 </head>
 
 
 <body>
 
+  <!-- =========================================
+       TOPPFELT
+       SAMME STRUKTUR SOM PRIMÆROPPDRAG
+  ========================================== -->
 
-<div class="page">
+  <header class="app-header">
+
+    <div>
+      <p class="app-eyebrow">
+        Luftambulansekoordinator
+      </p>
+
+      <h1>Flight Following</h1>
+    </div>
+
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-pressed="false"
+      aria-label="Slå på kveldsmodus"
+    >
+      <span
+        class="theme-toggle-icon"
+        aria-hidden="true"
+      >🌙</span>
+
+      <span class="theme-toggle-text">
+        Kveldsmodus
+      </span>
+    </button>
+
+  </header>
 
 
-    <!-- =========================================================
-         HEADER
-    ========================================================== -->
+  <!-- =========================================
+       HOVEDLAYOUT
+  ========================================== -->
 
-    <header class="page-header">
+  <main class="ff-layout">
 
-        <div class="page-title-area">
+    <!-- FELLES VENSTREMENY -->
+    <div id="shared-menu"></div>
 
-            <div class="page-icon">
-                ✈
-            </div>
 
-            <div>
+    <!-- HOVEDINNHOLD -->
+    <section
+      class="ff-main"
+      aria-label="Flight Following"
+    >
 
-                <h1 class="page-title">
-                    Flight Following
-                </h1>
+      <div class="ff-toolbar">
 
-                <div class="page-subtitle">
-                    Operativ oppfølging av luftambulanseressurser
-                </div>
+        <div class="ff-toolbar-text">
 
-            </div>
+          <h2>Flight Following</h2>
+
+          <p class="ff-description">
+            Operativ oppfølging av luftambulanseressurser
+          </p>
 
         </div>
-
 
         <button
-            type="button"
-            class="new-ff-btn"
-            id="newFFBtn"
+          type="button"
+          class="ff-new-button"
+          id="newFFBtn"
         >
-            ＋ Ny FF
+          ＋ Ny FF
         </button>
 
-    </header>
+      </div>
 
 
+      <!-- RESSURSOVERSIKT -->
+      <div id="ffContainer">
 
-    <!-- =========================================================
-         FLIGHT FOLLOWING
-    ========================================================== -->
+        <div class="ff-empty" id="emptyState">
 
-    <main id="ffContainer">
+          <strong>
+            Ingen aktiv Flight Following
+          </strong>
 
-        <div
-            class="empty-state"
-            id="emptyState"
-        >
-
-            <strong>
-                Ingen aktiv Flight Following
-            </strong>
-
-            Klikk «Ny FF» for å velge ressurs.
+          Klikk «Ny FF» for å velge ressurs.
 
         </div>
 
-    </main>
+      </div>
+
+    </section>
+
+  </main>
 
 
-</div>
+  <!-- =========================================
+       MODAL - NY FLIGHT FOLLOWING
+  ========================================== -->
 
-
-
-<!-- =============================================================
-     MODAL - VELG RESSURS
-============================================================== -->
-
-<div
-    class="modal-backdrop"
+  <div
+    class="ff-modal-backdrop"
     id="newFFModal"
->
+  >
 
-    <div class="modal">
+    <div
+      class="ff-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="newFFTitle"
+    >
 
-        <h2 class="modal-title">
-            Start ny Flight Following
-        </h2>
+      <h2 id="newFFTitle">
+        Start ny Flight Following
+      </h2>
 
-        <p class="modal-description">
-            Velg ressursen som skal flight followes.
-        </p>
+      <p>
+        Velg ressursen som skal flight followes.
+      </p>
 
+      <label for="resourceSelect">
+        Ressurs
+      </label>
 
-        <label for="resourceSelect">
-            Ressurs
-        </label>
+      <select id="resourceSelect">
 
-        <select id="resourceSelect">
+        <option value="">Velg ressurs</option>
+        <option value="LA 1">LA 1</option>
+        <option value="LA 2">LA 2</option>
+        <option value="LA 3">LA 3</option>
+        <option value="LA 4">LA 4</option>
+        <option value="LA 5">LA 5</option>
+        <option value="RH Rygge">RH Rygge</option>
+        <option value="IA">IA</option>
 
-            <option value="">
-                Velg ressurs
-            </option>
+      </select>
 
-            <option value="LA 1">
-                LA 1
-            </option>
+      <div class="ff-modal-actions">
 
-            <option value="LA 2">
-                LA 2
-            </option>
+        <button
+          type="button"
+          class="ff-cancel-button"
+          id="cancelNewFFBtn"
+        >
+          Avbryt
+        </button>
 
-            <option value="LA 3">
-                LA 3
-            </option>
+        <button
+          type="button"
+          class="ff-start-button"
+          id="startNewFFBtn"
+        >
+          Start FF
+        </button>
 
-            <option value="LA 4">
-                LA 4
-            </option>
-
-            <option value="LA 5">
-                LA 5
-            </option>
-
-            <option value="RH Rygge">
-                RH Rygge
-            </option>
-
-            <option value="IA">
-                IA
-            </option>
-
-        </select>
-
-
-        <div class="modal-actions">
-
-            <button
-                type="button"
-                class="modal-cancel-btn"
-                id="cancelNewFFBtn"
-            >
-                Avbryt
-            </button>
-
-            <button
-                type="button"
-                class="modal-start-btn"
-                id="startNewFFBtn"
-            >
-                Start FF
-            </button>
-
-        </div>
+      </div>
 
     </div>
 
-</div>
+  </div>
 
 
+  <!-- =========================================
+       MODAL - AVSLUTT FLIGHT FOLLOWING
+  ========================================== -->
 
-<!-- =============================================================
-     MODAL - AVSLUTT FF
-============================================================== -->
-
-<div
-    class="confirm-backdrop"
+  <div
+    class="ff-modal-backdrop"
     id="endFFConfirm"
->
+  >
 
-    <div class="confirm-box">
+    <div
+      class="ff-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="endFFTitle"
+    >
 
-        <h2>
-            Avslutt Flight Following
-        </h2>
+      <h2 id="endFFTitle">
+        Avslutt Flight Following
+      </h2>
 
-        <p id="endFFConfirmText">
-            Vil du avslutte Flight Following?
-        </p>
+      <p id="endFFConfirmText">
+        Vil du avslutte Flight Following?
+      </p>
 
+      <div class="ff-modal-actions">
 
-        <div class="confirm-actions">
+        <button
+          type="button"
+          class="ff-cancel-button"
+          id="endFFNoBtn"
+        >
+          Nei
+        </button>
 
-            <button
-                type="button"
-                class="confirm-no"
-                id="endFFNoBtn"
-            >
-                Nei
-            </button>
+        <button
+          type="button"
+          class="ff-confirm-button"
+          id="endFFYesBtn"
+        >
+          Avslutt FF
+        </button>
 
-            <button
-                type="button"
-                class="confirm-yes"
-                id="endFFYesBtn"
-            >
-                Avslutt FF
-            </button>
-
-        </div>
+      </div>
 
     </div>
 
-</div>
+  </div>
 
 
+  <!-- =========================================
+       JAVASCRIPT
+       ALL FF-JAVASCRIPT LIGGER HER
+  ========================================== -->
 
-<script>
+  <script>
 
+    "use strict";
 
-    /* =========================================================
+    /* =========================================
        ELEMENTER
-    ========================================================= */
+    ========================================= */
 
     const ffContainer =
-        document.getElementById("ffContainer");
+      document.getElementById("ffContainer");
 
     const emptyState =
-        document.getElementById("emptyState");
-
+      document.getElementById("emptyState");
 
     const newFFBtn =
-        document.getElementById("newFFBtn");
+      document.getElementById("newFFBtn");
 
     const newFFModal =
-        document.getElementById("newFFModal");
+      document.getElementById("newFFModal");
 
     const resourceSelect =
-        document.getElementById("resourceSelect");
+      document.getElementById("resourceSelect");
 
     const cancelNewFFBtn =
-        document.getElementById("cancelNewFFBtn");
+      document.getElementById("cancelNewFFBtn");
 
     const startNewFFBtn =
-        document.getElementById("startNewFFBtn");
-
+      document.getElementById("startNewFFBtn");
 
     const endFFConfirm =
-        document.getElementById("endFFConfirm");
+      document.getElementById("endFFConfirm");
 
     const endFFConfirmText =
-        document.getElementById("endFFConfirmText");
+      document.getElementById("endFFConfirmText");
 
     const endFFNoBtn =
-        document.getElementById("endFFNoBtn");
+      document.getElementById("endFFNoBtn");
 
     const endFFYesBtn =
-        document.getElementById("endFFYesBtn");
-
+      document.getElementById("endFFYesBtn");
 
     let cardWaitingForEnd = null;
 
 
-
-    /* =========================================================
+    /* =========================================
        KLOKKESLETT
-    ========================================================= */
+    ========================================= */
 
     function getCurrentTime() {
 
-        const now =
-            new Date();
+      const now = new Date();
 
-
-        const hours =
-            String(
-                now.getHours()
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        const minutes =
-            String(
-                now.getMinutes()
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        return `${hours}:${minutes}`;
+      return (
+        String(now.getHours()).padStart(2, "0") +
+        ":" +
+        String(now.getMinutes()).padStart(2, "0")
+      );
 
     }
 
 
+    /* =========================================
+       ÅPNE NY FF
+    ========================================= */
 
-    /* =========================================================
-       NY FF - ÅPNE MODAL
-    ========================================================= */
+    newFFBtn.addEventListener("click", () => {
 
-    newFFBtn.addEventListener(
-        "click",
-        function() {
+      updateResourceOptions();
 
-            updateResourceOptions();
+      resourceSelect.value = "";
 
-            resourceSelect.value =
-                "";
+      newFFModal.classList.add("open");
 
-            newFFModal.classList.add(
-                "open"
-            );
+      resourceSelect.focus();
 
-        }
-    );
+    });
 
 
+    function closeNewFF() {
+      newFFModal.classList.remove("open");
+    }
 
-    /* =========================================================
-       NY FF - LUKK MODAL
-    ========================================================= */
 
     cancelNewFFBtn.addEventListener(
-        "click",
-        function() {
-
-            newFFModal.classList.remove(
-                "open"
-            );
-
-        }
+      "click",
+      closeNewFF
     );
 
 
-    newFFModal.addEventListener(
-        "click",
-        function(event) {
+    newFFModal.addEventListener("click", event => {
 
-            if (
-                event.target === newFFModal
-            ) {
+      if (event.target === newFFModal) {
+        closeNewFF();
+      }
 
-                newFFModal.classList.remove(
-                    "open"
-                );
-
-            }
-
-        }
-    );
+    });
 
 
-
-    /* =========================================================
+    /* =========================================
        START FF
-    ========================================================= */
+    ========================================= */
 
-    startNewFFBtn.addEventListener(
-        "click",
-        function() {
+    startNewFFBtn.addEventListener("click", () => {
 
-            const resource =
-                resourceSelect.value;
+      const resource = resourceSelect.value;
 
+      if (!resource) {
+        alert("Velg ressurs.");
+        return;
+      }
 
-            if (!resource) {
+      const existing = Array.from(
+        ffContainer.querySelectorAll(
+          ".ff-resource-card"
+        )
+      ).some(
+        card => card.dataset.resource === resource
+      );
 
-                alert(
-                    "Velg ressurs."
-                );
+      if (existing) {
+        alert(
+          resource +
+          " har allerede aktiv Flight Following."
+        );
+        return;
+      }
 
-                return;
+      createResourceCard(resource);
 
-            }
+      closeNewFF();
 
-
-            const existingCard =
-                document.querySelector(
-                    `.resource-card[data-resource="${resource}"]`
-                );
-
-
-            if (existingCard) {
-
-                alert(
-                    `${resource} har allerede aktiv Flight Following.`
-                );
-
-                return;
-
-            }
+    });
 
 
-            createResourceCard(
-                resource
-            );
-
-
-            newFFModal.classList.remove(
-                "open"
-            );
-
-        }
-    );
-
-
-
-    /* =========================================================
-       SKJUL RESSURSER SOM ALLEREDE HAR FF
-    ========================================================= */
+    /* =========================================
+       OPPDATER RESSURSVALG
+    ========================================= */
 
     function updateResourceOptions() {
 
-        const options =
-            resourceSelect.querySelectorAll(
-                "option"
-            );
+      const activeResources = Array.from(
+        ffContainer.querySelectorAll(
+          ".ff-resource-card"
+        )
+      ).map(card => card.dataset.resource);
 
+      resourceSelect.querySelectorAll(
+        "option"
+      ).forEach(option => {
 
-        options.forEach(
-            function(option) {
+        if (!option.value) return;
 
-                if (!option.value) {
-                    return;
-                }
+        option.disabled =
+          activeResources.includes(option.value);
 
-
-                const active =
-                    document.querySelector(
-                        `.resource-card[data-resource="${option.value}"]`
-                    );
-
-
-                option.disabled =
-                    Boolean(active);
-
-            }
-        );
+      });
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        OPPRETT RESSURSKORT
-    ========================================================= */
+    ========================================= */
 
     function createResourceCard(resource) {
 
-        emptyState.style.display =
-            "none";
+      const card =
+        document.createElement("section");
+
+      card.className = "ff-resource-card";
+      card.dataset.resource = resource;
+
+      const header =
+        document.createElement("div");
+
+      header.className = "ff-resource-header";
+
+      const left =
+        document.createElement("div");
+
+      left.className = "ff-resource-left";
+
+      const dot =
+        document.createElement("div");
+
+      dot.className = "ff-resource-dot";
+
+      const name =
+        document.createElement("div");
+
+      name.className = "ff-resource-name";
+      name.textContent = resource;
+
+      const status =
+        document.createElement("div");
+
+      status.className = "ff-resource-status";
+      status.textContent = "FF AKTIV";
+
+      left.append(dot, name, status);
+
+      const collapseBtn =
+        document.createElement("button");
+
+      collapseBtn.type = "button";
+      collapseBtn.className = "ff-collapse-button";
+      collapseBtn.title = "Minimer";
+      collapseBtn.textContent = "−";
+
+      header.append(left, collapseBtn);
+
+      const summary =
+        document.createElement("div");
+
+      summary.className = "ff-resource-summary";
+
+      const body =
+        document.createElement("div");
+
+      body.className = "ff-resource-body";
+
+      const flightList =
+        document.createElement("div");
+
+      flightList.className = "ff-flight-list";
+
+      body.appendChild(flightList);
+
+      card.append(header, summary, body);
+
+      ffContainer.appendChild(card);
 
 
-        const card =
-            document.createElement(
-                "section"
-            );
+      /* MINIMER / UTVID */
 
+      collapseBtn.addEventListener("click", () => {
 
-        card.className =
-            "resource-card";
+        card.classList.toggle("collapsed");
 
+        const collapsed =
+          card.classList.contains("collapsed");
 
-        card.dataset.resource =
-            resource;
+        collapseBtn.textContent =
+          collapsed ? "+" : "−";
 
+        collapseBtn.title =
+          collapsed ? "Utvid" : "Minimer";
 
-        card.innerHTML = `
+        updateResourceSummary(card);
 
-            <div class="resource-header">
+      });
 
-                <div class="resource-header-left">
-
-                    <div class="resource-dot"></div>
-
-                    <div class="resource-name">
-                        ${resource}
-                    </div>
-
-                    <div class="resource-status">
-                        FF AKTIV
-                    </div>
-
-                </div>
-
-
-                <div class="resource-header-actions">
-
-                    <button
-                        type="button"
-                        class="collapse-btn"
-                        title="Minimer"
-                    >
-                        −
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="resource-summary">
-            </div>
-
-
-            <div class="resource-body">
-
-                <div class="flight-list">
-                </div>
-
-            </div>
-
-        `;
-
-
-        ffContainer.appendChild(
-            card
-        );
-
-
-        const collapseBtn =
-            card.querySelector(
-                ".collapse-btn"
-            );
-
-
-        collapseBtn.addEventListener(
-            "click",
-            function() {
-
-                card.classList.toggle(
-                    "collapsed"
-                );
-
-
-                collapseBtn.textContent =
-                    card.classList.contains(
-                        "collapsed"
-                    )
-                    ? "+"
-                    : "−";
-
-
-                updateResourceSummary(
-                    card
-                );
-
-            }
-        );
-
-
-        createFlightRow(
-            card
-        );
-
-
-        checkEmptyState();
+      createFlightRow(card);
+      checkEmptyState();
 
     }
 
 
-
-    /* =========================================================
-       OPPRETT FLIGHT
-    ========================================================= */
+    /* =========================================
+       OPPRETT FLIGHT-RAD
+    ========================================= */
 
     function createFlightRow(card) {
 
-        const flightList =
-            card.querySelector(
-                ".flight-list"
-            );
+      const flightList =
+        card.querySelector(".ff-flight-list");
 
-
-        const previousRows =
-            flightList.querySelectorAll(
-                ".flight-row"
-            );
-
-
-        /*
-            Fjern "Avslutt FF" fra tidligere flights.
-            Knappen skal bare ligge på aktiv flight.
-        */
-
-        previousRows.forEach(
-            function(row) {
-
-                const endButton =
-                    row.querySelector(
-                        ".end-ff-btn"
-                    );
-
-
-                if (endButton) {
-
-                    endButton.remove();
-
-                }
-
-            }
+      const previousRows =
+        flightList.querySelectorAll(
+          ".ff-flight-row"
         );
 
+      previousRows.forEach(oldRow => {
 
-        const flightNumber =
-            previousRows.length + 1;
+        oldRow.querySelector(
+          ".ff-end-button"
+        )?.remove();
 
+      });
 
-        const row =
-            document.createElement(
-                "div"
-            );
+      const flightNumber =
+        previousRows.length + 1;
 
+      const row =
+        document.createElement("div");
 
-        row.className =
-            "flight-row";
+      row.className = "ff-flight-row";
 
+      row.innerHTML = `
 
-        row.innerHTML = `
+        <div class="ff-flight-heading">
 
-            <div class="flight-heading">
+          <div class="ff-flight-number">
+            Flight ${flightNumber}
+          </div>
 
-                <div class="flight-number">
-                    Flight ${flightNumber}
-                </div>
+          <div class="ff-flight-result">
+            Aktiv
+          </div>
 
-                <div class="flight-result">
-                    Aktiv
-                </div>
+        </div>
 
-            </div>
 
+        <div class="ff-grid-top">
 
-            <div class="flight-grid-top">
+          <div class="ff-field">
 
+            <label>Fra</label>
 
-                <div class="field">
+            <input
+              type="text"
+              class="ff-from"
+              placeholder="F.eks. ENRH"
+              autocomplete="off"
+            >
 
-                    <label>
-                        Fra
-                    </label>
+          </div>
 
-                    <input
-                        type="text"
-                        class="from-input"
-                        placeholder="F.eks. ENRH"
-                        autocomplete="off"
-                    >
 
-                </div>
+          <div class="ff-field">
 
+            <label>Til</label>
 
-                <div class="field">
+            <input
+              type="text"
+              class="ff-to"
+              placeholder="F.eks. ENUH"
+              autocomplete="off"
+            >
 
-                    <label>
-                        Til
-                    </label>
+          </div>
 
-                    <input
-                        type="text"
-                        class="to-input"
-                        placeholder="F.eks. ENUH"
-                        autocomplete="off"
-                    >
 
-                </div>
+          <div class="ff-field">
 
+            <label>Beskrivelse</label>
 
-                <div class="field">
+            <input
+              type="text"
+              class="ff-description-input"
+              placeholder="Pasienttransport, retur base, reposisjonering ..."
+              autocomplete="off"
+            >
 
-                    <label>
-                        Beskrivelse
-                    </label>
+          </div>
 
-                    <input
-                        type="text"
-                        class="description-input"
-                        placeholder="Pasienttransport, retur base, reposisjonering ..."
-                        autocomplete="off"
-                    >
+        </div>
 
-                </div>
 
+        <div class="ff-grid-bottom">
 
-            </div>
+          <div class="ff-field">
 
+            <label>Tatt av</label>
 
-            <div class="flight-grid-bottom">
+            <input
+              type="text"
+              class="ff-departure ff-time-click"
+              placeholder="Klikk"
+              readonly
+            >
 
+          </div>
 
-                <div class="field">
 
-                    <label>
-                        Tatt av
-                    </label>
+          <div class="ff-field">
 
-                    <input
-                        type="text"
-                        class="departure-input time-click"
-                        placeholder="Klikk"
-                        readonly
-                    >
+            <label>POB</label>
 
-                </div>
+            <input
+              type="number"
+              class="ff-pob"
+              min="0"
+              max="30"
+              placeholder="0"
+            >
 
+          </div>
 
-                <div class="field">
 
-                    <label>
-                        POB
-                    </label>
+          <div class="ff-field">
 
-                    <input
-                        type="number"
-                        class="pob-input"
-                        min="0"
-                        max="30"
-                        placeholder="0"
-                    >
+            <label>ETE</label>
 
-                </div>
+            <input
+              type="text"
+              class="ff-ete"
+              placeholder="F.eks. 28"
+              autocomplete="off"
+            >
 
+          </div>
 
-                <div class="field">
 
-                    <label>
-                        ETE
-                    </label>
+          <div class="ff-field">
 
-                    <input
-                        type="text"
-                        class="ete-input"
-                        placeholder="F.eks. 28"
-                        autocomplete="off"
-                    >
+            <label>ETA</label>
 
-                </div>
+            <input
+              type="text"
+              class="ff-eta"
+              placeholder="--:--"
+              readonly
+            >
 
+          </div>
 
-                <div class="field">
 
-                    <label>
-                        ETA
-                    </label>
+          <div class="ff-field">
 
-                    <input
-                        type="text"
-                        class="eta-input"
-                        placeholder="--:--"
-                        readonly
-                    >
+            <label>Bekreftet landet</label>
 
-                </div>
+            <input
+              type="text"
+              class="ff-landed ff-time-click"
+              placeholder="Klikk"
+              readonly
+            >
 
+          </div>
 
-                <div class="field">
+        </div>
 
-                    <label>
-                        Bekreftet landet
-                    </label>
 
-                    <input
-                        type="text"
-                        class="landed-input time-click"
-                        placeholder="Klikk"
-                        readonly
-                    >
+        <div class="ff-flight-actions">
 
-                </div>
+          <div class="ff-status-text">
+            Flight Following aktiv
+          </div>
 
+          <div class="ff-buttons">
 
-            </div>
+            <button
+              type="button"
+              class="ff-land-button"
+            >
+              ✓ Bekreftet landet
+            </button>
 
+            <button
+              type="button"
+              class="ff-abort-button"
+            >
+              ✕ Avbrutt
+            </button>
 
-            <div class="flight-actions">
+            <button
+              type="button"
+              class="ff-end-button"
+            >
+              Avslutt FF
+            </button>
 
+          </div>
 
-                <div class="flight-status-text">
-                    Flight Following aktiv
-                </div>
+        </div>
 
+      `;
 
-                <div class="action-buttons">
+      flightList.appendChild(row);
 
+      setupFlightRow(card, row);
 
-                    <button
-                        type="button"
-                        class="land-btn"
-                    >
-                        ✓ Bekreftet landet
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="abort-btn"
-                    >
-                        ✕ Avbrutt
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="end-ff-btn"
-                    >
-                        Avslutt FF
-                    </button>
-
-
-                </div>
-
-
-            </div>
-
-        `;
-
-
-        flightList.appendChild(
-            row
-        );
-
-
-        setupFlightRow(
-            card,
-            row
-        );
-
-
-        updateResourceSummary(
-            card
-        );
+      updateResourceSummary(card);
 
     }
 
 
+    /* =========================================
+       KNYTT FUNKSJONER TIL FLIGHT
+    ========================================= */
 
-    /* =========================================================
-       SETT OPP FLIGHT
-    ========================================================= */
+    function setupFlightRow(card, row) {
 
-    function setupFlightRow(
-        card,
-        row
-    ) {
+      const departure =
+        row.querySelector(".ff-departure");
 
-        const departureInput =
-            row.querySelector(
-                ".departure-input"
-            );
+      const ete =
+        row.querySelector(".ff-ete");
 
-
-        const eteInput =
-            row.querySelector(
-                ".ete-input"
-            );
+      const landed =
+        row.querySelector(".ff-landed");
 
 
-        const landedInput =
-            row.querySelector(
-                ".landed-input"
-            );
+      /* TATT AV */
+
+      departure.addEventListener("click", () => {
+
+        if (isFinished(row)) return;
+
+        departure.value = getCurrentTime();
+
+        calculateETA(row);
+
+        updateResourceSummary(card);
+
+      });
 
 
-        const landButton =
-            row.querySelector(
-                ".land-btn"
-            );
+      /* ETE */
+
+      ete.addEventListener("input", () => {
+
+        calculateETA(row);
+
+        updateResourceSummary(card);
+
+      });
 
 
-        const abortButton =
-            row.querySelector(
-                ".abort-btn"
-            );
+      /* LANDET - KLIKK PÅ FELT */
+
+      landed.addEventListener("click", () => {
+
+        completeFlight(card, row);
+
+      });
 
 
-        const endFFButton =
-            row.querySelector(
-                ".end-ff-btn"
-            );
+      /* LANDET - KNAPP */
+
+      row.querySelector(
+        ".ff-land-button"
+      ).addEventListener("click", () => {
+
+        completeFlight(card, row);
+
+      });
 
 
-        const editableInputs =
-            row.querySelectorAll(
-                ".from-input, .to-input, .description-input, .pob-input, .ete-input"
-            );
+      /* AVBRUTT */
+
+      row.querySelector(
+        ".ff-abort-button"
+      ).addEventListener("click", () => {
+
+        abortFlight(card, row);
+
+      });
 
 
-        /*
-            TATT AV
-        */
+      /* AVSLUTT FF */
 
-        departureInput.addEventListener(
-            "click",
-            function() {
+      row.querySelector(
+        ".ff-end-button"
+      ).addEventListener("click", () => {
 
-                if (
-                    row.classList.contains("completed") ||
-                    row.classList.contains("aborted")
-                ) {
-                    return;
-                }
+        openEndFFConfirmation(card);
+
+      });
 
 
-                departureInput.value =
-                    getCurrentTime();
+      /* OPPDATER SAMMENDRAG */
 
+      row.querySelectorAll(
+        ".ff-from, .ff-to, .ff-description-input, .ff-pob, .ff-ete"
+      ).forEach(input => {
 
-                calculateETA(
-                    row
-                );
+        input.addEventListener("input", () => {
 
+          updateResourceSummary(card);
 
-                updateResourceSummary(
-                    card
-                );
+        });
 
-            }
-        );
-
-
-        /*
-            ETE
-        */
-
-        eteInput.addEventListener(
-            "input",
-            function() {
-
-                calculateETA(
-                    row
-                );
-
-
-                updateResourceSummary(
-                    card
-                );
-
-            }
-        );
-
-
-        /*
-            BEKREFTET LANDET - FELT
-        */
-
-        landedInput.addEventListener(
-            "click",
-            function() {
-
-                completeFlight(
-                    card,
-                    row
-                );
-
-            }
-        );
-
-
-        /*
-            BEKREFTET LANDET - KNAPP
-        */
-
-        landButton.addEventListener(
-            "click",
-            function() {
-
-                completeFlight(
-                    card,
-                    row
-                );
-
-            }
-        );
-
-
-        /*
-            AVBRUTT
-        */
-
-        abortButton.addEventListener(
-            "click",
-            function() {
-
-                abortFlight(
-                    card,
-                    row
-                );
-
-            }
-        );
-
-
-        /*
-            AVSLUTT HELE FF
-        */
-
-        endFFButton.addEventListener(
-            "click",
-            function() {
-
-                openEndFFConfirmation(
-                    card
-                );
-
-            }
-        );
-
-
-        /*
-            OPPDATER MINIMERT VISNING
-        */
-
-        editableInputs.forEach(
-            function(input) {
-
-                input.addEventListener(
-                    "input",
-                    function() {
-
-                        updateResourceSummary(
-                            card
-                        );
-
-                    }
-                );
-
-            }
-        );
+      });
 
     }
 
 
+    /* =========================================
+       KONTROLLER STATUS
+    ========================================= */
 
-    /* =========================================================
+    function isFinished(row) {
+
+      return (
+        row.classList.contains("completed") ||
+        row.classList.contains("aborted")
+      );
+
+    }
+
+
+    /* =========================================
        BEKREFT LANDET
-    ========================================================= */
+    ========================================= */
 
-    function completeFlight(
-        card,
-        row
-    ) {
+    function completeFlight(card, row) {
 
-        if (
-            row.classList.contains("completed") ||
-            row.classList.contains("aborted")
-        ) {
-            return;
-        }
+      if (isFinished(row)) return;
 
+      const time = getCurrentTime();
 
-        const landedInput =
-            row.querySelector(
-                ".landed-input"
-            );
+      row.querySelector(
+        ".ff-landed"
+      ).value = time;
 
+      row.classList.add("completed");
 
-        const flightResult =
-            row.querySelector(
-                ".flight-result"
-            );
+      row.querySelector(
+        ".ff-flight-result"
+      ).textContent = "Landet " + time;
 
+      row.querySelector(
+        ".ff-status-text"
+      ).textContent = "Bekreftet landet " + time;
 
-        const statusText =
-            row.querySelector(
-                ".flight-status-text"
-            );
+      lockCompletedFlight(row);
 
+      createFlightRow(card);
 
-        const time =
-            getCurrentTime();
-
-
-        landedInput.value =
-            time;
-
-
-        row.classList.add(
-            "completed"
-        );
-
-
-        flightResult.textContent =
-            `Landet ${time}`;
-
-
-        statusText.textContent =
-            `Bekreftet landet ${time}`;
-
-
-        lockCompletedFlight(
-            row
-        );
-
-
-        /*
-            Lag automatisk ny flight-rad
-        */
-
-        createFlightRow(
-            card
-        );
-
-
-        updateResourceSummary(
-            card
-        );
+      updateResourceSummary(card);
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        AVBRYT FLIGHT
-    ========================================================= */
+    ========================================= */
 
-    function abortFlight(
-        card,
-        row
-    ) {
+    function abortFlight(card, row) {
 
-        if (
-            row.classList.contains("completed") ||
-            row.classList.contains("aborted")
-        ) {
-            return;
-        }
+      if (isFinished(row)) return;
 
+      const time = getCurrentTime();
 
-        const flightResult =
-            row.querySelector(
-                ".flight-result"
-            );
+      row.classList.add("aborted");
 
+      row.querySelector(
+        ".ff-flight-result"
+      ).textContent = "Avbrutt " + time;
 
-        const statusText =
-            row.querySelector(
-                ".flight-status-text"
-            );
+      row.querySelector(
+        ".ff-status-text"
+      ).textContent = "Flight avbrutt " + time;
 
+      lockCompletedFlight(row);
 
-        const time =
-            getCurrentTime();
+      createFlightRow(card);
 
-
-        row.classList.add(
-            "aborted"
-        );
-
-
-        flightResult.textContent =
-            `Avbrutt ${time}`;
-
-
-        statusText.textContent =
-            `Flight avbrutt ${time}`;
-
-
-        lockCompletedFlight(
-            row
-        );
-
-
-        /*
-            Lag ny flight-rad også etter avbrutt.
-        */
-
-        createFlightRow(
-            card
-        );
-
-
-        updateResourceSummary(
-            card
-        );
+      updateResourceSummary(card);
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        LÅS FERDIG FLIGHT
-    ========================================================= */
+    ========================================= */
 
     function lockCompletedFlight(row) {
 
-        const inputs =
-            row.querySelectorAll(
-                "input"
-            );
+      row.querySelectorAll(
+        "input"
+      ).forEach(input => {
 
+        input.readOnly = true;
 
-        inputs.forEach(
-            function(input) {
+      });
 
-                input.readOnly =
-                    true;
+      row.querySelector(
+        ".ff-land-button"
+      ).disabled = true;
 
-            }
-        );
+      row.querySelector(
+        ".ff-abort-button"
+      ).disabled = true;
 
-
-        const landButton =
-            row.querySelector(
-                ".land-btn"
-            );
-
-
-        const abortButton =
-            row.querySelector(
-                ".abort-btn"
-            );
-
-
-        const endFFButton =
-            row.querySelector(
-                ".end-ff-btn"
-            );
-
-
-        if (landButton) {
-
-            landButton.disabled =
-                true;
-
-        }
-
-
-        if (abortButton) {
-
-            abortButton.disabled =
-                true;
-
-        }
-
-
-        if (endFFButton) {
-
-            endFFButton.remove();
-
-        }
+      row.querySelector(
+        ".ff-end-button"
+      )?.remove();
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        BEREGN ETA
-    ========================================================= */
+    ========================================= */
 
     function calculateETA(row) {
 
-        const departureInput =
-            row.querySelector(
-                ".departure-input"
-            );
+      const departure =
+        row.querySelector(
+          ".ff-departure"
+        ).value.trim();
 
+      const ete =
+        row.querySelector(
+          ".ff-ete"
+        ).value.trim();
 
-        const eteInput =
-            row.querySelector(
-                ".ete-input"
-            );
+      const etaInput =
+        row.querySelector(".ff-eta");
 
+      etaInput.value = "";
 
-        const etaInput =
-            row.querySelector(
-                ".eta-input"
-            );
+      if (!departure || !ete) return;
 
+      const match =
+        departure.match(/^(\d{2}):(\d{2})$/);
 
-        const departure =
-            departureInput.value.trim();
+      if (!match) return;
 
+      const hours = Number(match[1]);
+      const minutes = Number(match[2]);
 
-        const ete =
-            eteInput.value.trim();
+      if (hours > 23 || minutes > 59) return;
 
+      let eteMinutes = 0;
 
-        if (
-            !departure ||
-            !ete
-        ) {
+      if (/^\d+:\d{1,2}$/.test(ete)) {
 
-            etaInput.value =
-                "";
+        const parts = ete.split(":").map(Number);
 
-            return;
+        if (parts[1] > 59) return;
 
-        }
+        eteMinutes =
+          parts[0] * 60 + parts[1];
 
+      } else if (/^\d+\s*(min)?$/i.test(ete)) {
 
-        const departureParts =
-            departure.split(":");
+        eteMinutes = parseInt(ete, 10);
 
+      } else {
 
-        if (
-            departureParts.length !== 2
-        ) {
+        return;
 
-            etaInput.value =
-                "";
+      }
 
-            return;
+      if (
+        !Number.isFinite(eteMinutes) ||
+        eteMinutes <= 0
+      ) return;
 
-        }
+      const total =
+        (hours * 60 + minutes + eteMinutes) % 1440;
 
+      const etaHours =
+        Math.floor(total / 60);
 
-        const departureHours =
-            parseInt(
-                departureParts[0],
-                10
-            );
+      const etaMinutes =
+        total % 60;
 
-
-        const departureMinutes =
-            parseInt(
-                departureParts[1],
-                10
-            );
-
-
-        if (
-            Number.isNaN(departureHours) ||
-            Number.isNaN(departureMinutes)
-        ) {
-
-            etaInput.value =
-                "";
-
-            return;
-
-        }
-
-
-        let eteMinutes =
-            0;
-
-
-        /*
-            Godtar:
-
-            28
-            28 min
-            00:28
-            1:15
-        */
-
-        if (
-            ete.includes(":")
-        ) {
-
-            const eteParts =
-                ete.split(":");
-
-
-            const hours =
-                parseInt(
-                    eteParts[0],
-                    10
-                ) || 0;
-
-
-            const minutes =
-                parseInt(
-                    eteParts[1],
-                    10
-                ) || 0;
-
-
-            eteMinutes =
-                hours * 60 + minutes;
-
-        }
-
-        else {
-
-            const numbersOnly =
-                ete.replace(
-                    /\D/g,
-                    ""
-                );
-
-
-            eteMinutes =
-                parseInt(
-                    numbersOnly,
-                    10
-                ) || 0;
-
-        }
-
-
-        if (
-            eteMinutes <= 0
-        ) {
-
-            etaInput.value =
-                "";
-
-            return;
-
-        }
-
-
-        const eta =
-            new Date();
-
-
-        eta.setHours(
-            departureHours,
-            departureMinutes,
-            0,
-            0
-        );
-
-
-        eta.setMinutes(
-            eta.getMinutes() + eteMinutes
-        );
-
-
-        const etaHours =
-            String(
-                eta.getHours()
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        const etaMinutesText =
-            String(
-                eta.getMinutes()
-            ).padStart(
-                2,
-                "0"
-            );
-
-
-        etaInput.value =
-            `${etaHours}:${etaMinutesText}`;
+      etaInput.value =
+        String(etaHours).padStart(2, "0") +
+        ":" +
+        String(etaMinutes).padStart(2, "0");
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        MINIMERT VISNING
-    ========================================================= */
+    ========================================= */
 
     function updateResourceSummary(card) {
 
-        const summary =
-            card.querySelector(
-                ".resource-summary"
-            );
+      const summary =
+        card.querySelector(
+          ".ff-resource-summary"
+        );
 
+      const rows = Array.from(
+        card.querySelectorAll(
+          ".ff-flight-row"
+        )
+      );
 
-        const activeRows =
-            Array.from(
-                card.querySelectorAll(
-                    ".flight-row"
-                )
-            );
+      const activeRow =
+        rows.reverse().find(
+          row => !isFinished(row)
+        );
 
-
-        const activeRow =
-            activeRows
-                .slice()
-                .reverse()
-                .find(
-                    function(row) {
-
-                        return (
-                            !row.classList.contains("completed") &&
-                            !row.classList.contains("aborted")
-                        );
-
-                    }
-                );
-
-
-        if (!activeRow) {
-
-            summary.textContent =
-                "Ingen aktiv flight.";
-
-            return;
-
-        }
-
-
-        const from =
-            activeRow.querySelector(
-                ".from-input"
-            ).value || "—";
-
-
-        const to =
-            activeRow.querySelector(
-                ".to-input"
-            ).value || "—";
-
-
-        const description =
-            activeRow.querySelector(
-                ".description-input"
-            ).value || "Ingen beskrivelse";
-
-
-        const departure =
-            activeRow.querySelector(
-                ".departure-input"
-            ).value || "--:--";
-
-
-        const pob =
-            activeRow.querySelector(
-                ".pob-input"
-            ).value || "—";
-
-
-        const ete =
-            activeRow.querySelector(
-                ".ete-input"
-            ).value || "—";
-
-
-        const eta =
-            activeRow.querySelector(
-                ".eta-input"
-            ).value || "--:--";
-
+      if (!activeRow) {
 
         summary.textContent =
-            `${from} → ${to}   |   ${description}   |   Tatt av: ${departure}   |   POB: ${pob}   |   ETE: ${ete}   |   ETA: ${eta}`;
+          "Ingen aktiv flight.";
+
+        return;
+      }
+
+      const value = selector =>
+        activeRow.querySelector(selector)?.value || "—";
+
+      summary.textContent =
+        value(".ff-from") + " → " +
+        value(".ff-to") + " | " +
+        value(".ff-description-input") + " | " +
+        "Tatt av: " + value(".ff-departure") + " | " +
+        "POB: " + value(".ff-pob") + " | " +
+        "ETE: " + value(".ff-ete") + " | " +
+        "ETA: " + value(".ff-eta");
 
     }
 
 
-
-    /* =========================================================
-       AVSLUTT FF - BEKREFTELSE
-    ========================================================= */
+    /* =========================================
+       AVSLUTT HELE FF
+    ========================================= */
 
     function openEndFFConfirmation(card) {
 
-        cardWaitingForEnd =
-            card;
+      cardWaitingForEnd = card;
 
+      endFFConfirmText.textContent =
+        "Vil du avslutte Flight Following for " +
+        card.dataset.resource +
+        "? Ressursen fjernes fra den aktive oversikten.";
 
-        const resource =
-            card.dataset.resource;
-
-
-        endFFConfirmText.textContent =
-            `Vil du avslutte Flight Following for ${resource}? Ressursen fjernes fra den aktive oversikten.`;
-
-
-        endFFConfirm.classList.add(
-            "open"
-        );
+      endFFConfirm.classList.add("open");
 
     }
 
+
+    function closeEndFF() {
+
+      cardWaitingForEnd = null;
+
+      endFFConfirm.classList.remove("open");
+
+    }
 
 
     endFFNoBtn.addEventListener(
-        "click",
-        function() {
-
-            cardWaitingForEnd =
-                null;
-
-
-            endFFConfirm.classList.remove(
-                "open"
-            );
-
-        }
+      "click",
+      closeEndFF
     );
 
 
+    endFFYesBtn.addEventListener("click", () => {
 
-    endFFYesBtn.addEventListener(
-        "click",
-        function() {
+      if (cardWaitingForEnd) {
 
-            if (
-                cardWaitingForEnd
-            ) {
+        cardWaitingForEnd.remove();
 
-                cardWaitingForEnd.remove();
+      }
 
-            }
+      closeEndFF();
 
+      checkEmptyState();
 
-            cardWaitingForEnd =
-                null;
+    });
 
 
-            endFFConfirm.classList.remove(
-                "open"
-            );
+    endFFConfirm.addEventListener("click", event => {
+
+      if (event.target === endFFConfirm) {
+
+        closeEndFF();
+
+      }
+
+    });
 
 
-            checkEmptyState();
-
-        }
-    );
-
-
-
-    endFFConfirm.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target === endFFConfirm
-            ) {
-
-                cardWaitingForEnd =
-                    null;
-
-
-                endFFConfirm.classList.remove(
-                    "open"
-                );
-
-            }
-
-        }
-    );
-
-
-
-    /* =========================================================
+    /* =========================================
        TOM VISNING
-    ========================================================= */
+    ========================================= */
 
     function checkEmptyState() {
 
-        const resourceCards =
-            ffContainer.querySelectorAll(
-                ".resource-card"
-            );
+      const count =
+        ffContainer.querySelectorAll(
+          ".ff-resource-card"
+        ).length;
 
-
-        if (
-            resourceCards.length === 0
-        ) {
-
-            emptyState.style.display =
-                "block";
-
-        }
-
-        else {
-
-            emptyState.style.display =
-                "none";
-
-        }
+      emptyState.style.display =
+        count === 0 ? "block" : "none";
 
     }
 
 
-
-    /* =========================================================
+    /* =========================================
        ESC LUKKER MODALER
-    ========================================================= */
+    ========================================= */
 
-    document.addEventListener(
-        "keydown",
-        function(event) {
+    document.addEventListener("keydown", event => {
 
-            if (
-                event.key !== "Escape"
-            ) {
-                return;
-            }
+      if (event.key !== "Escape") return;
 
+      closeNewFF();
 
-            newFFModal.classList.remove(
-                "open"
-            );
+      closeEndFF();
 
+    });
 
-            endFFConfirm.classList.remove(
-                "open"
-            );
-
-
-            cardWaitingForEnd =
-                null;
-
-        }
-    );
-
-
-</script>
-
+  </script>
 
 </body>
 </html>

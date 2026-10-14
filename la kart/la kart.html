@@ -4,41 +4,55 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <title>Norgeskart LA og RH | Luftambulansekoordinator</title>
+  <title>
+    Norgeskart LA og RH | Luftambulansekoordinator
+  </title>
 
-  <!-- =====================================
-       FELLES STIL OG KARTETS STIL
-       ===================================== -->
+  <!-- FELLES CSS -->
+  <link
+    rel="stylesheet"
+    href="../felles/felles.css"
+  >
 
-  <link rel="stylesheet" href="../felles/felles.css">
-  <link rel="stylesheet" href="la kart.css">
+  <!-- KARTETS CSS -->
+  <link
+    rel="stylesheet"
+    href="la kart.css"
+  >
 
-  <!-- =====================================
-       FELLES JAVASCRIPT
-       ===================================== -->
+  <!-- FELLES JAVASCRIPT -->
+  <script
+    src="../felles/felles.js"
+    defer
+  ></script>
 
-  <script src="../felles/felles.js" defer></script>
-  <script src="../felles/meny.js" defer></script>
+  <script
+    src="../felles/meny.js"
+    defer
+  ></script>
 
-  <!-- =====================================
-       KARTETS JAVASCRIPT
-       ===================================== -->
-
-  <script src="la kart.js" defer></script>
+  <!-- KARTETS JAVASCRIPT -->
+  <script
+    src="la kart.js"
+    defer
+  ></script>
 
 </head>
 
 <body class="kart-side">
 
   <!-- =====================================
-       TOPPFELT
+       FELLES TOPPFELT
        ===================================== -->
 
   <header class="app-header">
 
-    <div class="app-header-content">
+    <div>
 
       <p class="app-eyebrow">
         Luftambulansekoordinator
@@ -59,6 +73,7 @@
       aria-pressed="false"
       aria-label="Slå på kveldsmodus"
     >
+
       <span
         class="theme-toggle-icon"
         aria-hidden="true"
@@ -67,6 +82,7 @@
       <span class="theme-toggle-text">
         Kveldsmodus
       </span>
+
     </button>
 
   </header>
@@ -78,10 +94,7 @@
 
   <main class="app-shell kart-layout">
 
-
-    <!-- ===================================
-         FELLES VENSTREMENY
-         =================================== -->
+    <!-- FELLES VENSTREMENY -->
 
     <aside
       class="kart-sidebar"
@@ -94,7 +107,7 @@
 
 
     <!-- ===================================
-         HOVEDOMRÅDE - NORGESKART
+         KARTOMRÅDE
          =================================== -->
 
     <section
@@ -104,15 +117,13 @@
 
       <div class="kart-panel-inner">
 
-
-        <!-- ===============================
-             INTERAKTIVT KART
-             =============================== -->
+        <!-- INTERAKTIVT KART -->
 
         <div
           class="kart-viewport"
           id="kartViewport"
           aria-label="Kart som kan forstørres og flyttes"
+          title="Bruk musehjulet for å zoome, dra for å flytte og dobbeltklikk for å tilbakestille"
         >
 
           <img
@@ -124,7 +135,6 @@
           >
 
         </div>
-
 
       </div>
 

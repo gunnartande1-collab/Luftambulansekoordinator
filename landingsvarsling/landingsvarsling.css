@@ -1,0 +1,332 @@
+
+/* ==========================================
+   LANDINGSVARSEL RH
+   Luftambulansekoordinator
+   ========================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body.landingsvarsel-side {
+  --lv-bg: #f3f6fa;
+  --lv-card: #ffffff;
+  --lv-text: #172b46;
+  --lv-muted: #64748b;
+  --lv-border: #dce4ee;
+  --lv-primary: #1761a7;
+  --lv-primary-hover: #104e88;
+  --lv-light: #edf4fc;
+  --lv-danger: #c62828;
+
+  margin: 0;
+  min-height: 100vh;
+  padding: 18px;
+  background: var(--lv-bg);
+  color: var(--lv-text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body.landingsvarsel-side.dark-mode {
+  --lv-bg: #111b2b;
+  --lv-card: #1d2a3c;
+  --lv-text: #f1f5f9;
+  --lv-muted: #a8b6c8;
+  --lv-border: #34445a;
+  --lv-primary: #3579bd;
+  --lv-primary-hover: #448bd0;
+  --lv-light: #263a52;
+  --lv-danger: #f87171;
+}
+
+.lv-app {
+  max-width: 470px;
+  margin: 0 auto;
+}
+
+.lv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.lv-overline {
+  margin: 0 0 6px;
+  color: var(--lv-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+
+.lv-header h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.lv-description {
+  margin: 6px 0 0;
+  color: var(--lv-muted);
+  font-size: 12px;
+}
+
+.lv-theme-button {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--lv-border);
+  border-radius: 10px;
+  background: var(--lv-card);
+  color: var(--lv-text);
+  font-size: 19px;
+  cursor: pointer;
+}
+
+/* KLOKKEPANEL */
+
+.lv-timer-card {
+  padding: 24px 20px 18px;
+  background: var(--lv-card);
+  border: 1px solid var(--lv-border);
+  border-radius: 16px;
+  text-align: center;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.lv-status {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 20px;
+  background: var(--lv-light);
+  color: var(--lv-primary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.lv-timer-label {
+  margin: 24px 0 4px;
+  color: var(--lv-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.lv-timer {
+  margin: 0;
+  font-size: clamp(66px, 18vw, 94px);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -3px;
+  font-variant-numeric: tabular-nums;
+  color: var(--lv-text);
+}
+
+.lv-progress {
+  height: 7px;
+  margin-top: 12px;
+  overflow: hidden;
+  background: var(--lv-border);
+  border-radius: 20px;
+}
+
+.lv-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--lv-primary);
+  border-radius: inherit;
+  transition: width 0.15s linear;
+}
+
+.lv-markers {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 10px;
+  color: var(--lv-muted);
+  font-size: 10px;
+}
+
+.lv-status-text {
+  min-height: 18px;
+  margin: 17px 0 0;
+  color: var(--lv-muted);
+  font-size: 12px;
+}
+
+/* ALARM */
+
+.lv-timer-card.alarm-active {
+  border: 2px solid var(--lv-danger);
+  background: #fff1f1;
+  animation: lv-flash 1s infinite;
+}
+
+body.dark-mode .lv-timer-card.alarm-active {
+  background: #49212a;
+}
+
+.lv-timer-card.alarm-active .lv-timer {
+  color: #b91c1c;
+}
+
+body.dark-mode
+.lv-timer-card.alarm-active .lv-timer {
+  color: #fecaca;
+}
+
+.lv-timer-card.alarm-active .lv-progress-fill {
+  background: #dc2626;
+}
+
+.lv-alarm-message {
+  margin-top: 20px;
+  padding: 13px 10px;
+  border-radius: 9px;
+  background: #b91c1c;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lv-alarm-icon {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.lv-ack-button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border: none;
+  border-radius: 9px;
+  background: #166534;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes lv-flash {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(220, 38, 38, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 18px rgba(220, 38, 38, 0.35);
+  }
+}
+
+/* KNAPPER */
+
+.lv-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.lv-button {
+  min-height: 46px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+}
+
+.lv-button-primary {
+  border: 1px solid var(--lv-primary);
+  background: var(--lv-primary);
+  color: white;
+}
+
+.lv-button-primary:hover {
+  background: var(--lv-primary-hover);
+}
+
+.lv-button-secondary {
+  border: 1px solid var(--lv-border);
+  background: var(--lv-card);
+  color: var(--lv-text);
+}
+
+.lv-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* BUNNFELT */
+
+.lv-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: var(--lv-muted);
+  font-size: 11px;
+}
+
+.lv-text-button {
+  border: none;
+  padding: 5px;
+  background: transparent;
+  color: var(--lv-primary);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.lv-disclaimer {
+  margin: 13px 0 0;
+  color: var(--lv-muted);
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 380px) {
+  body.landingsvarsel-side {
+    padding: 12px;
+  }
+
+  .lv-timer-card {
+    padding: 18px 12px;
+  }
+
+  .lv-timer {
+    font-size: 64px;
+  }
+
+  .lv-markers {
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lv-timer-card.alarm-active {
+    animation: none;
+  }
+
+  .lv-timer-card,
+  .lv-progress-fill {
+    transition: none;
+  }
+}

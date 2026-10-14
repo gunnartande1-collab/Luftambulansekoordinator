@@ -1,72 +1,198 @@
 
 /* ==========================================
    NORGESKART LA OG RH
+   Luftambulansekoordinator
+
+   Felles visuelt uttrykk med fremsiden
+   ========================================== */
+
+
+/* ==========================================
+   GENERELT
    ========================================== */
 
 .kart-side {
+  margin: 0;
   min-height: 100vh;
-  background: #eaf4fa;
-  color: #1b2733;
+
+  background: #edf2f5;
+  color: #182230;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 14px;
 }
 
-/* TOPPFELT */
+.kart-side * {
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   FELLES TOPPFELT
+
+   Samme uttrykk som fremsiden
+   ========================================== */
 
 .kart-side .app-header {
   width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 28px 32px 12px;
-  box-sizing: border-box;
+  max-width: none;
+  min-height: 76px;
+
+  margin: 0;
+  padding: 8px 22px;
 
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
   gap: 20px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #dce3e9;
+
+  color: #182230;
 }
+
+
+/* LUFTAMBULANSEKOORDINATOR */
 
 .kart-side .app-eyebrow {
   margin: 0 0 5px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #56758c;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+  line-height: 1.2;
+
+  text-transform: uppercase;
+
+  color: #667085;
 }
+
+
+/* SIDETITTEL */
 
 .kart-side .app-header h1 {
   margin: 0;
-  font-size: clamp(25px, 2.5vw, 34px);
-  line-height: 1.2;
-  color: #18364c;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+
+  color: #182230;
 }
 
-/* HOVEDLAYOUT */
 
-.kart-side .kart-layout {
+/* ==========================================
+   DAG- OG KVELDSMODUS-KNAPP
+   ========================================== */
+
+.kart-side .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 16px;
+
+  border: 1px solid #d5dfe8;
+  border-radius: 13px;
+
+  background: #ffffff;
+  color: #182230;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+}
+
+.kart-side .theme-toggle:hover {
+  background: #f5f8fb;
+}
+
+.kart-side .theme-toggle-icon {
+  font-size: 19px;
+}
+
+
+/* ==========================================
+   HOVEDLAYOUT
+
+   Samme bredder og avstander som fremsiden
+   ========================================== */
+
+.kart-side .app-shell.kart-layout {
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  gap: 24px;
 
-  width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 24px 32px 40px;
-  box-sizing: border-box;
+  grid-template-columns:
+    296px minmax(0, 1fr);
 
   align-items: start;
+
+  gap: 32px;
+
+  width: 100%;
+  max-width: none;
+
+  min-height: calc(100vh - 76px);
+
+  margin: 0;
+  padding: 16px;
+
+  background: transparent;
 }
 
-/* VENSTREMENY */
+
+/* ==========================================
+   FELLES VENSTREMENY
+   ========================================== */
 
 .kart-side .kart-sidebar {
   width: 100%;
   min-width: 0;
-  position: sticky;
-  top: 24px;
+
+  position: static;
   align-self: start;
 }
 
 .kart-side #shared-menu {
   width: 100%;
+  min-width: 0;
 }
+
+/*
+  Selve menyinnholdet hentes fra
+  felles/meny.js og styles av felles.css.
+
+  Her styrer vi bare bredde og plassering.
+*/
 
 .kart-side .kart-sidebar .form-navigation {
   width: 100%;
@@ -74,59 +200,87 @@
   box-sizing: border-box;
 }
 
-/* KARTPANEL */
+
+/* ==========================================
+   HOVEDPANEL FOR KART
+   ========================================== */
 
 .kart-side .kart-panel {
+  display: block;
+
   width: 100%;
   min-width: 0;
-  display: block;
+
+  margin: 0;
+  padding: 0;
 }
 
-/* HVIT RAMME */
+
+/* ==========================================
+   HVIT RAMME RUNDT KARTET
+   ========================================== */
 
 .kart-side .kart-panel-inner {
   width: 100%;
   min-width: 0;
+
+  margin: 0;
   padding: 16px;
-  box-sizing: border-box;
 
   background: #ffffff;
+
   border: 1px solid #dce5ed;
   border-radius: 18px;
 
-  box-shadow: 0 4px 18px rgba(25, 55, 80, 0.07);
+  box-shadow:
+    0 3px 12px rgba(16, 24, 40, 0.045);
 }
 
-/* KARTOMRÅDE */
+
+/* ==========================================
+   KARTOMRÅDE
+   ========================================== */
 
 .kart-side .kart-viewport {
   position: relative;
+
   width: 100%;
+
   height: min(75vh, 850px);
   min-height: 420px;
 
   overflow: hidden;
-  background: #d8edf8;
+
+  background: #edf2f5;
+
   border-radius: 12px;
 
   cursor: grab;
+
   touch-action: none;
   user-select: none;
 }
 
-/* SELVE KARTBILDET */
+
+/* ==========================================
+   SELVE KARTBILDET
+   ========================================== */
 
 .kart-side .kart-bilde {
   position: absolute;
+
   top: 50%;
   left: 50%;
 
   display: block;
+
   width: 100%;
   height: 100%;
-  object-fit: contain;
 
   max-width: none;
+
+  object-fit: contain;
+
   border-radius: 0;
 
   transform: translate(-50%, -50%);
@@ -134,73 +288,138 @@
 
   user-select: none;
   -webkit-user-drag: none;
+
   pointer-events: none;
+
   will-change: transform;
 }
 
-/* VED FLYTTING */
+
+/* ==========================================
+   VED FLYTTING
+   ========================================== */
 
 .kart-side .kart-viewport.dragging {
   cursor: grabbing;
 }
 
-/* KVELDSMODUS */
 
-body.kart-side[data-theme="dark"],
+/* ==========================================
+   KVELDSMODUS
+   ========================================== */
+
 body.kart-side.dark-mode,
-body.kart-side.theme-dark {
-  background: #101c2a;
-  color: #e8eff5;
+body.kart-side.theme-dark,
+body.kart-side[data-theme="dark"] {
+  background: #111827;
+  color: #e5eaf1;
 }
 
-body.kart-side[data-theme="dark"] .kart-panel-inner,
-body.kart-side.dark-mode .kart-panel-inner,
-body.kart-side.theme-dark .kart-panel-inner {
-  background: #1b2a3a;
-  border-color: #35485c;
+
+/* TOPPFELT I KVELDSMODUS */
+
+body.kart-side.dark-mode .app-header,
+body.kart-side.theme-dark .app-header,
+body.kart-side[data-theme="dark"] .app-header {
+  background: #1d2939;
+  border-color: #405066;
 }
 
-body.kart-side[data-theme="dark"] .app-header h1,
+
+/* OVERSKRIFT I KVELDSMODUS */
+
 body.kart-side.dark-mode .app-header h1,
-body.kart-side.theme-dark .app-header h1 {
-  color: #f0f6fb;
+body.kart-side.theme-dark .app-header h1,
+body.kart-side[data-theme="dark"] .app-header h1 {
+  color: #f3f6fa;
 }
 
-body.kart-side[data-theme="dark"] .app-eyebrow,
 body.kart-side.dark-mode .app-eyebrow,
-body.kart-side.theme-dark .app-eyebrow {
-  color: #a9c3d8;
+body.kart-side.theme-dark .app-eyebrow,
+body.kart-side[data-theme="dark"] .app-eyebrow {
+  color: #aebbd0;
 }
 
-/* MELLOMSTORE SKJERMER */
 
-@media (max-width: 1000px) {
-  .kart-side .kart-layout {
-    grid-template-columns: 210px minmax(0, 1fr);
-    gap: 16px;
-    padding: 16px;
-  }
+/* TEMAKNAPP */
 
-  .kart-side .app-header {
-    padding: 24px 16px 8px;
+body.kart-side.dark-mode .theme-toggle,
+body.kart-side.theme-dark .theme-toggle,
+body.kart-side[data-theme="dark"] .theme-toggle {
+  background: #28394e;
+  border-color: #53657c;
+  color: #ffffff;
+}
+
+
+/* KARTPANEL */
+
+body.kart-side.dark-mode .kart-panel-inner,
+body.kart-side.theme-dark .kart-panel-inner,
+body.kart-side[data-theme="dark"] .kart-panel-inner {
+  background: #1d2939;
+  border-color: #405066;
+}
+
+
+/* KARTBAKGRUNN */
+
+body.kart-side.dark-mode .kart-viewport,
+body.kart-side.theme-dark .kart-viewport,
+body.kart-side[data-theme="dark"] .kart-viewport {
+  background: #25364a;
+}
+
+
+/* ==========================================
+   MELLOMSTORE SKJERMER
+   ========================================== */
+
+@media (max-width: 1100px) {
+
+  .kart-side .app-shell.kart-layout {
+    grid-template-columns:
+      250px minmax(0, 1fr);
+
+    gap: 20px;
   }
 
   .kart-side .kart-panel-inner {
-    padding: 10px;
+    padding: 12px;
   }
+
 }
 
-/* MOBIL */
 
-@media (max-width: 700px) {
-  .kart-side .kart-layout {
+/* ==========================================
+   MOBIL / SMÅ SKJERMER
+   ========================================== */
+
+@media (max-width: 760px) {
+
+  .kart-side .app-header {
+    padding: 12px 15px;
+
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .kart-side .app-header h1 {
+    font-size: 23px;
+  }
+
+  .kart-side .app-shell.kart-layout {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+
+    gap: 18px;
+
+    padding: 15px;
   }
 
   .kart-side .kart-sidebar {
     position: static;
+
     width: 100%;
   }
 
@@ -217,8 +436,4 @@ body.kart-side.theme-dark .app-eyebrow {
     min-height: 350px;
   }
 
-  .kart-side .app-header {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
 }
