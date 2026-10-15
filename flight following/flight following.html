@@ -1,765 +1,46 @@
 
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>Flight Following | Luftambulansekoordinator</title>
 
   <!-- FELLESFILER -->
   <link rel="stylesheet" href="../felles/felles.css">
+
+  <!-- FLIGHT FOLLOWING -->
+  <link rel="stylesheet" href="flight following.css">
+
+  <!-- FELLES JAVASCRIPT -->
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 14px;
-      background: #edf2f5;
-      color: #182230;
-    }
-
-    button, input, textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    button:focus-visible, input:focus-visible {
-      outline: 3px solid #67a5ed;
-      outline-offset: 2px;
-    }
-
-    /* TOPPFELT */
-
-    body > .app-header {
-      min-height: 76px;
-      padding: 12px 22px;
-      background: #fff;
-      border-bottom: 1px solid #dce3e9;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .app-eyebrow {
-      margin: 0 0 5px;
-      font-weight: 800;
-      font-size: 12px;
-      letter-spacing: .7px;
-      color: #667085;
-      text-transform: uppercase;
-    }
-
-    .app-header h1 {
-      margin: 0;
-      font-size: 29px;
-      font-weight: 800;
-    }
-
-    .theme-toggle {
-      min-height: 44px;
-      padding: 0 15px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      border-radius: 11px;
-      border: 1px solid #d5dfe8;
-      background: #fff;
-      color: #182230;
-      font-weight: 700;
-    }
-
-    /* HOVEDOPPSETT */
-
-    .ff-layout {
-      display: grid;
-      grid-template-columns: 296px minmax(0, 1fr);
-      gap: 28px;
-      padding: 16px;
-      min-height: calc(100vh - 76px);
-      align-items: start;
-    }
-
-    #shared-menu {
-      width: 100%;
-      min-width: 0;
-    }
-
-    .ff-main {
-      width: 100%;
-      min-width: 0;
-      padding: 20px 0;
-    }
-
-    .ff-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .ff-toolbar h2 {
-      margin: 0 0 6px;
-      font-size: 25px;
-    }
-
-    .ff-description {
-      margin: 0;
-      color: #667085;
-      font-size: 14px;
-    }
-
-    .ff-toolbar-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-    }
-
-    .ff-primary-btn,
-    .ff-print-btn {
-      min-height: 44px;
-      padding: 0 17px;
-      border-radius: 9px;
-      font-weight: 800;
-      border: none;
-    }
-
-    .ff-primary-btn {
-      background: #16863c;
-      color: white;
-    }
-
-    .ff-print-btn {
-      background: #344054;
-      color: white;
-    }
-
-    .ff-primary-btn:hover {
-      background: #116d31;
-    }
-
-    /* RESSURSOVERSIKT */
-
-    #ffContainer {
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-    }
-
-    .ff-empty {
-      padding: 45px 20px;
-      background: white;
-      border: 1px dashed #bccbd8;
-      border-radius: 14px;
-      text-align: center;
-      color: #667085;
-    }
-
-    .ff-empty strong {
-      display: block;
-      margin-bottom: 8px;
-      color: #344054;
-      font-size: 17px;
-    }
-
-    .ff-resource-card {
-      background: white;
-      border: 1px solid #d7e0e8;
-      border-radius: 13px;
-      overflow: hidden;
-      box-shadow: 0 3px 10px rgba(16,24,40,.04);
-    }
-
-    .ff-resource-header {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: #f4faf6;
-      border-bottom: 1px solid #dae7de;
-    }
-
-    .ff-resource-left {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .ff-resource-dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: #16863c;
-    }
-
-    .ff-resource-name {
-      font-size: 21px;
-      font-weight: 800;
-    }
-
-    .ff-resource-status {
-      background: #dcefe2;
-      color: #167438;
-      border-radius: 20px;
-      padding: 5px 9px;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .ff-resource-status.waiting {
-      background: #fff1d5;
-      color: #925d00;
-    }
-
-    .ff-resource-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .ff-small-btn {
-      min-height: 34px;
-      padding: 0 11px;
-      border-radius: 7px;
-      border: 1px solid #b8c9d8;
-      background: white;
-      color: #344054;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .ff-small-btn.green {
-      border-color: #16863c;
-      background: #16863c;
-      color: white;
-    }
-
-    .ff-small-btn.danger {
-      border-color: #d94444;
-      color: #b62f2f;
-    }
-
-    .ff-resource-body {
-      padding: 12px;
-    }
-
-    .ff-flight-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    /* AKTIVT LEGG */
-
-    .ff-flight-row {
-      padding: 15px;
-      background: white;
-      border: 1px solid #dce4eb;
-      border-radius: 10px;
-    }
-
-    .ff-flight-row.active {
-      border-left: 4px solid #16863c;
-    }
-
-    .ff-flight-row.completed {
-      border-left: 4px solid #16863c;
-      background: #f8fcf9;
-    }
-
-    .ff-flight-row.aborted {
-      border-left: 4px solid #d94444;
-      background: #fff8f8;
-    }
-
-    .ff-flight-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 13px;
-    }
-
-    .ff-flight-number {
-      font-size: 12px;
-      font-weight: 800;
-      color: #667085;
-    }
-
-    .ff-flight-result {
-      font-size: 12px;
-      font-weight: 800;
-      color: #16863c;
-    }
-
-    .ff-grid-top {
-      display: grid;
-      grid-template-columns: 1fr 1fr 2fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .ff-grid-bottom {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0,1fr));
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .ff-grid-extra {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
-      gap: 12px;
-    }
-
-    .ff-field {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      gap: 6px;
-    }
-
-    .ff-field label {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: #344054;
-    }
-
-    .ff-field input {
-      width: 100%;
-      height: 42px;
-      padding: 0 10px;
-      background: white;
-      border: 1px solid #ccd5df;
-      border-radius: 7px;
-      color: #182230;
-      min-width: 0;
-    }
-
-    .ff-field input[readonly] {
-      background: #f1f4f7;
-    }
-
-    .ff-field .ff-time-click {
-      cursor: pointer;
-    }
-
-    .ff-inline-time {
-      display: flex;
-      gap: 7px;
-    }
-
-    .ff-inline-time input {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .ff-time-button {
-      flex-shrink: 0;
-      padding: 0 10px;
-      border-radius: 7px;
-      border: 1px solid #16863c;
-      background: #e6f5ea;
-      color: #126b31;
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .ff-flight-actions {
-      margin-top: 15px;
-      padding-top: 13px;
-      border-top: 1px solid #e5eaf0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .ff-status-text {
-      color: #667085;
-      font-size: 12px;
-    }
-
-    .ff-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .ff-land-button,
-    .ff-abort-button {
-      min-height: 39px;
-      padding: 0 14px;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .ff-land-button {
-      background: #16863c;
-      border: 1px solid #16863c;
-      color: white;
-    }
-
-    .ff-abort-button {
-      background: white;
-      border: 1px solid #d94444;
-      color: #c53232;
-    }
-
-    /* KOMPAKT FERDIG LEGG */
-
-    .ff-flight-row.finished {
-      padding: 0;
-    }
-
-    .ff-finished-line {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 13px;
-      flex-wrap: wrap;
-      cursor: pointer;
-      width: 100%;
-      background: transparent;
-      border: none;
-      text-align: left;
-      color: inherit;
-    }
-
-    .ff-finished-line:hover {
-      background: rgba(50,100,70,.05);
-    }
-
-    .ff-finished-number {
-      font-weight: 800;
-      white-space: nowrap;
-      color: #344054;
-    }
-
-    .ff-finished-route {
-      font-weight: 800;
-      flex: 1;
-      min-width: 130px;
-    }
-
-    .ff-finished-time {
-      color: #667085;
-      font-size: 12px;
-    }
-
-    .ff-finished-status {
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .completed .ff-finished-status {
-      color: #16863c;
-    }
-
-    .aborted .ff-finished-status {
-      color: #c53232;
-    }
-
-    .ff-finished-details {
-      display: none;
-      padding: 12px 15px 15px;
-      border-top: 1px solid #e4e8ec;
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-wrap: anywhere;
-    }
-
-    .ff-flight-row.expanded .ff-finished-details {
-      display: block;
-    }
-
-    /* MODAL */
-
-    .ff-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(15,23,42,.48);
-      padding: 16px;
-    }
-
-    .ff-modal-backdrop.open {
-      display: flex;
-    }
-
-    .ff-modal {
-      width: min(440px,100%);
-      padding: 23px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    }
-
-    .ff-modal h2 {
-      margin: 0 0 9px;
-      font-size: 21px;
-    }
-
-    .ff-modal p {
-      color: #667085;
-      line-height: 1.5;
-    }
-
-    .ff-modal label {
-      display: block;
-      margin: 16px 0 7px;
-      font-weight: 800;
-      font-size: 12px;
-    }
-
-    .ff-modal input {
-      height: 46px;
-      width: 100%;
-      padding: 0 12px;
-      border-radius: 8px;
-      border: 1px solid #ccd5df;
-    }
-
-    .ff-modal-actions {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 9px;
-    }
-
-    .ff-modal-actions button {
-      min-height: 42px;
-      padding: 0 15px;
-      border-radius: 8px;
-      font-weight: 800;
-    }
-
-    .ff-cancel-button {
-      background: white;
-      border: 1px solid #ccd5df;
-      color: #344054;
-    }
-
-    .ff-confirm-button {
-      background: #16863c;
-      border: none;
-      color: white;
-    }
-
-    /* KVELDSMODUS */
-
-    body.dark-mode,
-    body.theme-dark,
-    body[data-theme="dark"] {
-      background: #111827;
-      color: #e5eaf1;
-    }
-
-    body.dark-mode .ff-resource-card,
-    body.dark-mode .ff-flight-row,
-    body.dark-mode .ff-modal,
-    body.dark-mode .ff-empty,
-    body.theme-dark .ff-resource-card,
-    body.theme-dark .ff-flight-row,
-    body.theme-dark .ff-modal,
-    body.theme-dark .ff-empty,
-    body[data-theme="dark"] .ff-resource-card,
-    body[data-theme="dark"] .ff-flight-row,
-    body[data-theme="dark"] .ff-modal,
-    body[data-theme="dark"] .ff-empty {
-      background: #1d2939;
-      color: #e5eaf1;
-      border-color: #405066;
-    }
-
-    body.dark-mode .ff-resource-header,
-    body.theme-dark .ff-resource-header,
-    body[data-theme="dark"] .ff-resource-header {
-      background: #25364a;
-      border-color: #405066;
-    }
-
-    body.dark-mode .ff-field label,
-    body.theme-dark .ff-field label,
-    body[data-theme="dark"] .ff-field label {
-      color: #d8e1ed;
-    }
-
-    body.dark-mode .ff-field input,
-    body.dark-mode .ff-modal input,
-    body.theme-dark .ff-field input,
-    body.theme-dark .ff-modal input,
-    body[data-theme="dark"] .ff-field input,
-    body[data-theme="dark"] .ff-modal input {
-      background: #28394e;
-      color: white;
-      border-color: #53657c;
-    }
-
-    body.dark-mode .ff-toolbar h2,
-    body.dark-mode .ff-resource-name,
-    body.theme-dark .ff-toolbar h2,
-    body.theme-dark .ff-resource-name,
-    body[data-theme="dark"] .ff-toolbar h2,
-    body[data-theme="dark"] .ff-resource-name {
-      color: #f3f6fa;
-    }
-
-    body.dark-mode .ff-finished-number,
-    body.dark-mode .ff-empty strong,
-    body.theme-dark .ff-finished-number,
-    body.theme-dark .ff-empty strong,
-    body[data-theme="dark"] .ff-finished-number,
-    body[data-theme="dark"] .ff-empty strong {
-      color: #f3f6fa;
-    }
-
-    /* RESPONSIVT */
-
-    @media(max-width:1200px) {
-      .ff-grid-bottom {
-        grid-template-columns: repeat(3,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:950px) {
-      .ff-grid-top,
-      .ff-grid-extra {
-        grid-template-columns: repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:760px) {
-      .ff-layout {
-        grid-template-columns: minmax(0,1fr);
-        gap: 15px;
-      }
-
-      .ff-grid-top,
-      .ff-grid-bottom,
-      .ff-grid-extra {
-        grid-template-columns: 1fr;
-      }
-
-      .ff-resource-header {
-        flex-wrap: wrap;
-      }
-
-      .app-header h1 {
-        font-size: 23px;
-      }
-    }
-
-    /* UTSKRIFT */
-
-    #printArea {
-      display: none;
-    }
-
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 12mm;
-      }
-
-      body {
-        background: white !important;
-        color: black !important;
-      }
-
-      .app-header,
-      .ff-layout,
-      .ff-modal-backdrop {
-        display: none !important;
-      }
-
-      #printArea {
-        display: block !important;
-        color: black;
-        font-family: Arial, sans-serif;
-      }
-
-      .print-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        border-bottom: 2px solid #222;
-        margin-bottom: 16px;
-      }
-
-      .print-heading h1 {
-        font-size: 20px;
-      }
-
-      .print-resource {
-        margin-bottom: 18px;
-        break-inside: avoid;
-      }
-
-      .print-resource h2 {
-        font-size: 15px;
-        margin: 0 0 7px;
-      }
-
-      .print-table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-        font-size: 10px;
-      }
-
-      .print-table th,
-      .print-table td {
-        border: 1px solid #555;
-        padding: 7px 5px;
-        text-align: left;
-        overflow-wrap: anywhere;
-      }
-
-      .print-table th {
-        background: #eee !important;
-        color: black;
-      }
-
-      .print-table .blank-row td {
-        height: 32px;
-      }
-
-      .print-note {
-        font-size: 10px;
-        margin-top: 10px;
-      }
-    }
-  </style>
+  <!-- FLIGHT FOLLOWING JAVASCRIPT -->
+  <script src="flight following.js" defer></script>
 </head>
 
-<body>
+<body class="ff-page">
+
+  <!-- =====================================
+       TOPPFELT
+       ===================================== -->
 
   <header class="app-header">
-    <div>
-      <p class="app-eyebrow">Luftambulansekoordinator</p>
+
+    <div class="app-header-content">
+      <p class="app-eyebrow">
+        LUFTAMBULANSEKOORDINATOR
+      </p>
+
       <h1>Flight Following</h1>
+
+      <p class="ff-test-label">
+        TESTVERSJON – SKAL IKKE BRUKES OPERATIVT
+      </p>
     </div>
 
     <button
@@ -769,1038 +50,181 @@
       aria-pressed="false"
       aria-label="Slå på kveldsmodus"
     >
-      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
-      <span class="theme-toggle-text">Kveldsmodus</span>
+      <span class="theme-toggle-icon"
+            aria-hidden="true">🌙</span>
+
+      <span class="theme-toggle-text">
+        Kveldsmodus
+      </span>
     </button>
+
   </header>
+
+  <!-- =====================================
+       HOVEDOPPSETT
+       ===================================== -->
 
   <main class="ff-layout">
 
     <!-- FELLES VENSTREMENY -->
-    <div id="shared-menu"></div>
+    <aside id="shared-menu"></aside>
 
+    <!-- FLIGHT FOLLOWING -->
     <section class="ff-main">
 
+      <!-- OVERSKRIFT OG KNAPPER -->
       <div class="ff-toolbar">
+
         <div>
           <h2>Flight Following</h2>
+
           <p class="ff-description">
-            Operativ oppfølging av luftambulanseressurser
+            Operativ oppfølging av
+            luftambulanseressurser – prototype
           </p>
         </div>
 
         <div class="ff-toolbar-buttons">
-          <button type="button" class="ff-print-btn" id="printFFBtn">
+
+          <button
+            type="button"
+            id="printFFBtn"
+            class="ff-btn ff-neutral">
             Skriv ut
           </button>
 
-          <button type="button" class="ff-primary-btn" id="newFFBtn">
+          <button
+            type="button"
+            id="newFFBtn"
+            class="ff-btn ff-primary">
             + Ny FF
           </button>
+
         </div>
       </div>
 
-      <div id="ffContainer">
-        <div class="ff-empty" id="emptyState">
-          <strong>Ingen aktiv Flight Following</strong>
-          Klikk «Ny FF» for å registrere en ressurs.
+      <!-- SYSTEMSTATUS -->
+      <div id="ffSystemNotice"
+           class="ff-system-notice"
+           role="status">
+
+        TESTVERSJON: Opplysninger lagres lokalt
+        i nettleseren. Alarmfunksjonen er ikke
+        en godkjent sikkerhetsbarriere.
+
+      </div>
+
+      <!-- ALARMOVERSIKT -->
+      <section
+        id="ffAlarmPanel"
+        class="ff-alarm-panel"
+        aria-label="Alarm ved manglende landing"
+        aria-live="assertive"
+        hidden>
+      </section>
+
+      <!-- RESSURSER -->
+      <div id="ffContainer"
+           class="ff-container">
+
+        <div class="ff-empty">
+          <strong>Ingen Flight Following</strong>
+
+          <p>
+            Klikk «+ Ny FF» for å opprette
+            en ressurs.
+          </p>
         </div>
+
       </div>
 
     </section>
+
   </main>
 
-  <!-- MODAL FOR NY RESSURS -->
+  <!-- =====================================
+       NY FLIGHT FOLLOWING
+       ===================================== -->
 
-  <div class="ff-modal-backdrop" id="newFFModal">
-    <div class="ff-modal"
-         role="dialog"
-         aria-modal="true"
-         aria-labelledby="newFFTitle">
+  <dialog id="newFFDialog"
+          class="ff-dialog">
 
-      <h2 id="newFFTitle">Start ny Flight Following</h2>
+    <form id="newFFForm">
+
+      <h2>Start ny Flight Following</h2>
 
       <p>
         Skriv ressurs-ID, for eksempel 1-1.
-        Systemet legger automatisk til LA.
-        Andre ressursbetegnelser kan skrives fullt ut.
+        Systemet gjør dette automatisk om
+        til LA 1-1.
       </p>
 
-      <label for="resourceInput">Ressurs-ID</label>
+      <label for="resourceInput">
+        Ressurs-ID
+      </label>
 
       <input
         id="resourceInput"
         type="text"
         placeholder="F.eks. 1-1"
         autocomplete="off"
-      >
+        maxlength="40"
+        required>
 
-      <div class="ff-modal-actions">
-        <button class="ff-cancel-button"
-                type="button"
-                id="cancelNewFFBtn">
+      <div class="ff-dialog-buttons">
+
+        <button
+          type="button"
+          id="cancelNewFFBtn"
+          class="ff-btn ff-neutral">
           Avbryt
         </button>
 
-        <button class="ff-confirm-button"
-                type="button"
-                id="startNewFFBtn">
+        <button
+          type="submit"
+          class="ff-btn ff-primary">
           Start FF
         </button>
+
       </div>
+    </form>
+  </dialog>
+
+  <!-- =====================================
+       AVSLUTT FLIGHT FOLLOWING
+       ===================================== -->
+
+  <dialog id="endFFDialog"
+          class="ff-dialog">
+
+    <h2>Avslutt Flight Following?</h2>
+
+    <p id="endFFText"></p>
+
+    <div class="ff-dialog-buttons">
+
+      <button
+        type="button"
+        id="cancelEndFFBtn"
+        class="ff-btn ff-neutral">
+        Avbryt
+      </button>
+
+      <button
+        type="button"
+        id="confirmEndFFBtn"
+        class="ff-btn ff-danger">
+        Avslutt FF
+      </button>
 
     </div>
-  </div>
+  </dialog>
 
-  <!-- MODAL FOR AVSLUTT -->
-
-  <div class="ff-modal-backdrop" id="endFFModal">
-    <div class="ff-modal"
-         role="dialog"
-         aria-modal="true"
-         aria-labelledby="endFFTitle">
-
-      <h2 id="endFFTitle">Avslutt Flight Following</h2>
-
-      <p id="endFFText"></p>
-
-      <div class="ff-modal-actions">
-        <button type="button"
-                class="ff-cancel-button"
-                id="cancelEndFFBtn">
-          Avbryt
-        </button>
-
-        <button type="button"
-                class="ff-confirm-button"
-                id="confirmEndFFBtn">
-          Avslutt FF
-        </button>
-      </div>
-    </div>
-  </div>
+  <!-- =====================================
+       UTSKRIFT
+       ===================================== -->
 
   <div id="printArea"></div>
 
-  <script>
-    "use strict";
-
-    /* ==========================================
-       FLIGHT FOLLOWING
-       ========================================== */
-
-    const ffContainer =
-      document.getElementById("ffContainer");
-
-    const emptyState =
-      document.getElementById("emptyState");
-
-    const newFFModal =
-      document.getElementById("newFFModal");
-
-    const endFFModal =
-      document.getElementById("endFFModal");
-
-    const resourceInput =
-      document.getElementById("resourceInput");
-
-    const resources = new Map();
-
-    let resourceToEnd = null;
-
-    /* KLOKKE */
-
-    function getCurrentTime() {
-      const now = new Date();
-
-      return (
-        String(now.getHours()).padStart(2, "0") +
-        ":" +
-        String(now.getMinutes()).padStart(2, "0")
-      );
-    }
-
-    function getCurrentDate() {
-      return new Date().toLocaleDateString("nb-NO");
-    }
-
-    /* RESSURS-ID */
-
-    function normalizeResource(value) {
-      let text = value.trim().toUpperCase();
-
-      text = text.replace(/\s+/g, " ");
-
-      // 1-1 blir LA 1-1.
-      // 01-01 blir også LA 1-1.
-
-      const match = text.match(
-        /^(?:LA\s*)?0*(\d+)\s*-\s*0*(\d+)$/
-      );
-
-      if (match) {
-        return "LA " +
-          Number(match[1]) +
-          "-" +
-          Number(match[2]);
-      }
-
-      return text;
-    }
-
-    function resourceSort(a, b) {
-      return a.localeCompare(
-        b,
-        "nb",
-        {
-          numeric: true,
-          sensitivity: "base"
-        }
-      );
-    }
-
-    /* DATA */
-
-    function newFlight() {
-      return {
-        from: "",
-        to: "",
-        description: "",
-        departure: "",
-        pob: "",
-        ete: "",
-        eta: "",
-        landingPlace: "",
-        etaNotified: "",
-        landed: "",
-        aborted: "",
-        status: "active",
-        expanded: false
-      };
-    }
-
-    /* SIKKER TEKSTVISNING */
-
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function displayValue(value) {
-      return escapeHTML(value || "—");
-    }
-
-    /* ETA-BEREGNING */
-
-    function calculateETA(flight) {
-      const departure = flight.departure;
-      const ete = String(flight.ete).trim();
-
-      flight.eta = "";
-
-      if (!/^\d{2}:\d{2}$/.test(departure)) {
-        return;
-      }
-
-      const [hours, minutes] =
-        departure.split(":").map(Number);
-
-      if (hours > 23 || minutes > 59) {
-        return;
-      }
-
-      let eteMinutes;
-
-      if (/^\d+$/.test(ete)) {
-        eteMinutes = Number(ete);
-      } else if (/^\d+:\d{1,2}$/.test(ete)) {
-        const parts = ete.split(":").map(Number);
-
-        if (parts[1] > 59) return;
-
-        eteMinutes = parts[0] * 60 + parts[1];
-      } else {
-        return;
-      }
-
-      if (!Number.isFinite(eteMinutes) ||
-          eteMinutes <= 0) {
-        return;
-      }
-
-      const total =
-        (hours * 60 + minutes + eteMinutes) % 1440;
-
-      const etaHours = Math.floor(total / 60);
-      const etaMinutes = total % 60;
-
-      flight.eta =
-        String(etaHours).padStart(2, "0") +
-        ":" +
-        String(etaMinutes).padStart(2, "0");
-    }
-
-    /* NY FF */
-
-    document.getElementById("newFFBtn")
-      .addEventListener("click", () => {
-        resourceInput.value = "";
-        newFFModal.classList.add("open");
-        resourceInput.focus();
-      });
-
-    document.getElementById("cancelNewFFBtn")
-      .addEventListener("click", closeNewFF);
-
-    function closeNewFF() {
-      newFFModal.classList.remove("open");
-    }
-
-    function startNewFF() {
-      const resource = normalizeResource(
-        resourceInput.value
-      );
-
-      if (!resource) {
-        alert("Skriv inn ressurs-ID.");
-        return;
-      }
-
-      if (resources.has(resource)) {
-        alert(
-          resource +
-          " finnes allerede i aktiv Flight Following."
-        );
-        return;
-      }
-
-      resources.set(resource, {
-        id: resource,
-        flights: [newFlight()],
-        collapsed: false
-      });
-
-      closeNewFF();
-      renderAll();
-    }
-
-    document.getElementById("startNewFFBtn")
-      .addEventListener("click", startNewFF);
-
-    resourceInput.addEventListener("keydown", event => {
-      if (event.key === "Enter") {
-        startNewFF();
-      }
-    });
-
-    resourceInput.addEventListener("blur", () => {
-      resourceInput.value =
-        normalizeResource(resourceInput.value);
-    });
-
-    /* NYTT LEGG - MANUELT */
-
-    function addNewLeg(resourceId) {
-      const resource = resources.get(resourceId);
-
-      if (!resource) return;
-
-      const hasActive = resource.flights.some(
-        flight => flight.status === "active"
-      );
-
-      if (hasActive) {
-        alert(
-          "Ressursen har allerede et aktivt legg. " +
-          "Bekreft landet eller avbryt først."
-        );
-        return;
-      }
-
-      resource.flights.push(newFlight());
-      resource.collapsed = false;
-
-      renderAll();
-    }
-
-    /* AVSLUTT LEGG */
-
-    function finishFlight(resourceId, index, status) {
-      const resource = resources.get(resourceId);
-
-      if (!resource) return;
-
-      const flight = resource.flights[index];
-
-      if (!flight || flight.status !== "active") {
-        return;
-      }
-
-      if (status === "completed") {
-        flight.landed = getCurrentTime();
-      } else {
-        flight.aborted = getCurrentTime();
-      }
-
-      flight.status = status;
-      flight.expanded = false;
-
-      // IKKE opprett automatisk nytt legg.
-      // Brukeren gjør det manuelt.
-
-      renderAll();
-    }
-
-    /* OPPDATER FELT */
-
-    function updateFlightField(
-      resourceId,
-      index,
-      field,
-      value,
-      row
-    ) {
-      const resource = resources.get(resourceId);
-
-      if (!resource) return;
-
-      const flight = resource.flights[index];
-
-      if (!flight || flight.status !== "active") {
-        return;
-      }
-
-      flight[field] = value;
-
-      if (field === "departure" || field === "ete") {
-        calculateETA(flight);
-
-        const etaInput = row.querySelector(".ff-eta");
-
-        if (etaInput) {
-          etaInput.value = flight.eta;
-        }
-      }
-    }
-
-    function setTimeField(resourceId, index, field) {
-      const resource = resources.get(resourceId);
-
-      if (!resource) return;
-
-      const flight = resource.flights[index];
-
-      if (!flight || flight.status !== "active") {
-        return;
-      }
-
-      flight[field] = getCurrentTime();
-
-      if (field === "departure") {
-        calculateETA(flight);
-      }
-
-      renderAll();
-    }
-
-    /* OPPRETT AKTIVT LEGG */
-
-    function renderActiveFlight(
-      resourceId,
-      flight,
-      index
-    ) {
-      const row = document.createElement("div");
-
-      row.className = "ff-flight-row active";
-
-      row.innerHTML = `
-        <div class="ff-flight-heading">
-          <div class="ff-flight-number">
-            Legg ${index + 1}
-          </div>
-
-          <div class="ff-flight-result">
-            ● AKTIVT LEGG
-          </div>
-        </div>
-
-        <div class="ff-grid-top">
-          <div class="ff-field">
-            <label>Fra</label>
-            <input class="ff-from"
-                   data-field="from"
-                   placeholder="F.eks. ENRH"
-                   value="${escapeHTML(flight.from)}">
-          </div>
-
-          <div class="ff-field">
-            <label>Til</label>
-            <input class="ff-to"
-                   data-field="to"
-                   placeholder="F.eks. ENUH"
-                   value="${escapeHTML(flight.to)}">
-          </div>
-
-          <div class="ff-field">
-            <label>Beskrivelse</label>
-            <input
-              data-field="description"
-              placeholder="Pasienttransport, retur base ..."
-              value="${escapeHTML(flight.description)}">
-          </div>
-        </div>
-
-        <div class="ff-grid-bottom">
-          <div class="ff-field">
-            <label>Tatt av</label>
-            <input class="ff-time-click"
-                   data-time="departure"
-                   title="Klikk for nåtid"
-                   placeholder="Klikk"
-                   readonly
-                   value="${escapeHTML(flight.departure)}">
-          </div>
-
-          <div class="ff-field">
-            <label>POB</label>
-            <input type="number"
-                   min="0"
-                   max="30"
-                   data-field="pob"
-                   placeholder="0"
-                   value="${escapeHTML(flight.pob)}">
-          </div>
-
-          <div class="ff-field">
-            <label>ETE (min)</label>
-            <input data-field="ete"
-                   placeholder="F.eks. 28"
-                   value="${escapeHTML(flight.ete)}">
-          </div>
-
-          <div class="ff-field">
-            <label>ETA</label>
-            <input class="ff-eta"
-                   readonly
-                   value="${escapeHTML(flight.eta)}">
-          </div>
-
-          <div class="ff-field">
-            <label>Bekreftet landet</label>
-            <input class="ff-time-click"
-                   data-action="land"
-                   placeholder="Klikk"
-                   title="Bekreft landet"
-                   readonly>
-          </div>
-        </div>
-
-        <div class="ff-grid-extra">
-          <div class="ff-field">
-            <label>Landingssted</label>
-            <input
-              data-field="landingPlace"
-              placeholder="F.eks. Ullevål / Rikshospitalet"
-              value="${escapeHTML(flight.landingPlace)}">
-          </div>
-
-          <div class="ff-field">
-            <label>ETA varslet helikopter</label>
-
-            <div class="ff-inline-time">
-              <input
-                readonly
-                value="${escapeHTML(flight.etaNotified)}"
-                placeholder="Ikke varslet">
-
-              <button type="button"
-                      class="ff-time-button"
-                      data-time="etaNotified">
-                Varslet
-              </button>
-            </div>
-          </div>
-
-          <div class="ff-field">
-            <label>Status</label>
-            <input readonly value="Flight Following aktiv">
-          </div>
-        </div>
-
-        <div class="ff-flight-actions">
-          <div class="ff-status-text">
-            Aktiv Flight Following
-          </div>
-
-          <div class="ff-buttons">
-            <button type="button"
-                    class="ff-land-button"
-                    data-action="land">
-              ✓ Bekreftet landet
-            </button>
-
-            <button type="button"
-                    class="ff-abort-button"
-                    data-action="abort">
-              ✕ Avbrutt
-            </button>
-          </div>
-        </div>
-      `;
-
-      /* FELTER */
-
-      row.querySelectorAll("[data-field]")
-        .forEach(input => {
-          input.addEventListener("input", () => {
-            updateFlightField(
-              resourceId,
-              index,
-              input.dataset.field,
-              input.value,
-              row
-            );
-          });
-        });
-
-      /* TIDSSTEMPLER */
-
-      row.querySelectorAll("[data-time]")
-        .forEach(element => {
-          element.addEventListener("click", () => {
-            setTimeField(
-              resourceId,
-              index,
-              element.dataset.time
-            );
-          });
-        });
-
-      /* LANDET */
-
-      row.querySelectorAll('[data-action="land"]')
-        .forEach(element => {
-          element.addEventListener("click", () => {
-            finishFlight(
-              resourceId,
-              index,
-              "completed"
-            );
-          });
-        });
-
-      /* AVBRUTT */
-
-      row.querySelector('[data-action="abort"]')
-        .addEventListener("click", () => {
-          finishFlight(
-            resourceId,
-            index,
-            "aborted"
-          );
-        });
-
-      return row;
-    }
-
-    /* KOMPAKT FERDIG LEGG */
-
-    function renderFinishedFlight(
-      resourceId,
-      flight,
-      index
-    ) {
-      const row = document.createElement("div");
-
-      row.className =
-        "ff-flight-row finished " + flight.status;
-
-      if (flight.expanded) {
-        row.classList.add("expanded");
-      }
-
-      const finishedTime =
-        flight.status === "completed"
-          ? flight.landed
-          : flight.aborted;
-
-      const statusText =
-        flight.status === "completed"
-          ? "LANDET"
-          : "AVBRUTT";
-
-      row.innerHTML = `
-        <button type="button"
-                class="ff-finished-line"
-                aria-expanded="${flight.expanded}">
-
-          <span class="ff-finished-number">
-            Legg ${index + 1}
-          </span>
-
-          <span class="ff-finished-route">
-            ${displayValue(flight.from)}
-            →
-            ${displayValue(flight.to)}
-          </span>
-
-          <span class="ff-finished-time">
-            Avgang:
-            ${displayValue(flight.departure)}
-          </span>
-
-          <span class="ff-finished-time">
-            ETA:
-            ${displayValue(flight.eta)}
-          </span>
-
-          <span class="ff-finished-status">
-            ${statusText}
-            ${displayValue(finishedTime)}
-          </span>
-
-          <span aria-hidden="true">
-            ${flight.expanded ? "▲" : "▼"}
-          </span>
-        </button>
-
-        <div class="ff-finished-details">
-          <strong>Beskrivelse:</strong>
-          ${displayValue(flight.description)}
-
-          <div>
-            <strong>POB:</strong>
-            ${displayValue(flight.pob)}
-            &nbsp; | &nbsp;
-            <strong>ETE:</strong>
-            ${displayValue(flight.ete)}
-            &nbsp; | &nbsp;
-            <strong>ETA:</strong>
-            ${displayValue(flight.eta)}
-          </div>
-
-          <div>
-            <strong>Landingssted:</strong>
-            ${displayValue(flight.landingPlace)}
-          </div>
-
-          <div>
-            <strong>ETA varslet helikopter:</strong>
-            ${displayValue(flight.etaNotified)}
-          </div>
-
-          <div>
-            <strong>Status:</strong>
-            ${statusText} ${displayValue(finishedTime)}
-          </div>
-        </div>
-      `;
-
-      row.querySelector(".ff-finished-line")
-        .addEventListener("click", () => {
-          flight.expanded = !flight.expanded;
-          renderAll();
-        });
-
-      return row;
-    }
-
-    /* RESSURSKORT */
-
-    function renderResource(resource) {
-      const card = document.createElement("section");
-
-      card.className = "ff-resource-card";
-      card.dataset.resource = resource.id;
-
-      const hasActive = resource.flights.some(
-        flight => flight.status === "active"
-      );
-
-      const header = document.createElement("div");
-      header.className = "ff-resource-header";
-
-      header.innerHTML = `
-        <div class="ff-resource-left">
-          <span class="ff-resource-dot"></span>
-
-          <span class="ff-resource-name">
-            ${escapeHTML(resource.id)}
-          </span>
-
-          <span class="ff-resource-status
-            ${hasActive ? "" : "waiting"}">
-            ${hasActive ? "FF AKTIV" : "AVVENTER NYTT LEGG"}
-          </span>
-        </div>
-
-        <div class="ff-resource-actions">
-          <button class="ff-small-btn green"
-                  type="button"
-                  data-resource-action="newleg"
-                  ${hasActive ? "disabled" : ""}>
-            + Nytt legg
-          </button>
-
-          <button class="ff-small-btn danger"
-                  type="button"
-                  data-resource-action="end">
-            Avslutt FF
-          </button>
-
-          <button class="ff-small-btn"
-                  type="button"
-                  data-resource-action="collapse">
-            ${resource.collapsed ? "Vis" : "Skjul"}
-          </button>
-        </div>
-      `;
-
-      card.appendChild(header);
-
-      const body = document.createElement("div");
-      body.className = "ff-resource-body";
-
-      if (resource.collapsed) {
-        body.hidden = true;
-      }
-
-      const flightList = document.createElement("div");
-      flightList.className = "ff-flight-list";
-
-      // Nyeste legg øverst.
-      for (
-        let index = resource.flights.length - 1;
-        index >= 0;
-        index--
-      ) {
-        const flight = resource.flights[index];
-
-        const row =
-          flight.status === "active"
-            ? renderActiveFlight(
-                resource.id, flight, index
-              )
-            : renderFinishedFlight(
-                resource.id, flight, index
-              );
-
-        flightList.appendChild(row);
-      }
-
-      body.appendChild(flightList);
-      card.appendChild(body);
-
-      header.querySelector('[data-resource-action="newleg"]')
-        .addEventListener("click", () => {
-          addNewLeg(resource.id);
-        });
-
-      header.querySelector('[data-resource-action="end"]')
-        .addEventListener("click", () => {
-          openEndFF(resource.id);
-        });
-
-      header.querySelector('[data-resource-action="collapse"]')
-        .addEventListener("click", () => {
-          resource.collapsed = !resource.collapsed;
-          renderAll();
-        });
-
-      return card;
-    }
-
-    /* OPPDATER HELE OVERSIKTEN */
-
-    function renderAll() {
-      ffContainer.innerHTML = "";
-
-      const sortedResources = Array.from(
-        resources.keys()
-      ).sort(resourceSort);
-
-      if (sortedResources.length === 0) {
-        ffContainer.appendChild(emptyState);
-        emptyState.style.display = "block";
-        return;
-      }
-
-      sortedResources.forEach(id => {
-        const card = renderResource(resources.get(id));
-        ffContainer.appendChild(card);
-      });
-    }
-
-    /* AVSLUTT FF */
-
-    function openEndFF(resourceId) {
-      resourceToEnd = resourceId;
-
-      document.getElementById("endFFText")
-        .textContent =
-          "Vil du avslutte Flight Following for " +
-          resourceId +
-          "? Ressursen og alle registrerte legg " +
-          "fjernes fra den aktive oversikten. " +
-          "Skriv ut først dersom opplysningene skal beholdes.";
-
-      endFFModal.classList.add("open");
-    }
-
-    function closeEndFF() {
-      endFFModal.classList.remove("open");
-      resourceToEnd = null;
-    }
-
-    document.getElementById("cancelEndFFBtn")
-      .addEventListener("click", closeEndFF);
-
-    document.getElementById("confirmEndFFBtn")
-      .addEventListener("click", () => {
-        if (resourceToEnd) {
-          resources.delete(resourceToEnd);
-        }
-
-        closeEndFF();
-        renderAll();
-      });
-
-    /* UTSKRIFT */
-
-    document.getElementById("printFFBtn")
-      .addEventListener("click", printFlightFollowing);
-
-    function printFlightFollowing() {
-      const printArea = document.getElementById(
-        "printArea"
-      );
-
-      const sortedResources =
-        Array.from(resources.keys()).sort(resourceSort);
-
-      if (!sortedResources.length) {
-        alert("Ingen Flight Following å skrive ut.");
-        return;
-      }
-
-      let html = `
-        <div class="print-heading">
-          <h1>Flight Following – Luftambulansekoordinator</h1>
-          <span>Utskrift: ${getCurrentDate()} kl. ${getCurrentTime()}</span>
-        </div>
-      `;
-
-      sortedResources.forEach(resourceId => {
-        const resource = resources.get(resourceId);
-
-        html += `
-          <section class="print-resource">
-            <h2>${escapeHTML(resourceId)}</h2>
-
-            <table class="print-table">
-              <thead>
-                <tr>
-                  <th>Legg</th>
-                  <th>Fra</th>
-                  <th>Til</th>
-                  <th>Beskrivelse</th>
-                  <th>Tatt av</th>
-                  <th>POB</th>
-                  <th>ETE</th>
-                  <th>ETA</th>
-                  <th>Landingssted</th>
-                  <th>ETA varslet</th>
-                  <th>Landet</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-        `;
-
-        resource.flights.forEach((flight, index) => {
-          const status =
-            flight.status === "active"
-              ? "Aktiv"
-              : flight.status === "completed"
-                ? "Landet"
-                : "Avbrutt " + flight.aborted;
-
-          html += `
-            <tr>
-              <td>${index + 1}</td>
-              <td>${displayValue(flight.from)}</td>
-              <td>${displayValue(flight.to)}</td>
-              <td>${displayValue(flight.description)}</td>
-              <td>${displayValue(flight.departure)}</td>
-              <td>${displayValue(flight.pob)}</td>
-              <td>${displayValue(flight.ete)}</td>
-              <td>${displayValue(flight.eta)}</td>
-              <td>${displayValue(flight.landingPlace)}</td>
-              <td>${displayValue(flight.etaNotified)}</td>
-              <td>${displayValue(flight.landed)}</td>
-              <td>${escapeHTML(status)}</td>
-            </tr>
-          `;
-        });
-
-        // Tomme linjer for videreføring med penn.
-        for (let i = 0; i < 4; i++) {
-          html += `
-            <tr class="blank-row">
-              ${"<td></td>".repeat(12)}
-            </tr>
-          `;
-        }
-
-        html += `
-              </tbody>
-            </table>
-          </section>
-        `;
-      });
-
-      html += `
-        <p class="print-note">
-          Ved manuell videreføring: registrer relevante
-          klokkeslett, status og eventuelle endringer.
-        </p>
-      `;
-
-      printArea.innerHTML = html;
-
-      window.print();
-    }
-
-    /* LUKK MODALER */
-
-    newFFModal.addEventListener("click", event => {
-      if (event.target === newFFModal) {
-        closeNewFF();
-      }
-    });
-
-    endFFModal.addEventListener("click", event => {
-      if (event.target === endFFModal) {
-        closeEndFF();
-      }
-    });
-
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeNewFF();
-        closeEndFF();
-      }
-    });
-
-    /* START */
-
-    renderAll();
-
-  </script>
 </body>
 </html>

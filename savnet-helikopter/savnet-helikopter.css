@@ -1,814 +1,918 @@
-:root {
-  --primary: #0066a1;
-  --background: #eef2f5;
-  --surface: #ffffff;
-  --text: #17212b;
-  --muted: #667085;
-  --border: #d0d5dd;
-  --border-light: #e4e7ec;
 
-  --green: #16834b;
-  --green-dark: #0e6739;
-  --red: #c62828;
-  --red-dark: #a51e1e;
-  --blue-light: #dceef9;
-  --blue-light-hover: #c7e4f5;
-  --black: #202124;
+/* ============================================================
+   SAVNET HELIKOPTER – KOMPLETT CSS
+   Versjon 20261015-8
+   ============================================================ */
 
-  --radius-small: 6px;
-  --radius-medium: 10px;
-  --radius-large: 14px;
+body.savnet-side {
+  --sh-bg: var(--background, #edf2f5);
+  --sh-surface: var(--surface, #ffffff);
+  --sh-text: var(--text, #17212b);
+  --sh-muted: var(--muted, #667085);
+  --sh-border: var(--border, #d0d5dd);
+  --sh-border-light: var(--border-light, #e4e7ec);
+  --sh-blue: var(--primary, #0066a1);
+  --sh-blue-light: var(--blue-light, #eaf5fb);
+  --sh-input: #ffffff;
 
-  --header-height: 70px;
-  --panel-gap: 12px;
+  background: var(--sh-bg);
+  color: var(--sh-text);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
 }
 
-/* GENERELT */
+html[data-theme="dark"] body.savnet-side {
+  --sh-input: #151e28;
+}
 
-* {
+.savnet-side *,
+.savnet-side *::before,
+.savnet-side *::after {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-height) + var(--panel-gap));
+.savnet-side [hidden] {
+  display: none !important;
 }
 
-body {
-  margin: 0;
-  background: var(--background);
-  color: var(--text);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-  line-height: 1.45;
+.savnet-side button,
+.savnet-side input,
+.savnet-side textarea {
+  font-family: inherit;
 }
 
-button,
-input,
-textarea {
-  font: inherit;
-}
-
-button {
+.savnet-side button {
   cursor: pointer;
 }
 
-button:focus-visible,
-a:focus-visible {
-  outline: 3px solid var(--primary);
-  outline-offset: 3px;
+.savnet-side :is(
+  input, textarea, button, summary, a
+):focus-visible {
+  outline: 3px solid var(--sh-blue);
+  outline-offset: 2px;
 }
 
-/* OVERSKRIFT */
+/* ============================================================
+   TOPPFELT
+   ============================================================ */
 
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
+html body.savnet-side .app-header {
+  position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
   width: 100%;
-  height: var(--header-height);
-  padding: 10px 180px 10px 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border-light);
-}
-
-.app-eyebrow {
-  margin: 0 0 2px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.app-header h1 {
+  min-height: 70px;
   margin: 0;
-  font-size: 24px;
-  line-height: 1.2;
+  padding: 8px 190px 9px 20px;
+
+  background: var(--sh-surface);
+  border-bottom: 1px solid var(--sh-border-light);
+  box-shadow: none;
 }
 
-.app-header .theme-toggle {
+.savnet-side .header-title {
+  min-width: 0;
+}
+
+html body.savnet-side .app-eyebrow {
+  margin: 0 0 4px;
+  color: var(--sh-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.075em;
+}
+
+html body.savnet-side .app-header h1 {
+  margin: 0;
+  color: var(--sh-text);
+  font-family: inherit;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+html body.savnet-side .theme-toggle {
   position: absolute;
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
-}
 
-/* HOVEDLAYOUT */
-
-.app-shell {
-  display: grid;
-  grid-template-columns: 190px minmax(0, 1fr) 340px;
-  grid-template-areas: "navigation form report";
-  gap: 16px;
-  align-items: start;
-  width: calc(100% - 24px);
-  max-width: 1800px;
-  margin: var(--panel-gap) auto;
-}
-
-/* VENSTREMENY */
-
-.form-navigation {
-  grid-area: navigation;
-  position: sticky;
-  top: calc(var(--header-height) + var(--panel-gap));
-  align-self: start;
-  min-width: 0;
-}
-
-.form-navigation-inner {
-  position: static;
-  padding: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-large);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-}
-
-.form-navigation-label {
-  margin: 4px 8px 10px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.form-nav-list {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.form-nav-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 8px 9px;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.form-nav-link:hover {
-  background: #f3f6f8;
-  border-color: var(--border-light);
-}
-
-.form-nav-link[aria-current="page"] {
-  background: #eaf5fb;
-  border-color: #c5e1f1;
-  color: var(--primary);
-}
-
-.form-nav-icon {
-  width: 24px;
-  flex: 0 0 24px;
-  text-align: center;
-  font-size: 18px;
-}
-
-.form-nav-copy {
-  min-width: 0;
-}
-
-/* SKJEMA OG EGET RULLEFELT */
-
-.form-panel-frame {
-  grid-area: form;
-  position: relative;
-  min-width: 0;
-  height: calc(
-    100vh - var(--header-height) - var(--panel-gap) * 2
-  );
-  height: calc(
-    100dvh - var(--header-height) - var(--panel-gap) * 2
-  );
-}
-
-.form-panel {
-  min-width: 0;
-}
-
-.form-panel-frame .form-panel {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
-  scrollbar-width: auto;
-  scrollbar-color: var(--primary) var(--background);
-  padding-right: 5px;
-  overscroll-behavior-y: contain;
-}
-
-.form-panel::-webkit-scrollbar {
-  width: 12px;
-}
-
-.form-panel::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border: 3px solid var(--background);
-  border-radius: 10px;
-}
-
-.form-panel::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-.form-panel form {
-  padding-bottom: 48px;
-}
-
-.form-scroll-hint {
-  position: absolute;
-  bottom: 10px;
-  right: 24px;
-  z-index: 5;
-  padding: 7px 12px;
-  color: var(--primary);
-  background: var(--surface);
-  border: 1px solid var(--primary);
-  border-radius: 999px;
-  box-shadow: 0 3px 12px #0002;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.form-scroll-hint[hidden] {
-  display: none;
-}
-
-.form-section {
-  margin: 0 0 10px;
-  padding: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-large);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-}
-
-.form-section:last-child {
-  margin-bottom: 0;
-}
-
-.form-section h2 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  line-height: 1.2;
-}
-
-/* FELTER */
-
-.form-grid {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.form-grid-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.form-grid-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.tg-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-width: 0;
-  margin-bottom: 10px;
-}
-
-.form-grid .form-field,
-.form-field:last-child {
-  margin-bottom: 0;
-}
-
-label,
-.field-label {
-  color: #344054;
-  font-size: 13px;
-  font-weight: 650;
-}
-
-input,
-textarea {
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-small);
-  background: var(--surface);
-  color: var(--text);
-}
-
-input {
-  height: 36px;
-  padding: 0 9px;
-}
-
-textarea {
-  padding: 8px 9px;
-  resize: vertical;
-}
-
-input:focus,
-textarea:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 1px;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #98a2b3;
-}
-
-/* TALEGRUPPER */
-
-.field-card {
-  min-width: 0;
-  padding: 9px;
-  background: #fafbfc;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-medium);
-}
-
-.field-card > label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.other-tg-input {
-  margin-bottom: 6px;
-}
-
-.other-tg-input:last-child {
-  margin-bottom: 0;
-}
-
-/* POB */
-
-.pob-field {
-  margin-bottom: 14px;
-}
-
-.chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.chip {
-  min-width: 36px;
-  min-height: 36px;
-  padding: 0 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  color: #344054;
-}
-
-.chip:hover {
-  border-color: var(--primary);
-}
-
-.chip.is-selected {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #ffffff;
-}
-
-/* CREW MANIFEST */
-
-.person-row {
-  display: grid;
-  grid-template-columns: 100px minmax(0, 1fr) 125px;
-  column-gap: 10px;
-  row-gap: 8px;
-  align-items: center;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.person-row:last-child {
-  border-bottom: 0;
-}
-
-.person-role {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.person-ikon,
-.person-role img,
-.person-role .role-icon {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  object-fit: contain;
-}
-
-.person-role .role-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  gap: 8px;
+
+  min-height: 40px;
+  padding: 8px 12px;
+
+  border: 1px solid var(--sh-border);
+  border-radius: 11px;
+
+  background: var(--sh-surface);
+  color: var(--sh-text);
+
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
-.person-row .crew-name {
-  display: block;
-  min-height: 36px;
-  padding: 7px 9px;
-  line-height: 20px;
-  resize: none;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
+/* ============================================================
+   HOVEDOPPSETT – TRE KOLONNER
+   ============================================================ */
+
+html body.savnet-side .app-shell {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 340px;
+  gap: 14px;
+
+  align-items: start;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 14px 9px;
+
+  background: var(--sh-bg);
 }
 
-/* UTLØSENDE KRITERIUM */
+.savnet-side #shared-menu,
+.savnet-side .form-panel-frame {
+  min-width: 0;
+}
 
-.criteria-list {
+.savnet-side .form-panel {
+  height: calc(100vh - 102px);
+  min-height: 480px;
+
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.savnet-side #missingHelicopterForm {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 14px;
+
+  margin: 0;
+  padding: 0 1px 16px;
 }
 
-.criteria-chip {
+.savnet-side .sh-test-notice {
+  margin: 0 0 10px;
+  padding: 7px 12px;
+
+  color: #a32929;
+  background: #fff5f5;
+
+  border: 1px solid #e4bac0;
+  border-radius: 9px;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+}
+
+/* ============================================================
+   ALLE NI SEKSJONENE SKAL SE LIKE UT
+   ============================================================ */
+
+.savnet-side .sh-section {
+  min-width: 0;
+
+  padding: 17px 18px;
+
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-border-light);
+  border-radius: 15px;
+
+  box-shadow: 0 2px 5px rgba(16, 24, 40, 0.055);
+}
+
+.savnet-side .sh-section h2 {
+  margin: 0 0 17px;
+
+  color: var(--sh-text);
+  font-family: inherit;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.savnet-side .sh-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.savnet-side .sh-field > label,
+.savnet-side .sh-tg-card > label {
+  color: var(--sh-text);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.savnet-side .sh-field input,
+.savnet-side .sh-field textarea,
+.savnet-side .sh-tg-card input,
+.savnet-side .sh-person input,
+.savnet-side .sh-inline-note,
+.savnet-side .sh-closure input,
+.savnet-side .sh-closure textarea,
+.savnet-side .sh-question textarea {
+  display: block;
   width: 100%;
-  padding: 9px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-medium);
-  background: var(--surface);
-  color: var(--text);
-  text-align: left;
+  min-width: 0;
+  min-height: 39px;
+  padding: 9px 11px;
+
+  border: 1px solid var(--sh-border);
+  border-radius: 9px;
+
+  background: var(--sh-input);
+  color: var(--sh-text);
+
+  font-size: 13px;
+  line-height: 1.4;
 }
 
-.criteria-chip:hover {
-  border-color: var(--primary);
+.savnet-side textarea:not(#reportOutput) {
+  resize: vertical;
 }
 
-.criteria-chip.is-selected {
-  background: #eaf5fb;
-  border-color: var(--primary);
+.savnet-side input::placeholder,
+.savnet-side textarea::placeholder {
+  color: var(--sh-muted);
+  opacity: 0.75;
 }
 
-.conditional-field {
+.savnet-side .sh-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.savnet-side .sh-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.savnet-side .sh-mt {
   margin-top: 12px;
 }
 
-.conditional-field > label {
-  display: block;
-  margin-bottom: 5px;
+/* ============================================================
+   TALEGRUPPER
+   ============================================================ */
+
+.savnet-side .sh-tg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
 }
 
-.field-revealed {
-  animation: reveal-feedback 0.8s ease-out;
-}
-
-/* FEILMELDINGER */
-
-.field-error {
-  min-height: 0;
-  margin: 0;
-  color: var(--red);
-  font-size: 13px;
-}
-
-.field-error:not(:empty) {
-  margin: 0 0 10px;
-}
-
-/* RAPPORTPANEL */
-
-.side-panel {
-  grid-area: report;
-  position: sticky;
-  top: calc(var(--header-height) + var(--panel-gap));
-  align-self: start;
+.savnet-side .sh-tg-card {
   min-width: 0;
-  min-height: 0;
-  height: calc(
-    100vh - var(--header-height) - var(--panel-gap) * 2
-  );
-  height: calc(
-    100dvh - var(--header-height) - var(--panel-gap) * 2
-  );
+  padding: 9px;
+
+  border: 1px solid var(--sh-border-light);
+  border-radius: 12px;
+  background: var(--sh-bg);
 }
 
-.side-panel-inner {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 100%;
-  min-height: 0;
-  padding: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-large);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  overflow: auto;
-}
-
-.side-panel h2 {
-  flex: 0 0 auto;
-  margin: 0;
-  font-size: 20px;
-  line-height: 1.2;
-}
-
-.report-output {
+.savnet-side .sh-tg-card label {
   display: block;
-  flex: 1 1 0;
-  width: 100%;
-  height: auto;
-  min-height: 100px;
-  max-height: none;
-  margin: 0;
-  padding: 10px;
-  background: #f8fafc;
-  font-family:
-    "SFMono-Regular",
-    Consolas,
-    "Liberation Mono",
-    monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  resize: none;
-  overflow: auto;
+  margin-bottom: 6px;
 }
 
-/* RAPPORTKNAPPER */
-
-.action-buttons {
+.savnet-side #otherTgContainer {
   display: flex;
-  flex: 0 0 auto;
   flex-direction: column;
-  gap: 7px;
-  margin: 0;
+  gap: 6px;
 }
 
-.action-button {
+/* ============================================================
+   POB OG CREW
+   ============================================================ */
+
+.savnet-side .sh-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.savnet-side .sh-chips button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+
+  border: 1px solid var(--sh-border);
+  border-radius: 9px;
+
+  background: var(--sh-input);
+  color: var(--sh-text);
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.savnet-side .sh-chips button.active {
+  background: #0066a1;
+  color: #ffffff;
+  border-color: #0066a1;
+}
+
+.savnet-side .sh-crew-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.savnet-side .sh-person {
+  display: grid;
+  grid-template-columns: 95px minmax(0, 1fr) 135px;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+}
+
+.savnet-side #traineeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.savnet-side .sh-role {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
+
+  min-width: 0;
+
+  color: var(--sh-text);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.savnet-side .sh-role img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex: none;
+}
+
+/* ============================================================
+   UTLØSENDE KRITERIUM
+   ============================================================ */
+
+.savnet-side .sh-criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.savnet-side .sh-criteria button {
+  display: block;
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: var(--radius-medium);
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
+  padding: 11px 12px;
+
+  border: 1px solid var(--sh-border);
+  border-radius: 10px;
+
+  background: var(--sh-input);
+  color: var(--sh-text);
+
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.savnet-side .sh-criteria button.active {
+  background: var(--sh-blue-light);
+  border-color: var(--sh-blue);
+  color: var(--sh-blue);
+  font-weight: 750;
+}
+
+/* ============================================================
+   PUNKT 6–9
+   HVIT BAKGRUNN OG SAMME OVERSKRIFTER SOM 1–5
+   ============================================================ */
+
+.savnet-side details.sh-phase {
+  display: block;
+  padding: 17px 18px;
+
+  background: var(--sh-surface);
+}
+
+.savnet-side .sh-phase > summary.sh-phase-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+  background: transparent;
+  color: var(--sh-text);
+
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+
   cursor: pointer;
 }
 
-.action-copy {
-  background: var(--green);
+.savnet-side .sh-phase > summary::-webkit-details-marker {
+  display: none;
+}
+
+.savnet-side .sh-phase > summary::marker {
+  content: "";
+}
+
+.savnet-side .sh-chevron {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+
+  border-right: 2px solid var(--sh-muted);
+  border-bottom: 2px solid var(--sh-muted);
+
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.savnet-side .sh-phase[open] .sh-chevron {
+  transform: rotate(225deg);
+}
+
+.savnet-side .sh-phase-body {
+  padding: 16px 0 0;
+}
+
+.savnet-side .sh-check-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--sh-border-light);
+  background: transparent;
+}
+
+.savnet-side .sh-check-row:last-child {
+  border-bottom: 0;
+}
+
+.savnet-side .sh-check-row.is-done {
+  background: transparent;
+}
+
+.savnet-side .sh-check-main {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.savnet-side .sh-check-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  color: var(--sh-text);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+
+  cursor: pointer;
+}
+
+.savnet-side input[type="checkbox"] {
+  appearance: auto;
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  min-height: 17px;
+  margin: 0;
+  padding: 0;
+
+  accent-color: #0066a1;
+  cursor: pointer;
+}
+
+.savnet-side .sh-time {
+  flex: none;
+
+  color: #16834e;
+  font-size: 11px;
+  font-weight: 800;
+
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.savnet-side .sh-detail {
+  margin: 7px 0 0 26px;
+  min-width: 0;
+}
+
+.savnet-side .sh-bullet-list {
+  margin: 6px 0 3px;
+  padding-left: 19px;
+  list-style: disc;
+
+  color: var(--sh-text);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.savnet-side .sh-bullet-list li {
+  display: list-item;
+  margin: 3px 0;
+}
+
+.savnet-side .sh-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+
+  color: var(--sh-text);
+  font-size: 12px;
+  line-height: 1.4;
+
+  cursor: pointer;
+}
+
+.savnet-side .sh-sub > span:nth-child(2) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.savnet-side .sh-inline-note {
+  flex: 0 1 145px;
+  width: 145px !important;
+  min-width: 105px !important;
+  min-height: 32px !important;
+  padding: 5px 8px !important;
+  font-size: 11px !important;
+}
+
+.savnet-side .sh-info {
+  color: var(--sh-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.savnet-side .sh-question {
+  margin: 9px 0 3px 26px;
+  padding: 11px;
+
+  background: var(--sh-bg);
+  border: 1px solid var(--sh-border-light);
+  border-radius: 9px;
+}
+
+.savnet-side .sh-question-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 5px 0;
+}
+
+.savnet-side .sh-question-row > span {
+  color: var(--sh-text);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.savnet-side .sh-answer-buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.savnet-side .sh-answer-buttons button {
+  min-height: 29px;
+  padding: 5px 10px;
+
+  background: var(--sh-input);
+  color: var(--sh-text);
+
+  border: 1px solid var(--sh-border);
+  border-radius: 9px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.savnet-side .sh-answer-buttons button.active {
+  background: #0066a1;
+  color: #ffffff;
+  border-color: #0066a1;
+}
+
+.savnet-side .sh-closure {
+  margin: 10px 0 0 26px;
+}
+
+.savnet-side .sh-closure label,
+.savnet-side .sh-field-label {
+  display: block;
+  margin: 7px 0 5px;
+
+  color: var(--sh-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.savnet-side .sh-next {
+  margin: 12px 0 0;
+  padding: 9px 11px;
+
+  background: var(--sh-bg);
+  border-left: 3px solid var(--sh-blue);
+  border-radius: 5px;
+
+  color: var(--sh-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   RAPPORTPANEL
+   ============================================================ */
+
+.savnet-side .sh-report-panel {
+  position: sticky;
+  top: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  height: calc(100vh - 102px);
+  min-height: 480px;
+  min-width: 0;
+
+  padding: 17px 18px;
+
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-border-light);
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.savnet-side .sh-report-header {
+  flex: none;
+}
+
+.savnet-side .sh-report-header h2 {
+  margin: 0 0 4px;
+  color: var(--sh-text);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.savnet-side #reportStatus {
+  margin: 0;
+  color: var(--sh-muted);
+  font-size: 11px;
+}
+
+.savnet-side .sh-report-panel #reportOutput {
+  display: block;
+  flex: 1 1 auto;
+
+  width: 100%;
+  height: auto;
+  min-height: 90px;
+  margin: 0;
+  padding: 13px;
+
+  resize: none;
+  overflow-y: auto;
+
+  background: var(--sh-bg) !important;
+  color: var(--sh-text) !important;
+  -webkit-text-fill-color: var(--sh-text) !important;
+
+  border: 1px solid var(--sh-border);
+  border-radius: 10px;
+
+  font-family: Consolas, Menlo, monospace !important;
+  font-size: 11px !important;
+  line-height: 1.6;
+  opacity: 1 !important;
+}
+
+.savnet-side .sh-report-actions {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  gap: 8px;
+}
+
+.savnet-side .sh-report-actions button,
+.savnet-side .sh-report-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 10px;
+
+  border: none;
+  border-radius: 10px;
+
+  text-align: center;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.savnet-side .sh-copy {
+  background: #16834e;
   color: #ffffff;
 }
 
-.action-copy:hover {
-  background: var(--green-dark);
+.savnet-side .sh-print {
+  background: #bdbdbd;
+  color: #17212b;
 }
 
-.action-reset {
-  background: var(--red);
+.savnet-side .sh-reset {
+  background: #cc2528;
   color: #ffffff;
 }
 
-.action-reset:hover {
-  background: var(--red-dark);
+.savnet-side .sh-procedure {
+  background: #dceffa;
+  color: #174f6c;
 }
 
-.action-procedure {
-  background: var(--blue-light);
-  color: #174a67;
-}
-
-.action-procedure:hover {
-  background: var(--blue-light-hover);
-}
-
-.action-email {
-  background: var(--black);
+.savnet-side .sh-feedback {
+  background: #202124;
   color: #ffffff;
 }
 
-.action-email:hover {
-  background: #000000;
+.savnet-side .sh-report-actions :is(button, a):hover {
+  filter: brightness(0.96);
 }
 
-.action-space {
-  height: 5px;
-  flex: 0 0 5px;
+/* ============================================================
+   KVELDSMODUS
+   ============================================================ */
+
+html[data-theme="dark"] body.savnet-side .sh-section,
+html[data-theme="dark"] body.savnet-side .sh-report-panel {
+  background: var(--surface);
+  border-color: var(--border-light);
 }
 
-.copy-flash {
-  animation: copy-feedback 0.65s ease-out;
+html[data-theme="dark"] body.savnet-side .sh-tg-card,
+html[data-theme="dark"] body.savnet-side .sh-question {
+  background: #151e28;
+  border-color: var(--border);
 }
 
-@keyframes copy-feedback {
-  40% {
-    background: #35b977;
-    box-shadow: 0 0 0 4px #16834b33;
-  }
+html[data-theme="dark"] body.savnet-side .sh-phase-heading {
+  color: var(--text);
 }
 
-@keyframes reveal-feedback {
-  from {
-    background: #dceef9;
-  }
-
-  to {
-    background: transparent;
-  }
+html[data-theme="dark"] body.savnet-side .sh-time {
+  color: #8cdeb0;
 }
 
-.hidden {
-  display: none !important;
+html[data-theme="dark"] body.savnet-side .sh-test-notice {
+  background: #42262b;
+  border-color: #80404b;
+  color: #ffb9bd;
 }
 
-/* MINDRE LAPTOP */
+html[data-theme="dark"] body.savnet-side .sh-print {
+  background: #808b99;
+  color: #111820;
+}
+
+html[data-theme="dark"] body.savnet-side .sh-procedure {
+  background: #243f55;
+  color: #d8efff;
+}
+
+/* ============================================================
+   RESPONSIVT
+   ============================================================ */
 
 @media (max-width: 1200px) {
-  .app-shell {
-    grid-template-columns: 165px minmax(0, 1fr) 300px;
+
+  html body.savnet-side .app-shell {
+    grid-template-columns: 210px minmax(0, 1fr) 300px;
     gap: 10px;
-    width: calc(100% - 16px);
   }
 
-  .side-panel-inner {
-    padding: 10px;
+  .savnet-side .sh-person {
+    grid-template-columns: 82px minmax(0, 1fr) 115px;
   }
 
-  .report-output {
-    font-size: 11.5px;
+  .savnet-side .sh-check-main {
+    flex-wrap: wrap;
   }
+
 }
-
-@media (min-width: 901px) and (max-width: 1100px) {
-  .person-row {
-    grid-template-columns: 90px minmax(0, 1fr);
-  }
-
-  .person-row > input[type="tel"] {
-    grid-column: 2;
-  }
-}
-
-/* NETTBRETT OG SMAL SKJERM */
 
 @media (max-width: 900px) {
-  .app-header {
-    position: static;
-    height: auto;
-    min-height: var(--header-height);
-  }
 
-  .app-shell {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "navigation"
-      "form"
-      "report";
-    width: calc(100% - 20px);
-  }
-
-  .form-navigation,
-  .side-panel {
-    position: static;
-    top: auto;
-    height: auto;
-  }
-
-  .form-navigation-label {
-    display: none;
-  }
-
-  .form-nav-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .form-nav-link {
-    width: auto;
-  }
-
-  .form-grid-2,
-  .form-grid-3,
-  .tg-grid {
+  html body.savnet-side .app-shell {
     grid-template-columns: 1fr;
   }
 
-  .person-row {
-    grid-template-columns: 1fr;
-  }
-
-  .form-panel-frame {
+  .savnet-side .form-panel {
     height: auto;
-  }
-
-  .form-panel-frame .form-panel {
-    height: auto;
-    overflow: visible;
-    padding-right: 0;
-  }
-
-  .form-panel form {
-    padding-bottom: 0;
-  }
-
-  .form-scroll-hint {
-    display: none;
-  }
-
-  .side-panel-inner {
-    height: auto;
+    min-height: 0;
     overflow: visible;
   }
 
-  .report-output {
-    flex: 0 0 auto;
-    height: 400px;
-    min-height: 250px;
-    font-size: 12px;
-    resize: vertical;
+  .savnet-side .sh-report-panel {
+    position: static;
+    height: 600px;
   }
+
 }
 
-/* TELEFON */
+@media (max-width: 600px) {
 
-@media (max-width: 560px) {
-  .app-header {
-    padding: 12px 145px 12px 12px;
+  html body.savnet-side .app-header {
+    padding: 10px 145px 10px 12px;
   }
 
-  .app-header h1 {
-    font-size: 21px;
+  html body.savnet-side .app-header h1 {
+    font-size: 23px;
   }
 
-  .app-header .theme-toggle {
+  html body.savnet-side .theme-toggle {
     right: 12px;
+    font-size: 12px;
   }
 
-  .form-section {
-    padding: 11px;
+  .savnet-side .sh-section {
+    padding: 14px;
   }
 
-  input,
-  textarea {
-    font-size: 16px;
+  .savnet-side .sh-tg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .report-output {
-    font-size: 14px;
+  .savnet-side .sh-person {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .savnet-side .sh-role {
+    grid-column: 1 / -1;
+  }
+
 }
 
-/* REDUSERT BEVEGELSE */
+@media (max-width: 440px) {
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .savnet-side .sh-grid-2,
+  .savnet-side .sh-grid-3,
+  .savnet-side .sh-tg-grid {
+    grid-template-columns: 1fr;
   }
 
-  .copy-flash,
-  .field-revealed {
-    animation: none;
+  .savnet-side .sh-inline-note {
+    flex-basis: 100%;
+    width: 100% !important;
   }
 
-  .copy-flash {
-    outline: 2px solid #35b977;
-    outline-offset: 2px;
-  }
 }
