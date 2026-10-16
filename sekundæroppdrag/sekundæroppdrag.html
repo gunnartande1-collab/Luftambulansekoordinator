@@ -1,45 +1,662 @@
 
 <!DOCTYPE html>
 <html lang="no">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Sekundæroppdrag | Luftambulansekoordinator</title>
 
-  <!-- FELLES CSS -->
+  <!-- Felles design og meny -->
   <link rel="stylesheet" href="../felles/felles.css">
-
-  <!-- EGEN CSS FOR SEKUNDÆROPPDRAG -->
-  <link rel="stylesheet" href="sekundæroppdrag.css?v=2">
-
-  <!-- FELLES DAG- OG KVELDSMODUS -->
   <script src="../felles/felles.js" defer></script>
-
-  <!-- FELLES VENSTREMENY -->
   <script src="../felles/meny.js" defer></script>
 
-  <!-- JAVASCRIPT FOR SEKUNDÆROPPDRAG -->
-  <script src="sekundæroppdrag.js?v=2" defer></script>
+  <style>
+    /* ==========================================
+       SEKUNDÆROPPDRAG – DESIGN
+       ========================================== */
+
+    :root {
+      --secondary-bg: #eef2f5;
+      --secondary-surface: #fff;
+      --secondary-field: #fff;
+      --secondary-text: #17212b;
+      --secondary-muted: #667085;
+      --secondary-border: #dce2e8;
+      --secondary-primary: #0066a1;
+      --secondary-soft: #f6f8fa;
+      --secondary-selected: #eaf5fb;
+    }
+
+    html[data-theme="dark"] {
+      --secondary-bg: #111820;
+      --secondary-surface: #1b2530;
+      --secondary-field: #151e28;
+      --secondary-text: #e7edf4;
+      --secondary-muted: #a9b5c3;
+      --secondary-border: #344252;
+      --secondary-primary: #70bce8;
+      --secondary-soft: #202d3b;
+      --secondary-selected: #243f55;
+    }
+
+    .secondary-page,
+    .secondary-page *,
+    .secondary-page *::before,
+    .secondary-page *::after {
+      box-sizing: border-box;
+    }
+
+    html body.secondary-page {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--secondary-bg);
+      color: var(--secondary-text);
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .secondary-page input,
+    .secondary-page select,
+    .secondary-page textarea,
+    .secondary-page button {
+      font: inherit;
+    }
+
+    .secondary-page [hidden] {
+      display: none !important;
+    }
+
+    .secondary-page :focus-visible {
+      outline: 3px solid var(--secondary-primary);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================
+       HOVEDLAYOUT
+       ========================================== */
+
+    html body.secondary-page .app-shell {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr) 340px;
+      gap: 16px;
+      align-items: start;
+      width: calc(100% - 24px);
+      max-width: 1900px;
+      margin: 12px auto;
+    }
+
+    .secondary-page .sidebar {
+      grid-column: 1;
+      min-width: 0;
+    }
+
+    .secondary-page #shared-menu {
+      min-width: 0;
+    }
+
+    .secondary-page .sidebar .form-navigation {
+      position: sticky;
+      top: 12px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .secondary-page .sidebar .form-nav-icon {
+      display: none !important;
+    }
+
+    .secondary-page .main-content {
+      grid-column: 2;
+      min-width: 0;
+      padding: 0 0 35px;
+    }
+
+    .secondary-page .report-panel {
+      grid-column: 3;
+      min-width: 0;
+      position: sticky;
+      top: 12px;
+      height: calc(100vh - 24px);
+    }
+
+    /* ==========================================
+       SKJEMASEKSJONER
+       ========================================== */
+
+    .secondary-page .form-section {
+      margin-bottom: 12px;
+      padding: 19px 21px;
+      background: var(--secondary-surface);
+      border: 1px solid var(--secondary-border);
+      border-radius: 11px;
+    }
+
+    .secondary-page .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 13px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--secondary-border);
+    }
+
+    .secondary-page .section-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 32px;
+      height: 32px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 8px;
+      background: var(--secondary-soft);
+      color: var(--secondary-muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .secondary-page .section-heading h3 {
+      margin: 0 0 3px;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .secondary-page .section-heading p {
+      margin: 0;
+      color: var(--secondary-muted);
+      font-size: 12px;
+    }
+
+    /* ==========================================
+       HASTEGRAD
+       ========================================== */
+
+    .secondary-page .urgency-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .secondary-page .urgency {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 14px;
+      border: 1px solid var(--secondary-border);
+      border-left: 5px solid var(--urgency-color);
+      border-radius: 10px;
+      background: var(--secondary-soft);
+      color: var(--secondary-text);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+
+    .secondary-page .urgency input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .secondary-page .urgency-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .secondary-page .urgency small {
+      color: var(--secondary-muted);
+      font-size: 12px;
+    }
+
+    .secondary-page .urgency-acute {
+      --urgency-color: #c83b3b;
+    }
+
+    .secondary-page .urgency-urgent {
+      --urgency-color: #d4a32b;
+    }
+
+    .secondary-page .urgency-day {
+      --urgency-color: #78a67b;
+    }
+
+    .secondary-page .urgency-planned {
+      --urgency-color: #337b51;
+    }
+
+    .secondary-page .urgency:has(input:checked) {
+      background: var(--urgency-color);
+      border-color: var(--urgency-color);
+      color: white;
+      box-shadow: 0 0 0 1px var(--urgency-color);
+    }
+
+    .secondary-page .urgency:has(input:checked) small {
+      color: white;
+    }
+
+    .secondary-page .urgency-urgent:has(input:checked),
+    .secondary-page .urgency-day:has(input:checked) {
+      color: #15202b;
+    }
+
+    .secondary-page .urgency-urgent:has(input:checked) small,
+    .secondary-page .urgency-day:has(input:checked) small {
+      color: #15202b;
+    }
+
+    .secondary-page .urgency:has(input:focus-visible) {
+      outline: 3px solid var(--secondary-primary);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================
+       INPUTFELTER
+       ========================================== */
+
+    .secondary-page .field-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .secondary-page .field-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .secondary-page .field-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .secondary-page .field-grid.vitals {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .secondary-page .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      margin-bottom: 12px;
+    }
+
+    .secondary-page .field-grid .field {
+      margin-bottom: 0;
+    }
+
+    .secondary-page .field > span,
+    .secondary-page .field-label {
+      display: block;
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .secondary-page .field input,
+    .secondary-page .field select,
+    .secondary-page .field textarea,
+    .secondary-page .dynamic-row input {
+      width: 100%;
+      min-width: 0;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 9px;
+      background: var(--secondary-field);
+      color: var(--secondary-text);
+      font-size: 14px;
+    }
+
+    .secondary-page .field textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    .secondary-page input::placeholder,
+    .secondary-page textarea::placeholder {
+      color: var(--secondary-muted);
+      opacity: .75;
+    }
+
+    .secondary-page .subheading {
+      margin: 17px 0 11px;
+      font-size: 14px;
+    }
+
+    /* ==========================================
+       VALGKNAPPER
+       ========================================== */
+
+    .secondary-page .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 0 0 15px;
+    }
+
+    .secondary-page .choice {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .secondary-page .choice input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .secondary-page .choice span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 39px;
+      padding: 8px 13px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 9px;
+      background: var(--secondary-soft);
+      color: var(--secondary-text);
+      font-size: 13px;
+      font-weight: 600;
+      transition: background .15s, border-color .15s;
+    }
+
+    .secondary-page .choice:hover span {
+      border-color: var(--secondary-primary);
+    }
+
+    .secondary-page .choice input:checked + span {
+      border-color: var(--secondary-primary);
+      background: var(--secondary-selected);
+      color: var(--secondary-primary);
+      box-shadow: inset 0 0 0 1px var(--secondary-primary);
+    }
+
+    .secondary-page .choice input:focus-visible + span {
+      outline: 3px solid var(--secondary-primary);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================
+       BETINGEDE FELTER
+       ========================================== */
+
+    .secondary-page .conditional {
+      padding: 14px;
+      margin: 10px 0 15px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 10px;
+      background: var(--secondary-soft);
+    }
+
+    .secondary-page .conditional.field {
+      margin: 8px 0 16px;
+    }
+
+    /* ==========================================
+       DYNAMISKE LINJER
+       ========================================== */
+
+    .secondary-page .dynamic-editor {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--secondary-border);
+    }
+
+    .secondary-page .dynamic-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .secondary-page .dynamic-row input {
+      flex: 1;
+    }
+
+    .secondary-page .add-btn {
+      min-height: 37px;
+      margin-top: 4px;
+      padding: 8px 12px;
+      border: 1px solid var(--secondary-primary);
+      border-radius: 8px;
+      background: var(--secondary-selected);
+      color: var(--secondary-primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .secondary-page .remove-btn {
+      flex: 0 0 35px;
+      width: 35px;
+      height: 35px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 8px;
+      background: var(--secondary-surface);
+      color: #c83b3b;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* ==========================================
+       RAPPORT
+       ========================================== */
+
+    .secondary-page .report-panel-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      padding: 18px;
+      background: var(--secondary-surface);
+      border: 1px solid var(--secondary-border);
+      border-radius: 14px;
+    }
+
+    .secondary-page .report-heading h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .secondary-page .report-heading p {
+      margin: 5px 0 15px;
+      color: var(--secondary-muted);
+      font-size: 12px;
+    }
+
+    html body.secondary-page #rapport {
+      display: block;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 180px;
+      padding: 13px;
+      border: 1px solid var(--secondary-border);
+      border-radius: 10px;
+      background: var(--secondary-field);
+      color: var(--secondary-text);
+      font: 12px/1.6 ui-monospace, SFMono-Regular,
+        Menlo, Consolas, monospace;
+      resize: none;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .secondary-page .report-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      padding-top: 14px;
+    }
+
+    .secondary-page .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 43px;
+      padding: 10px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .secondary-page .copy-btn {
+      background: #247949;
+    }
+
+    .secondary-page .print-btn {
+      background: #315c7a;
+    }
+
+    .secondary-page .reset-btn {
+      background: #a53636;
+    }
+
+    .secondary-page .feedback-btn {
+      background: #263747;
+    }
+
+    .secondary-page .copy-message {
+      margin: 0;
+      color: var(--secondary-primary);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .secondary-page .copy-message:empty {
+      display: none;
+    }
+
+    .secondary-page .page-footer {
+      margin: 26px 0;
+      color: var(--secondary-muted);
+      font-size: 12px;
+    }
+
+    /* ==========================================
+       RESPONSIVT
+       ========================================== */
+
+    @media (max-width: 1350px) {
+      html body.secondary-page .app-shell {
+        grid-template-columns: 210px minmax(0, 1fr) 300px;
+        gap: 12px;
+      }
+
+      .secondary-page .form-section {
+        padding: 17px;
+      }
+
+      .secondary-page .field-grid.vitals {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1100px) {
+      html body.secondary-page .app-shell {
+        grid-template-columns: 190px minmax(0, 1fr);
+      }
+
+      .secondary-page .report-panel {
+        grid-column: 2;
+        position: static;
+        height: 450px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      html body.secondary-page .app-shell {
+        grid-template-columns: minmax(0, 1fr);
+        width: calc(100% - 16px);
+      }
+
+      .secondary-page .sidebar,
+      .secondary-page .main-content,
+      .secondary-page .report-panel {
+        grid-column: 1;
+      }
+
+      .secondary-page .field-grid.three,
+      .secondary-page .field-grid.vitals {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .secondary-page .form-section {
+        padding: 14px;
+      }
+
+      .secondary-page .urgency-grid,
+      .secondary-page .field-grid.two {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media print {
+      .secondary-page .app-header,
+      .secondary-page .sidebar,
+      .secondary-page .main-content,
+      .secondary-page .report-actions {
+        display: none !important;
+      }
+
+      html body.secondary-page .app-shell {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      .secondary-page .report-panel {
+        display: block;
+        position: static;
+        height: auto;
+      }
+
+      .secondary-page .report-panel-inner {
+        display: block;
+        border: 0;
+        padding: 0;
+      }
+
+      html body.secondary-page #rapport {
+        display: none;
+      }
+
+      #printReport {
+        display: block !important;
+        font: 11pt/1.5 Arial, sans-serif;
+        white-space: pre-wrap;
+      }
+    }
+  </style>
 </head>
 
 <body class="secondary-page">
 
-  <a class="skip-link" href="#mainContent">
-    Gå til skjema
-  </a>
-
+  <!-- TOPPFELT -->
   <header class="app-header">
     <div class="header-title">
       <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
       <h1>Sekundæroppdrag</h1>
     </div>
 
-    <button type="button"
-            id="themeToggle"
-            class="theme-toggle"
-            aria-pressed="false">
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-pressed="false">
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
@@ -47,22 +664,17 @@
 
   <div class="app-shell">
 
-    <!-- FELLES VENSTREMENY -->
+    <!-- VENSTREMENY -->
     <aside class="sidebar">
       <div id="shared-menu"></div>
     </aside>
 
-    <!-- SKJEMA I MIDTEN -->
+    <!-- HOVEDSKJEMA -->
     <main class="main-content" id="mainContent">
-
-      <div class="page-intro">
-        <h2>Intensiv- og helikoptertransport</h2>
-        <p>Informasjonsinnhenting ved sekundæroppdrag.</p>
-      </div>
 
       <form id="transportForm" autocomplete="off">
 
-        <!-- 1. HASTEGRAD -->
+        <!-- 01 HASTEGRAD -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">01</span>
@@ -73,6 +685,7 @@
           </div>
 
           <div class="urgency-grid">
+
             <label class="urgency urgency-acute">
               <input type="radio" name="hastegrad" value="Akutt">
               <span class="urgency-title">Akutt</span>
@@ -96,10 +709,11 @@
               <span class="urgency-title">Planlagt</span>
               <small>Transport kan planlegges frem i tid.</small>
             </label>
+
           </div>
         </section>
 
-        <!-- 2. TRANSPORT -->
+        <!-- 02 TRANSPORT -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">02</span>
@@ -112,12 +726,12 @@
           <div class="field-grid two">
             <label class="field">
               <span>Fra sykehus / avdeling</span>
-              <input name="fra" placeholder="Rekvirerende enhet">
+              <input name="fra" type="text">
             </label>
 
             <label class="field">
               <span>Til sykehus / avdeling</span>
-              <input name="til" placeholder="Mottakende enhet">
+              <input name="til" type="text">
             </label>
           </div>
 
@@ -134,19 +748,17 @@
 
             <label class="field">
               <span>Ressurs-ID</span>
-              <input name="ressurs" placeholder="LA / RH">
+              <input name="ressurs" type="text" placeholder="LA / RH">
             </label>
           </div>
 
           <label class="field">
             <span>Transportrelaterte opplysninger</span>
-            <textarea name="transportMerknad"
-              rows="2"
-              placeholder="Praktiske forhold, utstyr, logistikk eller andre behov"></textarea>
+            <textarea name="transportMerknad" rows="2"></textarea>
           </label>
         </section>
 
-        <!-- 3. FØLGEBEHOV -->
+        <!-- 03 FØLGEBEHOV -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">03</span>
@@ -157,32 +769,36 @@
           </div>
 
           <div class="chip-grid" data-exclusive-group="folge">
+
             <label class="choice">
-              <input type="checkbox" name="folge" value="Ikke behov"
-                     data-none>
+              <input type="checkbox" name="folge" value="Ikke behov" data-none>
               <span>Ikke behov</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="folge" value="Ambulansepersonell">
               <span>Ambulansepersonell</span>
             </label>
+
             <label class="choice">
-              <input type="checkbox" name="folge"
-                     value="Anestesi-/intensivsykepleier">
+              <input type="checkbox" name="folge" value="Anestesi-/intensivsykepleier">
               <span>Anestesi-/intensivsykepleier</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="folge" value="Anestesilege">
               <span>Anestesilege</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="folge" value="Jordmor">
               <span>Jordmor</span>
             </label>
+
           </div>
         </section>
 
-        <!-- 4. SPESIALTRANSPORT -->
+        <!-- 04 SPESIALTRANSPORT -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">04</span>
@@ -193,23 +809,27 @@
           </div>
 
           <div class="chip-grid" data-exclusive-group="spesial">
+
             <label class="choice">
-              <input type="checkbox" name="spesial"
-                     value="Ikke aktuelt" data-none>
+              <input type="checkbox" name="spesial" value="Ikke aktuelt" data-none>
               <span>Ikke aktuelt</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="spesial" value="ECMO">
               <span title="Ekstrakorporal membranoksygenering">ECMO</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="spesial" value="IABP">
               <span title="Intra-aorta ballongpumpe">IABP</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="spesial" value="Impella">
               <span>Impella</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="spesial" value="NO">
               <span title="Nitrogenmonoksid">NO</span>
@@ -218,12 +838,11 @@
 
           <label class="field">
             <span>Merknad spesialtransport</span>
-            <input name="spesialMerknad"
-                   placeholder="Utstyrsbehov og andre opplysninger">
+            <input name="spesialMerknad" placeholder="Utstyrsbehov og andre opplysninger">
           </label>
         </section>
 
-        <!-- 5. PASIENT / BARN -->
+        <!-- 05 PASIENT -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">05</span>
@@ -236,23 +855,25 @@
           <div class="field-grid three">
             <label class="field">
               <span>Alder</span>
-              <input name="alder" placeholder="Alder">
+              <input name="alder" type="text">
             </label>
+
             <label class="field">
               <span>Kjønn</span>
               <select name="kjonn">
                 <option value="">Ikke oppgitt</option>
-                <option>Mann</option>
-                <option>Kvinne</option>
+                <option value="Mann">Mann</option>
+                <option value="Kvinne">Kvinne</option>
               </select>
             </label>
+
             <label class="field">
               <span>Vekt (kg)</span>
-              <input name="vekt" inputmode="decimal" placeholder="kg">
+              <input name="vekt" inputmode="decimal">
             </label>
           </div>
 
-          <label class="field-label">Barn?</label>
+          <p class="field-label">Barn?</p>
           <div class="chip-grid">
             <label class="choice">
               <input type="radio" name="barn" value="Nei">
@@ -284,7 +905,7 @@
               </label>
             </div>
 
-            <label class="field-label">Transportform</label>
+            <p class="field-label">Transportform</p>
             <div class="chip-grid">
               <label class="choice">
                 <input type="radio" name="barnTransport" value="Kuvøse">
@@ -302,7 +923,7 @@
           </div>
         </section>
 
-        <!-- 6. AKTUELT / TIDLIGERE -->
+        <!-- 06 MEDISINSK PROBLEMSTILLING -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">06</span>
@@ -314,24 +935,22 @@
 
           <label class="field">
             <span>Aktuelt</span>
-            <textarea name="aktuelt" rows="3"
-                      placeholder="Aktuell problemstilling"></textarea>
+            <textarea name="aktuelt" rows="3"></textarea>
           </label>
 
           <label class="field">
             <span>Tidligere</span>
-            <textarea name="tidligere" rows="3"
-                      placeholder="Relevant sykehistorie"></textarea>
+            <textarea name="tidligere" rows="3"></textarea>
           </label>
         </section>
 
-        <!-- 7. LUFTVEIER -->
+        <!-- 07 LUFTVEIER -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">07</span>
             <div>
               <h3>Luftveier og respirasjon</h3>
-              <p>Velg luftveishåndtering og registrer relevante innstillinger.</p>
+              <p>Velg luftveishåndtering og relevante innstillinger.</p>
             </div>
           </div>
 
@@ -386,21 +1005,18 @@
             </div>
 
             <div id="trachDetails" hidden>
-              <label class="field-label">Trakeostomi – respirasjonsform</label>
+              <p class="field-label">Trakeostomi – respirasjonsform</p>
               <div class="chip-grid">
                 <label class="choice">
-                  <input type="radio" name="trachForm"
-                         value="Spontan via trakeostomi">
+                  <input type="radio" name="trachForm" value="Spontan via trakeostomi">
                   <span>Spontan via trakeostomi</span>
                 </label>
                 <label class="choice">
-                  <input type="radio" name="trachForm"
-                         value="O2 via trakeostomi">
+                  <input type="radio" name="trachForm" value="O2 via trakeostomi">
                   <span>O2 via trakeostomi</span>
                 </label>
                 <label class="choice">
-                  <input type="radio" name="trachForm"
-                         value="Respirator via trakeostomi">
+                  <input type="radio" name="trachForm" value="Respirator via trakeostomi">
                   <span>Respirator via trakeostomi</span>
                 </label>
               </div>
@@ -408,7 +1024,7 @@
           </div>
         </section>
 
-        <!-- 8. VITALPARAMETRE -->
+        <!-- 08 VITALPARAMETRE -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">08</span>
@@ -419,48 +1035,56 @@
           </div>
 
           <div class="field-grid vitals">
-            <label class="field"><span>RF</span>
+            <label class="field">
+              <span>RF</span>
               <input name="rf" inputmode="numeric">
             </label>
-            <label class="field"><span>SpO2 (%)</span>
+            <label class="field">
+              <span>SpO2 (%)</span>
               <input name="spo2" inputmode="numeric">
             </label>
-            <label class="field"><span>Puls</span>
+            <label class="field">
+              <span>Puls</span>
               <input name="puls" inputmode="numeric">
             </label>
-            <label class="field"><span>BT systolisk</span>
+            <label class="field">
+              <span>BT systolisk</span>
               <input name="sys" inputmode="numeric">
             </label>
-            <label class="field"><span>BT diastolisk</span>
+            <label class="field">
+              <span>BT diastolisk</span>
               <input name="dia" inputmode="numeric">
             </label>
-            <label class="field"><span>MAP</span>
+            <label class="field">
+              <span>MAP</span>
               <input name="map" inputmode="numeric">
             </label>
-            <label class="field"><span>Temperatur (°C)</span>
+            <label class="field">
+              <span>Temperatur (°C)</span>
               <input name="temp" inputmode="decimal">
             </label>
-            <label class="field"><span>GCS</span>
+            <label class="field">
+              <span>GCS</span>
               <input name="gcs" placeholder="3–15">
             </label>
           </div>
         </section>
 
-        <!-- 9. MEDIKAMENTER -->
+        <!-- 09 MEDIKAMENTER -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">09</span>
             <div>
               <h3>Medikamenter og infusjoner</h3>
-              <p>Registrer oppgitte preparater og eventuelle infusjoner.</p>
+              <p>Registrer oppgitte preparater og infusjoner.</p>
             </div>
           </div>
 
-          <label class="field-label">Sedasjon / analgesi</label>
+          <p class="field-label">Sedasjon / analgesi</p>
+
           <div class="chip-grid" data-exclusive-group="sedasjon">
             <label class="choice">
-              <input type="checkbox" name="sedasjon"
-                     value="Nei" data-none>
+              <input type="checkbox" name="sedasjon" value="Nei" data-none>
               <span>Nei</span>
             </label>
             <label class="choice">
@@ -486,28 +1110,31 @@
           </div>
 
           <div class="dynamic-editor">
-            <label class="field-label">Sedasjon – preparat og infusjon</label>
-            <div id="sedationRows" class="dynamic-list"></div>
-            <button type="button" class="add-btn"
-                    data-add="sedationRows">+ Legg til</button>
+            <p class="field-label">Sedasjon – preparat og infusjon</p>
+            <div id="sedationRows"></div>
+            <button type="button" class="add-btn" data-add="sedationRows">
+              + Legg til
+            </button>
           </div>
 
           <div class="dynamic-editor">
-            <label class="field-label">Vasoaktive medikamenter</label>
-            <div id="pressorRows" class="dynamic-list"></div>
-            <button type="button" class="add-btn"
-                    data-add="pressorRows">+ Legg til</button>
+            <p class="field-label">Vasoaktive medikamenter</p>
+            <div id="pressorRows"></div>
+            <button type="button" class="add-btn" data-add="pressorRows">
+              + Legg til
+            </button>
           </div>
 
           <div class="dynamic-editor">
-            <label class="field-label">Andre infusjoner / medikamenter</label>
-            <div id="otherMedicationRows" class="dynamic-list"></div>
-            <button type="button" class="add-btn"
-                    data-add="otherMedicationRows">+ Legg til</button>
+            <p class="field-label">Andre infusjoner / medikamenter</p>
+            <div id="otherMedicationRows"></div>
+            <button type="button" class="add-btn" data-add="otherMedicationRows">
+              + Legg til
+            </button>
           </div>
         </section>
 
-        <!-- 10. TILGANGER -->
+        <!-- 10 TILGANGER -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">10</span>
@@ -519,8 +1146,7 @@
 
           <div class="chip-grid" data-exclusive-group="tilganger">
             <label class="choice">
-              <input type="checkbox" name="tilganger"
-                     value="Ingen" data-none>
+              <input type="checkbox" name="tilganger" value="Ingen" data-none>
               <span>Ingen</span>
             </label>
             <label class="choice">
@@ -539,36 +1165,38 @@
                 <span>CVK – antall lumen</span>
                 <select name="cvkLumen">
                   <option value="">Ikke angitt</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
                 </select>
               </label>
+
               <label class="field" id="pvkField">
                 <span>PVK – antall</span>
                 <select name="pvkAntall">
                   <option value="">Ikke angitt</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
                 </select>
               </label>
             </div>
           </div>
 
           <div class="dynamic-editor">
-            <label class="field-label">Andre tilganger</label>
-            <div id="accessRows" class="dynamic-list"></div>
-            <button type="button" class="add-btn"
-                    data-add="accessRows">+ Legg til</button>
+            <p class="field-label">Andre tilganger</p>
+            <div id="accessRows"></div>
+            <button type="button" class="add-btn" data-add="accessRows">
+              + Legg til
+            </button>
           </div>
         </section>
 
-        <!-- 11. UTSTYR -->
+        <!-- 11 UTSTYR -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">11</span>
@@ -580,8 +1208,7 @@
 
           <div class="chip-grid" data-exclusive-group="utstyr">
             <label class="choice">
-              <input type="checkbox" name="utstyr"
-                     value="Ingen" data-none>
+              <input type="checkbox" name="utstyr" value="Ingen" data-none>
               <span>Ingen</span>
             </label>
             <label class="choice">
@@ -603,24 +1230,30 @@
               <span>Antall sprøytepumper</span>
               <select name="pumperAntall">
                 <option value="">Ikke oppgitt</option>
-                <option>1</option><option>2</option>
-                <option>3</option><option>4</option>
-                <option>5</option><option>6</option>
-                <option>7</option><option>8</option>
-                <option>9</option><option>10</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
               </select>
             </label>
           </div>
 
           <div class="dynamic-editor">
-            <label class="field-label">Annet utstyr</label>
-            <div id="equipmentRows" class="dynamic-list"></div>
-            <button type="button" class="add-btn"
-                    data-add="equipmentRows">+ Legg til</button>
+            <p class="field-label">Annet utstyr</p>
+            <div id="equipmentRows"></div>
+            <button type="button" class="add-btn" data-add="equipmentRows">
+              + Legg til
+            </button>
           </div>
         </section>
 
-        <!-- 12. SIKKERHET -->
+        <!-- 12 SMITTE OG CAVE -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">12</span>
@@ -630,36 +1263,44 @@
             </div>
           </div>
 
-          <label class="field-label">Smitte</label>
+          <p class="field-label">Smitte</p>
+
           <div class="chip-grid">
             <label class="choice">
-              <input type="radio" name="smitte" value="Ingen kjente">
+              <input type="radio" name="smitte" value="Ingen kjente" id="smitteIngen">
               <span>Ingen kjente</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="smitte" value="Kontaktsmitte">
               <span>Kontaktsmitte</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="smitte" value="Dråpesmitte">
               <span>Dråpesmitte</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="smitte" value="Luftsmitte">
               <span>Luftsmitte</span>
             </label>
+
             <label class="choice">
-              <input type="checkbox" name="blodsmitte" value="Blodsmitte">
+              <input type="checkbox" name="blodsmitte" value="Blodsmitte" id="blodsmitte">
               <span>Blodsmitte</span>
             </label>
           </div>
 
-          <label class="field">
+          <label class="field conditional" id="infectionDetails" hidden>
             <span>Spesifisering smitte</span>
-            <input name="smitteMerknad">
+            <input
+              name="smitteMerknad"
+              placeholder="Oppgi smittestoff eller relevante forhold">
           </label>
 
-          <label class="field-label">CAVE</label>
+          <p class="field-label">CAVE</p>
+
           <div class="chip-grid">
             <label class="choice">
               <input type="radio" name="cave" value="Nei">
@@ -675,13 +1316,13 @@
             </label>
           </div>
 
-          <label class="field" id="caveDetails" hidden>
+          <label class="field conditional" id="caveDetails" hidden>
             <span>Beskrivelse CAVE</span>
             <input name="caveMerknad" placeholder="Spesifiser">
           </label>
         </section>
 
-        <!-- 13. LEGEKONTAKT -->
+        <!-- 13 LEGEKONTAKT -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">13</span>
@@ -695,11 +1336,11 @@
           <div class="field-grid two">
             <label class="field">
               <span>Navn</span>
-              <input name="rekLege" placeholder="Navn">
+              <input name="rekLege">
             </label>
             <label class="field">
               <span>Telefon</span>
-              <input name="rekTlf" type="tel" placeholder="Telefonnummer">
+              <input name="rekTlf" type="tel">
             </label>
           </div>
 
@@ -707,11 +1348,11 @@
           <div class="field-grid two">
             <label class="field">
               <span>Navn</span>
-              <input name="mottLege" placeholder="Navn">
+              <input name="mottLege">
             </label>
             <label class="field">
               <span>Telefon</span>
-              <input name="mottTlf" type="tel" placeholder="Telefonnummer">
+              <input name="mottTlf" type="tel">
             </label>
           </div>
         </section>
@@ -723,7 +1364,7 @@
       </footer>
     </main>
 
-    <!-- RAPPORT TIL HØYRE -->
+    <!-- RAPPORTPANEL -->
     <aside class="report-panel" aria-label="Rapportpanel">
       <div class="report-panel-inner">
 
@@ -734,47 +1375,781 @@
 
         <textarea
           id="rapport"
-          class="report-output"
           readonly
           aria-label="Generert rapport"
           placeholder="Velg hastegrad og fyll ut skjemaet…"></textarea>
 
+        <pre id="printReport" hidden></pre>
+
         <div class="report-actions">
           <button type="button" id="copyBtn" class="action-btn copy-btn">
-            <span aria-hidden="true">⧉</span>
-            <span>Kopier tekst</span>
+            ⧉ Kopier tekst
           </button>
 
-               <button
-            type="button"
-            id="printButton"
-            class="action-button action-print"
-          >
-            <span aria-hidden="true">🖨️</span>
-            <span>Skriv ut</span>
+          <button type="button" id="printButton" class="action-btn print-btn">
+            🖨️ Skriv ut
           </button>
-
 
           <button type="button" id="resetBtn" class="action-btn reset-btn">
-            <span aria-hidden="true">⌫</span>
-            <span>Tøm skjema</span>
+            ⌫ Tøm skjema
           </button>
 
-          <a class="action-btn feedback-btn"
-             href="https://outlook.office.com/mail/deeplink/compose?to=b32838@ous-hf.no&amp;subject=Tilbakemelding%20sekund%C3%A6roppdrag"
-             target="_blank"
-             rel="noopener noreferrer">
+          <a
+            class="action-btn feedback-btn"
+            href="https://outlook.office.com/mail/deeplink/compose?to=b32838@ous-hf.no&amp;subject=Tilbakemelding%20sekund%C3%A6roppdrag"
+            target="_blank"
+            rel="noopener noreferrer">
             Send tilbakemelding
           </a>
 
-          <p id="copyMsg" class="copy-message"
-             role="status" aria-live="polite"></p>
+          <p id="copyMsg" class="copy-message" role="status" aria-live="polite"></p>
         </div>
-
       </div>
     </aside>
-
   </div>
+
+  <!-- ==========================================
+       JAVASCRIPT – SEKUNDÆROPPDRAG
+       ========================================== -->
+
+  <script>
+    (() => {
+      "use strict";
+
+      const form = document.getElementById("transportForm");
+      const rapport = document.getElementById("rapport");
+      const copyBtn = document.getElementById("copyBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const copyMsg = document.getElementById("copyMsg");
+
+      if (!form || !rapport) return;
+
+      let copyTimer = null;
+
+      /* ========================================
+         HJELPEFUNKSJONER
+         ======================================== */
+
+      const clean = value => String(value ?? "").trim();
+
+      function value(name) {
+        const element = form.elements.namedItem(name);
+        if (!element) return "";
+
+        if (element instanceof RadioNodeList) {
+          return clean(element.value);
+        }
+
+        return clean(element.value);
+      }
+
+      function checkedValues(name) {
+        return Array.from(
+          form.querySelectorAll(`input[name="${name}"]:checked`)
+        ).map(element => element.value);
+      }
+
+      function selected(name) {
+        return checkedValues(name)[0] || "";
+      }
+
+      function appendLine(lines, label, data) {
+        const text = clean(data);
+        if (text) lines.push(`${label}: ${text}`);
+      }
+
+      function appendSection(lines, title, entries) {
+        if (!entries.length) return;
+        if (lines.length) lines.push("");
+        lines.push(title.toUpperCase());
+        lines.push(...entries);
+      }
+
+      function dynamicValues(id) {
+        const container = document.getElementById(id);
+        if (!container) return [];
+
+        return Array.from(container.querySelectorAll("input"))
+          .map(input => clean(input.value))
+          .filter(Boolean);
+      }
+
+      function setVisible(id, visible) {
+        const element = document.getElementById(id);
+        if (element) element.hidden = !visible;
+      }
+
+      /* ========================================
+         EKSKLUSIVE VALG
+         ======================================== */
+
+      document.querySelectorAll("[data-exclusive-group]").forEach(group => {
+        group.addEventListener("change", event => {
+          const changed = event.target;
+
+          if (!changed.matches('input[type="checkbox"]')) return;
+          if (!changed.checked) return;
+
+          const boxes = Array.from(
+            group.querySelectorAll('input[type="checkbox"]')
+          );
+
+          if (changed.hasAttribute("data-none")) {
+            boxes.forEach(box => {
+              if (box !== changed) box.checked = false;
+            });
+          } else {
+            const none = boxes.find(box => box.hasAttribute("data-none"));
+            if (none) none.checked = false;
+          }
+        });
+      });
+
+      /* ========================================
+         BARN
+         ======================================== */
+
+      function updateChildDetails() {
+        const child = selected("barn");
+        setVisible("childDetails", Boolean(child && child !== "Nei"));
+      }
+
+      /* ========================================
+         LUFTVEIER
+         ======================================== */
+
+      function updateAirwayDetails() {
+        const airway = selected("luftvei");
+        const trach = selected("trachForm");
+
+        const oxygen = Boolean(airway && airway !== "Spontan uten O2");
+
+        setVisible("oxygenDetails", oxygen);
+        setVisible("trachDetails", airway === "Trakeostomi");
+
+        const flow =
+          airway === "Spontan med O2" ||
+          airway === "High flow" ||
+          (airway === "Trakeostomi" && trach === "O2 via trakeostomi");
+
+        const fio2 =
+          airway === "High flow" ||
+          airway === "NIV (CPAP/BiPAP)" ||
+          airway === "Intubert" ||
+          (airway === "Trakeostomi" && trach === "Respirator via trakeostomi");
+
+        const ventilation =
+          airway === "Intubert" ||
+          (airway === "Trakeostomi" && trach === "Respirator via trakeostomi");
+
+        setVisible("flowField", flow);
+        setVisible("fio2Field", fio2);
+        setVisible("peepField", ventilation);
+        setVisible("peakField", ventilation);
+      }
+
+      /* ========================================
+         TILGANGER OG UTSTYR
+         ======================================== */
+
+      function updateAccessDetails() {
+        const access = checkedValues("tilganger");
+
+        setVisible(
+          "accessDetails",
+          access.includes("CVK") || access.includes("PVK")
+        );
+
+        setVisible("cvkField", access.includes("CVK"));
+        setVisible("pvkField", access.includes("PVK"));
+      }
+
+      function updateEquipmentDetails() {
+        setVisible(
+          "pumpDetails",
+          checkedValues("utstyr").includes("Sprøytepumper")
+        );
+      }
+
+      /* ========================================
+         SMITTE
+         ======================================== */
+
+      const infectionNone = document.getElementById("smitteIngen");
+      const bloodInfection = document.getElementById("blodsmitte");
+
+      function updateInfectionDetails() {
+        const infection = selected("smitte");
+
+        if (infection === "Ingen kjente" && bloodInfection.checked) {
+          infectionNone.checked = false;
+        }
+
+        const currentInfection = selected("smitte");
+
+        const hasInfection =
+          (Boolean(currentInfection) && currentInfection !== "Ingen kjente") ||
+          bloodInfection.checked;
+
+        setVisible("infectionDetails", hasInfection);
+      }
+
+      infectionNone.addEventListener("change", () => {
+        if (infectionNone.checked) bloodInfection.checked = false;
+      });
+
+      bloodInfection.addEventListener("change", () => {
+        if (bloodInfection.checked) infectionNone.checked = false;
+      });
+
+      /* ========================================
+         CAVE
+         ======================================== */
+
+      function updateCaveDetails() {
+        setVisible("caveDetails", selected("cave") === "Ja");
+      }
+
+      function updateConditions() {
+        updateChildDetails();
+        updateAirwayDetails();
+        updateAccessDetails();
+        updateEquipmentDetails();
+        updateInfectionDetails();
+        updateCaveDetails();
+      }
+
+      /* ========================================
+         DYNAMISKE LINJER
+         ======================================== */
+
+      const dynamicLists = {
+        sedationRows: "Preparat, dose / infusjon",
+        pressorRows: "Medikament, dose / infusjon",
+        otherMedicationRows: "Medikament eller infusjon",
+        accessRows: "Annen tilgang",
+        equipmentRows: "Annet utstyr"
+      };
+
+      function addDynamicRow(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const row = document.createElement("div");
+        row.className = "dynamic-row";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = dynamicLists[containerId] || "Opplysning";
+        input.setAttribute("aria-label", input.placeholder);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-btn";
+        remove.textContent = "×";
+        remove.setAttribute("aria-label", "Fjern linje");
+
+        remove.addEventListener("click", () => {
+          row.remove();
+          buildReport();
+        });
+
+        input.addEventListener("input", buildReport);
+
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            addDynamicRow(containerId);
+          }
+        });
+
+        row.append(input, remove);
+        container.appendChild(row);
+        input.focus();
+      }
+
+      document.querySelectorAll("[data-add]").forEach(button => {
+        button.addEventListener("click", () => {
+          addDynamicRow(button.dataset.add);
+        });
+      });
+
+      /* ========================================
+         RAPPORTBYGGER
+         ======================================== */
+
+      function buildReport() {
+        const lines = [];
+        const haste = selected("hastegrad");
+
+        lines.push("SEKUNDÆROPPDRAG");
+        lines.push("Intensiv- og helikoptertransport");
+
+        if (haste) {
+          lines.push(`Rekvirert hastegrad: ${haste}`);
+        }
+
+        /* TRANSPORT */
+
+        const transport = [];
+
+        appendLine(transport, "Fra", value("fra"));
+        appendLine(transport, "Til", value("til"));
+        appendLine(transport, "Dato", value("dato"));
+        appendLine(transport, "Klokkeslett", value("tidspunkt"));
+        appendLine(transport, "Ressurs-ID", value("ressurs"));
+        appendLine(
+          transport,
+          "Transportopplysninger",
+          value("transportMerknad")
+        );
+
+        appendSection(lines, "Transport", transport);
+
+        /* FØLGEBEHOV */
+
+        const follow = checkedValues("folge");
+
+        if (follow.length) {
+          appendSection(lines, "Følgebehov fra rekvirent", [
+            follow.join(", ")
+          ]);
+        }
+
+        /* SPESIALTRANSPORT */
+
+        const special = checkedValues("spesial");
+        const specialLines = [];
+
+        if (special.length) {
+          specialLines.push(special.join(", "));
+        }
+
+        appendLine(
+          specialLines,
+          "Merknad",
+          value("spesialMerknad")
+        );
+
+        appendSection(lines, "Spesialtransport", specialLines);
+
+        /* PASIENT */
+
+        const patient = [];
+
+        appendLine(patient, "Alder", value("alder"));
+        appendLine(patient, "Kjønn", value("kjonn"));
+
+        if (value("vekt")) {
+          appendLine(patient, "Vekt", `${value("vekt")} kg`);
+        }
+
+        const child = selected("barn");
+
+        if (child) {
+          appendLine(patient, "Barn", child);
+
+          if (child !== "Nei") {
+            const ga = [];
+
+            if (value("gaUker")) {
+              ga.push(`${value("gaUker")} uker`);
+            }
+
+            if (value("gaDager")) {
+              ga.push(`${value("gaDager")} dager`);
+            }
+
+            if (ga.length) {
+              appendLine(patient, "Gestasjonsalder", ga.join(" + "));
+            }
+
+            appendLine(
+              patient,
+              "Transportform",
+              selected("barnTransport")
+            );
+          }
+        }
+
+        appendSection(lines, "Pasient", patient);
+
+        /* MEDISINSK PROBLEMSTILLING */
+
+        const medical = [];
+
+        appendLine(medical, "Aktuelt", value("aktuelt"));
+        appendLine(medical, "Tidligere", value("tidligere"));
+
+        appendSection(lines, "Medisinsk problemstilling", medical);
+
+        /* LUFTVEIER */
+
+        const airwayLines = [];
+        const airway = selected("luftvei");
+
+        if (airway) airwayLines.push(airway);
+
+        if (airway === "Trakeostomi") {
+          appendLine(
+            airwayLines,
+            "Respirasjonsform",
+            selected("trachForm")
+          );
+        }
+
+        if (airway && !document.getElementById("flowField").hidden) {
+          if (value("flow")) {
+            appendLine(airwayLines, "O2 / flow", `${value("flow")} l/min`);
+          }
+        }
+
+        if (airway && !document.getElementById("fio2Field").hidden) {
+          if (value("fio2")) {
+            appendLine(airwayLines, "FiO2", `${value("fio2")} %`);
+          }
+        }
+
+        if (airway && !document.getElementById("peepField").hidden) {
+          appendLine(airwayLines, "PEEP", value("peep"));
+        }
+
+        if (airway && !document.getElementById("peakField").hidden) {
+          appendLine(airwayLines, "Topptrykk", value("topptrykk"));
+        }
+
+        appendSection(lines, "Luftveier", airwayLines);
+
+        /* VITALPARAMETRE */
+
+        const vitals = [];
+
+        if (value("rf")) vitals.push(`RF ${value("rf")}`);
+        if (value("spo2")) vitals.push(`SpO2 ${value("spo2")} %`);
+        if (value("puls")) vitals.push(`Puls ${value("puls")}`);
+
+        const sys = value("sys");
+        const dia = value("dia");
+
+        if (sys || dia) {
+          vitals.push(`BT ${sys || "?"}/${dia || "?"}`);
+        }
+
+        if (value("map")) vitals.push(`MAP ${value("map")}`);
+        if (value("temp")) vitals.push(`Tmp ${value("temp")} °C`);
+        if (value("gcs")) vitals.push(`GCS ${value("gcs")}`);
+
+        if (vitals.length) {
+          appendSection(lines, "Vitalparametre", [
+            vitals.join(", ")
+          ]);
+        }
+
+        /* MEDIKAMENTER */
+
+        const medication = [];
+        const sedations = checkedValues("sedasjon");
+
+        if (sedations.length) {
+          appendLine(
+            medication,
+            "Sedasjon / analgesi",
+            sedations.join(", ")
+          );
+        }
+
+        const sedationRows = dynamicValues("sedationRows");
+
+        if (sedationRows.length) {
+          appendLine(
+            medication,
+            "Sedasjon / infusjon",
+            sedationRows.join("; ")
+          );
+        }
+
+        const pressorRows = dynamicValues("pressorRows");
+
+        if (pressorRows.length) {
+          appendLine(
+            medication,
+            "Vasoaktive medikamenter",
+            pressorRows.join("; ")
+          );
+        }
+
+        const otherRows = dynamicValues("otherMedicationRows");
+
+        if (otherRows.length) {
+          appendLine(
+            medication,
+            "Andre medikamenter / infusjoner",
+            otherRows.join("; ")
+          );
+        }
+
+        appendSection(lines, "Medikamenter", medication);
+
+        /* TILGANGER */
+
+        const access = [];
+        const accessValues = checkedValues("tilganger");
+
+        if (accessValues.includes("Ingen")) {
+          access.push("Ingen oppgitte tilganger");
+        } else {
+          if (accessValues.includes("CVK")) {
+            let cvk = "CVK";
+
+            if (value("cvkLumen")) {
+              cvk += `, ${value("cvkLumen")} lumen`;
+            }
+
+            access.push(cvk);
+          }
+
+          if (accessValues.includes("PVK")) {
+            let pvk = "PVK";
+
+            if (value("pvkAntall")) {
+              pvk += `, ${value("pvkAntall")} stk`;
+            }
+
+            access.push(pvk);
+          }
+        }
+
+        access.push(...dynamicValues("accessRows"));
+
+        appendSection(lines, "Tilganger", access);
+
+        /* UTSTYR */
+
+        const equipment = [];
+        const equipmentValues = checkedValues("utstyr");
+
+        if (equipmentValues.includes("Ingen")) {
+          equipment.push("Ingen oppgitt");
+        } else {
+          equipmentValues.forEach(item => {
+            if (item === "Sprøytepumper") {
+              const count = value("pumperAntall");
+
+              equipment.push(
+                count
+                  ? `Sprøytepumper: ${count} stk`
+                  : "Sprøytepumper"
+              );
+            } else {
+              equipment.push(item);
+            }
+          });
+        }
+
+        equipment.push(...dynamicValues("equipmentRows"));
+
+        appendSection(lines, "Medisinsk utstyr", equipment);
+
+        /* SMITTE OG CAVE */
+
+        const safety = [];
+        const infection = selected("smitte");
+        const blood = bloodInfection.checked;
+
+        if (infection === "Ingen kjente") {
+          safety.push("Smitte: Ingen kjente");
+        } else {
+          if (infection) {
+            appendLine(safety, "Smitte", infection);
+          }
+
+          if (blood) {
+            safety.push("Blodsmitte");
+          }
+
+          if (infection || blood) {
+            appendLine(
+              safety,
+              "Smitteopplysninger",
+              value("smitteMerknad")
+            );
+          }
+        }
+
+        const cave = selected("cave");
+
+        appendLine(safety, "CAVE", cave);
+
+        if (cave === "Ja") {
+          appendLine(
+            safety,
+            "CAVE-spesifisering",
+            value("caveMerknad")
+          );
+        }
+
+        appendSection(lines, "Smitte og CAVE", safety);
+
+        /* LEGEKONTAKT */
+
+        const contacts = [];
+
+        if (value("rekLege") || value("rekTlf")) {
+          contacts.push(
+            `Rekvirerende lege: ${
+              [value("rekLege"), value("rekTlf")]
+                .filter(Boolean)
+                .join(" / ")
+            }`
+          );
+        }
+
+        if (value("mottLege") || value("mottTlf")) {
+          contacts.push(
+            `Mottakende lege: ${
+              [value("mottLege"), value("mottTlf")]
+                .filter(Boolean)
+                .join(" / ")
+            }`
+          );
+        }
+
+        appendSection(lines, "Legekontakt", contacts);
+
+        rapport.value = lines.join("\n");
+        document.getElementById("printReport").textContent = rapport.value;
+      }
+
+      /* ========================================
+         KOPIER RAPPORT
+         ======================================== */
+
+      function showCopyMessage(message) {
+        copyMsg.textContent = message;
+
+        if (copyTimer) clearTimeout(copyTimer);
+
+        copyTimer = setTimeout(() => {
+          copyMsg.textContent = "";
+        }, 5000);
+      }
+
+      async function copyReport() {
+        const text = rapport.value;
+        if (!text.trim()) return;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            rapport.focus();
+            rapport.select();
+
+            const success = document.execCommand("copy");
+
+            if (!success) {
+              throw new Error("Kopiering feilet");
+            }
+
+            rapport.setSelectionRange(0, 0);
+          }
+
+          showCopyMessage("Tekst kopiert");
+        } catch (error) {
+          console.error("Kopiering feilet:", error);
+          showCopyMessage("Kunne ikke kopiere teksten.");
+        }
+      }
+
+      copyBtn.addEventListener("click", copyReport);
+
+      /* ========================================
+         UTSKRIFT
+         ======================================== */
+
+      document.getElementById("printButton").addEventListener("click", () => {
+        buildReport();
+        window.print();
+      });
+
+      /* ========================================
+         TØM SKJEMA
+         ======================================== */
+
+      resetBtn.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          "Vil du tømme hele sekundæroppdragsskjemaet?"
+        );
+
+        if (!confirmed) return;
+
+        form.reset();
+
+        Object.keys(dynamicLists).forEach(id => {
+          const container = document.getElementById(id);
+          if (container) container.replaceChildren();
+        });
+
+        copyMsg.textContent = "";
+
+        if (copyTimer) {
+          clearTimeout(copyTimer);
+          copyTimer = null;
+        }
+
+        updateConditions();
+        buildReport();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+
+      /* ========================================
+         SKJEMAOPPDATERING
+         ======================================== */
+
+      form.addEventListener("submit", event => {
+        event.preventDefault();
+      });
+
+      form.addEventListener("input", buildReport);
+
+      form.addEventListener("change", () => {
+        updateConditions();
+        buildReport();
+      });
+
+      /* ========================================
+         DAGENS DATO
+         ======================================== */
+
+      function localDateString() {
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+      }
+
+      const dateField = document.getElementById("oppdragDato");
+
+      if (dateField && !dateField.value) {
+        dateField.value = localDateString();
+      }
+
+      /* ========================================
+         INITIALISERING
+         ======================================== */
+
+      updateConditions();
+      buildReport();
+
+    })();
+  </script>
 
 </body>
 </html>
