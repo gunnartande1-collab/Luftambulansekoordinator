@@ -30,7 +30,7 @@ const LOGO_FILE = "logo-ous-e-post.png";
 const EMAIL = {
   to: "ekomvarsling@nkom.no",
   cc: "geisto@ous-hf.no",
-  feedback: "b32838@ous.hf.no",
+  feedback: "b32838@ous-hf.no",
   replyAddress: "la-oslo.amk@ous-hf.no",
   website: "https://www.oslo-universitetssykehus.no"
 };

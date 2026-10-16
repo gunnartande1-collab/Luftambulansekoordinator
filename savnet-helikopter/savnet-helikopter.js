@@ -1483,7 +1483,7 @@
     );
 
     window.location.href =
-      "mailto:la-oslo.amk@ous-hf.no" +
+      "mailto:b32838@ous-hf.no" +
       "?subject=" + subject +
       "&body=" + body;
   }
