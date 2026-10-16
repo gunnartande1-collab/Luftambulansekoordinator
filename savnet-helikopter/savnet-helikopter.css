@@ -1,9 +1,4 @@
 
-/* ============================================================
-   SAVNET HELIKOPTER – KOMPLETT CSS
-   Versjon 20261015-8
-   ============================================================ */
-
 body.savnet-side {
   --sh-bg: var(--background, #edf2f5);
   --sh-surface: var(--surface, #ffffff);
@@ -14,11 +9,9 @@ body.savnet-side {
   --sh-blue: var(--primary, #0066a1);
   --sh-blue-light: var(--blue-light, #eaf5fb);
   --sh-input: #ffffff;
-
   background: var(--sh-bg);
   color: var(--sh-text);
-  font-family: -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
 
 html[data-theme="dark"] body.savnet-side {
@@ -31,66 +24,30 @@ html[data-theme="dark"] body.savnet-side {
   box-sizing: border-box;
 }
 
-.savnet-side [hidden] {
-  display: none !important;
-}
-
+.savnet-side [hidden] { display: none !important; }
 .savnet-side button,
 .savnet-side input,
-.savnet-side textarea {
-  font-family: inherit;
-}
+.savnet-side textarea { font-family: inherit; }
+.savnet-side button { cursor: pointer; }
 
-.savnet-side button {
-  cursor: pointer;
-}
-
-.savnet-side :is(
-  input, textarea, button, summary, a
-):focus-visible {
+.savnet-side :is(input, textarea, button, summary, a):focus-visible {
   outline: 3px solid var(--sh-blue);
   outline-offset: 2px;
 }
 
-/* ============================================================
-   TOPPFELT
-   ============================================================ */
-
-html body.savnet-side .app-header {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  width: 100%;
-  min-height: 70px;
-  margin: 0;
-  padding: 8px 190px 9px 20px;
-
-  background: var(--sh-surface);
-  border-bottom: 1px solid var(--sh-border-light);
-  box-shadow: none;
-}
-
-.savnet-side .header-title {
-  min-width: 0;
-}
+.savnet-side .header-title { min-width: 0; }
 
 html body.savnet-side .app-eyebrow {
   margin: 0 0 4px;
   color: var(--sh-muted);
-  font-family: inherit;
   font-size: 12px;
   font-weight: 800;
-  line-height: 1.25;
   letter-spacing: 0.075em;
 }
 
 html body.savnet-side .app-header h1 {
   margin: 0;
   color: var(--sh-text);
-  font-family: inherit;
   font-size: 28px;
   font-weight: 800;
   line-height: 1.15;
@@ -102,59 +59,45 @@ html body.savnet-side .theme-toggle {
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   min-height: 40px;
   padding: 8px 12px;
-
   border: 1px solid var(--sh-border);
   border-radius: 11px;
-
   background: var(--sh-surface);
   color: var(--sh-text);
-
   font-size: 13px;
   font-weight: 750;
   white-space: nowrap;
 }
 
-/* ============================================================
-   HOVEDOPPSETT – TRE KOLONNER
-   ============================================================ */
-
+/* HOVEDOPPSETT */
 html body.savnet-side .app-shell {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr) 340px;
   gap: 14px;
-
   align-items: start;
   width: 100%;
   max-width: none;
   margin: 0;
   padding: 14px 9px;
-
   background: var(--sh-bg);
 }
 
 .savnet-side #shared-menu,
-.savnet-side .form-panel-frame {
-  min-width: 0;
-}
+.savnet-side .form-panel-frame { min-width: 0; }
 
 .savnet-side .form-panel {
   height: calc(100vh - 102px);
   min-height: 480px;
-
   padding: 0;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-
   background: transparent;
   border: none;
   border-radius: 0;
@@ -164,47 +107,23 @@ html body.savnet-side .app-shell {
   display: flex;
   flex-direction: column;
   gap: 14px;
-
   margin: 0;
   padding: 0 1px 16px;
 }
 
-.savnet-side .sh-test-notice {
-  margin: 0 0 10px;
-  padding: 7px 12px;
-
-  color: #a32929;
-  background: #fff5f5;
-
-  border: 1px solid #e4bac0;
-  border-radius: 9px;
-
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.035em;
-}
-
-/* ============================================================
-   ALLE NI SEKSJONENE SKAL SE LIKE UT
-   ============================================================ */
-
+/* SEKSJONER */
 .savnet-side .sh-section {
   min-width: 0;
-
   padding: 17px 18px;
-
   background: var(--sh-surface);
   border: 1px solid var(--sh-border-light);
   border-radius: 15px;
-
-  box-shadow: 0 2px 5px rgba(16, 24, 40, 0.055);
+  box-shadow: 0 2px 5px rgba(16,24,40,.055);
 }
 
 .savnet-side .sh-section h2 {
   margin: 0 0 17px;
-
   color: var(--sh-text);
-  font-family: inherit;
   font-size: 20px;
   line-height: 1.25;
   font-weight: 800;
@@ -233,31 +152,27 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-inline-note,
 .savnet-side .sh-closure input,
 .savnet-side .sh-closure textarea,
-.savnet-side .sh-question textarea {
+.savnet-side .sh-question textarea,
+.savnet-side .sh-nbko-note {
   display: block;
   width: 100%;
   min-width: 0;
   min-height: 39px;
   padding: 9px 11px;
-
   border: 1px solid var(--sh-border);
   border-radius: 9px;
-
   background: var(--sh-input);
   color: var(--sh-text);
-
   font-size: 13px;
   line-height: 1.4;
 }
 
-.savnet-side textarea:not(#reportOutput) {
-  resize: vertical;
-}
+.savnet-side textarea:not(#reportOutput) { resize: vertical; }
 
 .savnet-side input::placeholder,
 .savnet-side textarea::placeholder {
   color: var(--sh-muted);
-  opacity: 0.75;
+  opacity: .75;
 }
 
 .savnet-side .sh-grid-2 {
@@ -272,14 +187,9 @@ html body.savnet-side .app-shell {
   gap: 12px;
 }
 
-.savnet-side .sh-mt {
-  margin-top: 12px;
-}
+.savnet-side .sh-mt { margin-top: 12px; }
 
-/* ============================================================
-   TALEGRUPPER
-   ============================================================ */
-
+/* TALEGRUPPER */
 .savnet-side .sh-tg-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -289,7 +199,6 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-tg-card {
   min-width: 0;
   padding: 9px;
-
   border: 1px solid var(--sh-border-light);
   border-radius: 12px;
   background: var(--sh-bg);
@@ -306,10 +215,7 @@ html body.savnet-side .app-shell {
   gap: 6px;
 }
 
-/* ============================================================
-   POB OG CREW
-   ============================================================ */
-
+/* CREW */
 .savnet-side .sh-chips {
   display: flex;
   flex-wrap: wrap;
@@ -321,20 +227,17 @@ html body.savnet-side .app-shell {
   width: 36px;
   height: 36px;
   padding: 0;
-
   border: 1px solid var(--sh-border);
   border-radius: 9px;
-
   background: var(--sh-input);
   color: var(--sh-text);
-
   font-size: 13px;
   font-weight: 750;
 }
 
 .savnet-side .sh-chips button.active {
   background: #0066a1;
-  color: #ffffff;
+  color: white;
   border-color: #0066a1;
 }
 
@@ -363,9 +266,7 @@ html body.savnet-side .app-shell {
   display: flex;
   align-items: center;
   gap: 8px;
-
   min-width: 0;
-
   color: var(--sh-text);
   font-size: 12px;
   font-weight: 750;
@@ -378,10 +279,7 @@ html body.savnet-side .app-shell {
   flex: none;
 }
 
-/* ============================================================
-   UTLØSENDE KRITERIUM
-   ============================================================ */
-
+/* UTLØSENDE KRITERIUM */
 .savnet-side .sh-criteria {
   display: flex;
   flex-direction: column;
@@ -392,13 +290,10 @@ html body.savnet-side .app-shell {
   display: block;
   width: 100%;
   padding: 11px 12px;
-
   border: 1px solid var(--sh-border);
   border-radius: 10px;
-
   background: var(--sh-input);
   color: var(--sh-text);
-
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
@@ -411,15 +306,10 @@ html body.savnet-side .app-shell {
   font-weight: 750;
 }
 
-/* ============================================================
-   PUNKT 6–9
-   HVIT BAKGRUNN OG SAMME OVERSKRIFTER SOM 1–5
-   ============================================================ */
-
+/* PUNKT 6–9 */
 .savnet-side details.sh-phase {
   display: block;
   padding: 17px 18px;
-
   background: var(--sh-surface);
 }
 
@@ -428,20 +318,15 @@ html body.savnet-side .app-shell {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-
   margin: 0;
   padding: 0;
-
   list-style: none;
   background: transparent;
   color: var(--sh-text);
-
-  font-family: inherit;
   font-size: 20px;
   font-weight: 800;
   line-height: 1.25;
   letter-spacing: -0.025em;
-
   cursor: pointer;
 }
 
@@ -449,29 +334,23 @@ html body.savnet-side .app-shell {
   display: none;
 }
 
-.savnet-side .sh-phase > summary::marker {
-  content: "";
-}
+.savnet-side .sh-phase > summary::marker { content: ""; }
 
 .savnet-side .sh-chevron {
   width: 9px;
   height: 9px;
   flex: 0 0 9px;
-
   border-right: 2px solid var(--sh-muted);
   border-bottom: 2px solid var(--sh-muted);
-
   transform: rotate(45deg);
-  transition: transform 0.15s ease;
+  transition: transform .15s ease;
 }
 
 .savnet-side .sh-phase[open] .sh-chevron {
   transform: rotate(225deg);
 }
 
-.savnet-side .sh-phase-body {
-  padding: 16px 0 0;
-}
+.savnet-side .sh-phase-body { padding: 16px 0 0; }
 
 .savnet-side .sh-check-row {
   padding: 10px 0;
@@ -479,13 +358,7 @@ html body.savnet-side .app-shell {
   background: transparent;
 }
 
-.savnet-side .sh-check-row:last-child {
-  border-bottom: 0;
-}
-
-.savnet-side .sh-check-row.is-done {
-  background: transparent;
-}
+.savnet-side .sh-check-row:last-child { border-bottom: 0; }
 
 .savnet-side .sh-check-main {
   display: flex;
@@ -500,12 +373,10 @@ html body.savnet-side .app-shell {
   gap: 9px;
   flex: 1 1 auto;
   min-width: 0;
-
   color: var(--sh-text);
   font-size: 13px;
   font-weight: 650;
   line-height: 1.45;
-
   cursor: pointer;
 }
 
@@ -518,18 +389,15 @@ html body.savnet-side .app-shell {
   min-height: 17px;
   margin: 0;
   padding: 0;
-
   accent-color: #0066a1;
   cursor: pointer;
 }
 
 .savnet-side .sh-time {
   flex: none;
-
   color: #16834e;
   font-size: 11px;
   font-weight: 800;
-
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -543,7 +411,6 @@ html body.savnet-side .app-shell {
   margin: 6px 0 3px;
   padding-left: 19px;
   list-style: disc;
-
   color: var(--sh-text);
   font-size: 12px;
   line-height: 1.6;
@@ -559,11 +426,9 @@ html body.savnet-side .app-shell {
   align-items: center;
   gap: 8px;
   padding: 5px 0;
-
   color: var(--sh-text);
   font-size: 12px;
   line-height: 1.4;
-
   cursor: pointer;
 }
 
@@ -590,7 +455,6 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-question {
   margin: 9px 0 3px 26px;
   padding: 11px;
-
   background: var(--sh-bg);
   border: 1px solid var(--sh-border-light);
   border-radius: 9px;
@@ -620,20 +484,17 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-answer-buttons button {
   min-height: 29px;
   padding: 5px 10px;
-
   background: var(--sh-input);
   color: var(--sh-text);
-
   border: 1px solid var(--sh-border);
   border-radius: 9px;
-
   font-size: 11px;
   font-weight: 700;
 }
 
 .savnet-side .sh-answer-buttons button.active {
   background: #0066a1;
-  color: #ffffff;
+  color: white;
   border-color: #0066a1;
 }
 
@@ -645,53 +506,99 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-field-label {
   display: block;
   margin: 7px 0 5px;
-
   color: var(--sh-text);
   font-size: 11px;
   font-weight: 700;
 }
 
-.savnet-side .sh-next {
-  margin: 12px 0 0;
-  padding: 9px 11px;
+/* ENDRINGER PUNKT 7 */
 
-  background: var(--sh-bg);
-  border-left: 3px solid var(--sh-blue);
-  border-radius: 5px;
-
-  color: var(--sh-muted);
-  font-size: 12px;
-  line-height: 1.5;
+/* ATCC uten egen grå ramme */
+.savnet-side .sh-atcc-question {
+  margin: 8px 0 3px 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 
-/* ============================================================
-   RAPPORTPANEL
-   ============================================================ */
+.savnet-side .sh-atcc-question .sh-question-row {
+  justify-content: flex-start;
+  gap: 12px;
+}
 
-.savnet-side .sh-report-panel {
-  position: sticky;
-  top: 12px;
+.savnet-side .sh-atcc-question .sh-question-row > span {
+  color: var(--sh-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
 
+.savnet-side .sh-atcc-question textarea {
+  width: 100%;
+  min-height: 55px;
+}
+
+/* Feltet for andre ressurser */
+.savnet-side .sh-other-resource {
   display: flex;
-  flex-direction: column;
-  gap: 11px;
+  align-items: center;
+  gap: 8px;
+}
 
-  height: calc(100vh - 102px);
-  min-height: 480px;
-  min-width: 0;
+.savnet-side .sh-other-resource .sh-resource-input {
+  flex: 0 1 180px;
+  width: 180px !important;
+}
 
-  padding: 17px 18px;
+.savnet-side .sh-other-resource .sh-resource-label {
+  flex: 1 1 auto;
+}
 
-  background: var(--sh-surface);
-  border: 1px solid var(--sh-border-light);
-  border-radius: 15px;
+/* ENDRINGER PUNKT 8 */
+.savnet-side .sh-sar-description {
+  margin: 7px 0 10px;
+}
 
+.savnet-side .sh-sar-description textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid var(--sh-border);
+  border-radius: 9px;
+  background: var(--sh-input);
+  color: var(--sh-text);
+  font-size: 12px;
+}
+
+.savnet-side .sh-nbko-note {
+  display: block;
+  width: calc(100% - 26px);
+  margin: 8px 0 0 26px;
+  padding: 8px 10px;
+  min-height: 36px;
+  font-size: 12px;
+  line-height: 1.4;
+  resize: none !important;
   overflow: hidden;
 }
 
-.savnet-side .sh-report-header {
-  flex: none;
+/* RAPPORTPANEL */
+.savnet-side .sh-report-panel {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  height: calc(100vh - 102px);
+  min-height: 480px;
+  min-width: 0;
+  padding: 17px 18px;
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-border-light);
+  border-radius: 15px;
+  overflow: hidden;
 }
+
+.savnet-side .sh-report-header { flex: none; }
 
 .savnet-side .sh-report-header h2 {
   margin: 0 0 4px;
@@ -709,23 +616,18 @@ html body.savnet-side .app-shell {
 .savnet-side .sh-report-panel #reportOutput {
   display: block;
   flex: 1 1 auto;
-
   width: 100%;
   height: auto;
   min-height: 90px;
   margin: 0;
   padding: 13px;
-
   resize: none;
   overflow-y: auto;
-
   background: var(--sh-bg) !important;
   color: var(--sh-text) !important;
   -webkit-text-fill-color: var(--sh-text) !important;
-
   border: 1px solid var(--sh-border);
   border-radius: 10px;
-
   font-family: Consolas, Menlo, monospace !important;
   font-size: 11px !important;
   line-height: 1.6;
@@ -745,24 +647,20 @@ html body.savnet-side .app-shell {
   align-items: center;
   justify-content: center;
   gap: 9px;
-
   width: 100%;
   min-height: 44px;
   padding: 9px 10px;
-
   border: none;
   border-radius: 10px;
-
   text-align: center;
   text-decoration: none;
-
   font-size: 14px;
   font-weight: 800;
 }
 
 .savnet-side .sh-copy {
   background: #16834e;
-  color: #ffffff;
+  color: #fff;
 }
 
 .savnet-side .sh-print {
@@ -772,7 +670,7 @@ html body.savnet-side .app-shell {
 
 .savnet-side .sh-reset {
   background: #cc2528;
-  color: #ffffff;
+  color: #fff;
 }
 
 .savnet-side .sh-procedure {
@@ -782,17 +680,14 @@ html body.savnet-side .app-shell {
 
 .savnet-side .sh-feedback {
   background: #202124;
-  color: #ffffff;
+  color: #fff;
 }
 
-.savnet-side .sh-report-actions :is(button, a):hover {
-  filter: brightness(0.96);
+.savnet-side .sh-report-actions :is(button,a):hover {
+  filter: brightness(.96);
 }
 
-/* ============================================================
-   KVELDSMODUS
-   ============================================================ */
-
+/* KVELDSMODUS */
 html[data-theme="dark"] body.savnet-side .sh-section,
 html[data-theme="dark"] body.savnet-side .sh-report-panel {
   background: var(--surface);
@@ -805,18 +700,13 @@ html[data-theme="dark"] body.savnet-side .sh-question {
   border-color: var(--border);
 }
 
-html[data-theme="dark"] body.savnet-side .sh-phase-heading {
-  color: var(--text);
+html[data-theme="dark"] body.savnet-side .sh-atcc-question {
+  background: transparent;
+  border: 0;
 }
 
 html[data-theme="dark"] body.savnet-side .sh-time {
   color: #8cdeb0;
-}
-
-html[data-theme="dark"] body.savnet-side .sh-test-notice {
-  background: #42262b;
-  border-color: #80404b;
-  color: #ffb9bd;
 }
 
 html[data-theme="dark"] body.savnet-side .sh-print {
@@ -829,90 +719,52 @@ html[data-theme="dark"] body.savnet-side .sh-procedure {
   color: #d8efff;
 }
 
-/* ============================================================
-   RESPONSIVT
-   ============================================================ */
-
+/* RESPONSIVT */
 @media (max-width: 1200px) {
-
   html body.savnet-side .app-shell {
     grid-template-columns: 210px minmax(0, 1fr) 300px;
     gap: 10px;
   }
-
   .savnet-side .sh-person {
-    grid-template-columns: 82px minmax(0, 1fr) 115px;
+    grid-template-columns: 82px minmax(0,1fr) 115px;
   }
-
-  .savnet-side .sh-check-main {
-    flex-wrap: wrap;
-  }
-
+  .savnet-side .sh-check-main { flex-wrap: wrap; }
 }
 
 @media (max-width: 900px) {
-
   html body.savnet-side .app-shell {
     grid-template-columns: 1fr;
   }
-
   .savnet-side .form-panel {
     height: auto;
     min-height: 0;
     overflow: visible;
   }
-
   .savnet-side .sh-report-panel {
     position: static;
     height: 600px;
   }
-
 }
 
 @media (max-width: 600px) {
-
-  html body.savnet-side .app-header {
-    padding: 10px 145px 10px 12px;
-  }
-
-  html body.savnet-side .app-header h1 {
-    font-size: 23px;
-  }
-
-  html body.savnet-side .theme-toggle {
-    right: 12px;
-    font-size: 12px;
-  }
-
-  .savnet-side .sh-section {
-    padding: 14px;
-  }
-
+  .savnet-side .sh-section { padding: 14px; }
   .savnet-side .sh-tg-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
-
   .savnet-side .sh-person {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
-
-  .savnet-side .sh-role {
-    grid-column: 1 / -1;
-  }
-
+  .savnet-side .sh-role { grid-column: 1/-1; }
 }
 
 @media (max-width: 440px) {
-
   .savnet-side .sh-grid-2,
   .savnet-side .sh-grid-3,
   .savnet-side .sh-tg-grid {
     grid-template-columns: 1fr;
   }
-
   .savnet-side .sh-inline-note {
     flex-basis: 100%;
     width: 100% !important;
   }
-
 }

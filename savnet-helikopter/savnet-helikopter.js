@@ -1,6 +1,6 @@
 
 /* ============================================================
-   SAVNET HELIKOPTER
+   SAVNET HELIKOPTER 
    ============================================================ */
 
 (() => {
@@ -35,7 +35,7 @@
   };
 
   /* ============================================================
-     SJEKKLISTE
+     SJEKKLISTER
      ============================================================ */
 
   const PHASES = [
@@ -44,7 +44,7 @@
       items: [
         {
           id: "v1",
-          title: "Opprett varsling",
+          title: "Opprett hendelse i AMIS",
           bullets: [
             "Sted: Savnet helikopter",
             "Hastegrad: A",
@@ -65,32 +65,20 @@
       items: [
         {
           id: "k1",
-          title:
-            "Anrop ressurs i LA SØR-ØST1, LA RW og " +
-            "eventuelt annen relevant TG × 3",
-          report:
-            "Anropt ressurs i LA SØR-ØST1, LA RW " +
-            "og evt. annen relevant TG",
+          title: "Anrop ressurs i LA SØR-ØST1, LA RW og eventuelt annen relevant TG × 3",
+          report: "Anropt ressurs i LA SØR-ØST1, LA RW og evt. annen relevant TG",
           timed: true
         },
         {
           id: "k2",
-          title:
-            "Ring helikopterets DDI 1, DDI 2, GSM " +
-            "og SAT i én konferanse",
-          report:
-            "Ringt helikopterets DDI 1, DDI 2, GSM " +
-            "og SAT i én konferanse",
+          title: "Ring helikopterets DDI 1, DDI 2, GSM og SAT i én konferanse",
+          report: "Ringt helikopterets DDI 1, DDI 2, GSM og SAT i én konferanse",
           timed: true
         },
         {
           id: "k3",
-          title:
-            "Ring ressurs-ID SAT (håndholdt) " +
-            "og håndradioene til crew",
-          report:
-            "Ringt ressursens SAT (håndholdt) " +
-            "og håndradioene til crewet",
+          title: "Ring ressurs-ID SAT (håndholdt) og håndradioene til crew",
+          report: "Ringt ressursens SAT (håndholdt) og håndradioene til crewet",
           timed: true
         },
         {
@@ -129,19 +117,15 @@
         },
         {
           id: "h2",
-          title:
-            "Varsle nærmeste LA-ressurser i RW " +
-            "til savnet helikopter",
-          info:
-            "Flight following i LA SØR-ØST1. " +
-            "Oppdraget håndteres i aktuell SAR-TG.",
-          note: true
+          title: "Varsle nærmeste LA-ressurser i RW til savnet helikopter",
+          bullets: [
+            "Flight following i LA SØR-ØST1",
+            "Oppdraget i aktuell SAR-TG"
+          ]
         },
         {
           id: "h3",
-          title:
-            "Varsle NBKO dersom politihelikopter er " +
-            "involvert eller i området",
+          title: "Varsle NBKO dersom politihelikopter er involvert eller i området",
           report: "Varslet NBKO",
           timed: true,
           note: true
@@ -166,9 +150,7 @@
         },
         {
           id: "h7",
-          title:
-            "Før fortløpende i AMIS og oppdater " +
-            "ressurser og HRS i SAR-TG"
+          title: "Før fortløpende i AMIS og oppdater ressurser og HRS i SAR-TG"
         }
       ]
     },
@@ -194,27 +176,18 @@
   const ITEM_MAP = new Map();
 
   PHASES.forEach(phase => {
-    phase.items.forEach(item => {
-      ITEM_MAP.set(item.id, item);
-    });
+    phase.items.forEach(item => ITEM_MAP.set(item.id, item));
   });
 
   /* ============================================================
-     GENERELLE FUNKSJONER
+     HJELPEFUNKSJONER
      ============================================================ */
 
-  function make(tag, className = "", text = null) {
-    const node = document.createElement(tag);
-
-    if (className) {
-      node.className = className;
-    }
-
-    if (text !== null) {
-      node.textContent = text;
-    }
-
-    return node;
+  function make(tag, className = "", content = null) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (content !== null) element.textContent = content;
+    return element;
   }
 
   function value(id) {
@@ -222,10 +195,9 @@
   }
 
   function clock(date = new Date()) {
-    const hour = String(date.getHours()).padStart(2, "0");
-    const minute = String(date.getMinutes()).padStart(2, "0");
-
-    return hour + ":" + minute;
+    return String(date.getHours()).padStart(2, "0") +
+      ":" +
+      String(date.getMinutes()).padStart(2, "0");
   }
 
   function normalizeText(text) {
@@ -237,12 +209,9 @@
 
   function formatTimeInput(raw) {
     const text = String(raw || "").trim();
-
     if (!text) return "";
 
-    let hours;
-    let minutes;
-
+    let hours, minutes;
     const match = text.match(/^(\d{1,2}):(\d{2})$/);
 
     if (match) {
@@ -250,26 +219,20 @@
       minutes = Number(match[2]);
     } else if (/^\d{3,4}$/.test(text)) {
       const padded = text.padStart(4, "0");
-
       hours = Number(padded.slice(0, 2));
       minutes = Number(padded.slice(2));
     } else {
       return text;
     }
 
-    if (hours > 23 || minutes > 59) {
-      return text;
-    }
+    if (hours > 23 || minutes > 59) return text;
 
-    return (
-      String(hours).padStart(2, "0") +
-      ":" +
-      String(minutes).padStart(2, "0")
-    );
+    return String(hours).padStart(2, "0") +
+      ":" + String(minutes).padStart(2, "0");
   }
 
   /* ============================================================
-     TALEGRUPPER
+     TALEGRUPPER OG INDEKS
      ============================================================ */
 
   const TG = new Map();
@@ -286,11 +249,7 @@
     for (const alias of [name, ...aliases]) {
       const key = tgKey(alias);
       const existing = TG.get(key);
-
-      if (existing && existing.index !== index) {
-        continue;
-      }
-
+      if (existing && existing.index !== index) continue;
       TG.set(key, { name, index });
     }
   }
@@ -307,7 +266,6 @@
     health.forEach(([name, aliases, base, count]) => {
       for (let n = 1; n <= count; n++) {
         const padded = String(n).padStart(2, "0");
-
         registerTg(
           name + "-" + padded,
           base + n,
@@ -335,9 +293,7 @@
       ["FINO-HEMS-1", 9219],
       ["FINO-H-70", 9221],
       ["FINO-H-80", 9222]
-    ].forEach(([name, index]) => {
-      registerTg(name, index);
-    });
+    ].forEach(([name, index]) => registerTg(name, index));
 
     const areas = [
       [1, 1070, 1100],
@@ -355,32 +311,27 @@
       const prefix = String(area).padStart(2, "0");
 
       function add(series, number, index) {
-        const name = `${prefix}-${series}-${number}`;
-
-        registerTg(name, index, [
-          `${area}-${series}-${number}`
-        ]);
+        registerTg(
+          `${prefix}-${series}-${number}`,
+          index,
+          [`${area}-${series}-${number}`]
+        );
       }
 
-      for (let n = 1; n <= 9; n++) {
+      for (let n = 1; n <= 9; n++)
         add("BAPS", n, bapsBase + n);
-      }
 
-      for (let n = 1; n <= 4; n++) {
+      for (let n = 1; n <= 4; n++)
         add("SAR", n, sharedBase + 40 + n);
-      }
 
-      for (let n = 1; n <= 5; n++) {
+      for (let n = 1; n <= 5; n++)
         add("SAMV", n, sharedBase + 10 + n);
-      }
 
-      for (let n = 1; n <= 2; n++) {
+      for (let n = 1; n <= 2; n++)
         add("SAMV", "A" + n, sharedBase + 15 + n);
-      }
 
-      for (let n = 11; n <= 29; n++) {
+      for (let n = 11; n <= 29; n++)
         add("SAMVUP", n, sharedBase + 10 + n);
-      }
     });
 
     for (let n = 1; n <= 8; n++) {
@@ -397,11 +348,7 @@
       ["BODØ", 105],
       ["BANAK", 106]
     ].forEach(([name, index]) => {
-      registerTg(
-        `330-${name}-3`,
-        index,
-        [`330 ${name}`]
-      );
+      registerTg(`330-${name}-3`, index, [`330 ${name}`]);
     });
 
     [
@@ -430,11 +377,8 @@
 
   function formatTg(raw) {
     const text = String(raw || "").trim();
-
     if (!text) return "";
-
     const result = TG.get(tgKey(text));
-
     return result
       ? `${result.name} (indeks ${result.index})`
       : text;
@@ -447,45 +391,33 @@
       value("sarTg"),
       ...$$("#otherTgContainer .other-tg-input")
         .map(input => input.value.trim())
-    ]
-      .filter(Boolean)
-      .map(formatTg);
+    ].filter(Boolean).map(formatTg);
   }
 
   /* ============================================================
-     RESSURS-ID OG REGISTRERINGSNUMMER
+     HELIKOPTER OG CREW
      ============================================================ */
 
   function normalizeResource(raw) {
     const text = String(raw || "").trim();
-
     if (!text) return "";
 
     const match = text.match(
       /^(?:LA|LUFTAMBULANSE)?\s*(\d+)\s*-\s*(\d+)$/i
     );
 
-    return match
-      ? `LA ${match[1]}-${match[2]}`
-      : text;
+    return match ? `LA ${match[1]}-${match[2]}` : text;
   }
 
   function normalizeRegistration(raw) {
     const original = String(raw || "").trim();
-
     if (!original) return "";
 
-    const clean = original
-      .toUpperCase()
-      .replace(/[\s-]/g, "");
+    const clean = original.toUpperCase().replace(/[\s-]/g, "");
 
-    if (/^[A-Z]{3}$/.test(clean)) {
-      return "LN-" + clean;
-    }
-
-    if (/^LN[A-Z0-9]{3}$/.test(clean)) {
+    if (/^[A-Z]{3}$/.test(clean)) return "LN-" + clean;
+    if (/^LN[A-Z0-9]{3}$/.test(clean))
       return "LN-" + clean.slice(2);
-    }
 
     return original.toUpperCase();
   }
@@ -499,23 +431,16 @@
   function updateCrewRoles() {
     const police = policeHelicopter();
 
-    const rescuer = $("#rescuerRole");
-    const doctor = $("#doctorRole");
-    const doctorIcon = $("#doctorIcon");
+    if ($("#rescuerRole"))
+      $("#rescuerRole").textContent = police ? "PCM" : "HCM";
 
-    if (rescuer) {
-      rescuer.textContent = police ? "PCM" : "HCM";
-    }
+    if ($("#doctorRole"))
+      $("#doctorRole").textContent = police ? "PCM" : "Lege";
 
-    if (doctor) {
-      doctor.textContent = police ? "PCM" : "Lege";
-    }
-
-    if (doctorIcon) {
-      doctorIcon.src = police
+    if ($("#doctorIcon"))
+      $("#doctorIcon").src = police
         ? "../img/redningsmann.svg"
         : "../img/lege.svg";
-    }
   }
 
   /* ============================================================
@@ -526,44 +451,34 @@
     $$("#pobChips button").forEach(button => {
       button.addEventListener("click", () => {
         const n = Number(button.dataset.pob);
-
         state.pob = state.pob === n ? null : n;
-
         refreshPob();
         updateReport();
       });
     });
-
     refreshPob();
   }
 
   function refreshPob() {
     $$("#pobChips button").forEach(button => {
-      const active =
-        Number(button.dataset.pob) === state.pob;
-
+      const active = Number(button.dataset.pob) === state.pob;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
   }
 
   /* ============================================================
-     PAX
+     PAX – DYNAMISKE FELTER
      ============================================================ */
 
   function createPaxRow() {
     const row = make("div", "sh-person pax-row");
-
     const role = make("div", "sh-role");
     const icon = make("img");
 
     icon.src = "../img/hospitant.svg";
     icon.alt = "";
-
-    role.append(
-      icon,
-      make("span", "pax-label", "PAX")
-    );
+    role.append(icon, make("span", "pax-label", "PAX"));
 
     const name = make("input", "pax-name");
     name.type = "text";
@@ -574,7 +489,6 @@
     phone.placeholder = "Mobilnummer";
 
     row.append(role, name, phone);
-
     return row;
   }
 
@@ -590,34 +504,25 @@
     if (!container) return;
 
     $$(".pax-row", container).forEach(row => {
-      if (
-        !paxHasContent(row) &&
-        !row.contains(document.activeElement)
-      ) {
+      if (!paxHasContent(row) &&
+          !row.contains(document.activeElement)) {
         row.remove();
       }
     });
 
     let rows = $$(".pax-row", container);
 
-    if (
-      !rows.length ||
-      paxHasContent(rows[rows.length - 1])
-    ) {
+    if (!rows.length || paxHasContent(rows[rows.length - 1]))
       container.appendChild(createPaxRow());
-    }
 
     rows = $$(".pax-row", container);
 
-    const blanks = rows.filter(
-      row => !paxHasContent(row)
-    );
+    const blanks = rows.filter(row => !paxHasContent(row));
 
     if (blanks.length > 1) {
-      const keep =
-        blanks.find(row =>
-          row.contains(document.activeElement)
-        ) || blanks[blanks.length - 1];
+      const keep = blanks.find(row =>
+        row.contains(document.activeElement)
+      ) || blanks[blanks.length - 1];
 
       blanks.forEach(row => {
         if (row !== keep) row.remove();
@@ -625,32 +530,21 @@
     }
 
     $$(".pax-row", container).forEach((row, index) => {
-      const number = index + 1;
-
-      $(".pax-label", row).textContent = "PAX " + number;
-
-      $(".pax-name", row).setAttribute(
-        "aria-label",
-        `PAX ${number} navn`
-      );
-
-      $(".pax-phone", row).setAttribute(
-        "aria-label",
-        `PAX ${number} mobilnummer`
-      );
+      const n = index + 1;
+      $(".pax-label", row).textContent = "PAX " + n;
+      $(".pax-name", row).setAttribute("aria-label", `PAX ${n} navn`);
+      $(".pax-phone", row).setAttribute("aria-label", `PAX ${n} mobilnummer`);
     });
   }
 
   /* ============================================================
-     DYNAMISKE TALEGRUPPEFELTER
+     DYNAMISKE TALEGRUPPER
      ============================================================ */
 
   function createOtherTgField() {
     const input = make("input", "other-tg-input");
-
     input.type = "text";
     input.setAttribute("aria-label", "Annen talegruppe");
-
     return input;
   }
 
@@ -659,49 +553,33 @@
     if (!container) return;
 
     $$(".other-tg-input", container).forEach(input => {
-      if (
-        !input.value.trim() &&
-        input !== document.activeElement
-      ) {
+      if (!input.value.trim() && input !== document.activeElement)
         input.remove();
-      }
     });
 
     let inputs = $$(".other-tg-input", container);
 
-    if (
-      !inputs.length ||
-      inputs[inputs.length - 1].value.trim()
-    ) {
+    if (!inputs.length || inputs[inputs.length - 1].value.trim())
       container.appendChild(createOtherTgField());
-    }
 
     inputs = $$(".other-tg-input", container);
 
-    const blanks = inputs.filter(
-      input => !input.value.trim()
-    );
+    const blanks = inputs.filter(input => !input.value.trim());
 
     if (blanks.length > 1) {
-      const keep =
-        blanks.find(input =>
-          input === document.activeElement
-        ) || blanks[blanks.length - 1];
+      const keep = blanks.find(input =>
+        input === document.activeElement
+      ) || blanks[blanks.length - 1];
 
       blanks.forEach(input => {
         if (input !== keep) input.remove();
       });
     }
 
-    $$(".other-tg-input", container).forEach(
-      (input, index) => {
-        if (index === 0) {
-          input.id = "otherTgFirst";
-        } else {
-          input.removeAttribute("id");
-        }
-      }
-    );
+    $$(".other-tg-input", container).forEach((input, index) => {
+      if (index === 0) input.id = "otherTgFirst";
+      else input.removeAttribute("id");
+    });
   }
 
   /* ============================================================
@@ -712,15 +590,11 @@
     $$("#criteriaButtons button").forEach(button => {
       button.addEventListener("click", () => {
         const n = Number(button.dataset.criterion);
-
-        state.criterion =
-          state.criterion === n ? null : n;
-
+        state.criterion = state.criterion === n ? null : n;
         refreshCriteria();
         updateReport();
       });
     });
-
     refreshCriteria();
   }
 
@@ -734,20 +608,16 @@
     });
 
     const wrapper = $("#observationWrapper");
-
-    if (wrapper) {
-      wrapper.hidden = state.criterion !== 3;
-    }
+    if (wrapper) wrapper.hidden = state.criterion !== 3;
   }
 
   /* ============================================================
-     SJEKKLISTE – OPPBYGGING
+     BYGG SJEKKLISTENE
      ============================================================ */
 
   function buildChecklist() {
     PHASES.forEach(phase => {
       const container = $("#phase-" + phase.id);
-
       if (!container) return;
 
       container.replaceChildren();
@@ -764,16 +634,12 @@
 
     const main = make("div", "sh-check-main");
     const label = make("label", "sh-check-label");
-
     const checkbox = make("input");
+
     checkbox.type = "checkbox";
     checkbox.dataset.check = item.id;
 
-    label.append(
-      checkbox,
-      make("span", "", item.title)
-    );
-
+    label.append(checkbox, make("span", "", item.title));
     main.appendChild(label);
 
     if (item.timed) {
@@ -782,25 +648,19 @@
       main.appendChild(time);
     }
 
-    if (item.note) {
-      const input = make("input", "sh-inline-note");
-
-      input.type = "text";
-      input.placeholder = "Merknad";
-      input.dataset.note = item.id;
-
-      input.setAttribute(
-        "aria-label",
-        "Merknad – " + item.title
-      );
-
-      main.appendChild(input);
-    }
-
     row.appendChild(main);
 
-    /* KULEPUNKTER UNDER OPPRETT VARSLING */
+    /* NBKO – MERKNAD UNDER TEKSTEN */
+    if (item.note) {
+      const note = make("textarea", "sh-nbko-note");
+      note.rows = 1;
+      note.placeholder = "Merknad";
+      note.dataset.note = item.id;
+      note.setAttribute("aria-label", "Merknad – " + item.title);
+      row.appendChild(note);
+    }
 
+    /* KULEPUNKTER */
     if (item.bullets?.length) {
       const detail = make("div", "sh-detail");
       const list = make("ul", "sh-bullet-list");
@@ -814,43 +674,48 @@
     }
 
     /* KONTAKTKILDER */
-
     if (item.subs?.length) {
       const detail = make("div", "sh-detail");
 
       item.subs.forEach((text, index) => {
-        const sub = make("label", "sh-sub");
+        const sub = make(
+          "label",
+          index === 1 && item.id === "k6"
+            ? "sh-sub sh-other-resource"
+            : "sh-sub"
+        );
 
         const check = make("input");
         check.type = "checkbox";
         check.dataset.sub = item.id + ":" + index;
-
-        sub.append(
-          check,
-          make("span", "", text)
-        );
+        sub.appendChild(check);
 
         if (item.id === "k6" && index === 1) {
           const other = make(
             "input",
-            "sh-inline-note"
+            "sh-inline-note sh-resource-input"
           );
 
           other.type = "text";
           other.id = "otherContactResource";
-          other.placeholder = "Andre ressurser";
+          other.placeholder = "Hvilke ressurser?";
           other.setAttribute(
             "aria-label",
             "Navn på annen kontaktet ressurs"
           );
 
+          /* Skrivefeltet står før teksten */
           sub.appendChild(other);
+          sub.appendChild(
+            make("span", "sh-resource-label", text)
+          );
+        } else {
+          sub.appendChild(make("span", "", text));
         }
 
         if (item.subTimed) {
           const time = make("span", "sh-time");
           time.dataset.subtime = item.id + ":" + index;
-
           sub.appendChild(time);
         }
 
@@ -860,20 +725,9 @@
       row.appendChild(detail);
     }
 
-    if (item.info) {
-      const detail = make("div", "sh-detail");
-
-      detail.appendChild(
-        make("span", "sh-info", item.info)
-      );
-
-      row.appendChild(detail);
-    }
-
     /* OSLO ATCC */
-
     if (item.extra === "atcc") {
-      const panel = make("div", "sh-question");
+      const panel = make("div", "sh-atcc-question");
 
       panel.appendChild(
         createChoiceGroup(
@@ -892,7 +746,6 @@
         "sh-field-label",
         "Beskrivelse og tidspunkt for siste kontakt"
       );
-
       detailLabel.htmlFor = "atccDescription";
 
       const description = make("textarea");
@@ -905,22 +758,14 @@
     }
 
     /* SAR */
-
     if (item.extra === "sar") {
       row.appendChild(createSarInformation());
     }
 
     /* AVSLUTNING */
-
     if (item.extra === "closure") {
       const closure = make("div", "sh-closure");
-
-      const label = make(
-        "label",
-        "",
-        "Begrunnelse for avslutning"
-      );
-
+      const label = make("label", "", "Begrunnelse for avslutning");
       label.htmlFor = "closureReason";
 
       const description = make("textarea");
@@ -931,17 +776,10 @@
       row.appendChild(closure);
     }
 
-    /* AVVIKSNUMMER */
-
+    /* AVVIK */
     if (item.extra === "deviation") {
       const closure = make("div", "sh-closure");
-
-      const label = make(
-        "label",
-        "",
-        "Avviksnummer / referanse"
-      );
-
+      const label = make("label", "", "Avviksnummer / referanse");
       label.htmlFor = "deviationNumber";
 
       const input = make("input");
@@ -956,7 +794,7 @@
   }
 
   /* ============================================================
-     SAR-SJEKKLISTE
+     SAR-SPØRSMÅL 
      ============================================================ */
 
   function createSarInformation() {
@@ -972,7 +810,6 @@
     );
 
     const elt = make("li");
-
     elt.appendChild(
       createChoiceGroup(
         "elt",
@@ -980,11 +817,10 @@
         ["Ja", "Nei", "Uavklart"]
       )
     );
-
+    elt.appendChild(createSarDescription("elt"));
     list.appendChild(elt);
 
     const tracking = make("li");
-
     tracking.appendChild(
       createChoiceGroup(
         "tracking",
@@ -992,32 +828,49 @@
         ["Ja", "Nei", "Uavklart"]
       )
     );
-
+    tracking.appendChild(createSarDescription("tracking"));
     list.appendChild(tracking);
-    detail.appendChild(list);
 
+    detail.appendChild(list);
     return detail;
+  }
+
+  function createSarDescription(key) {
+    const wrapper = make("div", "sh-sar-description");
+    wrapper.id = key + "Detail";
+    wrapper.hidden = true;
+
+    const label = make(
+      "label",
+      "sh-field-label",
+      "Beskrivelse / opplysninger"
+    );
+    label.htmlFor = key + "Description";
+
+    const textarea = make("textarea");
+    textarea.id = key + "Description";
+    textarea.rows = 2;
+    textarea.placeholder = "Utdyp svaret";
+
+    wrapper.append(label, textarea);
+    return wrapper;
   }
 
   function createChoiceGroup(key, title, options) {
     const row = make("div", "sh-question-row");
-
     row.appendChild(make("span", "", title));
 
     const buttons = make("div", "sh-answer-buttons");
 
     options.forEach(option => {
       const button = make("button", "", option);
-
       button.type = "button";
       button.dataset.answer = key;
       button.dataset.value = option;
-
       buttons.appendChild(button);
     });
 
     row.appendChild(buttons);
-
     return row;
   }
 
@@ -1065,19 +918,14 @@
   }
 
   /* ============================================================
-     AVKRYSNING AV HOVEDPUNKT
+     AVKRYSNING HOVEDPUNKT
      ============================================================ */
 
   function changeMainCheckbox(id, checked) {
     const item = ITEM_MAP.get(id);
-
     if (!item) return;
 
-    if (
-      checked &&
-      id === "d3" &&
-      !value("closureReason")
-    ) {
+    if (checked && id === "d3" && !value("closureReason")) {
       alert("Skriv begrunnelse for avslutning først.");
       refreshChecklist();
       $("#closureReason")?.focus();
@@ -1095,14 +943,10 @@
         addEvent(
           key,
           item.report || item.title,
-          id === "d3"
-            ? value("closureReason")
-            : getNote(id)
+          id === "d3" ? value("closureReason") : getNote(id)
         );
       }
     }
-
-    /* HOVEDPUNKT KONTAKTKILDER */
 
     if (id === "k6" && !checked) {
       item.subs.forEach((_, index) => {
@@ -1116,18 +960,15 @@
   }
 
   /* ============================================================
-     UNDERPUNKTER – KONTAKTKILDER
+     UNDERPUNKTER
      ============================================================ */
 
   function changeSubCheckbox(key, checked) {
     const [id, indexText] = key.split(":");
-
     const item = ITEM_MAP.get(id);
     const index = Number(indexText);
 
-    if (!item || !item.subs?.[index]) {
-      return;
-    }
+    if (!item || !item.subs?.[index]) return;
 
     if (
       checked &&
@@ -1145,7 +986,6 @@
 
     if (item.subTimed) {
       const eventKey = subEventKey(id, index);
-
       removeEventsFor(eventKey);
 
       if (checked) {
@@ -1169,33 +1009,23 @@
   }
 
   /* ============================================================
-     SJEKKLISTEHENDELSER
+     HENDELSER
      ============================================================ */
 
   function setupChecklistEvents() {
-    const checklist = document;
-
-    checklist.addEventListener("change", event => {
+    document.addEventListener("change", event => {
       const target = event.target;
-
       if (!target.closest(".sh-phase")) return;
 
       if (target.dataset.check) {
-        changeMainCheckbox(
-          target.dataset.check,
-          target.checked
-        );
+        changeMainCheckbox(target.dataset.check, target.checked);
       } else if (target.dataset.sub) {
-        changeSubCheckbox(
-          target.dataset.sub,
-          target.checked
-        );
+        changeSubCheckbox(target.dataset.sub, target.checked);
       }
     });
 
-    checklist.addEventListener("click", event => {
+    document.addEventListener("click", event => {
       const button = event.target.closest("button");
-
       if (!button || !button.closest(".sh-phase")) return;
 
       if (button.dataset.answer) {
@@ -1203,9 +1033,7 @@
         const selected = button.dataset.value;
 
         state.answers[key] =
-          state.answers[key] === selected
-            ? null
-            : selected;
+          state.answers[key] === selected ? null : selected;
 
         refreshChecklist();
         updateReport();
@@ -1214,7 +1042,7 @@
   }
 
   /* ============================================================
-     OPPDATER SJEKKLISTEVISNINGEN
+     OPPDATER SJEKKLISTE
      ============================================================ */
 
   function refreshChecklist() {
@@ -1225,11 +1053,7 @@
 
         const checked = Boolean(state.checked[item.id]);
 
-        const checkbox = $(
-          `[data-check="${item.id}"]`,
-          row
-        );
-
+        const checkbox = $(`[data-check="${item.id}"]`, row);
         if (checkbox) checkbox.checked = checked;
 
         row.classList.toggle("is-done", checked);
@@ -1237,41 +1061,25 @@
         $$("[data-sub]", row).forEach(sub => {
           const key = sub.dataset.sub;
           const active = Boolean(state.sub[key]);
-
           sub.checked = active;
 
-          const time = $(
-            `[data-subtime="${key}"]`,
-            row
-          );
-
+          const time = $(`[data-subtime="${key}"]`, row);
           if (time) {
             const event = eventsFor("s:" + key)[0];
-
             time.textContent =
               active && event ? clock(event.time) : "";
           }
         });
 
-        const time = $(
-          `[data-time="${item.id}"]`,
-          row
-        );
+        const time = $(`[data-time="${item.id}"]`, row);
 
         if (time) {
-          const events = eventsFor(
-            mainEventKey(item.id)
-          );
-
+          const events = eventsFor(mainEventKey(item.id));
           const latest = events[events.length - 1];
-
-          time.textContent =
-            latest ? clock(latest.time) : "";
+          time.textContent = latest ? clock(latest.time) : "";
         }
       });
     });
-
-    /* SVARALTERNATIVER */
 
     $$("[data-answer]").forEach(button => {
       const active =
@@ -1279,17 +1087,18 @@
         button.dataset.value;
 
       button.classList.toggle("active", active);
-      button.setAttribute(
-        "aria-pressed",
-        String(active)
-      );
+      button.setAttribute("aria-pressed", String(active));
     });
 
-    const atccDetail = $("#atccDetail");
+    const atcc = $("#atccDetail");
+    if (atcc) atcc.hidden = state.answers.atcc !== "Ja";
 
-    if (atccDetail) {
-      atccDetail.hidden =
-        state.answers.atcc !== "Ja";
+    for (const key of ["elt", "tracking"]) {
+      const detail = $("#" + key + "Detail");
+      if (detail) {
+        detail.hidden =
+          !["Ja", "Uavklart"].includes(state.answers[key]);
+      }
     }
   }
 
@@ -1297,9 +1106,14 @@
      SKJEMAHENDELSER
      ============================================================ */
 
+  function autoGrowTextarea(textarea) {
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
+
   function setupFormEvents() {
     const form = $("#missingHelicopterForm");
-
     if (!form) return;
 
     form.addEventListener("submit", event => {
@@ -1309,17 +1123,17 @@
     form.addEventListener("input", event => {
       const target = event.target;
 
-      if (target.id === "registration") {
+      if (target.id === "registration")
         updateCrewRoles();
-      }
 
-      if (target.closest("#traineeContainer")) {
+      if (target.closest("#traineeContainer"))
         maintainPax();
-      }
 
-      if (target.closest("#otherTgContainer")) {
+      if (target.closest("#otherTgContainer"))
         maintainOtherTg();
-      }
+
+      if (target.classList.contains("sh-nbko-note"))
+        autoGrowTextarea(target);
 
       updateReport();
     });
@@ -1328,68 +1142,50 @@
       const target = event.target;
 
       if (target.id === "registration") {
-        target.value = normalizeRegistration(
-          target.value
-        );
-
+        target.value = normalizeRegistration(target.value);
         updateCrewRoles();
       }
 
-      if (target.id === "resourceId") {
-        target.value = normalizeResource(
-          target.value
-        );
-      }
+      if (target.id === "resourceId")
+        target.value = normalizeResource(target.value);
 
       if (
         target.id === "departureTime" ||
         target.id === "etaTime"
       ) {
-        target.value = formatTimeInput(
-          target.value
-        );
+        target.value = formatTimeInput(target.value);
       }
 
-      if (target.closest("#traineeContainer")) {
+      if (target.closest("#traineeContainer"))
         maintainPax();
-      }
 
-      if (target.closest("#otherTgContainer")) {
+      if (target.closest("#otherTgContainer"))
         maintainOtherTg();
-      }
 
       updateReport();
     });
   }
 
   /* ============================================================
-     CREW OG PAX I RAPPORTEN
+     CREW OG PAX I RAPPORT
      ============================================================ */
 
   function personLine(role, nameId, phoneId) {
-    const name = value(nameId);
-    const phone = value(phoneId);
-
-    return (
-      role + ": " +
-      [name, phone].filter(Boolean).join(" – ")
-    );
+    return role + ": " +
+      [value(nameId), value(phoneId)]
+        .filter(Boolean)
+        .join(" – ");
   }
 
   function paxLines() {
     return $$("#traineeContainer .pax-row")
       .filter(paxHasContent)
       .map((row, index) => {
-        const name =
-          $(".pax-name", row)?.value.trim() || "";
+        const name = $(".pax-name", row)?.value.trim() || "";
+        const phone = $(".pax-phone", row)?.value.trim() || "";
 
-        const phone =
-          $(".pax-phone", row)?.value.trim() || "";
-
-        return (
-          "PAX " + (index + 1) + ": " +
-          [name, phone].filter(Boolean).join(" – ")
-        );
+        return "PAX " + (index + 1) + ": " +
+          [name, phone].filter(Boolean).join(" – ");
       });
   }
 
@@ -1398,9 +1194,7 @@
      ============================================================ */
 
   function generateReport() {
-    const separator =
-      "----------------------------------------";
-
+    const separator = "----------------------------------------";
     const police = policeHelicopter();
 
     const lines = [
@@ -1434,9 +1228,7 @@
     ];
 
     if (state.criterion === 3) {
-      lines.push(
-        "Observasjoner: " + value("observations")
-      );
+      lines.push("Observasjoner: " + value("observations"));
     }
 
     lines.push(
@@ -1471,13 +1263,11 @@
     events.forEach(event => {
       let note = event.note;
 
-      if (event.key === mainEventKey("h3")) {
+      if (event.key === mainEventKey("h3"))
         note = getNote("h3") || note;
-      }
 
-      if (event.key === mainEventKey("d3")) {
+      if (event.key === mainEventKey("d3"))
         note = value("closureReason") || note;
-      }
 
       lines.push(
         clock(event.time) +
@@ -1492,8 +1282,7 @@
       ) {
         if (state.answers.atcc) {
           lines.push(
-            "  ATCC har hatt kontakt: " +
-            state.answers.atcc
+            "  ATCC har hatt kontakt: " + state.answers.atcc
           );
         }
 
@@ -1502,17 +1291,33 @@
           value("atccDescription")
         ) {
           lines.push(
-            "  Beskrivelse: " +
-            value("atccDescription")
+            "  Beskrivelse: " + value("atccDescription")
           );
         }
       }
     });
 
-    if (
-      state.checked.d4 ||
-      value("deviationNumber")
-    ) {
+    /* SAR-SPØRSMÅL */
+    for (const key of ["elt", "tracking"]) {
+      if (!state.answers[key]) continue;
+
+      const title = key === "elt"
+        ? "ELT eller PLB aktivert"
+        : "Bedt HRS om mobilsporing";
+
+      lines.push(title + ": " + state.answers[key]);
+
+      if (
+        ["Ja", "Uavklart"].includes(state.answers[key]) &&
+        value(key + "Description")
+      ) {
+        lines.push(
+          "  Beskrivelse: " + value(key + "Description")
+        );
+      }
+    }
+
+    if (state.checked.d4 || value("deviationNumber")) {
       lines.push(
         separator,
         "AVVIK:",
@@ -1526,14 +1331,12 @@
 
   function updateReport() {
     const output = $("#reportOutput");
-
     if (!output) return;
 
     try {
       output.value = generateReport();
 
       const status = $("#reportStatus");
-
       if (status) {
         status.textContent = "Oppdateres automatisk";
       }
@@ -1541,7 +1344,6 @@
       console.error("Rapportfeil:", error);
 
       const status = $("#reportStatus");
-
       if (status) {
         status.textContent =
           "Rapportfeil – kontroller konsollen";
@@ -1550,7 +1352,7 @@
   }
 
   /* ============================================================
-     KOPIER
+     KOPIER RAPPORT
      ============================================================ */
 
   async function copyReport() {
@@ -1560,21 +1362,13 @@
     let copied = false;
 
     try {
-      if (
-        navigator.clipboard &&
-        window.isSecureContext
-      ) {
-        await navigator.clipboard.writeText(
-          output.value
-        );
-
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(output.value);
         copied = true;
       } else {
         output.focus();
         output.select();
-
         copied = document.execCommand("copy");
-
         output.setSelectionRange(0, 0);
       }
     } catch (error) {
@@ -1582,7 +1376,6 @@
     }
 
     const label = $("#copyButtonText");
-
     if (!label) return;
 
     label.textContent =
@@ -1601,7 +1394,6 @@
 
   function printReport() {
     const report = $("#reportOutput")?.value || "";
-
     const win = window.open("", "_blank");
 
     if (!win) {
@@ -1610,7 +1402,6 @@
     }
 
     const doc = win.document;
-
     doc.open();
 
     doc.write(
@@ -1628,10 +1419,7 @@
     );
 
     doc.close();
-
-    doc.getElementById("printText").textContent =
-      report;
-
+    doc.getElementById("printText").textContent = report;
     win.focus();
     win.print();
   }
@@ -1666,12 +1454,13 @@
 
     maintainPax();
     maintainOtherTg();
-
     refreshPob();
     refreshCriteria();
     updateCrewRoles();
     refreshChecklist();
     updateReport();
+
+    $$(".sh-nbko-note").forEach(autoGrowTextarea);
 
     $(".form-panel")?.scrollTo({
       top: 0,
@@ -1700,25 +1489,10 @@
   }
 
   function setupButtons() {
-    $("#copyButton")?.addEventListener(
-      "click",
-      copyReport
-    );
-
-    $("#printButton")?.addEventListener(
-      "click",
-      printReport
-    );
-
-    $("#resetButton")?.addEventListener(
-      "click",
-      resetAll
-    );
-
-    $("#emailReportButton")?.addEventListener(
-      "click",
-      sendFeedback
-    );
+    $("#copyButton")?.addEventListener("click", copyReport);
+    $("#printButton")?.addEventListener("click", printReport);
+    $("#resetButton")?.addEventListener("click", resetAll);
+    $("#emailReportButton")?.addEventListener("click", sendFeedback);
   }
 
   /* ============================================================
@@ -1738,7 +1512,6 @@
 
     try {
       initializeTgRegister();
-
       buildChecklist();
       maintainPax();
       maintainOtherTg();
@@ -1754,7 +1527,7 @@
       updateReport();
 
       console.info(
-        "Savnet helikopter – versjon 20261015-8 startet."
+        "Savnet helikopter – versjon 2026-10-16 startet."
       );
     } catch (error) {
       console.error(
@@ -1763,7 +1536,6 @@
       );
 
       const status = $("#reportStatus");
-
       if (status) {
         status.textContent =
           "Feil ved oppstart – kontroller konsollen";
@@ -1772,10 +1544,7 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initialize
-    );
+    document.addEventListener("DOMContentLoaded", initialize);
   } else {
     initialize();
   }

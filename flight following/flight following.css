@@ -52,56 +52,6 @@
 }
 
 /* ==========================================
-   TOPPFELT
-   ========================================== */
-
-.ff-page > .app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  min-height: 80px;
-  background: var(--ff-card);
-  color: var(--ff-text);
-  border-bottom: 1px solid var(--ff-border);
-}
-
-.ff-page .app-eyebrow {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .8px;
-  color: var(--ff-muted);
-  margin: 0 0 5px;
-}
-
-.ff-page .app-header h1 {
-  font-size: 27px;
-  margin: 0;
-  font-weight: 800;
-}
-
-.ff-test-label {
-  color: var(--ff-red);
-  font-size: 11px;
-  font-weight: 800;
-  margin: 5px 0 0;
-}
-
-.ff-page .theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 14px;
-  min-height: 42px;
-  background: var(--ff-card);
-  color: var(--ff-text);
-  border: 1px solid var(--ff-border);
-  border-radius: 9px;
-  font-weight: 700;
-}
-
-/* ==========================================
    HOVEDOPPSETT
    ========================================== */
 
@@ -717,13 +667,10 @@
 
 /* ==========================================
    KVELDSMODUS
+   Felles temastyring fra felles.js
    ========================================== */
 
-body.ff-page:is(
-  .dark-mode,
-  .theme-dark,
-  [data-theme="dark"]
-) {
+html[data-theme="dark"] body.ff-page {
   --ff-bg: #101923;
   --ff-card: #1d2939;
   --ff-header: #26374b;
@@ -741,36 +688,19 @@ body.ff-page:is(
   --ff-yellow-light: #4b3921;
 }
 
-body.ff-page:is(
-  .dark-mode,
-  .theme-dark,
-  [data-theme="dark"]
-) .ff-primary,
-
-body.ff-page:is(
-  .dark-mode,
-  .theme-dark,
-  [data-theme="dark"]
-) .ff-land {
+html[data-theme="dark"] body.ff-page .ff-primary,
+html[data-theme="dark"] body.ff-page .ff-land {
   background: #15803d;
   border-color: #15803d;
   color: #ffffff;
 }
 
-body.ff-page:is(
-  .dark-mode,
-  .theme-dark,
-  [data-theme="dark"]
-) .ff-danger {
+html[data-theme="dark"] body.ff-page .ff-danger {
   color: #ffb8bd;
   border-color: #ed777f;
 }
 
-body.ff-page:is(
-  .dark-mode,
-  .theme-dark,
-  [data-theme="dark"]
-) .ff-time-button {
+html[data-theme="dark"] body.ff-page .ff-time-button {
   color: #b6f5cd;
 }
 
@@ -801,10 +731,6 @@ body.ff-page:is(
   .ff-grid-middle,
   .ff-grid-bottom {
     grid-template-columns: 1fr;
-  }
-
-  .ff-page > .app-header {
-    flex-wrap: wrap;
   }
 
   .ff-resource-name {

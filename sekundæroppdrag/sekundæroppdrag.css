@@ -83,59 +83,6 @@ html body.secondary-page {
   top: 10px;
 }
 
-/* TOPPFELT */
-
-html body.secondary-page .app-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: var(--header-height);
-  padding: 8px 180px 10px 18px;
-  background: var(--surface);
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-
-.secondary-page .header-title {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.secondary-page .app-eyebrow {
-  margin: 0 0 2px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .065em;
-  color: var(--muted);
-}
-
-.secondary-page .app-header h1 {
-  margin: 0;
-  font-size: 27px;
-  font-weight: 750;
-  line-height: 1.2;
-  letter-spacing: -.03em;
-}
-
-html body.secondary-page .theme-toggle {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 38px;
-  padding: 8px 12px;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
 /* TRE KOLONNER */
 
 html body.secondary-page .app-shell {
@@ -681,24 +628,6 @@ html body.secondary-page #rapport {
 }
 
 @media (max-width: 520px) {
-  html body.secondary-page .app-header {
-    padding: 10px 120px 10px 12px;
-  }
-
-  .secondary-page .app-eyebrow {
-    font-size: 9px;
-  }
-
-  .secondary-page .app-header h1 {
-    font-size: 21px;
-  }
-
-  html body.secondary-page .theme-toggle {
-    right: 8px;
-    padding: 7px;
-    font-size: 11px;
-  }
-
   .secondary-page .form-section {
     padding: 14px;
   }

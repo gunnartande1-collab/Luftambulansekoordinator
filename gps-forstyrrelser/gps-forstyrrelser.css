@@ -67,26 +67,6 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-
-  display: flex;
-  align-items: center;
-
-  width: 100%;
-  height: var(--header-height);
-
-  padding: 10px 180px 10px 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border-light);
-}
-
 .app-eyebrow {
   margin: 0 0 2px;
   color: var(--muted);
@@ -833,12 +813,6 @@ input[aria-invalid="true"] {
    ========================================================= */
 
 @media (max-width: 900px) {
-  .app-header {
-    position: static;
-    height: auto;
-    min-height: var(--header-height);
-  }
-
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -918,18 +892,6 @@ input[aria-invalid="true"] {
    ========================================================= */
 
 @media (max-width: 560px) {
-  .app-header {
-    padding: 12px 145px 12px 12px;
-  }
-
-  .app-header h1 {
-    font-size: 21px;
-  }
-
-  .app-header .theme-toggle {
-    right: 12px;
-  }
-
   .form-section {
     padding: 11px;
   }
