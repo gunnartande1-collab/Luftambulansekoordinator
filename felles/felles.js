@@ -3,29 +3,81 @@
    LUFTAMBULANSEKOORDINATOR
    FELLES JAVASCRIPT
 
-   Felles toppfelt for alle sider.
-
-   - Bygger toppfelt automatisk
-   - Henter sidenavn fra HTML-tittel
-   - Viser Luftambulansekoordinator
-   - Viser LA OSLO
-   - Viser aktivt skjema i midten
-   - Kveldsmodus til høyre
-   - Husker valgt tema mellom sider
-
+   - Felles toppfelt
+   - Aktivt sidenavn
+   - Dag- og kveldsmodus
+   - Telefonformatering i merkede telefonfelt
    ========================================================= */
 
 (() => {
   "use strict";
 
   const root = document.documentElement;
-
-  const storageKey =
-    "luftambulansekoordinator-theme";
-
+  const storageKey = "luftambulansekoordinator-theme";
 
   /* =========================================================
-     1. HENT LAGRET TEMA
+     1. FORMATER TELEFONNUMMER
+     ========================================================= */
+
+  function formatPhoneNumber(raw) {
+    const original = String(raw ?? "").trim();
+    if (!original) return "";
+
+    const digits = original.replace(/\D/g, "");
+
+    // Bare norske åttesifrede nummer uten landskode.
+    if (
+      !/^\d{8}$/.test(digits) ||
+      !/^[\d\s().-]+$/.test(original)
+    ) {
+      return original;
+    }
+
+    return (
+      digits.slice(0, 3) + " " +
+      digits.slice(3, 5) + " " +
+      digits.slice(5)
+    );
+  }
+
+  // Tilgjengelig for rapportgeneratorene i andre moduler.
+  window.LAK = window.LAK || {};
+  window.LAK.formatPhoneNumber = formatPhoneNumber;
+
+  // Gjelder bare eksplisitt utvalgte telefonfelt.
+  // data-phone-format="true" kan brukes på senere moduler.
+  document.addEventListener("focusout", event => {
+    const field = event.target;
+
+    if (!(field instanceof HTMLInputElement)) return;
+
+
+const phoneSelector = [
+  '[data-phone-format="true"]',
+  '#pilotPhone',
+  '#rescuerPhone',
+  '#doctorPhone',
+  '.pax-phone',
+  '#rekTlf',
+  '#mottTlf',
+  '[name="rekTlf"]',
+  '[name="mottTlf"]'
+].join(", ");
+
+    if (!field.matches(phoneSelector)) return;
+
+    const formatted = formatPhoneNumber(field.value);
+
+    if (formatted !== field.value) {
+      field.value = formatted;
+      field.dispatchEvent(
+        new Event("input", { bubbles: true })
+      );
+    }
+  });
+
+  /* =========================================================
+     2. HENT LAGRET TEMA
      ========================================================= */
 
   function getStoredTheme() {
@@ -40,30 +92,11 @@
 
   root.dataset.theme = getStoredTheme();
 
-
   /* =========================================================
-     2. FINN NAVNET PÅ AKTIV SIDE
+     3. FINN NAVNET PÅ AKTIV SIDE
      ========================================================= */
 
   function getPageTitle(header) {
-
-    /*
-      Prioritet:
-
-      1. data-page-title på body
-      2. data-page-title på header
-      3. HTML document.title
-      4. Eksisterende H1
-
-      Eksempel:
-
-      <title>
-        GPS-forstyrrelser | Luftambulansekoordinator
-      </title>
-
-      Gir: GPS-forstyrrelser
-    */
-
     const explicitTitle =
       document.body.dataset.pageTitle ||
       header.dataset.pageTitle;
@@ -82,27 +115,20 @@
         "luftambulansekoordinator"
     ) {
       const heading = header.querySelector("h1");
-
       title = heading?.textContent.trim() || "";
     }
 
-    /*
-      Fjern eventuell testtekst fra navnet.
-    */
-
+    // Fjern eventuell testtekst fra navnet.
     title = title
       .replace(/!!?\s*TESTVERSJON.*$/i, "")
       .replace(/TESTVERSJON.*$/i, "")
       .trim();
 
-    /*
-      Fremsiden får ikke egen skjematittel.
-    */
-
     const filename = decodeURIComponent(
       window.location.pathname.split("/").pop() || ""
     ).toLocaleLowerCase("nb-NO");
 
+    // Fremsiden får ikke egen skjematittel.
     if (
       /^(fremside|index)\.html$/.test(filename) ||
       /^fremside$/i.test(title) ||
@@ -114,83 +140,45 @@
     return title;
   }
 
-
   /* =========================================================
-     3. BYGG FELLES TOPPFELT
+     4. BYGG FELLES TOPPFELT
      ========================================================= */
 
   function initialisePageHeader() {
-
-    /*
-      Finn toppfeltet på siden.
-
-      Dersom siden ikke har toppfelt,
-      opprettes det automatisk.
-    */
-
     let header = document.querySelector(".app-header");
 
     if (!header) {
       header = document.createElement("header");
-
       header.className = "app-header";
-
       document.body.prepend(header);
     }
 
-    /*
-      Unngå dobbel opprettelse.
-    */
-
-    if (
-      header.dataset.sharedHeaderReady === "true"
-    ) {
+    if (header.dataset.sharedHeaderReady === "true") {
       return;
     }
 
-    /*
-      Hent sidenavnet FØR vi bygger toppfeltet.
-    */
-
     const pageTitle = getPageTitle(header);
 
-
-    /* =====================================================
-       3A. OPPRETT PROSJEKTNAVN
-       ===================================================== */
+    /* 4A. PROSJEKTNAVN */
 
     const headerTitle = document.createElement("div");
-
     headerTitle.className = "header-title";
 
     const mainHeading = document.createElement("h1");
-
-    mainHeading.textContent =
-      "Luftambulansekoordinator";
+    mainHeading.textContent = "Luftambulansekoordinator";
 
     const subtitle = document.createElement("p");
-
-    subtitle.className =
-      "app-eyebrow app-header-subtitle";
-
+    subtitle.className = "app-eyebrow app-header-subtitle";
     subtitle.textContent = "LA OSLO";
 
-    headerTitle.append(
-      mainHeading,
-      subtitle
-    );
+    headerTitle.append(mainHeading, subtitle);
 
-
-    /* =====================================================
-       3B. OPPRETT AKTIVT SKJEMA
-       ===================================================== */
+    /* 4B. AKTIVT SKJEMA */
 
     const activePage = document.createElement("div");
-
     activePage.className = "app-active-page";
 
     if (pageTitle) {
-
       const activeHeading =
         document.createElement("span");
 
@@ -198,40 +186,22 @@
         "app-active-page-title";
 
       activeHeading.textContent = pageTitle;
-
       activePage.appendChild(activeHeading);
-
     } else {
-
       activePage.hidden = true;
-
     }
 
-
-    /* =====================================================
-       3C. OPPRETT KVELDSMODUSKNAPP
-       ===================================================== */
-
-    /*
-      Bruk eksisterende knapp hvis den finnes.
-
-      Dette gjør løsningen kompatibel
-      med eksisterende skjemaer.
-    */
+    /* 4C. DAG- OG KVELDSMODUSKNAPP */
 
     let themeButton = header.querySelector(
       "#themeToggle"
     );
 
     if (!themeButton) {
-
       themeButton = document.createElement("button");
-
       themeButton.id = "themeToggle";
       themeButton.type = "button";
-
       themeButton.className = "theme-toggle";
-
     }
 
     themeButton.type = "button";
@@ -247,46 +217,20 @@
       "false"
     );
 
-    /*
-      Opprett standard innhold i knappen.
-    */
-
     themeButton.replaceChildren();
 
     const themeIcon = document.createElement("span");
-
     themeIcon.className = "theme-toggle-icon";
     themeIcon.setAttribute("aria-hidden", "true");
-
     themeIcon.textContent = "🌙";
 
     const themeText = document.createElement("span");
-
     themeText.className = "theme-toggle-text";
     themeText.textContent = "Kveldsmodus";
 
-    themeButton.append(
-      themeIcon,
-      themeText
-    );
+    themeButton.append(themeIcon, themeText);
 
-
-    /* =====================================================
-       3D. BYGG TOPPFELTET I RIKTIG REKKEFØLGE
-       ===================================================== */
-
-    /*
-      Vi erstatter kun innholdet i header.
-
-      Alt utenfor header, inkludert:
-
-      - Venstremeny
-      - Skjema
-      - Rapportpanel
-      - Rapportgenerator
-
-      beholdes uendret.
-    */
+    /* 4D. BYGG TOPPFELTET */
 
     header.replaceChildren(
       headerTitle,
@@ -295,46 +239,29 @@
     );
 
     header.classList.add("shared-app-header");
-
     header.dataset.sharedHeaderReady = "true";
 
-
-    /* =====================================================
-       3E. FJERN GAMMEL SKJEMATITTEL
-       ===================================================== */
-
-    /*
-      Tidligere versjon la en ekstra
-      overskrift i midtkolonnen.
-
-      Fjern kun denne spesifikke
-      overskriften dersom den finnes.
-    */
+    /* 4E. FJERN GAMMEL EKSTRA SIDETITTEL */
 
     document.querySelectorAll(
       ".form-panel > .app-page-title"
     ).forEach(element => {
       element.remove();
     });
-
   }
 
-
   /* =========================================================
-     4. DAG- OG KVELDSMODUS
+     5. DAG- OG KVELDSMODUS
      ========================================================= */
 
   function initialiseThemeToggle() {
-
     const button = document.getElementById(
       "themeToggle"
     );
 
     if (!button) return;
 
-    if (
-      button.dataset.themeReady === "true"
-    ) {
+    if (button.dataset.themeReady === "true") {
       return;
     }
 
@@ -346,13 +273,7 @@
       ".theme-toggle-text"
     );
 
-
-    /* =====================================================
-       4A. OPPDATER KNAPP
-       ===================================================== */
-
     function updateThemeButton() {
-
       const isDark =
         root.dataset.theme === "dark";
 
@@ -369,8 +290,7 @@
       );
 
       if (icon) {
-        icon.textContent =
-          isDark ? "☀️" : "🌙";
+        icon.textContent = isDark ? "☀️" : "🌙";
       }
 
       if (text) {
@@ -379,13 +299,7 @@
       }
     }
 
-
-    /* =====================================================
-       4B. BYTT TEMA
-       ===================================================== */
-
     button.addEventListener("click", () => {
-
       const nextTheme =
         root.dataset.theme === "dark"
           ? "light"
@@ -394,64 +308,41 @@
       root.dataset.theme = nextTheme;
 
       try {
-
         sessionStorage.setItem(
           storageKey,
           nextTheme
         );
-
       } catch {
         // Temaet fungerer fortsatt på åpen side.
       }
 
       updateThemeButton();
-
     });
-
-
-    /* =====================================================
-       4C. GJENOPPRETT TEMA
-       ===================================================== */
 
     window.addEventListener("pageshow", () => {
-
       root.dataset.theme = getStoredTheme();
-
       updateThemeButton();
-
     });
 
-
     button.dataset.themeReady = "true";
-
     updateThemeButton();
-
   }
 
-
   /* =========================================================
-     5. OPPSTART
+     6. OPPSTART
      ========================================================= */
 
   function initialiseSharedFunctions() {
-
     initialisePageHeader();
-
     initialiseThemeToggle();
-
   }
 
   if (document.readyState === "loading") {
-
     document.addEventListener(
       "DOMContentLoaded",
       initialiseSharedFunctions
     );
-
   } else {
-
     initialiseSharedFunctions();
-
   }
-
 })();

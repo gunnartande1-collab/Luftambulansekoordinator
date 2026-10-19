@@ -1,85 +1,152 @@
 
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Savnet helikopter | Luftambulansekoordinator</title>
+
   <link rel="stylesheet" href="../felles/felles.css">
   <link rel="stylesheet" href="savnet-helikopter.css?v=20261016-1">
+
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
   <script src="savnet-helikopter.js?v=20261016-1" defer></script>
 </head>
+
 <body class="savnet-side">
+
+  <!-- ==========================================
+       TOPPFELT
+       ========================================== -->
+
   <header class="app-header">
+
     <div class="header-title">
       <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
       <h1>Savnet helikopter</h1>
     </div>
-    <button type="button" id="themeToggle" class="theme-toggle"
-      aria-label="Slå på kveldsmodus" aria-pressed="false">
+
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-label="Slå på kveldsmodus"
+      aria-pressed="false"
+    >
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
+
   </header>
 
   <main class="app-shell">
+
+    <!-- ==========================================
+         FELLES VENSTREMENY
+         ========================================== -->
+
     <div id="shared-menu"></div>
+
+    <!-- ==========================================
+         SKJEMAPANEL
+         ========================================== -->
 
     <div class="form-panel-frame">
       <div class="form-panel">
+
         <form id="missingHelicopterForm" autocomplete="off">
 
-          <!-- 1. TALEGRUPPER -->
+          <!-- =====================================
+               1. TALEGRUPPER
+               ===================================== -->
+
           <section class="sh-section">
+
             <h2>1. Talegrupper</h2>
+
             <div class="sh-tg-grid">
+
               <div class="sh-tg-card">
                 <label for="healthTg">Helse TG</label>
                 <input id="healthTg" type="text">
               </div>
+
               <div class="sh-tg-card">
                 <label for="BAPS">BAPS TG</label>
                 <input id="BAPS" type="text">
               </div>
+
               <div class="sh-tg-card">
                 <label for="sarTg">SAR TG</label>
                 <input id="sarTg" type="text">
               </div>
+
               <div class="sh-tg-card">
                 <label for="otherTgFirst">Annen TG</label>
+
                 <div id="otherTgContainer">
-                  <input id="otherTgFirst" class="other-tg-input" type="text">
+                  <input
+                    id="otherTgFirst"
+                    class="other-tg-input"
+                    type="text"
+                  >
                 </div>
               </div>
+
             </div>
+
           </section>
 
-          <!-- 2. POSISJON -->
+          <!-- =====================================
+               2. POSISJON
+               ===================================== -->
+
           <section class="sh-section">
+
             <h2>2. Posisjon</h2>
+
             <div class="sh-grid-2">
+
               <div class="sh-field">
                 <label for="utmPosition">UTM</label>
                 <input id="utmPosition" type="text">
               </div>
+
               <div class="sh-field">
-                <label for="dmmPosition">Grader og desimalminutter</label>
+                <label for="dmmPosition">
+                  Grader og desimalminutter
+                </label>
                 <input id="dmmPosition" type="text">
               </div>
+
             </div>
+
             <div class="sh-field sh-mt">
-              <label for="placeName">Stedsnavn / område</label>
+              <label for="placeName">
+                Stedsnavn / område
+              </label>
               <input id="placeName" type="text">
             </div>
+
           </section>
 
-          <!-- 3. CREW MANIFEST -->
+          <!-- =====================================
+               3. CREW MANIFEST
+               ===================================== -->
+
           <section class="sh-section">
+
             <h2>3. Crew manifest</h2>
+
             <div class="sh-field">
-              <label>POB – totalt antall personer om bord</label>
+
+              <label>
+                POB – totalt antall personer om bord
+              </label>
+
               <div id="pobChips" class="sh-chips">
                 <button type="button" data-pob="1">1</button>
                 <button type="button" data-pob="2">2</button>
@@ -92,181 +159,391 @@
                 <button type="button" data-pob="9">9</button>
                 <button type="button" data-pob="10">10</button>
               </div>
+
             </div>
 
             <div class="sh-grid-3">
+
               <div class="sh-field">
                 <label for="resourceId">Ressurs-ID</label>
                 <input id="resourceId" type="text">
               </div>
+
               <div class="sh-field">
                 <label for="registration">Reg.nr.</label>
                 <input id="registration" type="text">
               </div>
+
               <div class="sh-field">
                 <label for="callsign">Callsign</label>
                 <input id="callsign" type="text">
               </div>
+
             </div>
 
             <div class="sh-crew-list">
+
+              <!-- PILOT -->
+
               <div class="sh-person">
+
                 <div class="sh-role">
                   <img src="../img/pilot.svg" alt="">
                   <span>Pilot</span>
                 </div>
-                <input id="pilotName" type="text" placeholder="Navn" aria-label="Pilot navn">
-                <input id="pilotPhone" type="tel" placeholder="Mobilnummer" aria-label="Pilot mobilnummer">
+
+                <input
+                  id="pilotName"
+                  type="text"
+                  placeholder="Navn"
+                  aria-label="Pilot navn"
+                >
+
+                <input
+                  id="pilotPhone"
+                  type="tel"
+                  placeholder="Mobilnummer"
+                  aria-label="Pilot mobilnummer"
+                >
+
               </div>
 
+              <!-- HCM / PCM -->
+
               <div class="sh-person">
+
                 <div class="sh-role">
-                  <img id="rescuerIcon" src="../img/redningsmann.svg" alt="">
+                  <img
+                    id="rescuerIcon"
+                    src="../img/redningsmann.svg"
+                    alt=""
+                  >
                   <span id="rescuerRole">HCM</span>
                 </div>
-                <input id="rescuerName" type="text" placeholder="Navn" aria-label="HCM navn">
-                <input id="rescuerPhone" type="tel" placeholder="Mobilnummer" aria-label="HCM mobilnummer">
+
+                <input
+                  id="rescuerName"
+                  type="text"
+                  placeholder="Navn"
+                  aria-label="HCM navn"
+                >
+
+                <input
+                  id="rescuerPhone"
+                  type="tel"
+                  placeholder="Mobilnummer"
+                  aria-label="HCM mobilnummer"
+                >
+
               </div>
+
+              <!-- LEGE / PCM -->
 
               <div class="sh-person">
+
                 <div class="sh-role">
-                  <img id="doctorIcon" src="../img/lege.svg" alt="">
+                  <img
+                    id="doctorIcon"
+                    src="../img/lege.svg"
+                    alt=""
+                  >
                   <span id="doctorRole">Lege</span>
                 </div>
-                <input id="doctorName" type="text" placeholder="Navn" aria-label="Lege navn">
-                <input id="doctorPhone" type="tel" placeholder="Mobilnummer" aria-label="Lege mobilnummer">
+
+                <input
+                  id="doctorName"
+                  type="text"
+                  placeholder="Navn"
+                  aria-label="Lege navn"
+                >
+
+                <input
+                  id="doctorPhone"
+                  type="tel"
+                  placeholder="Mobilnummer"
+                  aria-label="Lege mobilnummer"
+                >
+
               </div>
+
+              <!-- DYNAMISKE PAX-FELTER -->
+
               <div id="traineeContainer"></div>
+
             </div>
+
           </section>
 
-          <!-- 4. FLIGHT FOLLOWING -->
+          <!-- =====================================
+               4. FLIGHT FOLLOWING
+               ===================================== -->
+
           <section class="sh-section">
+
             <h2>4. Flight following</h2>
+
             <div class="sh-grid-2">
+
               <div class="sh-field">
                 <label for="fromLocation">Fra</label>
                 <input id="fromLocation" type="text">
               </div>
+
               <div class="sh-field">
                 <label for="toLocation">Til</label>
                 <input id="toLocation" type="text">
               </div>
+
             </div>
+
             <div class="sh-field sh-mt">
-              <label for="plannedRoute">Beskrivelse / planlagt flyrute</label>
-              <textarea id="plannedRoute" rows="2"></textarea>
+
+              <label for="plannedRoute">
+                Beskrivelse / planlagt flyrute
+              </label>
+
+              <textarea
+                id="plannedRoute"
+                rows="2"
+              ></textarea>
+
             </div>
+
             <div class="sh-grid-2 sh-mt">
+
               <div class="sh-field">
                 <label for="departureTime">Tatt av</label>
-                <input id="departureTime" type="text" inputmode="numeric">
+
+                <input
+                  id="departureTime"
+                  type="text"
+                  inputmode="numeric"
+                >
               </div>
+
               <div class="sh-field">
                 <label for="etaTime">ETA</label>
-                <input id="etaTime" type="text" inputmode="numeric">
+
+                <input
+                  id="etaTime"
+                  type="text"
+                  inputmode="numeric"
+                >
               </div>
+
             </div>
+
           </section>
 
-          <!-- 5. UTLØSENDE KRITERIUM -->
+          <!-- =====================================
+               5. UTLØSENDE KRITERIUM
+               ===================================== -->
+
           <section class="sh-section">
+
             <h2>5. Utløsende kriterium</h2>
+
             <div id="criteriaButtons" class="sh-criteria">
+
               <button type="button" data-criterion="1">
                 Manglende kontakt og rød på Locus og Nødnett
               </button>
+
               <button type="button" data-criterion="2">
                 Ingen landingsmelding 10 minutter etter ETA
               </button>
+
               <button type="button" data-criterion="3">
                 Observasjon eller melding som gir mistanke om havari
               </button>
+
             </div>
-            <div id="observationWrapper" class="sh-field sh-mt" hidden>
-              <label for="observations">Beskrivelse av observasjon</label>
-              <textarea id="observations" rows="3"></textarea>
+
+            <div
+              id="observationWrapper"
+              class="sh-field sh-mt"
+              hidden
+            >
+
+              <label for="observations">
+                Beskrivelse av observasjon
+              </label>
+
+              <textarea
+                id="observations"
+                rows="3"
+              ></textarea>
+
             </div>
+
           </section>
 
-          <!-- 6. VARSLING -->
+          <!-- =====================================
+               6. VARSLING
+               ===================================== -->
+
           <details class="sh-section sh-phase" open>
+
             <summary class="sh-phase-heading">
               <span>6. Varsling</span>
-              <span class="sh-chevron" aria-hidden="true"></span>
+              <span
+                class="sh-chevron"
+                aria-hidden="true"
+              ></span>
             </summary>
-            <div id="phase-varsling" class="sh-phase-body"></div>
+
+            <div
+              id="phase-varsling"
+              class="sh-phase-body"
+            ></div>
+
           </details>
 
-          <!-- 7. KONTAKT -->
+          <!-- =====================================
+               7. KONTAKT
+               ===================================== -->
+
           <details class="sh-section sh-phase" open>
+
             <summary class="sh-phase-heading">
               <span>7. Forsøk å opprette kontakt</span>
-              <span class="sh-chevron" aria-hidden="true"></span>
+              <span
+                class="sh-chevron"
+                aria-hidden="true"
+              ></span>
             </summary>
+
             <div class="sh-phase-body">
               <div id="phase-kontakt"></div>
             </div>
+
           </details>
 
-          <!-- 8. HAVARI -->
+          <!-- =====================================
+               8. HAVARI
+               ===================================== -->
+
           <details class="sh-section sh-phase" open>
+
             <summary class="sh-phase-heading">
               <span>8. Mistanke om / bekreftet havari</span>
-              <span class="sh-chevron" aria-hidden="true"></span>
+              <span
+                class="sh-chevron"
+                aria-hidden="true"
+              ></span>
             </summary>
-            <div id="phase-havari" class="sh-phase-body"></div>
+
+            <div
+              id="phase-havari"
+              class="sh-phase-body"
+            ></div>
+
           </details>
 
-          <!-- 9. DOKUMENTASJON -->
+          <!-- =====================================
+               9. AVSLUTNING
+               ===================================== -->
+
           <details class="sh-section sh-phase" open>
+
             <summary class="sh-phase-heading">
-              <span>9. Dokumentasjon</span>
-              <span class="sh-chevron" aria-hidden="true"></span>
+              <span>9. Avslutning</span>
+              <span
+                class="sh-chevron"
+                aria-hidden="true"
+              ></span>
             </summary>
-            <div id="phase-dokumentasjon" class="sh-phase-body"></div>
+
+            <div
+              id="phase-dokumentasjon"
+              class="sh-phase-body"
+            ></div>
+
           </details>
+
         </form>
+
       </div>
     </div>
 
-    <!-- RAPPORTPANEL -->
+    <!-- ==========================================
+         RAPPORTPANEL
+         ========================================== -->
+
     <aside class="side-panel sh-report-panel">
+
+      <!-- RAPPORTOVERSKRIFT -->
+
       <div class="sh-report-header">
         <h2>Rapporttekst</h2>
-        <p id="reportStatus" aria-live="polite">
-          Starter rapportgenerator ...
-        </p>
       </div>
 
-      <textarea id="reportOutput" readonly spellcheck="false"
-        aria-label="Generert rapporttekst">SAVNET HELIKOPTER</textarea>
+      <!-- GENERERT RAPPORT -->
+
+      <textarea
+        id="reportOutput"
+        readonly
+        spellcheck="false"
+        aria-label="Generert rapporttekst"
+      >SAVNET HELIKOPTER</textarea>
+
+      <!-- ======================================
+           RAPPORTKNAPPER
+           ====================================== -->
 
       <div class="sh-report-actions">
-        <button type="button" id="copyButton" class="sh-copy">
+
+        <button
+          type="button"
+          id="copyButton"
+          class="sh-copy"
+        >
           <span aria-hidden="true">▣</span>
           <span id="copyButtonText">Kopier tekst</span>
         </button>
-        <button type="button" id="printButton" class="sh-print">
+
+        <button
+          type="button"
+          id="printButton"
+          class="sh-print"
+        >
           <span aria-hidden="true">🖨️</span>
           Skriv ut
         </button>
-        <button type="button" id="resetButton" class="sh-reset">
+
+        <button
+          type="button"
+          id="resetButton"
+          class="sh-reset"
+        >
           <span aria-hidden="true">♻</span>
           Tøm skjema
         </button>
-        <a class="sh-procedure"
+
+        <a
+          class="sh-procedure"
           href="https://ehandbok.ous-hf.no/document/144250"
-          target="_blank" rel="noopener noreferrer">
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <span aria-hidden="true">▤</span>
           Prosedyre savnet helikopter
         </a>
-        <button type="button" id="emailReportButton" class="sh-feedback">
+
+        <button
+          type="button"
+          id="emailReportButton"
+          class="sh-feedback"
+        >
           <span aria-hidden="true">✉</span>
           Tilbakemelding på skjema
         </button>
+
       </div>
+
     </aside>
+
   </main>
+
 </body>
 </html>

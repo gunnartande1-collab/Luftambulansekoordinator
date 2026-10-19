@@ -585,8 +585,10 @@
     if (value("rekLege") || value("rekTlf")) {
       contacts.push(
         `Rekvirerende lege: ${
-          [value("rekLege"), value("rekTlf")]
-            .filter(Boolean).join(" / ")
+[
+  value("rekLege"),
+  window.LAK?.formatPhoneNumber?.(value("rekTlf")) ?? value("rekTlf")
+]            .filter(Boolean).join(" / ")
         }`
       );
     }
@@ -594,8 +596,10 @@
     if (value("mottLege") || value("mottTlf")) {
       contacts.push(
         `Mottakende lege: ${
-          [value("mottLege"), value("mottTlf")]
-            .filter(Boolean).join(" / ")
+[
+  value("mottLege"),
+  window.LAK?.formatPhoneNumber?.(value("mottTlf")) ?? value("mottTlf")
+]            .filter(Boolean).join(" / ")
         }`
       );
     }
