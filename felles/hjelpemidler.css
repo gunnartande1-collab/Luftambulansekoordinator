@@ -1,0 +1,579 @@
+
+/* =========================================================
+   LUFTAMBULANSEKOORDINATOR
+   HJELPEMIDLER OG DEMOVERSJON
+
+   Fil: felles/hjelpemidler.css
+
+   1. Utvidbar venstremeny
+   2. Eksterne lenker
+   3. Dag- og kveldsmodus
+   4. Statusmerking på fremsiden
+   5. Tastaturnavigasjon
+   6. Responsivt design
+   ========================================================= */
+
+
+/* =========================================================
+   1. UTVIDBAR SEKSJON I VENSTREMENY
+   ========================================================= */
+
+html body .nav-tools-section {
+
+  display: block;
+
+  min-width: 0;
+
+  margin-top: 22px;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+}
+
+
+/* OVERSKRIFTEN */
+
+html body .nav-tools-heading {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  min-height: 34px;
+
+  margin: 0 4px 8px;
+  padding: 5px 4px;
+
+  color: var(--muted, #667085);
+
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  list-style: none;
+
+  user-select: none;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+}
+
+
+/* FJERN STANDARDPIL FRA NETTLESER */
+
+html body .nav-tools-heading::-webkit-details-marker {
+  display: none;
+}
+
+html body .nav-tools-heading::marker {
+  content: "";
+}
+
+
+/* TEKST I OVERSKRIFTEN */
+
+html body .nav-tools-heading-text {
+
+  min-width: 0;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+
+  text-transform: uppercase;
+
+}
+
+
+/* HOVER */
+
+html body .nav-tools-heading:hover {
+
+  background: #f3f6f8;
+  color: var(--text, #17212b);
+
+}
+
+
+/* =========================================================
+   2. PIL SOM VISER ÅPEN/LUKKET
+   ========================================================= */
+
+html body .nav-tools-chevron {
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 20px;
+
+  width: 20px;
+  height: 20px;
+
+  color: var(--muted, #667085);
+
+  transition:
+    transform 0.18s ease;
+
+}
+
+
+/* LUKKET = PIL NED */
+
+html body .nav-tools-section:not([open])
+.nav-tools-chevron {
+
+  transform: rotate(0deg);
+
+}
+
+
+/* ÅPEN = PIL OPP */
+
+html body .nav-tools-section[open]
+.nav-tools-chevron {
+
+  transform: rotate(180deg);
+
+}
+
+
+/* =========================================================
+   3. LENKELISTE
+   ========================================================= */
+
+html body .nav-tools-list {
+
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 6px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+}
+
+
+/* LENKENE FØLGER EKSISTERENDE DESIGN */
+
+html body .nav-tools-list .form-nav-link {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  min-height: 42px;
+
+  padding: 8px 9px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: var(--text, #17212b);
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  line-height: 1.45;
+
+  text-decoration: none;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+}
+
+
+/* HOVER PÅ LENKER */
+
+html body .nav-tools-list a.form-nav-link:hover {
+
+  background: #f3f6f8;
+  border-color: #e4e7ec;
+
+}
+
+
+/* AKTIVT INTERNT HJELPEMIDDEL */
+
+html body .nav-tools-list
+.form-nav-link[aria-current="page"] {
+
+  background: #eaf5fb;
+  border-color: #c5e1f1;
+
+  color: #0066a1;
+
+}
+
+
+/* =========================================================
+   4. IKON FOR EKSTERNE LENKER
+   ========================================================= */
+
+html body .nav-external-icon {
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 18px;
+
+  width: 18px;
+  height: 18px;
+
+  color: var(--muted, #667085);
+
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 500;
+
+  line-height: 1;
+
+}
+
+
+/* =========================================================
+   5. KVELDSMODUS
+   ========================================================= */
+
+html[data-theme="dark"] body
+.nav-tools-heading {
+
+  color: var(--muted, #a9b5c3);
+
+}
+
+
+html[data-theme="dark"] body
+.nav-tools-heading:hover {
+
+  background: #263444;
+  color: var(--text, #e7edf4);
+
+}
+
+
+html[data-theme="dark"] body
+.nav-tools-list .form-nav-link {
+
+  color: var(--text, #e7edf4);
+
+}
+
+
+html[data-theme="dark"] body
+.nav-tools-list a.form-nav-link:hover {
+
+  background: #263444;
+  border-color: #344252;
+
+}
+
+
+html[data-theme="dark"] body
+.nav-tools-list .form-nav-link[aria-current="page"] {
+
+  background: #243f55;
+  border-color: #70bce8;
+
+  color: #d8efff;
+
+}
+
+
+html[data-theme="dark"] body
+.nav-external-icon {
+
+  color: var(--muted, #a9b5c3);
+
+}
+
+
+/* =========================================================
+   6. DEMOVERSJON - FREMSIDEN
+   ========================================================= */
+
+html body.home-page .home-demo-notice {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 11px;
+
+  width: fit-content;
+  max-width: 100%;
+
+  margin: 16px 0 25px;
+  padding: 11px 14px;
+
+  background: #fffaf0;
+
+  border: 1px solid #eadbbd;
+  border-radius: 10px;
+
+  color: #74521c;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+}
+
+
+/* LITEN STATUSMARKØR */
+
+html body.home-page .home-demo-indicator {
+
+  display: block;
+
+  flex: 0 0 8px;
+
+  width: 8px;
+  height: 8px;
+
+  margin-top: 6px;
+
+  background: #bd852c;
+
+  border-radius: 50%;
+
+}
+
+
+/* TEKSTBEHOLDER */
+
+html body.home-page .home-demo-copy {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: baseline;
+
+  gap: 5px 9px;
+
+  min-width: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+}
+
+
+/* STATUSOVERSKRIFT */
+
+html body.home-page .home-demo-copy strong {
+
+  font-size: 13px;
+  font-weight: 750;
+
+  color: #74521c;
+
+}
+
+
+/* STATUSFORKLARING */
+
+html body.home-page .home-demo-copy span {
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #806436;
+
+}
+
+
+/* =========================================================
+   7. DEMOVERSJON I KVELDSMODUS
+   ========================================================= */
+
+html[data-theme="dark"] body.home-page
+.home-demo-notice {
+
+  background: #332a1d;
+
+  border-color: #675031;
+
+  color: #f0d7a5;
+
+}
+
+
+html[data-theme="dark"] body.home-page
+.home-demo-indicator {
+
+  background: #e0b765;
+
+}
+
+
+html[data-theme="dark"] body.home-page
+.home-demo-copy strong {
+
+  color: #f3d8a4;
+
+}
+
+
+html[data-theme="dark"] body.home-page
+.home-demo-copy span {
+
+  color: #e0cda9;
+
+}
+
+
+/* =========================================================
+   8. TASTATURNAVIGASJON
+   ========================================================= */
+
+html body .nav-tools-heading:focus-visible,
+html body .nav-tools-list a:focus-visible {
+
+  outline: 3px solid
+    var(--primary, #0066a1);
+
+  outline-offset: 2px;
+
+}
+
+
+/* =========================================================
+   9. MELLOMSTORE SKJERMER
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  html body .nav-tools-heading-text {
+
+    font-size: 11px;
+
+  }
+
+  html body .nav-tools-list .form-nav-link {
+
+    font-size: 13px;
+
+  }
+
+}
+
+
+/* =========================================================
+   10. NETTBRETT OG MINDRE SKJERMER
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  html body .nav-tools-list {
+
+    grid-template-columns:
+      repeat(
+        auto-fit,
+        minmax(150px, 1fr)
+      );
+
+  }
+
+  html body .nav-tools-heading-text {
+
+    font-size: 12px;
+
+  }
+
+  html body .nav-tools-list .form-nav-link {
+
+    font-size: 14px;
+
+  }
+
+}
+
+
+/* =========================================================
+   11. MOBIL
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+  html body .nav-tools-list {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  html body.home-page .home-demo-notice {
+
+    width: 100%;
+
+    margin-top: 14px;
+    margin-bottom: 22px;
+
+    padding: 10px 12px;
+
+  }
+
+  html body.home-page .home-demo-copy {
+
+    flex-direction: column;
+
+    gap: 2px;
+
+  }
+
+}
+
+
+/* =========================================================
+   12. REDUSERT ANIMASJON
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html body .nav-tools-heading,
+  html body .nav-tools-chevron,
+  html body .nav-tools-list .form-nav-link {
+
+    transition: none;
+
+  }
+
+}

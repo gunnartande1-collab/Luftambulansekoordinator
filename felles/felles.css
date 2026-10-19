@@ -1,15 +1,21 @@
 
 /* =========================================================
-   LUFTAMBULANSEKOORDINATOR
-   FELLES CSS
-   Versjon 2026-10-16-3
+   LUFTAMBULANSE
+   LA OSLO
 
-   1. Felles toppfelt
-   2. Aktiv skjematittel
-   3. Dag- og kveldsmodus
-   4. Felles venstremeny
-   5. Kolonnebredder
-   6. Responsivt design
+   FELLES CSS
+   Versjon 2026-10-19
+
+   1. Grunninnstillinger
+   2. Felles toppfelt
+   3. Helikopterikon
+   4. Prosjektnavn
+   5. Aktiv skjematittel
+   6. Temaknapp
+   7. Kveldsmodus
+   8. Venstremeny
+   9. Kolonnebredder
+   10. Responsivt design
    ========================================================= */
 
 
@@ -26,18 +32,6 @@ html {
    2. FELLES TOPPFELT
    ========================================================= */
 
-/*
-   Desktop:
-
-   VENSTRE           MIDTEN           HØYRE
-   Luftambulanse-    Savnet           Kveldsmodus
-   koordinator       helikopter
-   LA OSLO
-
-   Midtkolonnen følger samme bredde som
-   hovedskjemaet under toppfeltet.
-*/
-
 html body .app-header.shared-app-header,
 html body.savnet-side .app-header.shared-app-header {
 
@@ -46,9 +40,7 @@ html body.savnet-side .app-header.shared-app-header {
   display: grid;
 
   grid-template-columns:
-    240px
-    minmax(0, 1fr)
-    340px;
+    240px minmax(0, 1fr) 340px;
 
   column-gap: 14px;
 
@@ -70,7 +62,7 @@ html body.savnet-side .app-header.shared-app-header {
 
 
 /* =========================================================
-   3. PROSJEKTNAVN TIL VENSTRE
+   3. PROSJEKTIDENTITET
    ========================================================= */
 
 html body .shared-app-header .header-title {
@@ -78,26 +70,83 @@ html body .shared-app-header .header-title {
   grid-column: 1;
   grid-row: 1;
 
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 10px;
+
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+  padding: 0 0 0 9px;
+}
+
+
+/* =========================================================
+   4. HELIKOPTERIKON
+   ========================================================= */
+
+html body .shared-app-header .app-brand-mark {
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 48px;
+
+  width: 48px;
+  height: 48px;
+
+  color: var(--text, #17212b);
+}
+
+
+html body .shared-app-header
+.app-brand-helicopter {
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  color: inherit;
+}
+
+
+/* =========================================================
+   5. LUFTAMBULANSE / LA OSLO
+   ========================================================= */
+
+html body .shared-app-header .app-brand-copy {
+
   display: flex;
   flex-direction: column;
 
   align-items: flex-start;
   justify-content: center;
 
-  position: relative;
-  z-index: 1;
-
   min-width: 0;
-  width: max-content;
-  max-width: none;
-
-  margin: 0;
-  padding: 0 0 0 11px;
+  flex: 1 1 auto;
 }
+
+
+/* HOVEDNAVN */
 
 html body .shared-app-header .header-title h1 {
 
   display: block;
+
+  min-width: 0;
+  max-width: 100%;
 
   margin: 0;
   padding: 0;
@@ -111,7 +160,7 @@ html body .shared-app-header .header-title h1 {
     Arial,
     sans-serif;
 
-  font-size: 25px;
+  font-size: 19px;
   font-weight: 800;
 
   line-height: 1.15;
@@ -121,11 +170,10 @@ html body .shared-app-header .header-title h1 {
 }
 
 
-/* =========================================================
-   4. LA OSLO UNDER PROSJEKTNAVNET
-   ========================================================= */
+/* UNDERTITTEL */
 
-html body .shared-app-header .app-header-subtitle {
+html body .shared-app-header
+.app-header-subtitle {
 
   display: block;
 
@@ -141,28 +189,21 @@ html body .shared-app-header .app-header-subtitle {
     Arial,
     sans-serif;
 
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
 
   line-height: 1.3;
-  letter-spacing: 0.075em;
+  letter-spacing: 0.08em;
 
   text-transform: uppercase;
+
+  white-space: nowrap;
 }
 
 
 /* =========================================================
-   5. AKTIVT SKJEMA MIDTSTILT OVER MIDTKOLONNEN
+   6. AKTIV SKJEMATITTEL
    ========================================================= */
-
-/*
-   Dette er den viktigste endringen.
-
-   Skjemanavnet har en fast plass i
-   midtkolonnen og blir derfor ikke
-   påvirket av plasseringen til
-   kveldsmodusknappen.
-*/
 
 html body .shared-app-header .app-active-page {
 
@@ -183,13 +224,20 @@ html body .shared-app-header .app-active-page {
   text-align: center;
 }
 
-html body .shared-app-header .app-active-page[hidden] {
+
+html body .shared-app-header
+.app-active-page[hidden] {
+
   display: none !important;
 }
 
-html body .shared-app-header .app-active-page-title {
+
+html body .shared-app-header
+.app-active-page-title {
 
   display: block;
+
+  max-width: 100%;
 
   margin: 0;
   padding: 0;
@@ -215,7 +263,7 @@ html body .shared-app-header .app-active-page-title {
 
 
 /* =========================================================
-   6. KVELDSMODUS HELT TIL HØYRE
+   7. KVELDSMODUSKNAPP
    ========================================================= */
 
 html body .shared-app-header .theme-toggle,
@@ -263,14 +311,20 @@ html body.savnet-side
   font-weight: 700;
 
   white-space: nowrap;
+
   cursor: pointer;
 }
 
-html body .shared-app-header .theme-toggle:hover {
+
+html body .shared-app-header
+.theme-toggle:hover {
+
   filter: brightness(0.95);
 }
 
-html body .shared-app-header .theme-toggle:focus-visible {
+
+html body .shared-app-header
+.theme-toggle:focus-visible {
 
   outline: 3px solid
     var(--primary, #0066a1);
@@ -280,16 +334,17 @@ html body .shared-app-header .theme-toggle:focus-visible {
 
 
 /* =========================================================
-   7. FJERN TIDLIGERE SKJEMATITTEL I MIDTKOLONNEN
+   8. FJERN GAMMEL SKJEMATITTEL
    ========================================================= */
 
 html body .form-panel > .app-page-title {
+
   display: none !important;
 }
 
 
 /* =========================================================
-   8. KVELDSMODUS – FARGER
+   9. KVELDSMODUS
    ========================================================= */
 
 html[data-theme="dark"] {
@@ -319,11 +374,15 @@ html[data-theme="dark"] {
   --black: #0c1117;
 }
 
+
 html[data-theme="dark"] body {
 
   background: var(--background);
   color: var(--text);
 }
+
+
+/* GENERELLE FLATER */
 
 html[data-theme="dark"] .app-header,
 html[data-theme="dark"] .form-section,
@@ -335,6 +394,9 @@ html[data-theme="dark"] .side-panel-inner {
   border-color: var(--border-light);
 }
 
+
+/* TOPPFELT */
+
 html[data-theme="dark"] body
 .app-header.shared-app-header {
 
@@ -342,11 +404,26 @@ html[data-theme="dark"] body
   border-color: var(--border-light);
 }
 
+
+/* PROSJEKTNAVN */
+
 html[data-theme="dark"] body
 .shared-app-header .header-title h1 {
 
   color: var(--text);
 }
+
+
+/* HELIKOPTER */
+
+html[data-theme="dark"] body
+.shared-app-header .app-brand-mark {
+
+  color: var(--text);
+}
+
+
+/* UNDERTITTEL */
 
 html[data-theme="dark"] body
 .shared-app-header .app-header-subtitle {
@@ -354,11 +431,17 @@ html[data-theme="dark"] body
   color: var(--muted);
 }
 
+
+/* SKJEMATITTEL */
+
 html[data-theme="dark"] body
 .shared-app-header .app-active-page-title {
 
   color: var(--text);
 }
+
+
+/* TEMAKNAPP */
 
 html[data-theme="dark"] body
 .shared-app-header .theme-toggle {
@@ -369,16 +452,23 @@ html[data-theme="dark"] body
   border-color: var(--border);
 }
 
+
+/* ETIKETTER */
+
 html[data-theme="dark"] label,
 html[data-theme="dark"] .field-label {
 
   color: #c8d3df;
 }
 
+
 html[data-theme="dark"] .app-eyebrow {
 
   color: var(--muted);
 }
+
+
+/* INNPUTFELTER */
 
 html[data-theme="dark"] .field-card,
 html[data-theme="dark"] .report-output,
@@ -391,11 +481,17 @@ html[data-theme="dark"] textarea {
   border-color: var(--border);
 }
 
+
+/* PLACEHOLDERS */
+
 html[data-theme="dark"] input::placeholder,
 html[data-theme="dark"] textarea::placeholder {
 
   color: #95a3b4;
 }
+
+
+/* VALGKNAPPER */
 
 html[data-theme="dark"] .chip,
 html[data-theme="dark"] .criteria-chip {
@@ -406,6 +502,7 @@ html[data-theme="dark"] .criteria-chip {
   color: var(--text);
 }
 
+
 html[data-theme="dark"] .chip.is-selected {
 
   background: #275b7b;
@@ -414,7 +511,9 @@ html[data-theme="dark"] .chip.is-selected {
   color: #ffffff;
 }
 
-html[data-theme="dark"] .criteria-chip.is-selected {
+
+html[data-theme="dark"]
+.criteria-chip.is-selected {
 
   background: #243f55;
   border-color: var(--primary);
@@ -422,21 +521,33 @@ html[data-theme="dark"] .criteria-chip.is-selected {
   color: #d8efff;
 }
 
+
+/* PROSEDYREKNAPP */
+
 html[data-theme="dark"] .action-procedure {
+
   color: #d8efff;
 }
 
+
+/* KOPIERINGSBEKREFTELSE */
+
 html[data-theme="dark"] .copy-confirmation {
+
   color: #7bd6a5;
 }
 
+
+/* FEILMELDINGER */
+
 html[data-theme="dark"] .field-error {
+
   color: #ff9b9b;
 }
 
 
 /* =========================================================
-   9. FELLES VENSTREMENY
+   10. FELLES VENSTREMENY
    ========================================================= */
 
 html body .form-navigation {
@@ -446,7 +557,9 @@ html body .form-navigation {
 
   position: sticky;
 
-  top: calc(var(--header-height, 84px) + 12px);
+  top: calc(
+    var(--header-height, 84px) + 12px
+  );
 
   font-family:
     -apple-system,
@@ -457,6 +570,9 @@ html body .form-navigation {
 
   line-height: 1.45;
 }
+
+
+/* MENYBEHOLDER */
 
 html body .form-navigation-inner {
 
@@ -476,6 +592,9 @@ html body .form-navigation-inner {
     0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
+
+/* MENYOVERSKRIFTER */
+
 html body .form-navigation-label {
 
   display: block;
@@ -491,11 +610,15 @@ html body .form-navigation-label {
   text-transform: uppercase;
 }
 
+
 html body
 .form-navigation-label:not(:first-child) {
 
   margin-top: 22px;
 }
+
+
+/* MENYLISTE */
 
 html body .form-nav-list {
 
@@ -509,6 +632,9 @@ html body .form-nav-list {
 
   list-style: none;
 }
+
+
+/* MENYLENKER */
 
 html body .form-nav-link {
 
@@ -533,11 +659,17 @@ html body .form-nav-link {
   overflow-wrap: anywhere;
 }
 
+
+/* HOVER */
+
 html body a.form-nav-link:hover {
 
   background: #f3f6f8;
   border-color: #e4e7ec;
 }
+
+
+/* AKTIV SIDE */
 
 html body
 .form-nav-link[aria-current="page"] {
@@ -548,11 +680,17 @@ html body
   color: #0066a1;
 }
 
+
+/* UTILGJENGELIG LENKE */
+
 html body .form-nav-link.is-unavailable {
 
   color: var(--muted, #667085);
   cursor: default;
 }
+
+
+/* EVENTUELLE MENYIKONER */
 
 html body .form-nav-icon {
 
@@ -569,6 +707,7 @@ html body .form-nav-icon {
   font-size: 18px;
 }
 
+
 html body .form-nav-icon img,
 html body .form-nav-icon svg {
 
@@ -580,13 +719,15 @@ html body .form-nav-icon svg {
   object-fit: contain;
 }
 
+
 html body .form-nav-copy {
+
   min-width: 0;
 }
 
 
 /* =========================================================
-   10. VENSTREMENY I KVELDSMODUS
+   11. VENSTREMENY I KVELDSMODUS
    ========================================================= */
 
 html[data-theme="dark"] body
@@ -595,12 +736,14 @@ html[data-theme="dark"] body
   border-color: #344252;
 }
 
+
 html[data-theme="dark"] body
 a.form-nav-link:hover {
 
   background: #263444;
   border-color: #344252;
 }
+
 
 html[data-theme="dark"] body
 .form-nav-link[aria-current="page"] {
@@ -613,14 +756,19 @@ html[data-theme="dark"] body
 
 
 /* =========================================================
-   11. FELLES KOLONNEBREDDER
+   12. KOLONNEBREDDER
    ========================================================= */
+
+/* FREMSIDE */
 
 html body .app-layout {
 
   grid-template-columns:
     240px minmax(0, 1fr);
 }
+
+
+/* UNDERSIDER MED RAPPORTPANEL */
 
 html body .app-shell {
 
@@ -630,10 +778,12 @@ html body .app-shell {
 
 
 /* =========================================================
-   12. MELLOMSTORE SKJERMER
+   13. MELLOMSTORE SKJERMER
    ========================================================= */
 
 @media (max-width: 1200px) {
+
+  /* FREMSIDE */
 
   html body .app-layout {
 
@@ -641,14 +791,21 @@ html body .app-shell {
       210px minmax(0, 1fr);
   }
 
+
+  /* UNDERSIDER */
+
   html body .app-shell {
 
     grid-template-columns:
       210px minmax(0, 1fr) 300px;
   }
 
+
+  /* TOPPFELT */
+
   html body .app-header.shared-app-header,
-  html body.savnet-side .app-header.shared-app-header {
+  html body.savnet-side
+  .app-header.shared-app-header {
 
     grid-template-columns:
       210px minmax(0, 1fr) 300px;
@@ -656,35 +813,59 @@ html body .app-shell {
     column-gap: 10px;
   }
 
-  html body .shared-app-header .header-title h1 {
+
+  /* HELIKOPTER */
+
+  html body .shared-app-header
+  .app-brand-mark {
+
+    flex-basis: 38px;
+
+    width: 38px;
+    height: 38px;
+  }
+
+
+  /* LUFTAMBULANSE */
+
+  html body .shared-app-header
+  .header-title h1 {
+
+    font-size: 16px;
+  }
+
+
+  /* SKJEMATITTEL */
+
+  html body .shared-app-header
+  .app-active-page-title {
+
     font-size: 22px;
   }
 
-  html body .shared-app-header .app-active-page-title {
-    font-size: 22px;
-  }
 }
 
 
 /* =========================================================
-   13. NETTBRETT OG MINDRE SKJERMER
+   14. NETTBRETT OG MINDRE SKJERMER
    ========================================================= */
 
 @media (max-width: 1000px) {
 
   /*
-    På mindre skjermer får vi to rader.
+     TOPPFELT I TO RADER:
 
-    Øverste rad:
-    Prosjektnavn til venstre
-    Kveldsmodus til høyre
+     RAD 1:
+     Helikopter / Luftambulanse / LA OSLO
+     Temaknapp til høyre
 
-    Nederste rad:
-    Aktivt skjema
+     RAD 2:
+     Aktiv skjematittel
   */
 
   html body .app-header.shared-app-header,
-  html body.savnet-side .app-header.shared-app-header {
+  html body.savnet-side
+  .app-header.shared-app-header {
 
     display: grid;
 
@@ -700,7 +881,11 @@ html body .app-shell {
     padding: 12px 16px;
   }
 
-  html body .shared-app-header .header-title {
+
+  /* LOGO */
+
+  html body .shared-app-header
+  .header-title {
 
     grid-column: 1;
     grid-row: 1;
@@ -709,19 +894,42 @@ html body .app-shell {
     max-width: 100%;
 
     padding-left: 0;
+
+    gap: 10px;
   }
 
-  html body .shared-app-header .header-title h1 {
 
-    font-size: 22px;
+  /* HELIKOPTER */
+
+  html body .shared-app-header
+  .app-brand-mark {
+
+    flex-basis: 40px;
+
+    width: 40px;
+    height: 40px;
+  }
+
+
+  /* LUFTAMBULANSE */
+
+  html body .shared-app-header
+  .header-title h1 {
+
+    font-size: 19px;
 
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
-  html body .shared-app-header .theme-toggle,
+
+  /* TEMAKNAPP */
+
+  html body .shared-app-header
+  .theme-toggle,
   html body.savnet-side
-  .app-header.shared-app-header .theme-toggle {
+  .app-header.shared-app-header
+  .theme-toggle {
 
     grid-column: 2;
     grid-row: 1;
@@ -731,7 +939,11 @@ html body .app-shell {
     margin-right: 0;
   }
 
-  html body .shared-app-header .app-active-page {
+
+  /* SKJEMATITTEL */
+
+  html body .shared-app-header
+  .app-active-page {
 
     grid-column: 1 / -1;
     grid-row: 2;
@@ -748,19 +960,24 @@ html body .app-shell {
     text-align: left;
   }
 
-  html body .shared-app-header .app-active-page-title {
+
+  html body .shared-app-header
+  .app-active-page-title {
 
     font-size: 22px;
     text-align: left;
   }
+
 }
 
 
 /* =========================================================
-   14. ENKELTKOLONNE VISNING
+   15. ENKELTKOLONNEVISNING
    ========================================================= */
 
 @media (max-width: 900px) {
+
+  /* SKJEMA / RAPPORT */
 
   html body .app-layout,
   html body .app-shell {
@@ -768,61 +985,112 @@ html body .app-shell {
     grid-template-columns: 1fr;
   }
 
+
+  /* VENSTREMENY */
+
   html body .form-navigation {
 
     position: static;
     top: auto;
   }
 
+
   html body .form-navigation-label {
 
     display: block;
   }
+
 
   html body .form-nav-list {
 
     display: grid;
 
     grid-template-columns:
-      repeat(auto-fit, minmax(150px, 1fr));
+      repeat(
+        auto-fit,
+        minmax(150px, 1fr)
+      );
 
     gap: 6px;
   }
+
 }
 
 
 /* =========================================================
-   15. MOBILVISNING
+   16. MOBILVISNING
    ========================================================= */
 
 @media (max-width: 560px) {
 
+  /* TOPPFELT */
+
   html body .app-header.shared-app-header,
-  html body.savnet-side .app-header.shared-app-header {
+  html body.savnet-side
+  .app-header.shared-app-header {
 
     gap: 10px 8px;
+
     padding: 12px;
   }
 
-  html body .shared-app-header .header-title h1 {
 
-    font-size: 18px;
-    line-height: 1.25;
+  /* LOGO */
+
+  html body .shared-app-header
+  .header-title {
+
+    gap: 8px;
   }
 
-  html body .shared-app-header .app-header-subtitle {
+
+  /* HELIKOPTER */
+
+  html body .shared-app-header
+  .app-brand-mark {
+
+    flex-basis: 32px;
+
+    width: 32px;
+    height: 32px;
+  }
+
+
+  /* LUFTAMBULANSE */
+
+  html body .shared-app-header
+  .header-title h1 {
+
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+
+  /* LA OSLO */
+
+  html body .shared-app-header
+  .app-header-subtitle {
 
     font-size: 10px;
   }
 
-  html body .shared-app-header .app-active-page-title {
+
+  /* SKJEMATITTEL */
+
+  html body .shared-app-header
+  .app-active-page-title {
 
     font-size: 21px;
   }
 
-  html body .shared-app-header .theme-toggle,
+
+  /* TEMAKNAPP */
+
+  html body .shared-app-header
+  .theme-toggle,
   html body.savnet-side
-  .app-header.shared-app-header .theme-toggle {
+  .app-header.shared-app-header
+  .theme-toggle {
 
     gap: 5px;
 
@@ -832,4 +1100,85 @@ html body .app-shell {
 
     font-size: 12px;
   }
+
+}
+
+
+/* =========================================================
+   17. EKSTRA SMÅ SKJERMER
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  html body .shared-app-header
+  .header-title {
+
+    gap: 6px;
+  }
+
+
+  html body .shared-app-header
+  .app-brand-mark {
+
+    flex-basis: 28px;
+
+    width: 28px;
+    height: 28px;
+  }
+
+
+  html body .shared-app-header
+  .header-title h1 {
+
+    font-size: 14px;
+  }
+
+
+  html body .shared-app-header
+  .theme-toggle {
+
+    padding: 6px 8px;
+  }
+
+}
+
+
+/* =========================================================
+   18. REDUSERT ANIMASJON
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html body .shared-app-header
+  .theme-toggle {
+
+    transition: none;
+  }
+
+}
+
+
+/* ==========================================
+   SEKUNDÆROPPDRAG – PROSEDYREKNAPP
+   ========================================== */
+
+html body.secondary-page
+.report-actions > .print-btn {
+  grid-column: 1 !important;
+}
+
+html body.secondary-page
+.report-actions > .procedure-btn {
+  grid-column: 2 !important;
+  order: 3 !important;
+
+  background: var(--rp-background) !important;
+  color: var(--rp-text) !important;
+  border: 1px solid var(--rp-border) !important;
+}
+
+html body.secondary-page
+.report-actions > .procedure-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }

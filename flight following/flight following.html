@@ -1,46 +1,26 @@
 
 <!DOCTYPE html>
 <html lang="no">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Flight Following | Luftambulansekoordinator</title>
 
-  <!-- FELLESFILER -->
   <link rel="stylesheet" href="../felles/felles.css">
-
-  <!-- FLIGHT FOLLOWING -->
   <link rel="stylesheet" href="flight following.css">
 
-  <!-- FELLES JAVASCRIPT -->
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
-
-  <!-- FLIGHT FOLLOWING JAVASCRIPT -->
   <script src="flight following.js" defer></script>
 </head>
 
 <body class="ff-page">
 
-  <!-- =====================================
-       TOPPFELT
-       ===================================== -->
-
   <header class="app-header">
-
     <div class="app-header-content">
-      <p class="app-eyebrow">
-        LUFTAMBULANSEKOORDINATOR
-      </p>
-
+      <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
       <h1>Flight Following</h1>
-
-      <p class="ff-test-label">
-        TESTVERSJON – SKAL IKKE BRUKES OPERATIVT
-      </p>
     </div>
 
     <button
@@ -48,131 +28,116 @@
       id="themeToggle"
       class="theme-toggle"
       aria-pressed="false"
-      aria-label="Slå på kveldsmodus"
-    >
-      <span class="theme-toggle-icon"
-            aria-hidden="true">🌙</span>
+      aria-label="Slå på kveldsmodus">
+
+      <span class="theme-toggle-icon" aria-hidden="true">
+        🌙
+      </span>
 
       <span class="theme-toggle-text">
         Kveldsmodus
       </span>
     </button>
-
   </header>
-
-  <!-- =====================================
-       HOVEDOPPSETT
-       ===================================== -->
 
   <main class="ff-layout">
 
     <!-- FELLES VENSTREMENY -->
     <aside id="shared-menu"></aside>
 
-    <!-- FLIGHT FOLLOWING -->
-    <section class="ff-main">
+    <!-- REGISTRERING -->
+    <section class="ff-main"
+             aria-label="Flight Following-registrering">
 
-      <!-- OVERSKRIFT OG KNAPPER -->
       <div class="ff-toolbar">
 
-        <div>
-          <h2>Flight Following</h2>
+        <button
+          type="button"
+          id="printActiveBtn"
+          class="ff-btn ff-neutral">
+          Skriv ut aktive flight followinger
+        </button>
 
-          <p class="ff-description">
-            Operativ oppfølging av
-            luftambulanseressurser – prototype
-          </p>
-        </div>
-
-        <div class="ff-toolbar-buttons">
-
-          <button
-            type="button"
-            id="printFFBtn"
-            class="ff-btn ff-neutral">
-            Skriv ut
-          </button>
-
-          <button
-            type="button"
-            id="newFFBtn"
-            class="ff-btn ff-primary">
-            + Ny FF
-          </button>
-
-        </div>
-      </div>
-
-      <!-- SYSTEMSTATUS -->
-      <div id="ffSystemNotice"
-           class="ff-system-notice"
-           role="status">
-
-        TESTVERSJON: Opplysninger lagres lokalt
-        i nettleseren. Alarmfunksjonen er ikke
-        en godkjent sikkerhetsbarriere.
+        <button
+          type="button"
+          id="printBlankBtn"
+          class="ff-btn ff-neutral">
+          Skriv ut tom flight following
+        </button>
 
       </div>
 
-      <!-- ALARMOVERSIKT -->
       <section
         id="ffAlarmPanel"
         class="ff-alarm-panel"
-        aria-label="Alarm ved manglende landing"
+        aria-label="Manglende landingsbekreftelse"
         aria-live="assertive"
         hidden>
       </section>
 
-      <!-- RESSURSER -->
-      <div id="ffContainer"
-           class="ff-container">
-
+      <div id="ffContainer" class="ff-container">
         <div class="ff-empty">
-          <strong>Ingen Flight Following</strong>
-
+          <strong>Ingen ressurs valgt</strong>
           <p>
-            Klikk «+ Ny FF» for å opprette
-            en ressurs.
+            Opprett en ny Flight Following eller velg
+            en ressurs fra oversikten til høyre.
           </p>
         </div>
-
       </div>
 
     </section>
 
+    <!-- ALLTID TILGJENGELIG HØYREPANEL -->
+    <aside class="ff-sidebar"
+           aria-label="Aktiv Flight Following">
+
+      <div class="ff-sidebar-top">
+
+        <div class="ff-sidebar-heading">
+          <div>
+            <h2>Aktiv Flight Following</h2>
+            <p>Alle registrerte ressurser</p>
+          </div>
+
+          <span id="ffActiveCount"
+                class="ff-total-count">0</span>
+        </div>
+
+        <button
+          type="button"
+          id="newFFBtn"
+          class="ff-btn ff-primary ff-new-button">
+          + Ny Flight Following
+        </button>
+
+      </div>
+
+      <div
+        id="ffOverview"
+        class="ff-overview">
+      </div>
+
+    </aside>
+
   </main>
 
-  <!-- =====================================
-       NY FLIGHT FOLLOWING
-       ===================================== -->
-
-  <dialog id="newFFDialog"
-          class="ff-dialog">
-
+  <!-- NY FLIGHT FOLLOWING -->
+  <dialog id="newFFDialog" class="ff-dialog">
     <form id="newFFForm">
 
-      <h2>Start ny Flight Following</h2>
+      <h2>Ny Flight Following</h2>
 
-      <p>
-        Skriv ressurs-ID, for eksempel 1-1.
-        Systemet gjør dette automatisk om
-        til LA 1-1.
-      </p>
-
-      <label for="resourceInput">
-        Ressurs-ID
-      </label>
+      <label for="resourceInput">Ressurs-ID</label>
 
       <input
         id="resourceInput"
         type="text"
+        maxlength="40"
         placeholder="F.eks. 1-1"
         autocomplete="off"
-        maxlength="40"
         required>
 
       <div class="ff-dialog-buttons">
-
         <button
           type="button"
           id="cancelNewFFBtn"
@@ -183,26 +148,54 @@
         <button
           type="submit"
           class="ff-btn ff-primary">
-          Start FF
+          Opprett FF
         </button>
-
       </div>
+
     </form>
   </dialog>
 
-  <!-- =====================================
-       AVSLUTT FLIGHT FOLLOWING
-       ===================================== -->
+  <!-- REGISTRER LANDING -->
+  <dialog id="landFFDialog" class="ff-dialog">
+    <form id="landFFForm">
 
-  <dialog id="endFFDialog"
-          class="ff-dialog">
+      <h2>Registrer landing</h2>
+      <p id="landFFText"></p>
+
+      <label for="landTimeInput">
+        Landingstidspunkt
+      </label>
+
+      <input
+        id="landTimeInput"
+        type="datetime-local"
+        required>
+
+      <div class="ff-dialog-buttons">
+        <button
+          type="button"
+          id="cancelLandFFBtn"
+          class="ff-btn ff-neutral">
+          Avbryt
+        </button>
+
+        <button
+          type="submit"
+          class="ff-btn ff-land">
+          Bekreft landing
+        </button>
+      </div>
+
+    </form>
+  </dialog>
+
+  <!-- AVSLUTT FF -->
+  <dialog id="endFFDialog" class="ff-dialog">
 
     <h2>Avslutt Flight Following?</h2>
-
     <p id="endFFText"></p>
 
     <div class="ff-dialog-buttons">
-
       <button
         type="button"
         id="cancelEndFFBtn"
@@ -216,13 +209,9 @@
         class="ff-btn ff-danger">
         Avslutt FF
       </button>
-
     </div>
-  </dialog>
 
-  <!-- =====================================
-       UTSKRIFT
-       ===================================== -->
+  </dialog>
 
   <div id="printArea"></div>
 

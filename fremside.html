@@ -3,24 +3,58 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Luftambulansekoordinator</title>
 
-  <link rel="stylesheet" href="felles/felles.css">
-<link rel="stylesheet" href="Fremside/Fremside.css">
+  <!-- FELLES DESIGN -->
+  <link
+    rel="stylesheet"
+    href="felles/felles.css"
+  >
 
-  <script src="felles/felles.js" defer></script>
+  <!-- FREMSIDENS DESIGN -->
+  <link
+    rel="stylesheet"
+    href="Fremside/Fremside.css"
+  >
+
+  <!-- NYTT MENYDESIGN -->
+  <link
+    rel="stylesheet"
+    href="felles/hjelpemidler.css"
+  >
+
+  <!-- FELLES FUNKSJONER -->
+  <script
+    src="felles/felles.js"
+    defer
+  ></script>
+
+  <!-- FELLES VENSTREMENY -->
+  <script
+    src="felles/meny.js"
+    defer
+  ></script>
 </head>
 
-<body class="home-page">
-  
-<header class="app-header">
+<body
+  class="home-page"
+  data-page-title="Fremside"
+>
 
-  <div class="header-title">
-    <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
-    <h1>Fremside. !!TESTVERSJON OG SKAL IKKE BRUKES I PRODUKSJON!!</h1>
-  </div>
+  <!-- =====================================
+       TOPPFELT
+       ===================================== -->
+
+  <header class="app-header">
+
+    <div class="header-title">
+      <h1>Luftambulansekoordinator</h1>
+    </div>
 
     <button
       type="button"
@@ -29,24 +63,43 @@
       aria-pressed="false"
       aria-label="Slå på kveldsmodus"
     >
-      <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
-      <span class="theme-toggle-text">Kveldsmodus</span>
+      <span
+        class="theme-toggle-icon"
+        aria-hidden="true"
+      >🌙</span>
+
+      <span class="theme-toggle-text">
+        Kveldsmodus
+      </span>
     </button>
 
   </header>
 
+
+  <!-- =====================================
+       HOVEDLAYOUT
+       ===================================== -->
+
   <div class="app-layout">
 
-    <!-- FELLES VENSTREMENY -->
-    <!-- Denne brukes også av meny.js på andre sider -->
+
+    <!-- ===================================
+         FELLES VENSTREMENY
+
+         Denne er hovedkilden for meny.js
+         på alle undersider.
+         =================================== -->
 
     <nav
       class="form-navigation"
       data-shared-menu
-      aria-label="Navigasjon"
+      aria-label="Hovednavigasjon"
     >
 
       <div class="form-navigation-inner">
+
+
+        <!-- SKJEMAER -->
 
         <p class="form-navigation-label">
           Skjemaer
@@ -60,7 +113,9 @@
               class="form-nav-link"
               aria-current="page"
             >
-              <span class="form-nav-copy">Fremside</span>
+              <span class="form-nav-copy">
+                Fremside
+              </span>
             </a>
           </li>
 
@@ -69,7 +124,9 @@
               href="savnet-helikopter/savnet-helikopter.html"
               class="form-nav-link"
             >
-              <span class="form-nav-copy">Savnet helikopter</span>
+              <span class="form-nav-copy">
+                Savnet helikopter
+              </span>
             </a>
           </li>
 
@@ -78,11 +135,16 @@
               href="gps-forstyrrelser/gps-forstyrrelser.html"
               class="form-nav-link"
             >
-              <span class="form-nav-copy">GPS-forstyrrelser</span>
+              <span class="form-nav-copy">
+                GPS-forstyrrelser
+              </span>
             </a>
           </li>
 
         </ul>
+
+
+        <!-- RESERVELØSNING -->
 
         <p class="form-navigation-label">
           Reserveløsning dokumentasjon
@@ -95,7 +157,9 @@
               href="flight following/flight following.html"
               class="form-nav-link"
             >
-              <span class="form-nav-copy">Flight following</span>
+              <span class="form-nav-copy">
+                Flight following
+              </span>
             </a>
           </li>
 
@@ -104,7 +168,9 @@
               href="primæroppdrag/primæroppdrag.html"
               class="form-nav-link"
             >
-              <span class="form-nav-copy">Primæroppdrag</span>
+              <span class="form-nav-copy">
+                Primæroppdrag
+              </span>
             </a>
           </li>
 
@@ -113,210 +179,349 @@
               href="sekundæroppdrag/sekundæroppdrag.html"
               class="form-nav-link"
             >
-              <span class="form-nav-copy">Sekundæroppdrag</span>
+              <span class="form-nav-copy">
+                Sekundæroppdrag
+              </span>
             </a>
           </li>
 
         </ul>
 
-        <p class="form-navigation-label">
-          Nyttige hjelpemidler
-        </p>
 
-        <ul class="form-nav-list">
+        <!-- =================================
+             NYTTIGE HJELPEMIDLER
 
-          <li>
-            <a
-              href="la kart/la kart.html"
-              class="form-nav-link"
+             Åpen som standard.
+             Brukeren kan lukke seksjonen.
+             Tilstanden huskes av meny.js.
+             ================================= -->
+
+        <details
+          class="nav-tools-section"
+          data-tools-section
+          open
+        >
+
+          <summary class="nav-tools-heading">
+
+            <span class="nav-tools-heading-text">
+              Nyttige hjelpemidler
+            </span>
+
+            <span
+              class="nav-tools-chevron"
+              aria-hidden="true"
             >
-              <span class="form-nav-copy">Norgeskart LA og RH</span>
-            </a>
-          </li>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </span>
 
-        </ul>
+          </summary>
+
+
+          <ul class="form-nav-list nav-tools-list">
+
+
+            <!-- INTERNT KART -->
+
+            <li>
+              <a
+                href="la kart/la kart.html"
+                class="form-nav-link"
+              >
+                <span class="form-nav-copy">
+                  Norgeskart LA og RH
+                </span>
+              </a>
+            </li>
+
+
+            <!-- WINDY -->
+
+            <li>
+              <a
+                href="https://www.windy.com/"
+                class="form-nav-link nav-external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Windy, åpnes i ny fane"
+              >
+
+                <span class="form-nav-copy">
+                  Windy
+                </span>
+
+                <span
+                  class="nav-external-icon"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+
+              </a>
+            </li>
+
+
+            <!-- IPPC -->
+
+            <li>
+              <a
+                href="https://www.ippc.no/"
+                class="form-nav-link nav-external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="IPPC, åpnes i ny fane"
+              >
+
+                <span class="form-nav-copy">
+                  IPPC
+                </span>
+
+                <span
+                  class="nav-external-icon"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+
+              </a>
+            </li>
+
+
+            <!-- GOOGLE MAPS -->
+
+            <li>
+              <a
+                href="https://www.google.com/maps"
+                class="form-nav-link nav-external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Google Maps, åpnes i ny fane"
+              >
+
+                <span class="form-nav-copy">
+                  Google Maps
+                </span>
+
+                <span
+                  class="nav-external-icon"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+
+              </a>
+            </li>
+
+          </ul>
+
+        </details>
 
       </div>
+
     </nav>
 
-    <!-- HOVEDINNHOLD -->
 
-    <main class="main-content" id="mainContent">
+    <!-- ===================================
+         HOVEDINNHOLD
+         =================================== -->
 
-      <div class="page-heading">
-        <h2>Operative skjemaer</h2>
-        <p>Velg ønsket skjema eller reserveløsning.</p>
-      </div>
-
-
-<!-- STORE BILDEKNAPPER -->
-
-<section class="home-section">
-
-  <h3 class="section-title">
-    Hendelser og varsling
-  </h3>
-
-  <div class="primary-buttons">
-
-    <!-- SAVNET HELIKOPTER -->
-
-    <a
-      href="savnet-helikopter/savnet-helikopter.html"
-      class="image-button image-button-large"
-      aria-label="Åpne Savnet helikopter"
+    <main
+      class="main-content"
+      id="mainContent"
     >
-      <img
-        src="img/savnet heli ferdig.png"
-        alt="Savnet helikopter"
+
+
+      <!-- =================================
+           HENDELSER OG VARSLING
+           ================================= -->
+
+      <section
+        class="home-section"
+        aria-labelledby="hendelserHeading"
       >
-    </a>
 
-    <!-- GPS-FORSTYRRELSER -->
+        <h3
+          class="section-title"
+          id="hendelserHeading"
+        >
+          Hendelser og varsling
+        </h3>
 
-    <a
-      href="gps-forstyrrelser/gps-forstyrrelser.html"
-      class="image-button image-button-large"
-      aria-label="Åpne GPS-forstyrrelser"
-    >
-      <img
-        src="img/GPS forstyrrelse ferdig.png"
-        alt="GPS-forstyrrelser"
+
+        <div class="primary-buttons">
+
+
+          <!-- SAVNET HELIKOPTER -->
+
+          <a
+            href="savnet-helikopter/savnet-helikopter.html"
+            class="image-button image-button-large"
+            aria-label="Åpne Savnet helikopter"
+          >
+
+            <img
+              src="img/savnet heli ferdig.png"
+              alt="Savnet helikopter"
+            >
+
+          </a>
+
+
+          <!-- GPS-FORSTYRRELSER -->
+
+          <a
+            href="gps-forstyrrelser/gps-forstyrrelser.html"
+            class="image-button image-button-large"
+            aria-label="Åpne GPS-forstyrrelser"
+          >
+
+            <img
+              src="img/GPS forstyrrelse ferdig.png"
+              alt="GPS-forstyrrelser"
+            >
+
+          </a>
+
+
+          <!-- LANDINGSVARSEL RH -->
+
+          <button
+            type="button"
+            class="image-button image-button-large landing-button"
+            id="landingWarningButton"
+            aria-label="Åpne Landingsvarsel RH"
+          >
+
+            <span class="landing-button-content">
+
+              <span
+                class="landing-button-icon"
+                aria-hidden="true"
+              >
+                🔔
+              </span>
+
+              <strong>
+                Landingsvarsel RH
+              </strong>
+
+              <small>
+                3 minutter til landing
+              </small>
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================
+           RESERVELØSNING DOKUMENTASJON
+           ================================= -->
+
+      <section
+        class="home-section"
+        aria-labelledby="reserveHeading"
       >
-    </a>
 
-    <!-- LANDINGSVARSEL RH -->
-
-    <button
-      type="button"
-      class="image-button image-button-large landing-button"
-      onclick="openLandingsvarsel()"
-      aria-label="Åpne Landingsvarsel RH"
-    >
-      <span class="landing-button-content">
-        <span class="landing-button-icon" aria-hidden="true">
-          🔔
-        </span>
-        <strong>Landingsvarsel RH</strong>
-        <small>3 minutter til landing</small>
-      </span>
-    </button>
-
-  </div>
-
-</section>
-
-      <!-- MINDRE BILDEKNAPPER -->
-
-      <section class="home-section">
-
-        <h3 class="section-title">
+        <h3
+          class="section-title"
+          id="reserveHeading"
+        >
           Reserveløsning dokumentasjon
         </h3>
 
+
         <div class="secondary-buttons">
+
+
+          <!-- FLIGHT FOLLOWING -->
 
           <a
             href="flight following/flight following.html"
             class="image-button image-button-small"
             aria-label="Åpne Flight following"
           >
+
             <img
               src="img/FF ferdig.png"
               alt="Flight following"
             >
+
           </a>
+
+
+          <!-- PRIMÆROPPDRAG -->
 
           <a
             href="primæroppdrag/primæroppdrag.html"
             class="image-button image-button-small"
             aria-label="Åpne Primæroppdrag"
           >
+
             <img
               src="img/primæroppdragv2.png"
               alt="Primæroppdrag"
             >
+
           </a>
+
+
+          <!-- SEKUNDÆROPPDRAG -->
 
           <a
             href="sekundæroppdrag/sekundæroppdrag.html"
             class="image-button image-button-small"
             aria-label="Åpne Sekundæroppdrag"
           >
+
             <img
               src="img/sekundær-min.png"
               alt="Sekundæroppdrag"
             >
+
           </a>
 
         </div>
 
       </section>
 
-      <!-- NYTTIGE HJELPEMIDLER -->
-
-      <section class="home-section">
-
-        <h3 class="section-title">
-          Nyttige hjelpemidler
-        </h3>
-
-        <a
-          href="la kart/la kart.html"
-          class="map-button"
-        >
-          <span aria-hidden="true">⌖</span>
-          <span>Norgeskart LA og RH</span>
-          <span aria-hidden="true">→</span>
-        </a>
-
-        <a
-          href="https://windy.com"
-          class="map-button"
-        >
-          <span aria-hidden="true">⌖</span>
-          <span>Windy</span>
-          <span aria-hidden="true">→</span>
-        </a>
-
-        <a
-          href="https://ippc.no"
-          class="map-button"
-        >
-          <span aria-hidden="true">⌖</span>
-          <span>IPPC</span>
-          <span aria-hidden="true">→</span>
-        </a>
-
-                <a
-          href="https://www.google.com/maps"
-          class="map-button"
-        >
-          <span aria-hidden="true">⌖</span>
-          <span>Google maps</span>
-          <span aria-hidden="true">→</span>
-        </a>
-
-
-
-      </section>
 
     </main>
 
-
   </div>
 
-  <!-- ÅPNE LANDINGSVARSEL I EGET VINDU -->
+
+  <!-- =====================================
+       LANDINGSVARSEL RH
+       ÅPNES I SEPARAT VINDU
+       ===================================== -->
 
   <script>
     let landingsvarselWindow = null;
 
     function openLandingsvarsel() {
 
-      // Dersom klokken allerede er åpen,
-      // hent frem eksisterende vindu.
-      if (landingsvarselWindow &&
-          !landingsvarselWindow.closed) {
+      // Gjenbruk vinduet dersom det allerede er åpent.
+
+      if (
+        landingsvarselWindow &&
+        !landingsvarselWindow.closed
+      ) {
         landingsvarselWindow.focus();
         return;
       }
@@ -326,31 +531,50 @@
 
       const left = Math.max(
         0,
-        Math.round((screen.availWidth - width) / 2)
+        Math.round(
+          (screen.availWidth - width) / 2
+        )
       );
 
       const top = Math.max(
         0,
-        Math.round((screen.availHeight - height) / 2)
+        Math.round(
+          (screen.availHeight - height) / 2
+        )
       );
 
-
-  landingsvarselWindow = window.open(
-  "landingsvarsling/landingsvarsling.html",
-  "LandingsvarselRH",
-  `popup=yes,width=${width},height=${height},` +
-  `left=${left},top=${top},resizable=yes,scrollbars=yes`
-);
+      landingsvarselWindow = window.open(
+        "landingsvarsling/landingsvarsling.html",
+        "LandingsvarselRH",
+        `popup=yes,width=${width},height=${height},` +
+        `left=${left},top=${top},` +
+        "resizable=yes,scrollbars=yes"
+      );
 
       if (landingsvarselWindow) {
+
         landingsvarselWindow.focus();
+
       } else {
+
         alert(
           "Nettleseren blokkerte vinduet. " +
           "Tillat popup-vinduer for denne siden."
         );
+
       }
     }
+
+
+    // Koble landingsvarselknappen til funksjonen.
+
+    document.getElementById(
+      "landingWarningButton"
+    )?.addEventListener(
+      "click",
+      openLandingsvarsel
+    );
+
   </script>
 
 </body>

@@ -2,20 +2,26 @@
 "use strict";
 
 (() => {
-  const $ = s => document.querySelector(s);
-  const $$ = s => [...document.querySelectorAll(s)];
+  const $ = selector => document.querySelector(selector);
+  const $$ = selector => [...document.querySelectorAll(selector)];
 
-  const state = {
+  const initialState = () => ({
     urgency: "",
     gender: "",
+    ageUnit: "år",
     reasons: [],
     responses: [],
     extraResource: "",
     extraCriteria: [],
     extraConclusion: "",
-    extraResponses: [],
-    pendingRejection: false
-  };
+    quickWaitId: null,
+    quickRejectId: null,
+    extraRejectId: null,
+    alertEventId: null,
+    nextId: 1
+  });
+
+  let state = initialState();
 
   const AMK_CENTRES = [
     "Oslo", "Vestre Viken", "Vestfold Telemark",
@@ -26,22 +32,30 @@
     "Nordland", "Helgeland", "Finnmark"
   ];
 
+  const TG = new Map();
+
   const value = id => $("#" + id)?.value.trim() || "";
 
-  const normalize = text => String(text || "")
-    .normalize("NFKC")
-    .toLocaleLowerCase("nb-NO")
-    .trim();
+  function normalize(text) {
+    return String(text || "")
+      .normalize("NFKC")
+      .toLocaleLowerCase("nb-NO")
+      .trim();
+  }
 
   function currentTime() {
     const d = new Date();
-    return [d.getHours(), d.getMinutes()]
-      .map(n => String(n).padStart(2, "0"))
-      .join(":");
+
+    return [
+      d.getHours(),
+      d.getMinutes()
+    ].map(n => String(n).padStart(2, "0"))
+     .join(":");
   }
 
   function formatTime(raw) {
     let text = String(raw || "").trim();
+
     if (!text) return "";
 
     if (/^\d{3,4}$/.test(text)) {
@@ -52,31 +66,62 @@
     const match = text.match(/^(\d{1,2}):(\d{2})$/);
     if (!match) return "";
 
-    const h = Number(match[1]);
-    const m = Number(match[2]);
-    if (h > 23 || m > 59) return "";
+    const hours = Number(match[1]);
+    const minutes = Number(match[2]);
 
-    return String(h).padStart(2, "0") +
-      ":" + String(m).padStart(2, "0");
+    if (hours > 23 || minutes > 59) return "";
+
+    return [
+      hours,
+      minutes
+    ].map(n => String(n).padStart(2, "0"))
+     .join(":");
   }
 
-  function normalizeResource(raw) {
+  function normalizeResource(raw, defaultType = "LA") {
     const text = String(raw || "").trim();
+
+    if (!text) return "";
+
     const match = text.match(
-      /^(?:LA|LUFTAMBULANSE)?\s*(\d+)\s*-\s*(\d+)$/i
+      /^(?:(LA|LUFTAMBULANSE|RH|REDNINGSHELIKOPTER)\s*)?(\d+)\s*-\s*(\d+)$/i
     );
-    return match
-      ? `LA ${match[1]}-${match[2]}`
-      : text;
+
+    if (!match) return text;
+
+    const type = match[1]
+      ? (/^(RH|REDNINGSHELIKOPTER)$/i.test(match[1])
+          ? "RH"
+          : "LA")
+      : defaultType;
+
+    return `${type} ${match[2]}-${match[3]}`;
+  }
+
+  function setError(id, message = "") {
+    const element = $("#" + id);
+    if (element) element.textContent = message;
   }
 
   /* VALGKNAPPER */
 
-  function selectButton(group, button) {
-    group.querySelectorAll("button").forEach(b => {
-      const selected = b === button;
-      b.classList.toggle("is-selected", selected);
-      b.setAttribute("aria-pressed", String(selected));
+  function selectButton(group, selected) {
+    if (!group) return;
+
+    group.querySelectorAll("button").forEach(button => {
+      const active = button === selected;
+
+      button.classList.toggle("is-selected", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
+
+  function clearButtons(group) {
+    if (!group) return;
+
+    group.querySelectorAll("button").forEach(button => {
+      button.classList.remove("is-selected");
+      button.setAttribute("aria-pressed", "false");
     });
   }
 
@@ -86,38 +131,48 @@
 
     group.addEventListener("click", event => {
       const button = event.target.closest(
-        "button[" + attribute + "]"
+        `button[${attribute}]`
       );
+
       if (!button || !group.contains(button)) return;
 
+      const chosen = button.getAttribute(attribute);
+
       selectButton(group, button);
-      callback(button.getAttribute(attribute));
+      callback(chosen);
       updateReport();
     });
   }
 
-  function setupMultiple(id, attribute, array) {
+  // Bruker en state-nøkkel, ikke en gammel array-referanse.
+  // Dermed fungerer kriteriene også etter "Tøm skjema".
+  function setupMultiple(id, attribute, stateKey) {
     const group = $("#" + id);
     if (!group) return;
 
     group.addEventListener("click", event => {
       const button = event.target.closest(
-        "button[" + attribute + "]"
+        `button[${attribute}]`
       );
+
       if (!button || !group.contains(button)) return;
 
-      const item = button.getAttribute(attribute);
-      const index = array.indexOf(item);
+      const chosen = button.getAttribute(attribute);
+      const items = state[stateKey];
 
-      if (index === -1) array.push(item);
-      else array.splice(index, 1);
+      const index = items.indexOf(chosen);
 
-      button.classList.toggle(
-        "is-selected", array.includes(item)
-      );
-      button.setAttribute(
-        "aria-pressed", String(array.includes(item))
-      );
+      if (index === -1) {
+        items.push(chosen);
+      } else {
+        items.splice(index, 1);
+      }
+
+      const active = items.includes(chosen);
+
+      button.classList.toggle("is-selected", active);
+      button.setAttribute("aria-pressed", String(active));
+
       updateReport();
     });
   }
@@ -138,6 +193,7 @@
       if (event.isComposing) return;
 
       const typed = input.value;
+
       if (!typed.trim()) {
         updateReport();
         return;
@@ -147,11 +203,15 @@
         normalize(name).startsWith(normalize(typed))
       );
 
-      if (matches.length === 1 &&
-          normalize(matches[0]) !== normalize(typed)) {
+      if (
+        matches.length === 1 &&
+        normalize(matches[0]) !== normalize(typed)
+      ) {
         input.value = matches[0];
+
         input.setSelectionRange(
-          typed.length, matches[0].length
+          typed.length,
+          matches[0].length
         );
       }
 
@@ -169,18 +229,20 @@
       .replace(/[\s._–—-]+/g, "");
   }
 
-  const TG = new Map();
-
   function registerTg(name, index, aliases = []) {
     for (const alias of [name, ...aliases]) {
       const key = tgKey(alias);
       const existing = TG.get(key);
+
       if (existing && existing.index !== index) continue;
+
       TG.set(key, { name, index });
     }
   }
 
   function initTgRegister() {
+    TG.clear();
+
     const health = [
       ["Oslo", ["osl"], 1010, 20],
       ["Innlandet", ["inn", "innl"], 1710, 20],
@@ -192,11 +254,16 @@
     health.forEach(([name, aliases, base, count]) => {
       for (let n = 1; n <= count; n++) {
         const padded = String(n).padStart(2, "0");
-        const names = [name, ...aliases];
+
         registerTg(
-          name + "-" + padded,
+          `${name}-${padded}`,
           base + n,
-          names.flatMap(a => [a + n, a + padded])
+          [name, ...aliases].flatMap(a => [
+            a + n,
+            a + padded,
+            a + "-" + n,
+            a + "-" + padded
+          ])
         );
       }
     });
@@ -236,6 +303,7 @@
 
       function add(series, n, index) {
         const name = `${prefix}-${series}-${n}`;
+
         registerTg(name, index, [
           `${area}-${series}-${n}`,
           `${series}-${n}`
@@ -270,48 +338,79 @@
     }
 
     [
-      ["RYGGE", 101], ["SOLA", 102],
-      ["FLORØ", 103], ["ØRLAND", 104],
-      ["BODØ", 105], ["BANAK", 106]
+      ["RYGGE", 101],
+      ["SOLA", 102],
+      ["FLORØ", 103],
+      ["ØRLAND", 104],
+      ["BODØ", 105],
+      ["BANAK", 106]
     ].forEach(([name, index]) => {
-      registerTg(`330-${name}-3`, index, [`330 ${name}`]);
+      registerTg(
+        `330-${name}-3`,
+        index,
+        [`330 ${name}`]
+      );
     });
 
     [
-      ["1-1", "LSK", 11], ["1-2", "LSK", 12],
-      ["1-3", "ÅL", 13], ["1-4", "ARN", 14],
-      ["1-5", "DOM", 15], ["3-1", "STV", 31],
-      ["3-3", "BGN", 33], ["3-5", "FDE", 35],
-      ["4-1", "AES", 41], ["4-2", "TRD", 42],
-      ["5-1", "BNN", 51], ["5-2", "EVE", 52],
-      ["5-3", "TOS", 53], ["5-4", "KKN", 54]
+      ["1-1", "LSK", 11],
+      ["1-2", "LSK", 12],
+      ["1-3", "ÅL", 13],
+      ["1-4", "ARN", 14],
+      ["1-5", "DOM", 15],
+      ["3-1", "STV", 31],
+      ["3-3", "BGN", 33],
+      ["3-5", "FDE", 35],
+      ["4-1", "AES", 41],
+      ["4-2", "TRD", 42],
+      ["5-1", "BNN", 51],
+      ["5-2", "EVE", 52],
+      ["5-3", "TOS", 53],
+      ["5-4", "KKN", 54]
     ].forEach(([id, base, index]) => {
       registerTg(
-        `LA RW ${id} ${base}`, index, [`LA RW ${id}`]
+        `LA RW ${id} ${base}`,
+        index,
+        [`LA RW ${id}`]
       );
     });
   }
 
-  function formatTg(text) {
-    const raw = String(text || "").trim();
-    if (!raw) return "";
+  function lookupTg(raw) {
+    return TG.get(tgKey(raw)) || null;
+  }
 
-    const match = TG.get(tgKey(raw));
+  function formatTg(raw) {
+    const text = String(raw || "").trim();
+    if (!text) return "";
+
+    const match = lookupTg(text);
+
     return match
       ? `${match.name} (indeks ${match.index})`
-      : raw;
+      : text;
+  }
+
+  function expandTgInput(input) {
+    const match = lookupTg(input.value);
+
+    if (match) input.value = match.name;
   }
 
   function makeTgInput() {
     const input = document.createElement("input");
-    input.className = "other-tg-input";
+
     input.type = "text";
+    input.className = "other-tg-input tg-input";
     input.setAttribute("aria-label", "Annen talegruppe");
+    input.spellcheck = false;
+
     return input;
   }
 
   function maintainDynamicTg() {
     const container = $("#otherTgContainer");
+
     let inputs = [...container.querySelectorAll("input")];
 
     if (!inputs.length || inputs.at(-1).value.trim()) {
@@ -319,10 +418,13 @@
     }
 
     inputs = [...container.querySelectorAll("input")];
+
     for (let i = inputs.length - 2; i >= 0; i--) {
-      if (!inputs[i].value.trim() &&
-          !inputs[i + 1].value.trim() &&
-          inputs[i] !== document.activeElement) {
+      if (
+        !inputs[i].value.trim() &&
+        !inputs[i + 1].value.trim() &&
+        inputs[i] !== document.activeElement
+      ) {
         inputs[i].remove();
       }
     }
@@ -337,7 +439,46 @@
     ].filter(Boolean).map(formatTg);
   }
 
-  /* DYNAMISKE ANDRE RESSURSER OG ETA */
+  /* DYNAMISKE ANDRE RESSURSER */
+
+  function calculateEta(minutes, startTime = Date.now()) {
+    const totalMinutes = Math.round(
+      startTime / 60000 + minutes
+    );
+
+    const minutesInDay = 24 * 60;
+
+    const now = new Date(
+      totalMinutes * 60000
+    );
+
+    return [
+      now.getHours(),
+      now.getMinutes()
+    ].map(n => String(n).padStart(2, "0"))
+     .join(":");
+  }
+
+  function parseEte(raw) {
+    const text = String(raw || "").trim();
+
+    if (!text) return null;
+
+    // ETE i hele minutter.
+    if (!/^\d+$/.test(text)) return null;
+
+    const minutes = Number(text);
+
+    if (
+      !Number.isSafeInteger(minutes) ||
+      minutes < 0 ||
+      minutes > 1440
+    ) {
+      return null;
+    }
+
+    return minutes;
+  }
 
   function makeResourceRow() {
     const row = document.createElement("div");
@@ -348,22 +489,68 @@
     resource.className = "other-resource-name";
     resource.setAttribute("aria-label", "Ressurs");
 
+    const ete = document.createElement("input");
+    ete.type = "text";
+    ete.inputMode = "numeric";
+    ete.className = "other-resource-ete";
+    ete.setAttribute("aria-label", "ETE i minutter");
+
     const eta = document.createElement("input");
     eta.type = "text";
+    eta.inputMode = "numeric";
+    eta.maxLength = 5;
     eta.className = "other-resource-eta";
     eta.setAttribute("aria-label", "ETA");
 
-    row.append(resource, eta);
+    row.append(resource, ete, eta);
+
     return row;
+  }
+
+  function calculateResourceEta(row) {
+    const eteInput = row.querySelector(
+      ".other-resource-ete"
+    );
+
+    const etaInput = row.querySelector(
+      ".other-resource-eta"
+    );
+
+    const minutes = parseEte(eteInput.value);
+
+    if (minutes === null) {
+      if (!eteInput.value.trim()) {
+        if (row.dataset.etaCalculated === "true") {
+          etaInput.value = "";
+        }
+
+        row.dataset.etaCalculated = "false";
+      }
+      return;
+    }
+
+    // Beregning fra tidspunktet ETE ble registrert.
+    const startTime = Date.now();
+
+    etaInput.value = calculateEta(
+      minutes,
+      startTime
+    );
+
+    row.dataset.etaCalculated = "true";
   }
 
   function maintainResourceRows() {
     const container = $("#otherResourcesRows");
+
     let rows = [...container.querySelectorAll(".resource-pair")];
 
-    if (!rows.length ||
-        rows.at(-1).querySelector(".other-resource-name")
-          .value.trim()) {
+    if (
+      !rows.length ||
+      rows.at(-1).querySelector(
+        ".other-resource-name"
+      ).value.trim()
+    ) {
       container.appendChild(makeResourceRow());
     }
 
@@ -371,10 +558,12 @@
 
     for (let i = rows.length - 2; i >= 0; i--) {
       const inputs = rows[i].querySelectorAll("input");
-      const next = rows[i + 1].querySelectorAll("input");
+      const nextInputs = rows[i + 1].querySelectorAll("input");
 
-      if ([...inputs, ...next].every(x => !x.value.trim()) &&
-          !rows[i].contains(document.activeElement)) {
+      if (
+        [...inputs, ...nextInputs].every(x => !x.value.trim()) &&
+        !rows[i].contains(document.activeElement)
+      ) {
         rows[i].remove();
       }
     }
@@ -385,23 +574,71 @@
       const resource = row.querySelector(
         ".other-resource-name"
       ).value.trim();
+
       const eta = row.querySelector(
         ".other-resource-eta"
       ).value.trim();
 
       if (!resource && !eta) return "";
-      return [resource, eta ? `ETA: ${eta}` : ""]
-        .filter(Boolean).join(" – ");
+
+      return [
+        resource,
+        eta ? `ETA: ${formatTime(eta) || eta}` : ""
+      ].filter(Boolean).join(" – ");
     }).filter(Boolean);
   }
 
-  /* HENDELSESLOGG */
+  function initializeResourceRows() {
+    const container = $("#otherResourcesRows");
+
+    container.appendChild(makeResourceRow());
+
+    container.addEventListener("input", event => {
+      const input = event.target;
+      const row = input.closest(".resource-pair");
+
+      if (!row) return;
+
+      if (input.classList.contains("other-resource-ete")) {
+        calculateResourceEta(row);
+      }
+
+      if (input.classList.contains("other-resource-eta")) {
+        row.dataset.etaCalculated = "false";
+      }
+
+      maintainResourceRows();
+      updateReport();
+    });
+
+    container.addEventListener("blur", event => {
+      if (
+        !event.target.classList.contains(
+          "other-resource-eta"
+        )
+      ) {
+        return;
+      }
+
+      const formatted = formatTime(event.target.value);
+
+      if (formatted) {
+        event.target.value = formatted;
+      }
+
+      updateReport();
+    }, true);
+  }
+
+  /* HENDELSESLOGG I RAPPORTEN */
 
   function addEvent(resource, response, options = {}) {
     const entry = {
-      id: crypto.randomUUID?.() ||
-        String(Date.now()) + Math.random(),
-      resource: normalizeResource(resource),
+      id: state.nextId++,
+      resource: normalizeResource(
+        resource,
+        options.type || "LA"
+      ),
       time: options.time || currentTime(),
       response,
       rejection: options.rejection || "",
@@ -409,102 +646,83 @@
     };
 
     state.responses.push(entry);
-    renderLog();
     updateReport();
+
     return entry;
   }
 
-  function renderLog() {
-    const container = $("#responseLog");
-    container.replaceChildren();
-
-    if (!state.responses.length) return;
-
-    const title = document.createElement("h3");
-    title.className = "response-log-title";
-    title.textContent = "Hendelseslogg";
-    container.appendChild(title);
-
-    state.responses.forEach(entry => {
-      const row = document.createElement("div");
-      row.className = "response-entry";
-
-      const main = document.createElement("div");
-      main.className = "response-entry-main";
-
-      const heading = document.createElement("div");
-      const time = document.createElement("span");
-      time.className = "response-entry-time";
-      time.textContent = entry.time + " ";
-
-      const status = document.createElement("span");
-      status.className = "response-status";
-      status.textContent = entry.response;
-
-      if (entry.response === "Avvist") {
-        status.classList.add("rejected");
-      }
-      if (entry.response === "Avventer") {
-        status.classList.add("waiting");
-      }
-      if (entry.response === "Rykker ut") {
-        status.classList.add("go");
-      }
-
-      heading.append(time, status);
-
-      const resource = document.createElement("div");
-      resource.className = "response-entry-resource";
-      resource.textContent = entry.resource;
-
-      main.append(heading, resource);
-
-      if (entry.rejection || entry.note) {
-        const note = document.createElement("div");
-        note.className = "response-entry-note";
-        note.textContent = [
-          entry.rejection, entry.note
-        ].filter(Boolean).join(" – ");
-        main.appendChild(note);
-      }
-
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.className = "remove-entry";
-      remove.textContent = "Slett";
-      remove.addEventListener("click", () => {
-        state.responses = state.responses.filter(
-          item => item.id !== entry.id
-        );
-        renderLog();
-        updateReport();
-      });
-
-      row.append(main, remove);
-      container.appendChild(row);
-    });
+  function findEvent(id) {
+    return state.responses.find(
+      entry => entry.id === id
+    );
   }
 
-  /* RESSURSUTALAR MERING */
+  function getPrimaryResource() {
+    return normalizeResource(value("resourceId"));
+  }
+
+  /* UTALARMERING OG BESNINGENS SVAR */
 
   function initializeAlerting() {
-    $("#alertNow").addEventListener("click", () => {
-      const resource = normalizeResource(value("resourceId"));
+    const alertInput = $("#alertTime");
+
+    alertInput.addEventListener("focus", () => {
+      const resource = getPrimaryResource();
 
       if (!resource) {
-        $("#responseError").textContent =
-          "Angi ressurs-ID før utalarmering.";
+        setError(
+          "responseError",
+          "Angi ressurs-ID før utalarmering."
+        );
         return;
       }
 
-      $("#responseError").textContent = "";
-      const time = currentTime();
-      $("#alertTime").value = time;
-      $("#responseResource").value = resource;
+      setError("responseError");
 
-      addEvent(resource, "Utalamert", {
-        time
-      });
+      $("#resourceId").value = resource;
+
+      if (alertInput.value.trim()) return;
+
+      const time = currentTime();
+      alertInput.value = time;
+
+      const entry = addEvent(
+        resource,
+        "Utalarmert",
+        { time }
+      );
+
+      state.alertEventId = entry.id;
+
+      updateReport();
+    });
+
+    alertInput.addEventListener("change", () => {
+      const formatted = formatTime(alertInput.value);
+
+      if (formatted) alertInput.value = formatted;
+
+      const entry = findEvent(state.alertEventId);
+
+      if (entry && formatted) {
+        entry.time = formatted;
+      }
+
+      updateReport();
+    });
+
+    $("#resourceId").addEventListener("blur", event => {
+      event.target.value = normalizeResource(
+        event.target.value
+      );
+
+      const entry = findEvent(state.alertEventId);
+
+      if (entry) {
+        entry.resource = getPrimaryResource();
+      }
+
+      updateReport();
     });
 
     $("#quickResponseChips").addEventListener(
@@ -512,39 +730,83 @@
         const button = event.target.closest(
           "[data-quick-response]"
         );
+
         if (!button) return;
 
-        const resource = normalizeResource(
-          value("responseResource") || value("resourceId")
-        );
+        const resource = getPrimaryResource();
 
         if (!resource) {
-          $("#responseError").textContent =
-            "Angi ressurs-ID før tilbakemelding.";
+          setError(
+            "responseError",
+            "Angi ressurs-ID før tilbakemelding."
+          );
           return;
         }
 
-        $("#responseError").textContent = "";
-        const response = button.dataset.quickResponse;
+        setError("responseError");
         selectButton($("#quickResponseChips"), button);
 
-        if (response === "Avvist") {
-          $("#quickReject").classList.remove("hidden");
-          state.pendingRejection = true;
+        const response = button.dataset.quickResponse;
+        const time = currentTime();
+
+        if (response === "Avventer") {
+          const entry = addEvent(
+            resource,
+            "Avventer",
+            { time }
+          );
+
+          state.quickWaitId = entry.id;
+
+          $("#quickWaitDescription").value = "";
+          $("#quickWait").classList.remove("hidden");
+          $("#quickReject").classList.add("hidden");
+
           updateReport();
           return;
         }
 
-        $("#quickReject").classList.add("hidden");
-        state.pendingRejection = false;
-        const time = currentTime();
-        $("#responseTime").value = time;
+        if (response === "Avvist") {
+          const entry = addEvent(
+            resource,
+            "Avvist",
+            { time }
+          );
 
-        addEvent(resource, response, {
-          time,
-          note: value("responseNote")
-        });
-        $("#responseNote").value = "";
+          state.quickRejectId = entry.id;
+
+          $("#quickReject").classList.remove("hidden");
+          $("#quickWait").classList.add("hidden");
+
+          $("#quickRejectDescription").value = "";
+          clearButtons($("#quickRejectChips"));
+
+          updateReport();
+          return;
+        }
+
+        $("#quickWait").classList.add("hidden");
+        $("#quickReject").classList.add("hidden");
+
+        addEvent(
+          resource,
+          response,
+          { time }
+        );
+      }
+    );
+
+    $("#quickWaitDescription").addEventListener(
+      "input", () => {
+        const entry = findEvent(
+          state.quickWaitId
+        );
+
+        if (entry) {
+          entry.note = value("quickWaitDescription");
+        }
+
+        updateReport();
       }
     );
 
@@ -553,99 +815,170 @@
         const button = event.target.closest(
           "[data-quick-rejection]"
         );
-        if (!button || !state.pendingRejection) return;
+
+        if (!button) return;
 
         selectButton($("#quickRejectChips"), button);
-        const resource = normalizeResource(
-          value("responseResource") || value("resourceId")
+
+        const entry = findEvent(
+          state.quickRejectId
         );
-        const time = currentTime();
-        $("#responseTime").value = time;
 
-        addEvent(resource, "Avvist", {
-          time,
-          rejection: button.dataset.quickRejection,
-          note: value("responseNote")
-        });
+        if (entry) {
+          entry.rejection = button.dataset.quickRejection;
+        }
 
-        $("#responseNote").value = "";
-        state.pendingRejection = false;
-        $("#quickReject").classList.add("hidden");
+        updateReport();
       }
     );
 
-    $("#addResponseButton").addEventListener(
-      "click", () => {
-        const resource = normalizeResource(
-          value("responseResource") || value("resourceId")
+    $("#quickRejectDescription").addEventListener(
+      "input", () => {
+        const entry = findEvent(
+          state.quickRejectId
         );
-        const note = value("responseNote");
-        const rawTime = value("responseTime");
-        const time = rawTime
-          ? formatTime(rawTime)
-          : currentTime();
 
-        if (!resource || !note || !time) {
-          $("#responseError").textContent =
-            "Angi ressurs, beskrivelse og gyldig tid.";
-          return;
+        if (entry) {
+          entry.note = value("quickRejectDescription");
         }
 
-        $("#responseError").textContent = "";
-        addEvent(resource, "Supplerende tilbakemelding", {
-          time, note
-        });
-        $("#responseNote").value = "";
+        updateReport();
       }
     );
   }
 
   /* EKSTRA RESSURS */
 
+  function updateConclusionLabel() {
+    const button = $("#extraActiveConclusion");
+
+    if (!button) return;
+
+    if (state.extraResource === "LA") {
+      button.textContent = "Utalarmert";
+    } else if (state.extraResource === "RH") {
+      button.textContent = "Forespurt";
+    } else {
+      button.textContent = "Utalarmert / Forespurt";
+    }
+  }
+
+  function actualConclusion() {
+    if (state.extraConclusion === "Aktivert") {
+      if (state.extraResource === "LA") {
+        return "Utalarmert";
+      }
+
+      if (state.extraResource === "RH") {
+        return "Forespurt";
+      }
+    }
+
+    return state.extraConclusion;
+  }
+
   function initializeExtra() {
     setupSingle(
-      "extraResourceChips", "data-extra", resource => {
+      "extraResourceChips",
+      "data-extra",
+      resource => {
         state.extraResource = resource;
         state.extraCriteria = [];
         state.extraConclusion = "";
-        state.extraResponses = [];
+        state.extraRejectId = null;
 
-        $$(".criteria-chip[data-extra-criterion]")
+        $$("#ekstraressurs [data-extra-criterion]")
           .forEach(button => {
             button.classList.remove("is-selected");
             button.setAttribute("aria-pressed", "false");
           });
 
-        $$("#extraConclusionChips button").forEach(b =>
-          b.classList.remove("is-selected")
-        );
+        clearButtons($("#extraConclusionChips"));
+        clearButtons($("#extraOutcomeButtons"));
+        clearButtons($("#extraRejectChips"));
 
         $("#laCriteria").classList.toggle(
-          "hidden", resource !== "LA"
+          "hidden",
+          resource !== "LA"
         );
+
         $("#rhCriteria").classList.toggle(
-          "hidden", resource !== "RH"
+          "hidden",
+          resource !== "RH"
         );
+
         $("#extraOutcome").classList.add("hidden");
         $("#extraReject").classList.add("hidden");
-        renderLog();
+
+        $("#extraResourceId").value = "";
+        $("#extraRejectDescription").value = "";
+
+        setError("extraError");
+        updateConclusionLabel();
       }
     );
 
-    setupMultiple(
-      "ekstraressurs",
-      "data-extra-criterion",
-      state.extraCriteria
-    );
+    // Kriteriene registreres fra begge kriterieområdene.
+    // Hver knapp oppdaterer rapportteksten umiddelbart.
+    ["laCriteria", "rhCriteria"].forEach(id => {
+      const group = $("#" + id);
+
+      group.addEventListener("click", event => {
+        const button = event.target.closest(
+          "button[data-extra-criterion]"
+        );
+
+        if (!button || !group.contains(button)) return;
+
+        const criterion = button.dataset.extraCriterion;
+        const index = state.extraCriteria.indexOf(criterion);
+
+        if (index === -1) {
+          state.extraCriteria.push(criterion);
+        } else {
+          state.extraCriteria.splice(index, 1);
+        }
+
+        const active = state.extraCriteria.includes(
+          criterion
+        );
+
+        button.classList.toggle("is-selected", active);
+        button.setAttribute(
+          "aria-pressed",
+          String(active)
+        );
+
+        updateReport();
+      });
+    });
 
     setupSingle(
       "extraConclusionChips",
       "data-conclusion",
       conclusion => {
+        if (!state.extraResource) {
+          state.extraConclusion = "";
+          clearButtons($("#extraConclusionChips"));
+
+          setError(
+            "extraError",
+            "Velg LA eller RH før konklusjon."
+          );
+          return;
+        }
+
         state.extraConclusion = conclusion;
+        setError("extraError");
+
         $("#extraOutcome").classList.toggle(
-          "hidden", conclusion !== "Forespurt"
+          "hidden",
+          conclusion !== "Aktivert"
         );
+
+        if (conclusion !== "Aktivert") {
+          $("#extraReject").classList.add("hidden");
+        }
       }
     );
 
@@ -654,31 +987,65 @@
         const button = event.target.closest(
           "[data-extra-outcome]"
         );
+
         if (!button) return;
 
+        const type = state.extraResource;
+
         const resource = normalizeResource(
-          value("extraResourceId")
+          value("extraResourceId"),
+          type
         );
+
         if (!resource) {
-          $("#extraError").textContent =
-            "Angi ekstra ressurs-ID først.";
+          setError(
+            "extraError",
+            "Angi ekstra ressurs-ID først."
+          );
           return;
         }
-        $("#extraError").textContent = "";
+
+        setError("extraError");
+
+        $("#extraResourceId").value = resource;
 
         const response = button.dataset.extraOutcome;
-        selectButton($("#extraOutcomeButtons"), button);
+
+        selectButton(
+          $("#extraOutcomeButtons"),
+          button
+        );
 
         if (response === "Avvist") {
+          const entry = addEvent(
+            resource,
+            "Avvist",
+            {
+              type,
+              note: `Ekstra ${type}`
+            }
+          );
+
+          state.extraRejectId = entry.id;
+
           $("#extraReject").classList.remove("hidden");
+
+          $("#extraRejectDescription").value = "";
+          clearButtons($("#extraRejectChips"));
+
           return;
         }
 
         $("#extraReject").classList.add("hidden");
-        const entry = addEvent(resource, response, {
-          note: "Ekstra " + state.extraResource
-        });
-        state.extraResponses.push(entry.id);
+
+        addEvent(
+          resource,
+          response,
+          {
+            type,
+            note: `Ekstra ${type}`
+          }
+        );
       }
     );
 
@@ -687,23 +1054,102 @@
         const button = event.target.closest(
           "[data-extra-rejection]"
         );
+
         if (!button) return;
 
-        const resource = normalizeResource(
-          value("extraResourceId")
+        selectButton(
+          $("#extraRejectChips"),
+          button
         );
-        if (!resource) return;
 
-        selectButton($("#extraRejectChips"), button);
+        const entry = findEvent(
+          state.extraRejectId
+        );
 
-        const entry = addEvent(resource, "Avvist", {
-          rejection: button.dataset.extraRejection,
-          note: "Ekstra " + state.extraResource
-        });
-        state.extraResponses.push(entry.id);
-        $("#extraReject").classList.add("hidden");
+        if (entry) {
+          entry.rejection = button.dataset.extraRejection;
+        }
+
+        updateReport();
       }
     );
+
+    $("#extraRejectDescription").addEventListener(
+      "input", () => {
+        const entry = findEvent(
+          state.extraRejectId
+        );
+
+        if (entry) {
+          entry.note = [
+            `Ekstra ${state.extraResource}`,
+            value("extraRejectDescription")
+          ].filter(Boolean).join(" – ");
+        }
+
+        updateReport();
+      }
+    );
+
+    $("#extraResourceId").addEventListener(
+      "blur", event => {
+        event.target.value = normalizeResource(
+          event.target.value,
+          state.extraResource || "LA"
+        );
+
+        updateReport();
+      }
+    );
+  }
+
+  /* ALDER: ÅR / MÅNEDER */
+
+  function initializeAge() {
+    const ageInput = $("#patientAge");
+
+    setupSingle(
+      "ageUnitChips",
+      "data-age-unit",
+      unit => {
+        state.ageUnit = unit;
+
+        // Endring av enhet endrer ikke den innskrevne alderen.
+        ageInput.max = unit === "mnd" ? "1500" : "125";
+      }
+    );
+  }
+
+  /* SUPPLERENDE TILBAKEMELDING */
+
+  function initializeFeedback() {
+    const resourceInput = $("#responseResource");
+    const timeInput = $("#responseTime");
+
+    resourceInput.addEventListener("blur", () => {
+      resourceInput.value = normalizeResource(
+        resourceInput.value
+      );
+
+      updateReport();
+    });
+
+    timeInput.addEventListener("focus", () => {
+      if (!timeInput.value.trim()) {
+        timeInput.value = currentTime();
+        updateReport();
+      }
+    });
+
+    timeInput.addEventListener("blur", () => {
+      const formatted = formatTime(timeInput.value);
+
+      if (formatted) {
+        timeInput.value = formatted;
+      }
+
+      updateReport();
+    });
   }
 
   /* FLIGHT FOLLOWING */
@@ -712,125 +1158,146 @@
     const message = $("#flightMessage");
     message.textContent = "";
 
-    // Finn siste status for hver ressurs.
-    const latest = new Map();
-    state.responses.forEach(entry => {
-      if (entry.response !== "Supplerende tilbakemelding" &&
-          entry.response !== "Utalamert") {
-        latest.set(entry.resource, entry.response);
-      }
-    });
+    const url = new URL(
+      "../flight following/flight following.html",
+      window.location.href
+    ).href;
 
-    const eligible = [...latest.entries()]
-      .filter(([, status]) => status === "Rykker ut")
-      .map(([resource]) => resource);
-
-    if (!eligible.length) {
-      message.textContent =
-        "Ingen ressurs har siste status «Rykker ut».";
-      return;
-    }
-
-    // Prioriter ressursen som er valgt i skjemaet.
-    const preferred = normalizeResource(
-      value("responseResource") || value("resourceId")
-    );
-    const resource = eligible.includes(preferred)
-      ? preferred
-      : eligible.at(-1);
-
-    const payload = {
-      version: 1,
-      createdAt: new Date().toISOString(),
-      resourceId: resource,
-      from: "",
-      to: value("patientPosition"),
-      description: value("problemDescription"),
-      eta: "",
-      pob: ""
-    };
-
-    // Unngå pasientopplysninger i URL.
-    // sessionStorage er kun et forslag til grensesnitt.
-    // Mottakende FF-side må støtte overføringen.
-    try {
-      sessionStorage.setItem(
-        "laPendingFlightFollowing",
-        JSON.stringify(payload)
-      );
-    } catch {
-      message.textContent =
-        "Kunne ikke klargjøre overføring.";
-      return;
-    }
-
-    const url = "../flight-following/flight-following.html";
-    const win = window.open(url, "_blank", "noopener");
+    const win = window.open(url, "_blank");
 
     if (!win) {
       message.textContent =
-        "Nytt vindu ble blokkert. Tillat popup-vinduer.";
+        "Nettleseren blokkerte ny fane. Tillat popup-vinduer.";
       return;
     }
 
+    try {
+      win.opener = null;
+    } catch {
+      // Noen nettlesere begrenser tilgang.
+    }
+
     message.textContent =
-      "Flight following åpnet. Kontroller ressurs og felter.";
+      "Flight following åpnet i ny fane.";
   }
 
-  /* RAPPORT */
+  /* RAPPORTGENERERING */
 
   function generateReport() {
     const separator = "----------------------------------------";
+
     const age = value("patientAge");
+
     const patient = [
-      age ? age + " år" : "",
-      state.gender ? state.gender.toLowerCase() : ""
+      age
+        ? `${age} ${state.ageUnit}`
+        : "",
+      state.gender
+        ? state.gender.toLowerCase()
+        : ""
     ].filter(Boolean).join(", ");
 
-    const resourceLines = getOtherResources();
-
-    const responseLines = state.responses.map(entry => {
+    const eventLines = state.responses.map(entry => {
       let line = `${entry.time} – ${entry.resource}: `;
-      line += entry.response === "Utalamert"
-        ? "Utalarmering"
-        : "Svar fra crew: " + entry.response;
 
-      if (entry.rejection) line += ` – ${entry.rejection}`;
-      if (entry.note) line += ` – ${entry.note}`;
+      if (entry.response === "Utalarmert") {
+        line += "Utalarmert";
+      } else {
+        line += `Tilbakemelding: ${entry.response}`;
+      }
+
+      if (entry.rejection) {
+        line += ` – ${entry.rejection}`;
+      }
+
+      if (entry.note) {
+        line += ` – ${entry.note}`;
+      }
+
       return line;
     });
+
+    // Tilbakemeldingen nederst er et redigerbart felt.
+    const feedbackResource = normalizeResource(
+      value("responseResource")
+    );
+
+    const feedbackTime = formatTime(
+      value("responseTime")
+    );
+
+    const feedbackNote = value("responseNote");
+
+    if (
+      feedbackResource ||
+      feedbackTime ||
+      feedbackNote
+    ) {
+      const prefix = [
+        feedbackTime,
+        feedbackResource
+      ].filter(Boolean).join(" – ");
+
+      eventLines.push(
+        [
+          prefix,
+          feedbackNote
+            ? `Tilbakemelding: ${feedbackNote}`
+            : "Tilbakemelding"
+        ].filter(Boolean).join(": ")
+      );
+    }
 
     const lines = [
       "PRIMÆROPPDRAG",
       `TG: ${getTgValues().join(" // ")}`,
       separator,
+
       `Aksjons-AMK: ${value("actionAmk")}`,
       `Hastegrad: ${state.urgency}`,
       `Posisjon: ${value("patientPosition")}`,
       `Pasient: ${patient}`,
       `Problemstilling: ${value("problemDescription")}`,
+
+      // Vis alle valgte årsaker.
       `Årsak til LA: ${state.reasons.join(", ")}`,
       "",
+
       "ANDRE RESSURSER OG ETA:",
-      ...resourceLines,
+      ...getOtherResources(),
       "",
+
       `Forventet leveringssted: ${value("deliveryLocation")}`,
       "",
+
       "SUPPLERENDE INFORMASJON:",
       value("additionalInformation"),
+
       separator,
+
       "RESSURS OG VARSLING:",
-      `Ressurs-ID: ${normalizeResource(value("resourceId"))}`,
+      `Ressurs-ID: ${getPrimaryResource()}`,
       `Utalarmering kl.: ${formatTime(value("alertTime"))}`,
       "",
+
       "HENDELSESLOGG / TILBAKEMELDING:",
-      ...responseLines,
+      ...eventLines,
+
       separator,
+
       "VURDERING AV EKSTRA RESSURS:",
       `Ressurs: ${state.extraResource}`,
+
+      // Vis samtlige aktive LA- eller RH-kriterier.
       `Kriterier: ${state.extraCriteria.join(", ")}`,
-      `Konklusjon: ${state.extraConclusion}`,
-      `Ekstra ressurs-ID: ${normalizeResource(value("extraResourceId"))}`,
+
+      `Konklusjon: ${actualConclusion()}`,
+
+      `Ekstra ressurs-ID: ${normalizeResource(
+        value("extraResourceId"),
+        state.extraResource || "LA"
+      )}`,
+
       `Merknad: ${value("extraNote")}`,
       separator
     ];
@@ -840,7 +1307,11 @@
 
   function updateReport() {
     const output = $("#reportOutput");
-    if (output) output.value = generateReport();
+
+    if (output) {
+      output.value = generateReport();
+    }
+
     updateScrollHint();
   }
 
@@ -855,18 +1326,102 @@
       copied = true;
     } catch {
       const output = $("#reportOutput");
+
       output.focus();
       output.select();
-      copied = document.execCommand("copy");
+
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
     }
 
-    $("#copyButtonText").textContent =
-      copied ? "Tekst kopiert" : "Kopiering mislyktes";
+    $("#copyButtonText").textContent = copied
+      ? "Tekst kopiert"
+      : "Kopiering mislyktes";
 
     setTimeout(() => {
       $("#copyButtonText").textContent = "Kopier tekst";
     }, 5000);
   }
+
+  function printReport() {
+    const report = generateReport();
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+      window.alert(
+        "Nettleseren blokkerte utskriftsvinduet."
+      );
+      return;
+    }
+
+    const doc = printWindow.document;
+
+    doc.open();
+
+    doc.write(
+      "<!DOCTYPE html><html lang='no'><head>" +
+      "<meta charset='UTF-8'>" +
+      "<title>Primæroppdrag – Rapport</title>" +
+      "<style>" +
+      "body{font-family:Arial,sans-serif;" +
+      "margin:25mm;color:#17212b}" +
+      "h1{font-size:20px}" +
+      "pre{white-space:pre-wrap;overflow-wrap:anywhere;" +
+      "font:12px/1.6 Consolas,monospace}" +
+      "</style></head><body>" +
+      "<h1>Primæroppdrag</h1><pre id='report'></pre>" +
+      "</body></html>"
+    );
+
+    doc.close();
+
+    doc.getElementById("report").textContent = report;
+
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  function createEmail() {
+    const recipient = "b32838@ous-hf.no";
+
+    const subject =
+      "Tilbakemelding – Primæroppdrag | Luftambulansekoordinator";
+
+    const body = [
+      "Hei!",
+      "",
+      "Jeg ønsker å gi en tilbakemelding på",
+      "Primæroppdrag-skjemaet i Luftambulansekoordinator.",
+      "",
+      "Type tilbakemelding:",
+      "Feil / forbedringsforslag / annet:",
+      "",
+      "Beskrivelse:",
+      "",
+      "",
+      "Hva forventet du skulle skje?",
+      "",
+      "",
+      "Hva skjedde?",
+      "",
+      "",
+      "Eventuell annen informasjon:",
+      "",
+      "",
+      "Vennlig hilsen",
+      ""
+    ].join("\r\n");
+
+    window.location.href =
+      `mailto:${recipient}` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+  }
+
+  /* TØM SKJEMA */
 
   function resetForm() {
     if (!window.confirm("Vil du tømme hele skjemaet?")) {
@@ -875,69 +1430,80 @@
 
     $("#primaryMissionForm").reset();
 
-    state.urgency = "";
-    state.gender = "";
-    state.reasons = [];
-    state.responses = [];
-    state.extraResource = "";
-    state.extraCriteria = [];
-    state.extraConclusion = "";
-    state.extraResponses = [];
-    state.pendingRejection = false;
+    state = initialState();
 
-    $$(".chip, .criteria-chip").forEach(b => {
-      b.classList.remove("is-selected");
-      b.setAttribute("aria-pressed", "false");
+    $$(".chip, .criteria-chip").forEach(button => {
+      button.classList.remove("is-selected");
+      button.setAttribute("aria-pressed", "false");
     });
 
-    $("#quickReject").classList.add("hidden");
-    $("#laCriteria").classList.add("hidden");
-    $("#rhCriteria").classList.add("hidden");
-    $("#extraOutcome").classList.add("hidden");
-    $("#extraReject").classList.add("hidden");
+    const ageYears = $(
+      '#ageUnitChips [data-age-unit="år"]'
+    );
 
-    $("#otherTgContainer").replaceChildren(makeTgInput());
-    $("#otherResourcesRows").replaceChildren(makeResourceRow());
+    selectButton($("#ageUnitChips"), ageYears);
+    $("#patientAge").max = "125";
 
-    $("#responseError").textContent = "";
-    $("#extraError").textContent = "";
-    $("#flightMessage").textContent = "";
+    [
+      "quickWait",
+      "quickReject",
+      "laCriteria",
+      "rhCriteria",
+      "extraOutcome",
+      "extraReject"
+    ].forEach(id => {
+      $("#" + id).classList.add("hidden");
+    });
+
+    $("#otherTgContainer").replaceChildren(
+      makeTgInput()
+    );
+
+    $("#otherResourcesRows").replaceChildren(
+      makeResourceRow()
+    );
+
+    $("#quickWaitDescription").value = "";
+    $("#quickRejectDescription").value = "";
+    $("#extraRejectDescription").value = "";
+
+    setError("responseError");
+    setError("extraError");
+    setError("flightMessage");
+
+    updateConclusionLabel();
 
     $$(".auto-grow").forEach(field => {
       field.style.height = "";
     });
 
-    renderLog();
     updateReport();
 
     $(".form-panel").scrollTo({ top: 0 });
     $("#reportOutput").scrollTop = 0;
   }
 
-  function createEmail() {
-    window.location.href =
-      "mailto:?subject=" +
-      encodeURIComponent(
-        "Tilbakemelding – primæroppdragsskjema"
-      );
-  }
+  /* SKJEMAHJELP */
 
   function resizeTextarea(field) {
     field.style.height = "auto";
+
     field.style.height = Math.max(
-      75, field.scrollHeight + 2
+      75,
+      field.scrollHeight + 2
     ) + "px";
   }
-
-  /* RULLEINDIKATOR */
 
   function updateScrollHint() {
     const panel = $(".form-panel");
     const hint = $("#formScrollHint");
+
     if (!panel || !hint) return;
 
-    hint.hidden = panel.scrollHeight -
-      panel.clientHeight - panel.scrollTop < 12;
+    hint.hidden =
+      panel.scrollHeight -
+      panel.clientHeight -
+      panel.scrollTop < 12;
   }
 
   /* INITIALISERING */
@@ -947,93 +1513,127 @@
 
     initTgRegister();
     initializeAmk();
+    initializeResourceRows();
+    initializeAge();
 
-    $("#otherResourcesRows").appendChild(makeResourceRow());
+    setupSingle(
+      "urgencyChips",
+      "data-urgency",
+      selected => {
+        state.urgency = selected;
+      }
+    );
 
-    setupSingle("urgencyChips", "data-urgency",
-      selected => state.urgency = selected);
+    setupSingle(
+      "genderChips",
+      "data-gender",
+      selected => {
+        state.gender = selected;
+      }
+    );
 
-    setupSingle("genderChips", "data-gender",
-      selected => state.gender = selected);
-
-    setupMultiple("reasonChips", "data-reason",
-      state.reasons);
+    setupMultiple(
+      "reasonChips",
+      "data-reason",
+      "reasons"
+    );
 
     initializeAlerting();
     initializeExtra();
+    initializeFeedback();
+    updateConclusionLabel();
 
     $("#primaryMissionForm").addEventListener(
-      "submit", event => event.preventDefault()
+      "submit",
+      event => event.preventDefault()
     );
 
-    $(".form-panel").addEventListener("input", event => {
-      const target = event.target;
+    $(".form-panel").addEventListener(
+      "input",
+      event => {
+        const target = event.target;
 
-      if (target.classList.contains("other-tg-input")) {
-        maintainDynamicTg();
-      }
+        if (target.classList.contains("other-tg-input")) {
+          maintainDynamicTg();
+        }
 
-      if (target.closest("#otherResourcesRows")) {
-        maintainResourceRows();
-      }
+        if (target.classList.contains("auto-grow")) {
+          resizeTextarea(target);
+        }
 
-      if (target.classList.contains("auto-grow")) {
-        resizeTextarea(target);
-      }
-
-      updateReport();
-    });
-
-    $$("[data-time-target]").forEach(button => {
-      button.addEventListener("click", () => {
-        const input = $("#" + button.dataset.timeTarget);
-        if (input) input.value = currentTime();
         updateReport();
-      });
-    });
+      }
+    );
 
-    ["alertTime", "responseTime"].forEach(id => {
-      $("#" + id).addEventListener("blur", event => {
-        const formatted = formatTime(event.target.value);
-        if (formatted) event.target.value = formatted;
-        updateReport();
-      });
-    });
+    $(".form-panel").addEventListener(
+      "focusout",
+      event => {
+        const target = event.target;
 
-    $("#resourceId").addEventListener("blur", event => {
-      event.target.value = normalizeResource(
-        event.target.value
-      );
-      updateReport();
-    });
+        if (target.classList.contains("tg-input")) {
+          expandTgInput(target);
+          maintainDynamicTg();
+          updateReport();
+        }
+      }
+    );
 
-    $("#copyButton").addEventListener("click", copyReport);
-    $("#resetButton").addEventListener("click", resetForm);
+    $("#copyButton").addEventListener(
+      "click",
+      copyReport
+    );
+
+    $("#printButton").addEventListener(
+      "click",
+      printReport
+    );
+
+    $("#resetButton").addEventListener(
+      "click",
+      resetForm
+    );
+
     $("#emailReportButton").addEventListener(
-      "click", createEmail
+      "click",
+      createEmail
     );
+
     $("#openFlightFollowing").addEventListener(
-      "click", openFlightFollowing
+      "click",
+      openFlightFollowing
     );
 
     const panel = $(".form-panel");
-    panel.addEventListener("scroll", updateScrollHint);
 
-    $("#formScrollHint").addEventListener("click", () => {
-      panel.scrollBy({
-        top: panel.clientHeight * 0.7,
-        behavior: "smooth"
-      });
-    });
+    panel.addEventListener(
+      "scroll",
+      updateScrollHint
+    );
 
-    window.addEventListener("resize", updateScrollHint);
+    $("#formScrollHint").addEventListener(
+      "click",
+      () => {
+        panel.scrollBy({
+          top: panel.clientHeight * 0.7,
+          behavior: "smooth"
+        });
+      }
+    );
+
+    window.addEventListener(
+      "resize",
+      updateScrollHint
+    );
 
     updateReport();
     requestAnimationFrame(updateScrollHint);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialize);
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize
+    );
   } else {
     initialize();
   }

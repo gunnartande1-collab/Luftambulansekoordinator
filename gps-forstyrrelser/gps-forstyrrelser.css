@@ -1,8 +1,8 @@
 
-/* =========================================================
-   GPS-FORSTYRRELSER – STIL
-   Luftambulansekoordinator
-   ========================================================= */
+/* =====================================================
+   GPS-FORSTYRRELSER
+   LUFTAMBULANSEKOORDINATOR
+   ===================================================== */
 
 :root {
   --primary: #0066a1;
@@ -39,8 +39,8 @@ body {
   background: var(--background);
   color: var(--text);
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+    -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.45;
 }
 
@@ -67,6 +67,10 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+/* =====================================================
+   HEADER
+   ===================================================== */
+
 .app-eyebrow {
   margin: 0 0 2px;
   color: var(--muted);
@@ -89,34 +93,32 @@ textarea:focus-visible {
   transform: translateY(-50%);
 }
 
-/* =========================================================
+/* =====================================================
    TREDelt LAYOUT
-   ========================================================= */
+   ===================================================== */
 
 .app-shell {
   display: grid;
-
   grid-template-columns:
-    190px
-    minmax(0, 1fr)
-    340px;
-
+    190px minmax(0, 1fr) 340px;
   grid-template-areas: "navigation form report";
-
   gap: 16px;
   align-items: start;
-
   width: calc(100% - 24px);
   max-width: 1800px;
   margin: var(--panel-gap) auto;
 }
 
-/* =========================================================
-   VENSTREMENY
-   ========================================================= */
+#shared-menu {
+  grid-area: navigation;
+  min-width: 0;
+}
+
+/* =====================================================
+   FELLES VENSTREMENY
+   ===================================================== */
 
 .form-navigation {
-  grid-area: navigation;
   position: sticky;
   top: calc(var(--header-height) + var(--panel-gap));
   align-self: start;
@@ -180,9 +182,9 @@ textarea:focus-visible {
   font-size: 18px;
 }
 
-/* =========================================================
+/* =====================================================
    MIDTPANEL
-   ========================================================= */
+   ===================================================== */
 
 .form-panel-frame {
   grid-area: form;
@@ -195,13 +197,10 @@ textarea:focus-visible {
 .form-panel-frame .form-panel {
   height: 100%;
   min-width: 0;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-gutter: stable;
   scrollbar-color: var(--primary) var(--background);
-
   padding-right: 5px;
   overscroll-behavior-y: contain;
 }
@@ -224,24 +223,21 @@ textarea:focus-visible {
   padding-bottom: 48px;
 }
 
-/* =========================================================
+/* =====================================================
    RULLEINDIKATOR
-   ========================================================= */
+   ===================================================== */
 
 .form-scroll-hint {
   position: absolute;
   bottom: 10px;
   right: 24px;
   z-index: 5;
-
   padding: 7px 12px;
   color: var(--primary);
   background: var(--surface);
-
   border: 1px solid var(--primary);
   border-radius: 999px;
   box-shadow: 0 3px 12px #0002;
-
   font-size: 12px;
   font-weight: 700;
 }
@@ -250,9 +246,9 @@ textarea:focus-visible {
   display: none;
 }
 
-/* =========================================================
+/* =====================================================
    SKJEMASEKSJONER
-   ========================================================= */
+   ===================================================== */
 
 .form-section {
   margin: 0 0 10px;
@@ -273,9 +269,9 @@ textarea:focus-visible {
   margin-bottom: 0;
 }
 
-/* =========================================================
-   FELTER OG GRID
-   ========================================================= */
+/* =====================================================
+   FELTER
+   ===================================================== */
 
 .form-grid {
   display: grid;
@@ -337,11 +333,6 @@ textarea:focus {
   outline-offset: 1px;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #98a2b3;
-}
-
 input[readonly] {
   cursor: pointer;
 }
@@ -355,6 +346,10 @@ input[readonly] {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 12px;
+}
+
+.field-help:empty {
+  display: none;
 }
 
 .field-error {
@@ -375,9 +370,9 @@ input[aria-invalid="true"] {
   border-color: var(--primary);
 }
 
-/* =========================================================
+/* =====================================================
    HØYDE
-   ========================================================= */
+   ===================================================== */
 
 .gps-chip-row {
   display: grid;
@@ -411,13 +406,9 @@ input[aria-invalid="true"] {
   color: #ffffff;
 }
 
-/* =========================================================
+/* =====================================================
    VARSLING
-   ========================================================= */
-
-.notification-intro {
-  margin-bottom: 12px;
-}
+   ===================================================== */
 
 .notification-list {
   display: flex;
@@ -430,10 +421,8 @@ input[aria-invalid="true"] {
   grid-template-columns: minmax(0, 1fr) 118px;
   gap: 12px;
   align-items: center;
-
   min-height: 54px;
   padding: 8px 10px;
-
   border: 1px solid var(--border-light);
   border-radius: var(--radius-medium);
   background: #fafbfc;
@@ -453,15 +442,12 @@ input[aria-invalid="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 26px;
   height: 26px;
   flex: 0 0 26px;
-
   border-radius: 50%;
   background: #eaf5fb;
   color: var(--primary);
-
   font-size: 12px;
   font-weight: 800;
 }
@@ -469,13 +455,10 @@ input[aria-invalid="true"] {
 .notification-time-field {
   height: 38px;
   padding: 0 8px;
-
   border: 1px solid var(--border);
   border-radius: 8px;
-
   background: var(--surface);
   color: var(--text);
-
   text-align: center;
   font-size: 14px;
   font-weight: 750;
@@ -497,9 +480,7 @@ input[aria-invalid="true"] {
 
 .notification-row-large {
   grid-template-columns:
-    minmax(0, 1fr)
-    minmax(220px, 1fr);
-
+    minmax(0, 1fr) minmax(220px, 1fr);
   align-items: start;
 }
 
@@ -511,125 +492,62 @@ input[aria-invalid="true"] {
   min-height: 62px;
 }
 
-/* =========================================================
-   SISTE STEG – E-POSTVARSLING
-   ========================================================= */
-
-.final-step {
-  margin-top: 14px;
-  padding: 20px;
-
-  border: 1px solid #a9cee3;
-  border-top: 4px solid var(--primary);
-
-  background: var(--surface);
-  box-shadow: 0 3px 12px rgba(0, 102, 161, 0.08);
-}
-
-.final-step-heading {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.final-step-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
-
-  background: var(--primary);
-  color: white;
-
-  border-radius: 50%;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-.final-step h2 {
-  margin: 0 0 4px;
-  font-size: 19px;
-}
-
-.final-step-heading p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-}
+/* =====================================================
+   PUNKT 8 – SAMME STIL SOM RESTEN
+   ===================================================== */
 
 .send-email-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-
+  gap: 10px;
   width: 100%;
-  min-height: 60px;
-  padding: 14px 18px;
-
-  background: #17364f;
+  min-height: 46px;
+  padding: 10px 14px;
+  background: var(--primary);
   color: #ffffff;
-
-  border: none;
+  border: 1px solid var(--primary);
   border-radius: var(--radius-medium);
-
-  font-size: 16px;
-  font-weight: 750;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
-
-  transition:
-    background 0.15s ease,
-    transform 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .send-email-button:hover:not(:disabled) {
-  background: #0c253b;
-  transform: translateY(-1px);
-}
-
-.send-email-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.final-step-help {
-  margin: 12px 0 0;
-  font-size: 12px;
-  color: var(--muted);
+  background: #004f80;
 }
 
 .email-status {
   margin: 0;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 600;
   color: var(--green-dark);
 }
 
+.email-status:empty {
+  display: none;
+}
+
 .email-status:not(:empty) {
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .email-status.is-error {
   color: var(--red-dark);
 }
 
-/* =========================================================
-   HØYRE RAPPORTPANEL
-   ========================================================= */
+/* =====================================================
+   RAPPORTPANEL
+   ===================================================== */
 
 .side-panel {
   grid-area: report;
-
   position: sticky;
   top: calc(var(--header-height) + var(--panel-gap));
-
   align-self: start;
   min-width: 0;
   min-height: 0;
-
   height: calc(100vh - var(--header-height) - 24px);
   height: calc(100dvh - var(--header-height) - 24px);
 }
@@ -638,16 +556,12 @@ input[aria-invalid="true"] {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   height: 100%;
   min-height: 0;
   padding: 14px;
-
   background: var(--surface);
-
   border: 1px solid var(--border-light);
   border-radius: var(--radius-large);
-
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   overflow: auto;
 }
@@ -662,28 +576,24 @@ input[aria-invalid="true"] {
 .report-output {
   display: block;
   flex: 1 1 0;
-
   width: 100%;
   min-height: 100px;
   margin: 0;
   padding: 10px;
-
   background: #f8fafc;
   color: #17212b;
-
   font-family:
     "SFMono-Regular", Consolas,
     "Liberation Mono", monospace;
-
   font-size: 12px;
   line-height: 1.5;
   resize: none;
   overflow: auto;
 }
 
-/* =========================================================
+/* =====================================================
    HANDLINGSKNAPPER
-   ========================================================= */
+   ===================================================== */
 
 .action-buttons {
   display: flex;
@@ -698,14 +608,11 @@ input[aria-invalid="true"] {
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
-
   border: 0;
   border-radius: var(--radius-medium);
-
   font-weight: 700;
   text-align: center;
   text-decoration: none;
@@ -774,17 +681,14 @@ input[aria-invalid="true"] {
   }
 }
 
-/* =========================================================
+/* =====================================================
    MINDRE LAPTOP
-   ========================================================= */
+   ===================================================== */
 
 @media (max-width: 1200px) {
   .app-shell {
     grid-template-columns:
-      165px
-      minmax(0, 1fr)
-      300px;
-
+      165px minmax(0, 1fr) 300px;
     gap: 10px;
     width: calc(100% - 16px);
   }
@@ -803,14 +707,13 @@ input[aria-invalid="true"] {
 
   .notification-row-large {
     grid-template-columns:
-      minmax(0, 1fr)
-      minmax(180px, 1fr);
+      minmax(0, 1fr) minmax(180px, 1fr);
   }
 }
 
-/* =========================================================
+/* =====================================================
    NETTBRETT
-   ========================================================= */
+   ===================================================== */
 
 @media (max-width: 900px) {
   .app-shell {
@@ -819,7 +722,6 @@ input[aria-invalid="true"] {
       "navigation"
       "form"
       "report";
-
     width: calc(100% - 20px);
   }
 
@@ -887,9 +789,9 @@ input[aria-invalid="true"] {
   }
 }
 
-/* =========================================================
+/* =====================================================
    MOBIL
-   ========================================================= */
+   ===================================================== */
 
 @media (max-width: 560px) {
   .form-section {
@@ -905,10 +807,6 @@ input[aria-invalid="true"] {
     font-size: 13px;
   }
 
-  .final-step {
-    padding: 15px;
-  }
-
   .send-email-button {
     font-size: 14px;
   }
@@ -918,9 +816,9 @@ input[aria-invalid="true"] {
   }
 }
 
-/* =========================================================
+/* =====================================================
    REDUSERT BEVEGELSE
-   ========================================================= */
+   ===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -938,16 +836,10 @@ input[aria-invalid="true"] {
   }
 }
 
-/* =========================================================
+/* =====================================================
    KVELDSMODUS
-   Respekterer felles temahåndtering.
-   ========================================================= */
-
-[data-theme="dark"] .final-step,
-body.dark-mode .final-step {
-  background: var(--surface);
-  border-color: #39789d;
-}
+   Bruker felles temavariabler.
+   ===================================================== */
 
 [data-theme="dark"] .notification-row,
 body.dark-mode .notification-row {
@@ -955,11 +847,26 @@ body.dark-mode .notification-row {
   border-color: var(--border);
 }
 
-[data-theme="dark"] .final-step-heading p,
-[data-theme="dark"] .final-step-help,
-body.dark-mode .final-step-heading p,
-body.dark-mode .final-step-help {
-  color: var(--muted);
+[data-theme="dark"] label,
+[data-theme="dark"] .field-label,
+body.dark-mode label,
+body.dark-mode .field-label {
+  color: var(--text);
+}
+
+[data-theme="dark"] .chip,
+body.dark-mode .chip {
+  color: var(--text);
+}
+
+[data-theme="dark"] .chip.is-selected,
+body.dark-mode .chip.is-selected {
+  color: #ffffff;
+}
+
+[data-theme="dark"] #aircraftType[readonly],
+body.dark-mode #aircraftType[readonly] {
+  background: var(--surface);
 }
 
 [data-theme="dark"] .action-print,
@@ -972,4 +879,14 @@ body.dark-mode .action-print {
 [data-theme="dark"] .action-print:hover,
 body.dark-mode .action-print:hover {
   background: #415970;
+}
+
+[data-theme="dark"] .email-status,
+body.dark-mode .email-status {
+  color: #81d6a7;
+}
+
+[data-theme="dark"] .email-status.is-error,
+body.dark-mode .email-status.is-error {
+  color: #ff9999;
 }

@@ -1,34 +1,36 @@
 
 /* =====================================================
-   LUFTAMBULANSEKOORDINATOR - SEKUNDÆROPPDRAG
+   LUFTAMBULANSEKOORDINATOR – SEKUNDÆROPPDRAG
+   KOMPAKT HYBRIDDESIGN
    ===================================================== */
 
 :root {
-  --background: #eef2f5;
-  --surface: #ffffff;
-  --text: #17212b;
-  --muted: #667085;
-  --border: #dce2e8;
-  --primary: #0066a1;
-  --field-bg: #ffffff;
-  --soft-bg: #f6f8fa;
-  --chip-selected: #eaf5fb;
-  --chip-selected-border: #8cc8e5;
-  --header-height: 70px;
+  --secondary-bg: #eef2f5;
+  --secondary-surface: #ffffff;
+  --secondary-field: #ffffff;
+  --secondary-text: #17212b;
+  --secondary-muted: #667085;
+  --secondary-border: #dce2e8;
+  --secondary-primary: #0066a1;
+  --secondary-soft: #f6f8fa;
+  --secondary-selected: #eaf5fb;
+  --secondary-selected-border: #8cc8e5;
 }
 
 html[data-theme="dark"] {
-  --background: #111820;
-  --surface: #1b2530;
-  --text: #e7edf4;
-  --muted: #a9b5c3;
-  --border: #344252;
-  --primary: #70bce8;
-  --field-bg: #151e28;
-  --soft-bg: #202d3b;
-  --chip-selected: #243f55;
-  --chip-selected-border: #70bce8;
+  --secondary-bg: #111820;
+  --secondary-surface: #1b2530;
+  --secondary-field: #151e28;
+  --secondary-text: #e7edf4;
+  --secondary-muted: #a9b5c3;
+  --secondary-border: #344252;
+  --secondary-primary: #70bce8;
+  --secondary-soft: #202d3b;
+  --secondary-selected: #243f55;
+  --secondary-selected-border: #70bce8;
 }
+
+/* GRUNNLEGGENDE */
 
 .secondary-page,
 .secondary-page *,
@@ -39,56 +41,36 @@ html[data-theme="dark"] {
 
 html body.secondary-page {
   margin: 0;
-  background: var(--background);
-  color: var(--text);
+  min-height: 100vh;
+  background: var(--secondary-bg);
+  color: var(--secondary-text);
   font-family: -apple-system, BlinkMacSystemFont,
     "Segoe UI", Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
 }
 
-.secondary-page button,
 .secondary-page input,
+.secondary-page select,
 .secondary-page textarea,
-.secondary-page select {
+.secondary-page button {
   font: inherit;
 }
 
-.secondary-page button,
-.secondary-page a,
-.secondary-page input,
-.secondary-page select {
-  -webkit-tap-highlight-color: transparent;
+.secondary-page [hidden] {
+  display: none !important;
 }
 
 .secondary-page :focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--secondary-primary);
   outline-offset: 2px;
 }
 
-/* TILGJENGELIGHET */
-
-.secondary-page .skip-link {
-  position: absolute;
-  top: -100px;
-  left: 12px;
-  z-index: 1000;
-  padding: 10px 16px;
-  border-radius: 8px;
-  background: #0066a1;
-  color: #fff;
-}
-
-.secondary-page .skip-link:focus {
-  top: 10px;
-}
-
-/* TRE KOLONNER */
+/* HOVEDLAYOUT */
 
 html body.secondary-page .app-shell {
   display: grid;
-  grid-template-columns:
-    240px minmax(0, 1fr) 340px;
+  grid-template-columns: 240px minmax(0, 1fr) 340px;
   gap: 16px;
   align-items: start;
   width: calc(100% - 24px);
@@ -97,8 +79,8 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .sidebar {
-  min-width: 0;
   grid-column: 1;
+  min-width: 0;
 }
 
 .secondary-page #shared-menu {
@@ -123,8 +105,7 @@ html body.secondary-page .app-shell {
 .secondary-page .main-content {
   grid-column: 2;
   min-width: 0;
-  width: 100%;
-  padding: 12px 0 35px;
+  padding-bottom: 35px;
 }
 
 .secondary-page .report-panel {
@@ -133,149 +114,152 @@ html body.secondary-page .app-shell {
   position: sticky;
   top: 12px;
   height: calc(100vh - 24px);
-  max-height: calc(100vh - 24px);
-}
-
-.secondary-page .report-panel-inner {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  height: 100%;
-  padding: 18px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.04);
-}
-
-/* INTRO */
-
-.secondary-page .page-intro {
-  margin: 0 0 20px;
-  padding: 0 6px;
-}
-
-.secondary-page .page-intro h2 {
-  margin: 0 0 4px;
-  font-size: 24px;
-  letter-spacing: -.025em;
-}
-
-.secondary-page .page-intro p {
-  margin: 0;
-  color: var(--muted);
 }
 
 /* SKJEMASEKSJONER */
 
 .secondary-page .form-section {
-  margin-bottom: 17px;
-  padding: 22px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.03);
+  margin-bottom: 13px;
+  padding: 19px 21px;
+  background: var(--secondary-surface);
+  border: 1px solid var(--secondary-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .03);
 }
 
 .secondary-page .section-heading {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-bottom: 21px;
+  margin-bottom: 17px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--secondary-border);
 }
 
 .secondary-page .section-number {
   display: flex;
+  flex: 0 0 33px;
   align-items: center;
   justify-content: center;
-  flex: 0 0 35px;
-  height: 35px;
-  background: var(--chip-selected);
-  border: 1px solid var(--chip-selected-border);
-  border-radius: 10px;
-  color: var(--primary);
-  font-weight: 800;
+  height: 33px;
+  border-radius: 9px;
+  background: var(--secondary-selected);
+  color: var(--secondary-primary);
+  border: 1px solid var(--secondary-selected-border);
   font-size: 13px;
+  font-weight: 800;
 }
 
 .secondary-page .section-heading h3 {
-  margin: 0 0 3px;
-  font-size: 18px;
+  margin: 0 0 4px;
+  font-size: 17px;
   line-height: 1.3;
 }
 
 .secondary-page .section-heading p {
   margin: 0;
-  color: var(--muted);
+  color: var(--secondary-muted);
   font-size: 12px;
 }
 
-/* HASTEGRAD */
+/* HASTEGRAD – MINDRE KORT */
 
 .secondary-page .urgency-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
 }
 
 .secondary-page .urgency {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 15px 14px;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  background: var(--soft-bg);
+  gap: 4px;
+  min-height: 78px;
+  padding: 10px 13px;
+  background: var(--secondary-soft);
+  border: 1px solid var(--secondary-border);
+  border-left: 4px solid var(--urgency-color);
+  border-radius: 10px;
   cursor: pointer;
-  transition: border-color .16s, background .16s;
+  transition:
+    background .15s,
+    border-color .15s,
+    box-shadow .15s;
 }
 
 .secondary-page .urgency input {
   position: absolute;
-  opacity: 0;
   width: 1px;
   height: 1px;
+  opacity: 0;
 }
 
 .secondary-page .urgency-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
+  line-height: 1.25;
 }
 
 .secondary-page .urgency small {
-  font-size: 12px;
-  color: var(--muted);
+  color: var(--secondary-muted);
+  font-size: 11px;
+  line-height: 1.35;
 }
 
 .secondary-page .urgency-acute {
-  border-left: 5px solid #c83b3b;
+  --urgency-color: #d43c41;
 }
 
 .secondary-page .urgency-urgent {
-  border-left: 5px solid #d4a32b;
+  --urgency-color: #e4b200;
 }
 
 .secondary-page .urgency-day {
-  border-left: 5px solid #78a67b;
+  --urgency-color: #7eaa83;
 }
 
 .secondary-page .urgency-planned {
-  border-left: 5px solid #337b51;
+  --urgency-color: #2b824a;
+}
+
+.secondary-page .urgency:hover {
+  border-color: var(--urgency-color);
 }
 
 .secondary-page .urgency:has(input:checked) {
-  border-color: var(--primary);
-  background: var(--chip-selected);
-  box-shadow: 0 0 0 1px var(--primary);
+  background: var(--urgency-color);
+  border-color: var(--urgency-color);
+  box-shadow: 0 0 0 1px var(--urgency-color);
+  color: #ffffff;
+}
+
+.secondary-page .urgency:has(input:checked) small {
+  color: #ffffff;
+}
+
+.secondary-page .urgency-urgent:has(input:checked),
+.secondary-page .urgency-day:has(input:checked),
+.secondary-page .urgency-urgent:has(input:checked) small,
+.secondary-page .urgency-day:has(input:checked) small {
+  color: #17212b;
+}
+
+.secondary-page .urgency:has(input:checked)::after {
+  content: "✓";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 15px;
+  font-weight: 900;
 }
 
 .secondary-page .urgency:has(input:focus-visible) {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--secondary-primary);
   outline-offset: 3px;
 }
 
-/* FELTER */
+/* VANLIGE FELTER */
 
 .secondary-page .field-grid {
   display: grid;
@@ -284,15 +268,15 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .field-grid.two {
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .secondary-page .field-grid.three {
-  grid-template-columns: repeat(3, minmax(0,1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .secondary-page .field-grid.vitals {
-  grid-template-columns: repeat(4, minmax(0,1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .secondary-page .field {
@@ -300,9 +284,7 @@ html body.secondary-page .app-shell {
   flex-direction: column;
   gap: 6px;
   min-width: 0;
-  margin-bottom: 12px;
-  font-weight: 600;
-  color: var(--text);
+  margin-bottom: 13px;
 }
 
 .secondary-page .field-grid .field {
@@ -312,25 +294,26 @@ html body.secondary-page .app-shell {
 .secondary-page .field span,
 .secondary-page .field-label {
   display: block;
-  margin: 0 0 5px;
+  margin: 0 0 4px;
   font-size: 13px;
   font-weight: 700;
+  color: var(--secondary-text);
 }
 
 .secondary-page .field input,
 .secondary-page .field select,
 .secondary-page .field textarea,
-.secondary-page .dynamic-row input {
+.secondary-page .auto-row input {
   display: block;
   width: 100%;
   min-width: 0;
   min-height: 42px;
   margin: 0;
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--secondary-border);
   border-radius: 9px;
-  background: var(--field-bg);
-  color: var(--text);
+  background: var(--secondary-field);
+  color: var(--secondary-text);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -340,31 +323,85 @@ html body.secondary-page .app-shell {
   resize: vertical;
 }
 
+.secondary-page .field input:focus,
+.secondary-page .field select:focus,
+.secondary-page .field textarea:focus,
+.secondary-page .auto-row input:focus {
+  border-color: var(--secondary-primary);
+}
+
 .secondary-page input::placeholder,
 .secondary-page textarea::placeholder {
-  color: var(--muted);
-  opacity: .8;
+  color: var(--secondary-muted);
 }
 
 .secondary-page .subheading {
+  margin: 18px 0 11px;
   font-size: 14px;
-  margin: 18px 0 12px;
+  font-weight: 700;
 }
 
-/* KLIKKBARE VALG */
+/* PASIENT – ALDER, KJØNN OG VEKT */
+
+.secondary-page .patient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.secondary-page .patient-field {
+  min-width: 0;
+}
+
+.secondary-page .patient-field > .field {
+  margin-bottom: 7px;
+}
+
+.secondary-page .patient-field > .field-label {
+  margin-bottom: 12px;
+}
+
+.secondary-page .patient-field > .chip-grid {
+  margin-bottom: 0;
+}
+
+/* ENHETSKNAPPER */
+
+.secondary-page .unit-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.secondary-page .unit-switch .choice span {
+  min-height: 32px;
+  min-width: 49px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.secondary-page .patient-field .chip-grid {
+  gap: 7px;
+}
+
+.secondary-page .patient-field .chip-grid .choice span {
+  min-height: 42px;
+}
+
+/* VALGKNAPPER */
 
 .secondary-page .chip-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 9px;
-  margin: 0 0 15px;
+  margin-bottom: 15px;
 }
 
 .secondary-page .choice {
   position: relative;
   display: inline-flex;
   align-items: center;
-  margin: 0;
   cursor: pointer;
 }
 
@@ -377,102 +414,133 @@ html body.secondary-page .app-shell {
 
 .secondary-page .choice span {
   display: inline-flex;
+  justify-content: center;
   align-items: center;
   min-height: 39px;
   padding: 8px 13px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--secondary-border);
   border-radius: 9px;
-  background: var(--soft-bg);
-  color: var(--text);
+  background: var(--secondary-soft);
+  color: var(--secondary-text);
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.3;
   transition: background .15s, border-color .15s;
 }
 
 .secondary-page .choice:hover span {
-  border-color: var(--primary);
+  border-color: var(--secondary-primary);
 }
 
 .secondary-page .choice input:checked + span {
-  border-color: var(--chip-selected-border);
-  background: var(--chip-selected);
-  color: var(--primary);
-  box-shadow: inset 0 0 0 1px var(--primary);
+  border-color: var(--secondary-selected-border);
+  background: var(--secondary-selected);
+  color: var(--secondary-primary);
+  box-shadow: inset 0 0 0 1px var(--secondary-primary);
+}
+
+.secondary-page .choice input:checked + span::before {
+  content: "✓";
+  margin-right: 6px;
+  font-weight: 900;
 }
 
 .secondary-page .choice input:focus-visible + span {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--secondary-primary);
   outline-offset: 2px;
 }
+
+/* MEDIKAMENTER */
+
+.secondary-page .medication-group {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--secondary-border);
+}
+
+.secondary-page .medication-group:first-of-type {
+  padding-top: 0;
+}
+
+.secondary-page .medication-group:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.secondary-page .medication-group h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.secondary-page .medication-group .chip-grid {
+  margin-bottom: 13px;
+}
+
+/* AUTOMATISKE FRITEKSTFELTER */
+
+.secondary-page .auto-editor {
+  margin-top: 10px;
+}
+
+.secondary-page .auto-editor .field-label {
+  font-size: 12px;
+  color: var(--secondary-muted);
+  margin-bottom: 8px;
+}
+
+.secondary-page .auto-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.secondary-page .auto-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.secondary-page .auto-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.secondary-page .auto-row input:placeholder-shown {
+  background: var(--secondary-field);
+}
+
+/* BETINGEDE FELTER */
 
 .secondary-page .conditional {
   padding: 14px;
   margin: 10px 0 15px;
-  background: var(--soft-bg);
-  border: 1px solid var(--border);
+  background: var(--secondary-soft);
+  border: 1px solid var(--secondary-border);
   border-radius: 10px;
 }
 
-.secondary-page [hidden] {
-  display: none !important;
+.secondary-page .conditional.field {
+  margin: 8px 0 15px;
 }
 
-/* DYNAMISKE FELTER */
+/* RAPPORTPANEL */
 
-.secondary-page .dynamic-editor {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.secondary-page .dynamic-row {
+.secondary-page .report-panel-inner {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  padding: 18px;
+  background: var(--secondary-surface);
+  border: 1px solid var(--secondary-border);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .04);
 }
-
-.secondary-page .dynamic-row input {
-  flex: 1;
-}
-
-.secondary-page .add-btn {
-  display: inline-flex;
-  align-items: center;
-  min-height: 37px;
-  padding: 8px 12px;
-  margin-top: 4px;
-  border: 1px solid var(--chip-selected-border);
-  border-radius: 8px;
-  background: var(--chip-selected);
-  color: var(--primary);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.secondary-page .remove-btn {
-  flex: 0 0 auto;
-  width: 35px;
-  height: 35px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: #b23b3b;
-  cursor: pointer;
-}
-
-/* RAPPORT */
 
 .secondary-page .report-heading h2 {
-  margin: 0;
+  margin: 0 0 15px;
   font-size: 18px;
-}
-
-.secondary-page .report-heading p {
-  margin: 5px 0 15px;
-  color: var(--muted);
-  font-size: 12px;
 }
 
 html body.secondary-page #rapport {
@@ -483,11 +551,11 @@ html body.secondary-page #rapport {
   min-height: 180px;
   margin: 0;
   padding: 13px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--secondary-border);
   border-radius: 10px;
   resize: none;
-  background: var(--field-bg);
-  color: var(--text);
+  background: var(--secondary-field);
+  color: var(--secondary-text);
   font: 12px/1.6 ui-monospace, SFMono-Regular,
     Menlo, Consolas, monospace;
   white-space: pre-wrap;
@@ -509,9 +577,9 @@ html body.secondary-page #rapport {
   gap: 9px;
   width: 100%;
   min-height: 43px;
-  border: none;
-  border-radius: 9px;
   padding: 10px;
+  border: 0;
+  border-radius: 9px;
   color: #fff;
   font-size: 13px;
   font-weight: 700;
@@ -525,6 +593,14 @@ html body.secondary-page #rapport {
 
 .secondary-page .copy-btn:hover {
   background: #1e663e;
+}
+
+.secondary-page .print-btn {
+  background: #315c7a;
+}
+
+.secondary-page .print-btn:hover {
+  background: #274b64;
 }
 
 .secondary-page .reset-btn {
@@ -545,10 +621,9 @@ html body.secondary-page #rapport {
 
 .secondary-page .copy-message {
   margin: 0;
-  color: #247949;
+  color: var(--secondary-primary);
   font-size: 12px;
   text-align: center;
-  min-height: 0;
 }
 
 .secondary-page .copy-message:empty {
@@ -557,7 +632,7 @@ html body.secondary-page #rapport {
 
 .secondary-page .page-footer {
   margin: 26px 0;
-  color: var(--muted);
+  color: var(--secondary-muted);
   font-size: 12px;
 }
 
@@ -565,8 +640,7 @@ html body.secondary-page #rapport {
 
 @media (max-width: 1350px) {
   html body.secondary-page .app-shell {
-    grid-template-columns:
-      210px minmax(0,1fr) 300px;
+    grid-template-columns: 210px minmax(0, 1fr) 300px;
     gap: 12px;
   }
 
@@ -575,14 +649,17 @@ html body.secondary-page #rapport {
   }
 
   .secondary-page .field-grid.vitals {
-    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .secondary-page .patient-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 1100px) {
   html body.secondary-page .app-shell {
-    grid-template-columns:
-      190px minmax(0,1fr);
+    grid-template-columns: 190px minmax(0, 1fr);
   }
 
   .secondary-page .sidebar {
@@ -603,7 +680,7 @@ html body.secondary-page #rapport {
 
 @media (max-width: 760px) {
   html body.secondary-page .app-shell {
-    grid-template-columns: minmax(0,1fr);
+    grid-template-columns: minmax(0, 1fr);
     width: calc(100% - 16px);
   }
 
@@ -617,13 +694,9 @@ html body.secondary-page #rapport {
     position: static;
   }
 
-  .secondary-page .urgency-grid {
-    grid-template-columns: repeat(2, minmax(0,1fr));
-  }
-
   .secondary-page .field-grid.three,
   .secondary-page .field-grid.vitals {
-    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -633,7 +706,57 @@ html body.secondary-page #rapport {
   }
 
   .secondary-page .urgency-grid,
-  .secondary-page .field-grid.two {
-    grid-template-columns: minmax(0,1fr);
+  .secondary-page .field-grid.two,
+  .secondary-page .patient-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .secondary-page .urgency {
+    min-height: 72px;
+  }
+}
+
+/* UTSKRIFT */
+
+@media print {
+  .secondary-page .app-header,
+  .secondary-page .sidebar,
+  .secondary-page .main-content,
+  .secondary-page .report-actions,
+  .secondary-page .report-heading {
+    display: none !important;
+  }
+
+  html body.secondary-page .app-shell {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .secondary-page .report-panel {
+    display: block;
+    position: static;
+    height: auto;
+    max-height: none;
+  }
+
+  .secondary-page .report-panel-inner {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  html body.secondary-page #rapport {
+    display: none;
+  }
+
+  #printReport {
+    display: block !important;
+    font: 11pt/1.5 Arial, sans-serif;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 }

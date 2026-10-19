@@ -1,13 +1,13 @@
 
 "use strict";
 
-/* =========================================================
+/* =====================================================
    GPS-FORSTYRRELSER
-   Luftambulansekoordinator
-   ========================================================= */
+   LUFTAMBULANSEKOORDINATOR
+   ===================================================== */
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => [...document.querySelectorAll(selector)];
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
 
 const state = {
   altitudeUnit: "",
@@ -16,16 +16,11 @@ const state = {
 
 let copyTimer = null;
 
-/*
- * LOGO
- * Legg logo-ous-e-post.png i samme mappe som HTML-filen.
- * Sett til "" dersom logo ikke skal brukes.
- */
-const LOGO_FILE = "logo-ous-e-post.png";
+/* =====================================================
+   INNSTILLINGER
+   ===================================================== */
 
-/* =========================================================
-   E-POSTINNSTILLINGER
-   ========================================================= */
+const LOGO_FILE = "logo-ous-e-post.png";
 
 const EMAIL = {
   to: "ekomvarsling@nkom.no",
@@ -35,9 +30,9 @@ const EMAIL = {
   website: "https://www.oslo-universitetssykehus.no"
 };
 
-/* =========================================================
+/* =====================================================
    LUFTFARTØYREGISTER
-   ========================================================= */
+   ===================================================== */
 
 const AIRCRAFT_TYPES = {
   "LN-OUD": "H135T3H",
@@ -69,12 +64,15 @@ const AIRCRAFT_TYPES = {
   "LN-ORC": "AW169"
 };
 
-/* =========================================================
+/* =====================================================
    OPPSTART
-   ========================================================= */
+   ===================================================== */
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initialiseForm);
+  document.addEventListener(
+    "DOMContentLoaded",
+    initialiseForm
+  );
 } else {
   initialiseForm();
 }
@@ -91,25 +89,40 @@ function initialiseForm() {
     event.preventDefault();
   });
 
-  panel.addEventListener("input", handleInput);
-  panel.addEventListener("focusout", handleFocusOut);
+  form.addEventListener("input", handleInput);
+  form.addEventListener("focusout", handleFocusOut);
 
   initialiseAltitudeChips();
   initialiseTimeFields();
   initialiseScrollHint();
 
-  $("#copyButton")?.addEventListener("click", copyReport);
-  $("#printButton")?.addEventListener("click", printReport);
-  $("#resetButton")?.addEventListener("click", resetForm);
-  $("#sendNkomButton")?.addEventListener("click", createNkomEmail);
-  $("#feedbackButton")?.addEventListener("click", createFeedbackEmail);
+  $("#copyButton")?.addEventListener(
+    "click", copyReport
+  );
 
+  $("#printButton")?.addEventListener(
+    "click", printReport
+  );
+
+  $("#resetButton")?.addEventListener(
+    "click", resetForm
+  );
+
+  $("#sendNkomButton")?.addEventListener(
+    "click", createNkomEmail
+  );
+
+  $("#feedbackButton")?.addEventListener(
+    "click", createFeedbackEmail
+  );
+
+  updateAircraftType();
   updateReport();
 }
 
-/* =========================================================
+/* =====================================================
    HJELPEFUNKSJONER
-   ========================================================= */
+   ===================================================== */
 
 function value(id) {
   return $("#" + id)?.value?.trim() ?? "";
@@ -121,29 +134,40 @@ function pad2(number) {
 
 function currentTime() {
   const now = new Date();
-  return `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+
+  return (
+    pad2(now.getHours()) +
+    ":" +
+    pad2(now.getMinutes())
+  );
 }
 
 function setToday() {
   const now = new Date();
 
-  const date =
-    `${now.getFullYear()}-` +
-    `${pad2(now.getMonth() + 1)}-` +
-    `${pad2(now.getDate())}`;
+  const date = [
+    now.getFullYear(),
+    pad2(now.getMonth() + 1),
+    pad2(now.getDate())
+  ].join("-");
 
-  if ($("#eventDate")) {
-    $("#eventDate").value = date;
-  }
+  const field = $("#eventDate");
+
+  if (field) field.value = date;
 }
 
 function formatDate(text) {
   if (!text) return "";
 
   const parts = text.split("-");
+
   if (parts.length !== 3) return text;
 
-  return `${parts[2]}.${parts[1]}.${parts[0]}`;
+  return (
+    parts[2] + "." +
+    parts[1] + "." +
+    parts[0]
+  );
 }
 
 function formatTime(input) {
@@ -156,13 +180,16 @@ function formatTime(input) {
   let hours;
   let minutes;
 
-  const match = text.match(/^(\d{1,2}):(\d{2})$/);
+  const match = text.match(
+    /^(\d{1,2}):(\d{2})$/
+  );
 
   if (match) {
     hours = Number(match[1]);
     minutes = Number(match[2]);
   } else if (/^\d{3,4}$/.test(text)) {
     const digits = text.padStart(4, "0");
+
     hours = Number(digits.slice(0, 2));
     minutes = Number(digits.slice(2));
   } else {
@@ -178,7 +205,7 @@ function formatTime(input) {
     return "";
   }
 
-  return `${pad2(hours)}:${pad2(minutes)}`;
+  return pad2(hours) + ":" + pad2(minutes);
 }
 
 function reportTime(id) {
@@ -195,16 +222,14 @@ function escapeHtml(text) {
 }
 
 function htmlText(text) {
-  return escapeHtml(text).replace(/\r?\n/g, "<br>");
+  return escapeHtml(text).replace(
+    /\r?\n/g, "<br>"
+  );
 }
 
-/* =========================================================
+/* =====================================================
    RESSURS-ID
-   1-1    -> LA 1-1
-   LA1-1  -> LA 1-1
-   la 1-1 -> LA 1-1
-   Annen ID beholdes som fritekst.
-   ========================================================= */
+   ===================================================== */
 
 function normaliseResourceId(input) {
   const original = String(input ?? "").trim();
@@ -229,15 +254,19 @@ function normaliseResourceId(input) {
 
 function updateResourceId() {
   const field = $("#resourceId");
+
   if (!field) return;
 
-  field.value = normaliseResourceId(field.value);
+  field.value = normaliseResourceId(
+    field.value
+  );
+
   updateReport();
 }
 
-/* =========================================================
-   REGISTRERINGSNUMMER OG LUFTFARTØYTYPE
-   ========================================================= */
+/* =====================================================
+   REGISTRERINGSNUMMER OG TYPE
+   ===================================================== */
 
 function normaliseRegistration(input) {
   const text = String(input ?? "")
@@ -246,11 +275,11 @@ function normaliseRegistration(input) {
     .replace(/\s+/g, "");
 
   if (/^LN[A-Z]{3}$/.test(text)) {
-    return `LN-${text.slice(2)}`;
+    return "LN-" + text.slice(2);
   }
 
   if (/^[A-Z]{3}$/.test(text)) {
-    return `LN-${text}`;
+    return "LN-" + text;
   }
 
   return text;
@@ -269,9 +298,9 @@ function updateAircraftType() {
   typeField.value = AIRCRAFT_TYPES[registration] || "";
 }
 
-/* =========================================================
-   INPUT OG FORMATTERING
-   ========================================================= */
+/* =====================================================
+   INPUT
+   ===================================================== */
 
 function handleInput(event) {
   const target = event.target;
@@ -286,7 +315,9 @@ function handleInput(event) {
 function handleFocusOut(event) {
   const target = event.target;
 
-  if (!(target instanceof HTMLInputElement)) return;
+  if (!(target instanceof HTMLInputElement)) {
+    return;
+  }
 
   if (target.id === "eventTime") {
     const formatted = formatTime(target.value);
@@ -301,16 +332,19 @@ function handleFocusOut(event) {
   }
 
   if (target.id === "registration") {
-    target.value = normaliseRegistration(target.value);
+    target.value = normaliseRegistration(
+      target.value
+    );
+
     updateAircraftType();
   }
 
   updateReport();
 }
 
-/* =========================================================
-   HENDELSESTID
-   ========================================================= */
+/* =====================================================
+   KLOKKESLETT
+   ===================================================== */
 
 function initialiseTimeFields() {
   const eventTime = $("#eventTime");
@@ -331,18 +365,23 @@ function initialiseTimeFields() {
 
   notificationIds.forEach(id => {
     const field = $("#" + id);
+
     if (!field) return;
 
     const setTime = () => {
       field.value = currentTime();
       field.classList.add("has-time");
+
       updateReport();
     };
 
     field.addEventListener("click", setTime);
 
     field.addEventListener("keydown", event => {
-      if (event.key === "Enter" || event.key === " ") {
+      if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
         event.preventDefault();
         setTime();
       }
@@ -356,11 +395,17 @@ function validateEventTime() {
 
   if (!field || !error) return true;
 
-  if (field.value.trim() && !formatTime(field.value)) {
+  if (
+    field.value.trim() &&
+    !formatTime(field.value)
+  ) {
     error.textContent =
       "Ugyldig klokkeslett. Bruk for eksempel 0930 eller 09:30.";
 
-    field.setAttribute("aria-invalid", "true");
+    field.setAttribute(
+      "aria-invalid", "true"
+    );
+
     return false;
   }
 
@@ -370,24 +415,31 @@ function validateEventTime() {
   return true;
 }
 
-/* =========================================================
+/* =====================================================
    TIDSSONE
-   ========================================================= */
+   ===================================================== */
 
 function getTimezone() {
   const dateText = value("eventDate");
 
   if (!dateText) return "";
 
-  const date = new Date(`${dateText}T12:00:00Z`);
+  const date = new Date(
+    dateText + "T12:00:00Z"
+  );
 
-  if (Number.isNaN(date.getTime())) return "";
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
 
   try {
-    const parts = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/Oslo",
-      timeZoneName: "shortOffset"
-    }).formatToParts(date);
+    const parts = new Intl.DateTimeFormat(
+      "en-GB",
+      {
+        timeZone: "Europe/Oslo",
+        timeZoneName: "shortOffset"
+      }
+    ).formatToParts(date);
 
     const timezone = parts.find(
       part => part.type === "timeZoneName"
@@ -401,9 +453,9 @@ function getTimezone() {
   }
 }
 
-/* =========================================================
-   HØYDECHIPS
-   ========================================================= */
+/* =====================================================
+   HØYDEVALG
+   ===================================================== */
 
 function initialiseAltitudeChips() {
   initialiseSingleChoiceChips(
@@ -417,7 +469,10 @@ function initialiseAltitudeChips() {
   );
 }
 
-function initialiseSingleChoiceChips(selector, stateKey) {
+function initialiseSingleChoiceChips(
+  selector,
+  stateKey
+) {
   const buttons = $$(selector);
 
   buttons.forEach(button => {
@@ -425,14 +480,23 @@ function initialiseSingleChoiceChips(selector, stateKey) {
       const selectedValue = button.dataset.value;
 
       state[stateKey] =
-        state[stateKey] === selectedValue ? "" : selectedValue;
+        state[stateKey] === selectedValue
+          ? ""
+          : selectedValue;
 
       buttons.forEach(item => {
         const active =
           item.dataset.value === state[stateKey];
 
-        item.classList.toggle("is-selected", active);
-        item.setAttribute("aria-pressed", String(active));
+        item.classList.toggle(
+          "is-selected",
+          active
+        );
+
+        item.setAttribute(
+          "aria-pressed",
+          String(active)
+        );
       });
 
       updateReport();
@@ -440,15 +504,15 @@ function initialiseSingleChoiceChips(selector, stateKey) {
   });
 }
 
-/* =========================================================
+/* =====================================================
    RAPPORTDATA
-   ========================================================= */
+   ===================================================== */
 
 function buildPosition() {
-  const position = value("position");
-  const place = value("placeName");
-
-  return [position, place].filter(Boolean).join(" – ");
+  return [
+    value("position"),
+    value("placeName")
+  ].filter(Boolean).join(" – ");
 }
 
 function buildAltitude() {
@@ -472,25 +536,29 @@ function buildNotificationLines() {
 
   if (value("flightFollowingTime")) {
     lines.push(
-      `HKP med flight following fått beskjed på TG kl. ${value("flightFollowingTime")}`
+      "HKP med flight following fått beskjed på TG kl. " +
+      value("flightFollowingTime")
     );
   }
 
   if (value("policeTime")) {
     lines.push(
-      `Politiets lokale operasjonssentral varslet kl. ${value("policeTime")}`
+      "Politiets lokale operasjonssentral varslet kl. " +
+      value("policeTime")
     );
   }
 
   if (value("nkomTime")) {
     lines.push(
-      `Nkom beredskapsvakt varslet kl. ${value("nkomTime")}`
+      "Nkom beredskapsvakt varslet kl. " +
+      value("nkomTime")
     );
   }
 
   if (value("oplTime")) {
     lines.push(
-      `OPL AMK Oslo varslet kl. ${value("oplTime")}`
+      "OPL AMK Oslo varslet kl. " +
+      value("oplTime")
     );
   }
 
@@ -513,9 +581,9 @@ function getReportData() {
   };
 }
 
-/* =========================================================
-   GENERER RAPPORTTEKST
-   ========================================================= */
+/* =====================================================
+   GENERER RAPPORT
+   ===================================================== */
 
 function generateReport() {
   const data = getReportData();
@@ -573,10 +641,10 @@ function updateReport() {
   updateFormScrollHint();
 }
 
-/* =========================================================
-   HTML-FORMATERT RAPPORT
-   Aptos brødtekst 10 pkt
-   ========================================================= */
+/* =====================================================
+   HTML-FORMATERT RAPPORT FOR OUTLOOK
+   Aptos, 10 pkt
+   ===================================================== */
 
 function buildEmailHTML(logoSource = "") {
   const data = getReportData();
@@ -600,118 +668,138 @@ function buildEmailHTML(logoSource = "") {
       <td style="
         padding:4px 0;
         vertical-align:top;
+        overflow-wrap:break-word;
       ">${htmlText(content)}</td>
     </tr>
   `;
 
   const logo = logoSource ? `
-    <div style="margin:16px 0 12px 0;">
+    <div style="margin:16px 0 12px;">
       <img
         src="${escapeHtml(logoSource)}"
         alt="Oslo universitetssykehus"
-        style="display:block;max-width:270px;max-height:90px;width:auto;height:auto;"
+        style="
+          display:block;
+          max-width:270px;
+          max-height:90px;
+          width:auto;
+          height:auto;
+        "
       >
     </div>
   ` : "";
 
   return `
-  <div style="
-    font-family:Aptos,'Aptos Body',Calibri,Arial,sans-serif;
-    font-size:10pt;
-    line-height:1.4;
-    color:#17212b;
-    background:#ffffff;
-  ">
+    <div style="
+      font-family:Aptos,'Aptos Body',Calibri,Arial,sans-serif;
+      font-size:10pt;
+      line-height:1.4;
+      color:#17212b;
+      background:#ffffff;
+    ">
 
-    <p style="margin:0 0 14px 0;">
-      AMK-LA Oslo har mottatt melding om GNSS-forstyrrelser.
-    </p>
-
-    <table role="presentation" cellpadding="0" cellspacing="0"
-      style="
-        font-family:Aptos,'Aptos Body',Calibri,Arial,sans-serif;
-        font-size:10pt;
-        color:#17212b;
-        border-collapse:collapse;
-      ">
-      ${row("Tidspunkt for forstyrrelsen:", timestamp)}
-      ${row("Posisjon/område:", data.position)}
-      ${row("Høyde:", data.altitude)}
-      ${row("Luftfartøy:", data.aircraft)}
-      ${row("Beskrivelse:", data.description)}
-      ${row("Operative konsekvenser og tiltak:", data.consequences)}
-      ${row("Varsling:", notification)}
-      ${row("Videre oppfølging:", data.followUp)}
-    </table>
-
-    <div style="margin-top:24px;">
-      <p style="margin:0 0 12px 0;">Med vennlig hilsen</p>
-
-      <p style="margin:0;">
-        <strong style="font-size:12pt;">
-          ${escapeHtml(data.senderName || "Fornavn Etternavn")}
-        </strong>
+      <p style="margin:0 0 14px;">
+        AMK-LA Oslo har mottatt melding om GNSS-forstyrrelser.
       </p>
 
-      <p style="margin:0;">
-        <em style="font-size:10pt;">Luftambulansekoordinator</em>
-      </p>
+      <table
+        role="presentation"
+        cellpadding="0"
+        cellspacing="0"
+        style="
+          font-family:Aptos,'Aptos Body',Calibri,Arial,sans-serif;
+          font-size:10pt;
+          border-collapse:collapse;
+          color:#17212b;
+        "
+      >
+        ${row("Tidspunkt for forstyrrelsen:", timestamp)}
+        ${row("Posisjon/område:", data.position)}
+        ${row("Høyde:", data.altitude)}
+        ${row("Luftfartøy:", data.aircraft)}
+        ${row("Beskrivelse:", data.description)}
+        ${row("Operative konsekvenser og tiltak:", data.consequences)}
+        ${row("Varsling:", notification)}
+        ${row("Videre oppfølging:", data.followUp)}
+      </table>
 
-      <p style="margin:0;">
-        Prehospital klinikk | AMK-LA Oslo
-      </p>
+      <div style="margin-top:24px;">
 
-      <p style="margin:0;">
-        <strong>Oslo universitetssykehus HF</strong>
-      </p>
+        <p style="margin:0 0 12px;">
+          Med vennlig hilsen
+        </p>
 
-      <p style="margin:0;">
-        648 95 749 |
-        <a
-          href="mailto:la-oslo.amk@ous-hf.no"
-          style="color:#0066a1;text-decoration:underline;"
-        >la-oslo.amk@ous-hf.no</a>
-      </p>
+        <p style="margin:0;">
+          <strong style="font-size:12pt;">
+            ${escapeHtml(data.senderName || "Fornavn Etternavn")}
+          </strong>
+        </p>
 
-      <p style="margin:0;">
-        <a
-          href="https://www.oslo-universitetssykehus.no"
-          style="color:#0066a1;text-decoration:underline;"
-        >www.oslo-universitetssykehus.no</a>
-      </p>
+        <p style="margin:0;">
+          <em>Luftambulansekoordinator</em>
+        </p>
 
-      ${logo}
+        <p style="margin:0;">
+          Prehospital klinikk | AMK-LA Oslo
+        </p>
 
-      <p style="
-        margin:18px 0 0 0;
-        font-size:9pt;
-        color:#52606d;
-      ">
-        Denne meldingen inneholder ikke sensitiv informasjon
-        som bryter med Oslo universitetssykehus HFs krav
-        til informasjonssikkerhet
-      </p>
+        <p style="margin:0;">
+          <strong>Oslo universitetssykehus HF</strong>
+        </p>
+
+        <p style="margin:0;">
+          648 95 749 |
+          <a
+            href="mailto:la-oslo.amk@ous-hf.no"
+            style="color:#0066a1;"
+          >la-oslo.amk@ous-hf.no</a>
+        </p>
+
+        <p style="margin:0;">
+          <a
+            href="https://www.oslo-universitetssykehus.no"
+            style="color:#0066a1;"
+          >www.oslo-universitetssykehus.no</a>
+        </p>
+
+        ${logo}
+
+        <p style="
+          margin:18px 0 0;
+          font-size:9pt;
+          color:#52606d;
+        ">
+          Denne meldingen inneholder ikke sensitiv informasjon
+          som bryter med Oslo universitetssykehus HFs krav
+          til informasjonssikkerhet
+        </p>
+      </div>
     </div>
-  </div>`;
+  `;
 }
 
-/* =========================================================
-   LOGO – KONVERTERING TIL DATA-URL
-   Merk: Outlook kan fortsatt blokkere slike bilder.
-   ========================================================= */
+/* =====================================================
+   LOGO
+   ===================================================== */
 
 async function loadLogoDataUrl() {
   if (!LOGO_FILE) return "";
 
   try {
-    const imageUrl = new URL(LOGO_FILE, document.baseURI);
+    const imageUrl = new URL(
+      LOGO_FILE,
+      document.baseURI
+    );
+
     const response = await fetch(imageUrl.href);
 
     if (!response.ok) return "";
 
     const blob = await response.blob();
 
-    if (!blob.type.startsWith("image/")) return "";
+    if (!blob.type.startsWith("image/")) {
+      return "";
+    }
 
     return await new Promise(resolve => {
       const reader = new FileReader();
@@ -723,6 +811,7 @@ async function loadLogoDataUrl() {
       );
 
       reader.onerror = () => resolve("");
+
       reader.readAsDataURL(blob);
     });
   } catch {
@@ -730,35 +819,9 @@ async function loadLogoDataUrl() {
   }
 }
 
-/* =========================================================
-   KOPIER REN RAPPORTTEKST
-   ========================================================= */
-
-async function copyReport() {
-  updateReport();
-
-  const report = $("#reportOutput");
-  if (!report) return;
-
-  const copied = await copyPlainText(report.value);
-
-  clearTimeout(copyTimer);
-
-  const label = $("#copyButtonText");
-  const button = $("#copyButton");
-
-  if (label) {
-    label.textContent = copied
-      ? "Tekst kopiert"
-      : "Kopiering mislyktes";
-  }
-
-  if (button) {
-    button.classList.toggle("copy-flash", copied);
-  }
-
-  copyTimer = setTimeout(clearCopyConfirmation, 5000);
-}
+/* =====================================================
+   KOPIER REN TEKST
+   ===================================================== */
 
 async function copyPlainText(text) {
   try {
@@ -767,10 +830,13 @@ async function copyPlainText(text) {
       return true;
     }
   } catch {
-    // Forsøk eldre kopieringsmetode.
+    // Forsøk eldre metode.
   }
 
-  const temporary = document.createElement("textarea");
+  const temporary = document.createElement(
+    "textarea"
+  );
+
   temporary.value = text;
   temporary.style.position = "fixed";
   temporary.style.left = "-9999px";
@@ -791,22 +857,64 @@ async function copyPlainText(text) {
   return success;
 }
 
+async function copyReport() {
+  updateReport();
+
+  const report = $("#reportOutput");
+
+  if (!report) return;
+
+  const copied = await copyPlainText(
+    report.value
+  );
+
+  clearTimeout(copyTimer);
+
+  const label = $("#copyButtonText");
+  const button = $("#copyButton");
+
+  if (label) {
+    label.textContent = copied
+      ? "Tekst kopiert"
+      : "Kopiering mislyktes";
+  }
+
+  if (button) {
+    button.classList.toggle(
+      "copy-flash",
+      copied
+    );
+  }
+
+  copyTimer = setTimeout(
+    clearCopyConfirmation,
+    5000
+  );
+}
+
 function clearCopyConfirmation() {
   clearTimeout(copyTimer);
 
-  if ($("#copyButtonText")) {
-    $("#copyButtonText").textContent = "Kopier tekst";
+  const label = $("#copyButtonText");
+
+  if (label) {
+    label.textContent = "Kopier tekst";
   }
 
-  $("#copyButton")?.classList.remove("copy-flash");
+  $("#copyButton")?.classList.remove(
+    "copy-flash"
+  );
 }
 
-/* =========================================================
-   KOPIER HTML OG REN TEKST TIL UTKLIPPSTAVLEN
-   ========================================================= */
+/* =====================================================
+   KOPIER FORMATERT HTML TIL UTKLIPPSTAVLEN
+   ===================================================== */
 
 async function copyFormattedEmail(html, plain) {
-  if (!navigator.clipboard?.write || !window.ClipboardItem) {
+  if (
+    !navigator.clipboard?.write ||
+    !window.ClipboardItem
+  ) {
     return false;
   }
 
@@ -823,18 +931,20 @@ async function copyFormattedEmail(html, plain) {
     });
 
     await navigator.clipboard.write([item]);
+
     return true;
   } catch {
     return false;
   }
 }
 
-/* =========================================================
-   EMNE FOR E-POST
-   ========================================================= */
+/* =====================================================
+   E-POSTEMNE
+   ===================================================== */
 
 function buildEmailSubject() {
-  const area = value("placeName") || "område ikke oppgitt";
+  const area =
+    value("placeName") || "område ikke oppgitt";
 
   const details = [
     area,
@@ -845,10 +955,15 @@ function buildEmailSubject() {
   return `GNSS-forstyrrelser ${details}`;
 }
 
-/* =========================================================
-   SEND VARSLING – SISTE STEG
-   Kopierer formatert HTML og åpner e-postprogrammet.
-   ========================================================= */
+/* =====================================================
+   ÅPNE OUTLOOK MED UTFYLT E-POST
+
+   NB:
+   mailto støtter ren tekst, ikke HTML.
+   En formatert versjon kopieres til utklippstavlen.
+
+   Ingen automatisk sending.
+   ===================================================== */
 
 async function createNkomEmail() {
   updateResourceId();
@@ -857,118 +972,129 @@ async function createNkomEmail() {
 
   if (!validateEventTime()) {
     $("#eventTime")?.focus();
-    setEmailStatus("Kontroller klokkeslettet før varsling.", true);
+
+    setEmailStatus(
+      "Kontroller klokkeslettet før varsling.",
+      true
+    );
+
     return;
   }
 
   const button = $("#sendNkomButton");
 
-  if (button) button.disabled = true;
+  if (button) {
+    button.disabled = true;
+  }
 
-  setEmailStatus("Klargjør formatert e-post …");
+  setEmailStatus("");
 
-  /*
-   * Åpne et tomt vindu tidlig i klikkhendelsen for
-   * nettlesere som ellers blokkerer mailto etter await.
-   * Vi bruker normalt ikke dette vinduet, fordi mailto
-   * åpnes direkte nedenfor.
-   */
+  const plain = generateReport();
+  const subject = buildEmailSubject();
+
+  // Lag mailto umiddelbart fra brukerens klikk.
+  // Dette gir størst sjanse for at Outlook åpnes.
+  const mailto =
+    `mailto:${EMAIL.to}` +
+    `?cc=${encodeURIComponent(EMAIL.cc)}` +
+    `&subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(plain)}`;
 
   try {
+    window.location.href = mailto;
+
+    // Lag formatert versjon som også kan limes inn.
     const logo = await loadLogoDataUrl();
-
     const html = buildEmailHTML(logo);
-    const plain = generateReport();
 
-    const formatted = await copyFormattedEmail(html, plain);
-
-    const subject = buildEmailSubject();
-
-    let mailto =
-      `mailto:${EMAIL.to}` +
-      `?cc=${encodeURIComponent(EMAIL.cc)}` +
-      `&subject=${encodeURIComponent(subject)}`;
+    const formatted = await copyFormattedEmail(
+      html,
+      plain
+    );
 
     if (formatted) {
-      /*
-       * Ingen body i mailto: den formaterte
-       * teksten er klar til innliming.
-       */
       setEmailStatus(
-        "Formatert e-post kopiert. Lim inn i e-postmeldingen med Ctrl+V eller Cmd+V."
+        "Outlook-utkast forsøkt åpnet. Formatert rapport er også kopiert. Kontroller e-posten og send manuelt."
       );
     } else {
-      /*
-       * Fallback: ren tekst direkte i e-posten.
-       * Skrifttype, fet skrift og logo følger ikke med.
-       */
-      mailto += `&body=${encodeURIComponent(plain)}`;
-
       setEmailStatus(
-        "E-post åpnes med ren tekst. HTML-formatering var ikke tilgjengelig.",
-        true
+        "Outlook-utkast forsøkt åpnet med vanlig tekst. Kontroller e-posten og send manuelt."
       );
     }
-
-    window.location.href = mailto;
   } catch (error) {
-    console.error("Kunne ikke klargjøre e-post:", error);
+    console.error(
+      "Kunne ikke klargjøre e-post:",
+      error
+    );
 
     setEmailStatus(
-      "Kunne ikke klargjøre e-posten. Bruk Kopier tekst og lim inn manuelt.",
+      "Kunne ikke klargjøre formatert e-post. Bruk rapportfeltet til høyre.",
       true
     );
   } finally {
-    if (button) button.disabled = false;
+    if (button) {
+      button.disabled = false;
+    }
   }
 }
 
 function setEmailStatus(message, isError = false) {
   const status = $("#emailStatus");
+
   if (!status) return;
 
   status.textContent = message;
-  status.classList.toggle("is-error", isError);
+
+  status.classList.toggle(
+    "is-error",
+    isError
+  );
 }
 
-/* =========================================================
-   TILBAKEMELDING
-   ========================================================= */
+/* =====================================================
+   TILBAKEMELDING PÅ SKJEMA
+   ===================================================== */
 
 function createFeedbackEmail() {
-  const subject = "GPS-forstyrrelser – tilbakemelding på skjema";
+  const subject =
+    "GPS-forstyrrelser – tilbakemelding på skjema";
 
   window.location.href =
     `mailto:${EMAIL.feedback}` +
     `?subject=${encodeURIComponent(subject)}`;
 }
 
-/* =========================================================
+/* =====================================================
    SKRIV UT
-   Bruker samme formatering som e-posten.
-   ========================================================= */
+   ===================================================== */
 
 async function printReport() {
   updateResourceId();
   updateAircraftType();
   updateReport();
 
-  /*
-   * Åpnes direkte i klikkhendelsen, før asynkron
-   * innlasting av logo, for å unngå popup-blokkering.
-   */
-  const printWindow = window.open("", "_blank");
+  const printWindow = window.open(
+    "",
+    "_blank"
+  );
 
   if (!printWindow) {
-    alert("Nettleseren blokkerte utskriftsvinduet. Tillat popup-vinduer.");
+    alert(
+      "Nettleseren blokkerte utskriftsvinduet. Tillat popup-vinduer."
+    );
+
     return;
   }
 
   try {
     const logoData = await loadLogoDataUrl();
+
     const logo = logoData || (
       LOGO_FILE
-        ? new URL(LOGO_FILE, document.baseURI).href
+        ? new URL(
+            LOGO_FILE,
+            document.baseURI
+          ).href
         : ""
     );
 
@@ -993,7 +1119,12 @@ async function printReport() {
             margin: 0;
             background: white;
             color: #17212b;
-            font-family: Aptos, "Aptos Body", Calibri, Arial, sans-serif;
+            font-family:
+              Aptos,
+              "Aptos Body",
+              Calibri,
+              Arial,
+              sans-serif;
             font-size: 10pt;
           }
 
@@ -1048,18 +1179,28 @@ async function printReport() {
 
     printWindow.document.close();
 
-    /*
-     * Vent på eventuelle bilder før utskrift.
-     */
-    const images = [...printWindow.document.images];
+    const images = [
+      ...printWindow.document.images
+    ];
 
     await Promise.all(
       images.map(img => {
-        if (img.complete) return Promise.resolve();
+        if (img.complete) {
+          return Promise.resolve();
+        }
 
         return new Promise(resolve => {
-          img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true });
+          img.addEventListener(
+            "load",
+            resolve,
+            { once: true }
+          );
+
+          img.addEventListener(
+            "error",
+            resolve,
+            { once: true }
+          );
         });
       })
     );
@@ -1067,41 +1208,57 @@ async function printReport() {
     printWindow.focus();
     printWindow.print();
   } catch (error) {
-    console.error("Utskrift feilet:", error);
+    console.error(
+      "Utskrift feilet:",
+      error
+    );
+
     printWindow.close();
-    alert("Kunne ikke klargjøre utskrift.");
+
+    alert(
+      "Kunne ikke klargjøre utskrift."
+    );
   }
 }
 
-/* =========================================================
-   NULLSTILL SKJEMA
-   ========================================================= */
+/* =====================================================
+   TØM SKJEMA
+   ===================================================== */
 
 function resetForm() {
   const form = $("#gpsForm");
+
   form?.reset();
 
   state.altitudeUnit = "";
   state.altitudeReference = "";
 
   $$(".chip").forEach(button => {
-    button.classList.remove("is-selected");
-    button.setAttribute("aria-pressed", "false");
+    button.classList.remove(
+      "is-selected"
+    );
+
+    button.setAttribute(
+      "aria-pressed",
+      "false"
+    );
   });
 
   $$(".notification-time-field").forEach(field => {
     field.value = "";
-    field.classList.remove("has-time");
+
+    field.classList.remove(
+      "has-time"
+    );
   });
 
-  if ($("#aircraftType")) {
-    $("#aircraftType").value = "";
+  const aircraftType = $("#aircraftType");
+
+  if (aircraftType) {
+    aircraftType.value = "";
   }
 
-  if ($("#emailStatus")) {
-    $("#emailStatus").textContent = "";
-    $("#emailStatus").classList.remove("is-error");
-  }
+  setEmailStatus("");
 
   setToday();
   clearCopyConfirmation();
@@ -1124,14 +1281,16 @@ function resetForm() {
   });
 }
 
-/* =========================================================
+/* =====================================================
    RULLEINDIKATOR
-   ========================================================= */
+   ===================================================== */
 
 function motionBehavior() {
   return window.matchMedia(
     "(prefers-reduced-motion: reduce)"
-  ).matches ? "auto" : "smooth";
+  ).matches
+    ? "auto"
+    : "smooth";
 }
 
 function initialiseScrollHint() {
@@ -1143,16 +1302,22 @@ function initialiseScrollHint() {
     { passive: true }
   );
 
-  $("#formScrollHint")?.addEventListener("click", () => {
-    if (!panel) return;
+  $("#formScrollHint")?.addEventListener(
+    "click",
+    () => {
+      if (!panel) return;
 
-    panel.scrollBy({
-      top: panel.clientHeight * 0.7,
-      behavior: motionBehavior()
-    });
-  });
+      panel.scrollBy({
+        top: panel.clientHeight * 0.7,
+        behavior: motionBehavior()
+      });
+    }
+  );
 
-  window.addEventListener("resize", updateFormScrollHint);
+  window.addEventListener(
+    "resize",
+    updateFormScrollHint
+  );
 
   if ("ResizeObserver" in window) {
     const observer = new ResizeObserver(
@@ -1162,6 +1327,7 @@ function initialiseScrollHint() {
     if (panel) observer.observe(panel);
 
     const form = $("#gpsForm");
+
     if (form) observer.observe(form);
   }
 

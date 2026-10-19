@@ -16,8 +16,6 @@
 </head>
 
 <body>
-
-  <!-- HEADER -->
   <header class="app-header">
     <div>
       <p class="app-eyebrow">Luftambulansekoordinator</p>
@@ -38,8 +36,8 @@
 
   <main class="app-shell">
 
-<!-- FELLES VENSTREMENY -->
-<div id="shared-menu"></div>
+    <!-- Felles venstremeny. Styres av meny.js. -->
+    <div id="shared-menu"></div>
 
     <!-- MIDTPANEL -->
     <div class="form-panel-frame">
@@ -49,7 +47,6 @@
         role="region"
         aria-label="Skjema for GPS-forstyrrelser"
       >
-
         <form id="gpsForm" autocomplete="off">
 
           <!-- 1. TIDSPUNKT -->
@@ -59,7 +56,11 @@
             <div class="form-grid form-grid-2">
               <div class="form-field">
                 <label for="eventDate">Dato</label>
-                <input type="date" id="eventDate" name="eventDate">
+                <input
+                  type="date"
+                  id="eventDate"
+                  name="eventDate"
+                >
               </div>
 
               <div class="form-field">
@@ -71,13 +72,17 @@
                   class="time-click-field"
                   maxlength="5"
                   inputmode="numeric"
-                  placeholder="HH:MM"
                   aria-describedby="timeError"
                 >
               </div>
             </div>
 
-            <p id="timeError" class="field-error" aria-live="polite"></p>
+            <p
+              id="timeError"
+              class="field-error"
+              aria-live="polite"
+            ></p>
+
             <p id="timezoneInfo" class="field-help"></p>
           </section>
 
@@ -86,12 +91,14 @@
             <h2>2. Posisjon / område</h2>
 
             <div class="form-field">
-              <label for="position">Posisjon</label>
+              <label for="position">
+                Posisjon (UTM eller grader og minutter)
+              </label>
               <input
                 type="text"
                 id="position"
                 name="position"
-                placeholder="Lim inn eller skriv posisjon"
+                spellcheck="false"
               >
             </div>
 
@@ -101,7 +108,6 @@
                 type="text"
                 id="placeName"
                 name="placeName"
-                placeholder="F.eks. Drammen / Oslofjorden"
               >
             </div>
           </section>
@@ -131,12 +137,19 @@
                   role="group"
                   aria-label="Velg høydeenhet"
                 >
-                  <button type="button" class="chip" data-value="fot" aria-pressed="false">
-                    Fot
-                  </button>
-                  <button type="button" class="chip" data-value="meter" aria-pressed="false">
-                    Meter
-                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-value="fot"
+                    aria-pressed="false"
+                  >Fot</button>
+
+                  <button
+                    type="button"
+                    class="chip"
+                    data-value="meter"
+                    aria-pressed="false"
+                  >Meter</button>
                 </div>
               </div>
 
@@ -149,12 +162,19 @@
                   role="group"
                   aria-label="Velg høydereferanse"
                 >
-                  <button type="button" class="chip" data-value="MSL" aria-pressed="false">
-                    MSL
-                  </button>
-                  <button type="button" class="chip" data-value="AGL" aria-pressed="false">
-                    AGL
-                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-value="MSL"
+                    aria-pressed="false"
+                  >MSL</button>
+
+                  <button
+                    type="button"
+                    class="chip"
+                    data-value="AGL"
+                    aria-pressed="false"
+                  >AGL</button>
                 </div>
               </div>
             </div>
@@ -171,11 +191,12 @@
                   type="text"
                   id="resourceId"
                   name="resourceId"
-                  placeholder="F.eks. 1-1"
                   autocapitalize="characters"
                   spellcheck="false"
                 >
-                <p class="field-help">LA legges til automatisk, f.eks. LA 1-1.</p>
+                <p class="field-help">
+                  LA legges til automatisk, f.eks. LA 1-1.
+                </p>
               </div>
 
               <div class="form-field">
@@ -184,7 +205,6 @@
                   type="text"
                   id="registration"
                   name="registration"
-                  placeholder="LN-..."
                   autocapitalize="characters"
                   spellcheck="false"
                 >
@@ -208,12 +228,14 @@
             <h2>5. Beskrivelse av forstyrrelsen</h2>
 
             <div class="form-field">
-              <label for="description">Beskrivelse</label>
+              <label for="description">
+                Bortfall, feil posisjonering, ustabilt signal eller annet
+              </label>
+
               <textarea
                 id="description"
                 name="description"
                 rows="4"
-                placeholder="Bortfall, feil posisjonering, ustabilt signal eller annet"
               ></textarea>
             </div>
           </section>
@@ -223,12 +245,14 @@
             <h2>6. Operative konsekvenser og tiltak</h2>
 
             <div class="form-field">
-              <label for="consequences">Beskrivelse</label>
+              <label for="consequences">
+                Beskriv konsekvenser og tiltak som er iverksatt
+              </label>
+
               <textarea
                 id="consequences"
                 name="consequences"
                 rows="4"
-                placeholder="Beskriv konsekvenser og tiltak som er iverksatt"
               ></textarea>
             </div>
           </section>
@@ -237,16 +261,14 @@
           <section class="form-section">
             <h2>7. Varsling</h2>
 
-            <p class="field-help notification-intro">
-              Klikk på klokkeslettfeltet når varslingen er gjennomført.
-            </p>
-
             <div class="notification-list">
 
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">1</span>
-                  <span>HKP med flight following fått beskjed på TG</span>
+                  <span>
+                    HKP med flight following fått beskjed på TG
+                  </span>
                 </div>
 
                 <input
@@ -254,7 +276,6 @@
                   id="flightFollowingTime"
                   class="notification-time-field"
                   readonly
-                  placeholder="Sett tid"
                   aria-label="Tidspunkt for beskjed til helikopter"
                   title="Klikk for å registrere tidspunkt"
                 >
@@ -263,7 +284,9 @@
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">2</span>
-                  <span>Ringe politiets lokale operasjonssentral</span>
+                  <span>
+                    Ringe politiets lokale operasjonssentral
+                  </span>
                 </div>
 
                 <input
@@ -271,7 +294,6 @@
                   id="policeTime"
                   class="notification-time-field"
                   readonly
-                  placeholder="Sett tid"
                   aria-label="Tidspunkt for varsling til politiet"
                   title="Klikk for å registrere tidspunkt"
                 >
@@ -288,7 +310,6 @@
                   id="nkomTime"
                   class="notification-time-field"
                   readonly
-                  placeholder="Sett tid"
                   aria-label="Tidspunkt for varsling til Nkom"
                   title="Klikk for å registrere tidspunkt"
                 >
@@ -305,7 +326,6 @@
                   id="oplTime"
                   class="notification-time-field"
                   readonly
-                  placeholder="Sett tid"
                   aria-label="Tidspunkt for varsling til OPL AMK Oslo"
                   title="Klikk for å registrere tidspunkt"
                 >
@@ -335,25 +355,15 @@
                   type="text"
                   id="senderName"
                   name="senderName"
-                  placeholder="Fornavn Etternavn"
                   aria-label="Fullt navn på den som har fylt ut skjemaet"
                 >
               </div>
             </div>
           </section>
 
-          <!-- 8. SISTE STEG -->
-          <section class="form-section final-step">
-            <div class="final-step-heading">
-              <span class="final-step-number">8</span>
-
-              <div>
-                <h2>Send varsling</h2>
-                <p>
-                  Kontroller rapporten til høyre før varslingen sendes.
-                </p>
-              </div>
-            </div>
+          <!-- 8. SEND VARSLING -->
+          <section class="form-section">
+            <h2>8. Send varsling</h2>
 
             <button
               type="button"
@@ -362,15 +372,14 @@
             >
               <span aria-hidden="true">✉️</span>
               <span>Send varsling på e-post</span>
-              <span aria-hidden="true">→</span>
             </button>
 
-            <p id="emailStatus" class="email-status" role="status" aria-live="polite"></p>
-
-            <p class="final-step-help">
-              En adressert e-post åpnes i e-postprogrammet.
-              Lim inn den kopierte rapporten for å beholde formateringen.
-            </p>
+            <p
+              id="emailStatus"
+              class="email-status"
+              role="status"
+              aria-live="polite"
+            ></p>
           </section>
 
         </form>
@@ -388,7 +397,10 @@
     </div>
 
     <!-- HØYRE RAPPORTPANEL -->
-    <aside class="side-panel" aria-label="Rapport og handlinger">
+    <aside
+      class="side-panel"
+      aria-label="Rapport og handlinger"
+    >
       <div class="side-panel-inner">
 
         <h2>Rapporttekst</h2>
@@ -407,9 +419,11 @@
             class="action-button action-copy"
           >
             <span aria-hidden="true">📋</span>
-            <span id="copyButtonText" role="status" aria-live="polite">
-              Kopier tekst
-            </span>
+            <span
+              id="copyButtonText"
+              role="status"
+              aria-live="polite"
+            >Kopier tekst</span>
           </button>
 
           <button

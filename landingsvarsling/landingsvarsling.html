@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Landingsvarsel Redningshelikopter | Luftambulansekoordinator
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../felles/felles.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="landingsvarsling.css"
+  >
+
+  <script
+    src="landingsvarsling.js"
+    defer
+  ></script>
+</head>
+
+<body class="landingsvarsel-side">
+
+  <main class="lv-app">
+
+    <!-- TOPPFELT -->
+
+    <header class="lv-header">
+
+      <div>
+        <p class="lv-overline">
+          LUFTAMBULANSEKOORDINATOR
+        </p>
+
+        <h1>Landingsvarsel Redningshelikopter</h1>
+      </div>
+
+      <button
+        id="themeButton"
+        class="lv-theme-button"
+        type="button"
+        title="Bytt dag-/nattmodus"
+        aria-label="Bytt dag- og nattmodus"
+      >
+        ☾
+      </button>
+
+    </header>
+
+
+    <!-- NEDTELLINGSKLOKKE -->
+
+    <section
+      class="lv-timer-card"
+      aria-label="Nedtellingsklokke"
+    >
+
+      <p class="lv-timer-label">
+        TID TIL FORVENTET LANDING
+      </p>
+
+      <div
+        id="timerDisplay"
+        class="lv-timer"
+        role="timer"
+        aria-label="Tid til landing"
+      >
+        03:00
+      </div>
+
+
+      <!-- FREMGANGSLINJE -->
+
+      <div
+        class="lv-progress"
+        role="progressbar"
+        aria-label="Nedtellingens fremdrift"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        <div
+          id="progressBar"
+          class="lv-progress-fill"
+        ></div>
+      </div>
+
+
+      <!-- TIDSMARKØRER -->
+
+      <div class="lv-markers">
+        <span>03:00 Start</span>
+        <span>01:30 Varsling</span>
+        <span>00:00 Landing</span>
+      </div>
+
+
+      <!-- VARSLING VED 01:30 -->
+
+      <div
+        id="alarmMessage"
+        class="lv-alarm-message"
+        role="alert"
+        hidden
+      >
+
+        <span
+          class="lv-alarm-icon"
+          aria-hidden="true"
+        >
+          🔔
+        </span>
+
+        <strong>
+          AKTIVER LANDINGSVARSEL!
+        </strong>
+
+      </div>
+
+
+      <!-- KVITTERING AV VARSEL -->
+
+      <button
+        id="ackButton"
+        type="button"
+        class="lv-ack-button"
+        hidden
+      >
+        ✓ Varsling aktivert
+      </button>
+
+    </section>
+
+
+    <!-- HOVEDKNAPPER -->
+
+    <div class="lv-actions">
+
+      <button
+        id="startButton"
+        type="button"
+        class="lv-button lv-button-primary"
+      >
+        ▶ Start
+      </button>
+
+      <button
+        id="stopButton"
+        type="button"
+        class="lv-button lv-button-secondary"
+        disabled
+      >
+        ■ Stopp
+      </button>
+
+      <button
+        id="resetButton"
+        type="button"
+        class="lv-button lv-button-secondary"
+      >
+        ↺ Nullstill
+      </button>
+
+    </div>
+
+
+    <!-- TEST AV LYD -->
+
+    <footer class="lv-footer">
+
+      <button
+        id="testSoundButton"
+        type="button"
+        class="lv-text-button"
+      >
+        Test lyd
+      </button>
+
+    </footer>
+
+  </main>
+
+</body>
+</html>

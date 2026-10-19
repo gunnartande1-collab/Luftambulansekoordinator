@@ -1,12 +1,6 @@
 
 /* ==========================================
    LANDINGSVARSEL RH
-   Luftambulansekoordinator
-
-   03:00 - Start
-   01:30 - Aktiver landingsvarsel
-   00:00 - Forventet landing
-   -00:01 - Overtid
    ========================================== */
 
 (() => {
@@ -14,14 +8,19 @@
 
   const TOTAL_SECONDS = 180;
   const ALERT_SECONDS = 90;
+  const REPEAT_ALARM_MS = 8000;
 
   const $ = id => document.getElementById(id);
 
   const timerDisplay = $("timerDisplay");
-  const timerCard = document.querySelector(".lv-timer-card");
-  const statusBadge = $("statusBadge");
-  const statusText = $("statusText");
+  const timerCard = document.querySelector(
+    ".lv-timer-card"
+  );
+
   const progressBar = $("progressBar");
+  const progressTrack = document.querySelector(
+    ".lv-progress"
+  );
 
   const alarmMessage = $("alarmMessage");
   const ackButton = $("ackButton");
@@ -30,11 +29,11 @@
   const stopButton = $("stopButton");
   const resetButton = $("resetButton");
   const testSoundButton = $("testSoundButton");
-  const audioStatus = $("audioStatus");
   const themeButton = $("themeButton");
 
   let remainingMs = TOTAL_SECONDS * 1000;
   let running = false;
+  let starting = false;
   let lastStartTime = null;
 
   let alertTriggered = false;
@@ -46,52 +45,64 @@
 
   let audioContext = null;
 
+
   /* ======================================
      TIDSBEREGNING
      ====================================== */
 
   function currentRemainingMs() {
+
     if (!running) {
       return remainingMs;
     }
 
-    const elapsed = performance.now() - lastStartTime;
+    const elapsed =
+      performance.now() - lastStartTime;
 
     return remainingMs - elapsed;
   }
 
+
   function formatTime(milliseconds) {
-    // Avrunding mot null gir 00:00 i selve
-    // sekundet rundt forventet landing.
+
     const totalSeconds = Math.trunc(
       Math.abs(milliseconds) / 1000
     );
 
-    const minutes = Math.floor(totalSeconds / 60);
+    const minutes = Math.floor(
+      totalSeconds / 60
+    );
+
     const seconds = totalSeconds % 60;
 
-    const sign = milliseconds <= -1000 ? "−" : "";
+    const sign =
+      milliseconds <= -1000 ? "−" : "";
 
-    return sign +
+    return (
+      sign +
       String(minutes).padStart(2, "0") +
       ":" +
-      String(seconds).padStart(2, "0");
+      String(seconds).padStart(2, "0")
+    );
   }
+
 
   /* ======================================
      LYD
-     Dørklokke: to toner med etterklang
      ====================================== */
 
   async function initializeAudio() {
+
     try {
+
       const AudioContextClass =
         window.AudioContext ||
         window.webkitAudioContext;
 
       if (!AudioContextClass) {
-        audioStatus.textContent =
-          "⚠ Lyd støttes ikke i nettleseren";
+        console.warn(
+          "Lyd støttes ikke i nettleseren."
+        );
         return false;
       }
 
@@ -106,21 +117,36 @@
       return audioContext.state === "running";
 
     } catch (error) {
-      console.warn("Lyd kunne ikke startes:", error);
-      audioStatus.textContent =
-        "⚠ Lyd utilgjengelig – kontroller PC";
+
+      console.warn(
+        "Lyd kunne ikke startes:",
+        error
+      );
+
       return false;
     }
   }
 
-  function playTone(frequency, start, duration, volume) {
-    if (!audioContext ||
-        audioContext.state !== "running") {
+
+  function playTone(
+    frequency,
+    start,
+    duration,
+    volume
+  ) {
+
+    if (
+      !audioContext ||
+      audioContext.state !== "running"
+    ) {
       return;
     }
 
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+    const oscillator =
+      audioContext.createOscillator();
+
+    const gain =
+      audioContext.createGain();
 
     oscillator.type = "sine";
     oscillator.frequency.value = frequency;
@@ -144,11 +170,16 @@
     );
 
     oscillator.start(start);
-    oscillator.stop(start + duration + 0.02);
+    oscillator.stop(
+      start + duration + 0.02
+    );
   }
 
+
   async function playDoorbell() {
-    const available = await initializeAudio();
+
+    const available =
+      await initializeAudio();
 
     if (!available) {
       return;
@@ -156,159 +187,241 @@
 
     const now = audioContext.currentTime;
 
-    // DING
+    // Første DING
+
     playTone(880, now, 0.9, 0.27);
     playTone(1320, now, 0.7, 0.10);
 
-    // DONG
-    playTone(659.25, now + 0.55, 1.3, 0.30);
-    playTone(987.77, now + 0.55, 1.0, 0.09);
+    // Første DONG
 
-    // Gjentatt DING
-    playTone(880, now + 1.9, 0.9, 0.27);
-    playTone(1320, now + 1.9, 0.7, 0.10);
+    playTone(
+      659.25,
+      now + 0.55,
+      1.3,
+      0.30
+    );
 
-    // Gjentatt DONG
-    playTone(659.25, now + 2.45, 1.3, 0.30);
-    playTone(987.77, now + 2.45, 1.0, 0.09);
+    playTone(
+      987.77,
+      now + 0.55,
+      1.0,
+      0.09
+    );
+
+    // Andre DING
+
+    playTone(
+      880,
+      now + 1.9,
+      0.9,
+      0.27
+    );
+
+    playTone(
+      1320,
+      now + 1.9,
+      0.7,
+      0.10
+    );
+
+    // Andre DONG
+
+    playTone(
+      659.25,
+      now + 2.45,
+      1.3,
+      0.30
+    );
+
+    playTone(
+      987.77,
+      now + 2.45,
+      1.0,
+      0.09
+    );
   }
+
 
   /* ======================================
      VARSLING
      ====================================== */
 
   function triggerAlarm() {
+
     if (alertTriggered) {
       return;
     }
 
     alertTriggered = true;
     alertAcknowledged = false;
+
     lastAlarmSoundTime = performance.now();
 
     playDoorbell();
+
     updateDisplay();
   }
+
 
   function acknowledgeAlarm() {
+
     alertAcknowledged = true;
+
     updateDisplay();
   }
 
+
   /* ======================================
-     OPPDATER VISNING
+     OPPDATER KLOKKEN
      ====================================== */
 
   function updateDisplay() {
+
     const ms = currentRemainingMs();
 
-    timerDisplay.textContent = formatTime(ms);
+    timerDisplay.textContent =
+      formatTime(ms);
 
-    const elapsed = TOTAL_SECONDS * 1000 - ms;
+    const elapsed =
+      TOTAL_SECONDS * 1000 - ms;
 
     const percent = Math.min(
       100,
       Math.max(
         0,
-        elapsed / (TOTAL_SECONDS * 1000) * 100
+        elapsed /
+          (TOTAL_SECONDS * 1000) *
+          100
       )
     );
 
-    progressBar.style.width = percent + "%";
+    progressBar.style.width =
+      percent + "%";
+
+    if (progressTrack) {
+      progressTrack.setAttribute(
+        "aria-valuenow",
+        String(Math.round(percent))
+      );
+    }
+
+    // Vis alarm til den blir kvittert.
 
     const alarmActive =
-      alertTriggered && !alertAcknowledged;
+      alertTriggered &&
+      !alertAcknowledged;
 
     timerCard.classList.toggle(
       "alarm-active",
       alarmActive
     );
 
-    alarmMessage.hidden = !alarmActive;
-    ackButton.hidden = !alarmActive;
+    alarmMessage.hidden =
+      !alarmActive;
 
-    if (alarmActive) {
-      statusBadge.textContent = "VARSLING";
-      statusText.textContent =
-        "Aktiver landingsvarslingsanlegget nå!";
+    ackButton.hidden =
+      !alarmActive;
 
-    } else if (!startedOnce) {
-      statusBadge.textContent = "KLAR";
-      statusText.textContent =
-        "Klar til å starte nedtelling";
+    // Marker overtid visuelt.
 
-    } else if (!running) {
-      statusBadge.textContent = "STOPPET";
-      statusText.textContent =
-        "Nedtelling stoppet";
+    timerCard.classList.toggle(
+      "timer-overtime",
+      ms < -1000 &&
+      !alarmActive
+    );
 
-    } else if (ms <= 0) {
-      statusBadge.textContent = "OVERTID";
-      statusText.textContent =
-        "Forventet landingstid er passert";
+    // Start / stopp-knapper.
 
-    } else if (alertAcknowledged) {
-      statusBadge.textContent = "KVITTERT";
-      statusText.textContent =
-        "Landingsvarsel er kvittert aktivert";
+    startButton.disabled =
+      running || starting;
 
-    } else {
-      statusBadge.textContent = "PÅGÅR";
-      statusText.textContent =
-        "Nedtelling pågår";
-    }
-
-    startButton.disabled = running;
-    stopButton.disabled = !running;
-
-    startButton.textContent =
-      startedOnce ? "▶ Fortsett" : "▶ Start";
+    stopButton.disabled =
+      !running;
 
     if (running) {
-      startButton.textContent = "▶ Pågår";
+
+      startButton.textContent =
+        "▶ Pågår";
+
+    } else if (startedOnce) {
+
+      startButton.textContent =
+        "▶ Fortsett";
+
+    } else {
+
+      startButton.textContent =
+        "▶ Start";
+
     }
 
+    // Klokken vises også i vindustittelen.
+
     document.title =
-      formatTime(ms) + " | Landingsvarsel RH";
+      formatTime(ms) +
+      " | Landingsvarsel RH";
   }
+
 
   /* ======================================
      TIMER
      ====================================== */
 
   function tick() {
+
     if (!running) {
       return;
     }
 
     const ms = currentRemainingMs();
 
-    // Første passering av 01:30
-    if (ms <= ALERT_SECONDS * 1000 &&
-        !alertTriggered) {
+    // Utløs alarm ved første passering
+    // av 01:30.
+
+    if (
+      ms <= ALERT_SECONDS * 1000 &&
+      !alertTriggered
+    ) {
       triggerAlarm();
     }
 
-    // Gjenta dørklokken hvert 8. sekund
-    // helt til varselet er kvittert.
-    if (alertTriggered &&
-        !alertAcknowledged &&
-        performance.now() - lastAlarmSoundTime >= 8000) {
+    // Gjenta alarmen hvert 8. sekund
+    // til varselet er kvittert.
 
-      lastAlarmSoundTime = performance.now();
+    if (
+      alertTriggered &&
+      !alertAcknowledged &&
+      performance.now() -
+        lastAlarmSoundTime >=
+        REPEAT_ALARM_MS
+    ) {
+
+      lastAlarmSoundTime =
+        performance.now();
+
       playDoorbell();
     }
 
     updateDisplay();
   }
 
+
   async function startTimer() {
-    if (running) {
+
+    if (running || starting) {
       return;
     }
 
-    // Start lyd fra brukerens klikk
-    await initializeAudio();
+    starting = true;
+    startButton.disabled = true;
+
+    // Forsøk å aktivere lyd fra brukerklikket.
+
+    try {
+      await initializeAudio();
+    } finally {
+      starting = false;
+    }
 
     if (running) {
       return;
@@ -316,20 +429,29 @@
 
     running = true;
     startedOnce = true;
-    lastStartTime = performance.now();
+
+    lastStartTime =
+      performance.now();
 
     clearInterval(intervalId);
-    intervalId = setInterval(tick, 100);
+
+    intervalId = setInterval(
+      tick,
+      100
+    );
 
     updateDisplay();
   }
 
+
   function stopTimer() {
+
     if (!running) {
       return;
     }
 
-    remainingMs = currentRemainingMs();
+    remainingMs =
+      currentRemainingMs();
 
     running = false;
     lastStartTime = null;
@@ -340,54 +462,101 @@
     updateDisplay();
   }
 
+
   function resetTimer() {
+
     clearInterval(intervalId);
     intervalId = null;
 
     running = false;
     startedOnce = false;
 
-    remainingMs = TOTAL_SECONDS * 1000;
+    remainingMs =
+      TOTAL_SECONDS * 1000;
+
     lastStartTime = null;
 
     alertTriggered = false;
     alertAcknowledged = false;
+
     lastAlarmSoundTime = 0;
 
     updateDisplay();
   }
+
 
   /* ======================================
      DAG- OG NATTMODUS
      ====================================== */
 
   function applyTheme(theme) {
-    const dark = theme === "dark";
+
+    const dark =
+      theme === "dark";
 
     document.body.classList.toggle(
       "dark-mode",
       dark
     );
 
-    themeButton.textContent = dark ? "☀" : "☾";
+    themeButton.textContent =
+      dark ? "☀" : "☾";
 
-    localStorage.setItem(
-      "luftambulanse-theme",
-      theme
+    themeButton.setAttribute(
+      "aria-label",
+      dark
+        ? "Slå på dagmodus"
+        : "Slå på nattmodus"
     );
+
+    try {
+
+      localStorage.setItem(
+        "luftambulanse-theme",
+        theme
+      );
+
+    } catch {
+      // Tema fungerer uten lagring.
+    }
   }
 
-  const savedTheme =
-    localStorage.getItem("luftambulanse-theme");
 
-  applyTheme(savedTheme === "dark" ? "dark" : "light");
+  let savedTheme = "light";
 
-  themeButton.addEventListener("click", () => {
-    const dark =
-      document.body.classList.contains("dark-mode");
+  try {
 
-    applyTheme(dark ? "light" : "dark");
-  });
+    savedTheme =
+      localStorage.getItem(
+        "luftambulanse-theme"
+      ) || "light";
+
+  } catch {
+    savedTheme = "light";
+  }
+
+  applyTheme(
+    savedTheme === "dark"
+      ? "dark"
+      : "light"
+  );
+
+
+  themeButton.addEventListener(
+    "click",
+    () => {
+
+      const dark =
+        document.body.classList.contains(
+          "dark-mode"
+        );
+
+      applyTheme(
+        dark ? "light" : "dark"
+      );
+    }
+  );
+
 
   /* ======================================
      KNAPPER
@@ -418,14 +587,16 @@
     playDoorbell
   );
 
+
   /* ======================================
      INITIALISERING
      ====================================== */
 
   updateDisplay();
 
-  // Når vinduet blir synlig igjen,
-  // oppdateres klokken umiddelbart.
+  // Oppdater etter at vinduet har
+  // vært i bakgrunnen.
+
   document.addEventListener(
     "visibilitychange",
     () => {
@@ -433,6 +604,9 @@
     }
   );
 
-  window.addEventListener("focus", tick);
+  window.addEventListener(
+    "focus",
+    tick
+  );
 
 })();

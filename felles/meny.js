@@ -1,116 +1,261 @@
 
-/* ==========================================
+/* =========================================================
+   LUFTAMBULANSEKOORDINATOR
    FELLES VENSTREMENY
-   Luftambulansekoordinator
 
    Fil: felles/meny.js
 
-   Henter menyen fra fremside.html
-   og viser den på alle undersider.
-   ========================================== */
+   FUNKSJONER:
+   1. Felles meny fra fremside.html
+   2. Korrekte lenker på alle undersider
+   3. Markering av aktiv side
+   4. Utvidbare nyttige hjelpemidler
+   5. Husker åpen/lukket tilstand
+   6. Åpner eksterne lenker i ny fane
+   7. Laster felles meny-CSS automatisk
+   ========================================================= */
 
 (() => {
   "use strict";
 
-  // Finn adressen til denne JS-filen
+
+  /* =======================================================
+     1. INNSTILLINGER
+     ======================================================= */
+
+  const MENU_STORAGE_KEY =
+    "lak-nyttige-hjelpemidler-open";
+
   const scriptUrl = document.currentScript?.src;
 
   if (!scriptUrl) {
-    console.error("Meny: Fant ikke meny.js");
+    console.error(
+      "Meny: Kunne ikke finne adressen til meny.js"
+    );
     return;
   }
 
-  // Finn prosjektets rotmappe
+  // Finn prosjektets rotmappe.
+
   const rootUrl = new URL("../", scriptUrl);
 
-  // Fremsiden er kilden til fellesmenyen
-  const frontUrl = new URL("fremside.html", rootUrl);
+  // Fremsiden er hovedkilden til venstremenyen.
 
-  /* ======================================
-     HJELPEFUNKSJONER
-     ====================================== */
+  const frontUrl = new URL(
+    "fremside.html",
+    rootUrl
+  );
+
+  // Eget stilark for hjelpemiddelmenyen.
+
+  const toolsCssUrl = new URL(
+    "felles/hjelpemidler.css",
+    rootUrl
+  );
+
+
+  /* =======================================================
+     2. LAST INN FELLES MENYSTILER
+     ======================================================= */
+
+  function loadMenuStyles() {
+
+    const existingStylesheet = [
+      ...document.querySelectorAll(
+        'link[rel="stylesheet"]'
+      )
+    ].some(link => {
+      return link.href === toolsCssUrl.href;
+    });
+
+    if (existingStylesheet) {
+      return;
+    }
+
+    const stylesheet = document.createElement(
+      "link"
+    );
+
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = toolsCssUrl.href;
+
+    document.head.appendChild(stylesheet);
+
+  }
+
+
+  /* =======================================================
+     3. NORMALISER ADRESSER
+     ======================================================= */
 
   function normalizePath(url) {
+
     try {
-      const parsed = new URL(url, window.location.href);
 
-      let path = decodeURIComponent(parsed.pathname);
+      const parsed = new URL(
+        url,
+        window.location.href
+      );
 
-      // Fjern avsluttende skråstrek
+      let path = decodeURIComponent(
+        parsed.pathname
+      );
+
       path = path.replace(/\/+$/, "");
 
       return path;
-    } catch {
+
+    } catch (error) {
+
+      console.warn(
+        "Meny: Kunne ikke normalisere adresse.",
+        error
+      );
+
       return "";
+
     }
+
   }
 
-  // Gjør relative lenker absolutte
+
+  /* =======================================================
+     4. RETT RELATIVE LENKER
+     ======================================================= */
+
   function fixLinks(menu) {
 
-    menu.querySelectorAll("[href]").forEach(element => {
+    menu.querySelectorAll(
+      "[href]"
+    ).forEach(element => {
 
-      const href = element.getAttribute("href");
+      const href = element.getAttribute(
+        "href"
+      );
+
+      if (!href) return;
+
+      const ignoredProtocols = [
+        "#",
+        "mailto:",
+        "tel:",
+        "javascript:",
+        "data:"
+      ];
 
       if (
-        !href ||
-        href.startsWith("#") ||
-        href.startsWith("mailto:") ||
-        href.startsWith("tel:") ||
-        href.startsWith("javascript:")
+        ignoredProtocols.some(
+          prefix => href.startsWith(prefix)
+        )
       ) {
         return;
       }
 
       try {
-        const absoluteUrl = new URL(href, frontUrl);
 
-        element.setAttribute("href", absoluteUrl.href);
+        const absoluteUrl = new URL(
+          href,
+          frontUrl
+        );
+
+        element.setAttribute(
+          "href",
+          absoluteUrl.href
+        );
+
       } catch (error) {
-        console.warn("Kunne ikke rette lenke:", href);
+
+        console.warn(
+          "Meny: Kunne ikke rette lenke:",
+          href,
+          error
+        );
+
       }
 
     });
 
-    // Rett eventuelle bildebaner
-    menu.querySelectorAll("[src]").forEach(element => {
 
-      const src = element.getAttribute("src");
+    // Korriger eventuelle bildebaner.
+
+    menu.querySelectorAll(
+      "[src]"
+    ).forEach(element => {
+
+      const src = element.getAttribute(
+        "src"
+      );
 
       if (!src) return;
 
       try {
-        const absoluteUrl = new URL(src, frontUrl);
 
-        element.setAttribute("src", absoluteUrl.href);
+        const absoluteUrl = new URL(
+          src,
+          frontUrl
+        );
+
+        element.setAttribute(
+          "src",
+          absoluteUrl.href
+        );
+
       } catch (error) {
-        console.warn("Kunne ikke rette bilde:", src);
+
+        console.warn(
+          "Meny: Kunne ikke rette bildebane:",
+          src,
+          error
+        );
+
       }
 
     });
+
   }
 
-  /* ======================================
-     MARKER AKTIV SIDE
-     ====================================== */
+
+  /* =======================================================
+     5. MARKER AKTIV SIDE
+     ======================================================= */
 
   function setActivePage(menu) {
 
-    const currentPath = normalizePath(window.location.href);
+    const currentPath = normalizePath(
+      window.location.href
+    );
 
-    const links = menu.querySelectorAll(".form-nav-link");
+    const links = menu.querySelectorAll(
+      ".form-nav-link"
+    );
 
     links.forEach(link => {
 
-      link.classList.remove("is-active");
-      link.removeAttribute("aria-current");
+      link.classList.remove(
+        "is-active"
+      );
 
-      const targetPath = normalizePath(link.href);
+      link.removeAttribute(
+        "aria-current"
+      );
 
-      if (targetPath === currentPath) {
+      const targetPath = normalizePath(
+        link.href
+      );
 
-        link.classList.add("is-active");
-        link.setAttribute("aria-current", "page");
+      if (
+        targetPath &&
+        targetPath === currentPath
+      ) {
+
+        link.classList.add(
+          "is-active"
+        );
+
+        link.setAttribute(
+          "aria-current",
+          "page"
+        );
 
       }
 
@@ -118,101 +263,301 @@
 
   }
 
-  /* ======================================
-     LAST FELLESMENY
-     ====================================== */
+
+  /* =======================================================
+     6. LAGRE TILSTAND FOR HJELPEMIDLER
+     ======================================================= */
+
+  function getStoredMenuState() {
+
+    try {
+
+      const stored = sessionStorage.getItem(
+        MENU_STORAGE_KEY
+      );
+
+      // Åpen som standard første gang.
+
+      if (stored === null) {
+        return true;
+      }
+
+      return stored === "true";
+
+    } catch {
+
+      return true;
+
+    }
+
+  }
+
+
+  function saveMenuState(isOpen) {
+
+    try {
+
+      sessionStorage.setItem(
+        MENU_STORAGE_KEY,
+        String(isOpen)
+      );
+
+    } catch {
+
+      // Menyen fungerer også dersom lagring
+      // ikke er tilgjengelig.
+
+    }
+
+  }
+
+
+  /* =======================================================
+     7. KLARGJØR UTVIDBAR MENY
+     ======================================================= */
+
+  function initializeToolsMenu(menu) {
+
+    const toolsSection = menu.querySelector(
+      "[data-tools-section]"
+    );
+
+    if (!toolsSection) {
+      return;
+    }
+
+    if (
+      toolsSection.dataset.menuInitialized ===
+      "true"
+    ) {
+      return;
+    }
+
+    // Hent lagret tilstand.
+
+    toolsSection.open = getStoredMenuState();
+
+    // Lagre når brukeren åpner eller lukker.
+
+    toolsSection.addEventListener(
+      "toggle",
+      () => {
+
+        saveMenuState(
+          toolsSection.open
+        );
+
+      }
+    );
+
+    toolsSection.dataset.menuInitialized =
+      "true";
+
+  }
+
+
+  /* =======================================================
+     8. EKSTERNE LENKER
+     ======================================================= */
+
+  function initializeExternalLinks(menu) {
+
+    const links = menu.querySelectorAll(
+      "a.nav-external-link"
+    );
+
+    links.forEach(link => {
+
+      link.setAttribute(
+        "target",
+        "_blank"
+      );
+
+      link.setAttribute(
+        "rel",
+        "noopener noreferrer"
+      );
+
+    });
+
+  }
+
+
+  /* =======================================================
+     9. KLARGJØR EN MENY
+     ======================================================= */
+
+  function initializeMenu(menu, copied = false) {
+
+    if (!menu) return;
+
+    if (copied) {
+
+      // Undersider bruker absolutte stier.
+
+      fixLinks(menu);
+
+    }
+
+    // Marker aktiv side.
+
+    setActivePage(menu);
+
+    // Aktiver hjelpemiddelmenyen.
+
+    initializeToolsMenu(menu);
+
+    // Sikre trygg åpning av eksterne sider.
+
+    initializeExternalLinks(menu);
+
+  }
+
+
+  /* =======================================================
+     10. LAST FELLESMENY PÅ UNDERSIDER
+     ======================================================= */
 
   async function loadSharedMenu() {
 
-    // Finn plassen hvor menyen skal vises
-    const target = document.getElementById("shared-menu");
+    const target = document.getElementById(
+      "shared-menu"
+    );
 
-    // Hvis siden ikke har shared-menu,
-    // skal vi ikke gjøre noe.
+    // Dersom vi er på fremsiden, finnes
+    // navigasjonen allerede direkte i HTML.
+
     if (!target) {
       return;
     }
 
     try {
 
-      const response = await fetch(frontUrl.href, {
-        cache: "no-cache"
-      });
+      const response = await fetch(
+        frontUrl.href,
+        {
+          cache: "no-cache"
+        }
+      );
 
       if (!response.ok) {
+
         throw new Error(
-          `Kunne ikke hente fremside.html (${response.status})`
+          `Kunne ikke hente fremsiden. ` +
+          `HTTP-status: ${response.status}`
         );
+
       }
 
       const html = await response.text();
 
-      // Les HTML fra fremsiden
       const parser = new DOMParser();
 
-      const doc = parser.parseFromString(
-        html,
-        "text/html"
-      );
+      const documentCopy =
+        parser.parseFromString(
+          html,
+          "text/html"
+        );
 
-      // Finn selve navigasjonsmenyen
-      const sourceMenu = doc.querySelector(
-        "nav.form-navigation, .form-navigation"
-      );
+      // Finn hovedmenyen.
+
+      const sourceMenu =
+        documentCopy.querySelector(
+          "nav.form-navigation"
+        );
 
       if (!sourceMenu) {
+
         throw new Error(
-          "Fant ikke .form-navigation i fremside.html"
+          "Fant ikke navigasjonsmenyen " +
+          "i fremside.html"
         );
+
       }
 
-      // Lag en kopi av menyen
-      const menu = sourceMenu.cloneNode(true);
+      // Lag en kopi til undersiden.
 
-      // Unngå dupliserte ID-er
+      const menu = sourceMenu.cloneNode(
+        true
+      );
+
+      // Unngå dupliserte ID-er.
+
       menu.removeAttribute("id");
 
-      // Rett lenker og bilder
-      fixLinks(menu);
+      // Erstatt tidligere meny.
 
-      // Marker riktig aktiv side
-      setActivePage(menu);
+      target.replaceChildren(menu);
 
-      // Fjern eventuelt gammelt innhold
-      target.replaceChildren();
+      // Klargjør kopien.
 
-      // Sett inn menyen
-      target.appendChild(menu);
+      initializeMenu(
+        menu,
+        true
+      );
 
     } catch (error) {
 
       console.error(
-        "Feil ved lasting av fellesmeny:",
+        "Meny: Feil ved lasting av fellesmeny:",
         error
       );
 
       target.textContent =
-        "Kunne ikke laste menyen.";
+        "Kunne ikke laste navigasjonsmenyen.";
 
     }
 
   }
 
-  /* ======================================
-     START
-     ====================================== */
 
-  if (document.readyState === "loading") {
+  /* =======================================================
+     11. OPPSTART
+     ======================================================= */
+
+  function initializeSharedNavigation() {
+
+    // Last nødvendig CSS.
+
+    loadMenuStyles();
+
+    // Finn eventuell meny på fremsiden.
+
+    const localMenu = document.querySelector(
+      "nav.form-navigation[data-shared-menu]"
+    );
+
+    if (localMenu) {
+
+      initializeMenu(
+        localMenu,
+        false
+      );
+
+    }
+
+    // Last meny på undersidene.
+
+    loadSharedMenu();
+
+  }
+
+
+  if (
+    document.readyState === "loading"
+  ) {
 
     document.addEventListener(
       "DOMContentLoaded",
-      loadSharedMenu,
-      { once: true }
+      initializeSharedNavigation,
+      {
+        once: true
+      }
     );
 
   } else {
 
-    loadSharedMenu();
+    initializeSharedNavigation();
 
   }
 

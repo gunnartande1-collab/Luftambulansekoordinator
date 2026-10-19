@@ -6,646 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sekundæroppdrag | Luftambulansekoordinator</title>
 
-  <!-- Felles design og meny -->
+  <!-- Felles design og venstremeny -->
   <link rel="stylesheet" href="../felles/felles.css">
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
 
-  <style>
-    /* ==========================================
-       SEKUNDÆROPPDRAG – DESIGN
-       ========================================== */
-
-    :root {
-      --secondary-bg: #eef2f5;
-      --secondary-surface: #fff;
-      --secondary-field: #fff;
-      --secondary-text: #17212b;
-      --secondary-muted: #667085;
-      --secondary-border: #dce2e8;
-      --secondary-primary: #0066a1;
-      --secondary-soft: #f6f8fa;
-      --secondary-selected: #eaf5fb;
-    }
-
-    html[data-theme="dark"] {
-      --secondary-bg: #111820;
-      --secondary-surface: #1b2530;
-      --secondary-field: #151e28;
-      --secondary-text: #e7edf4;
-      --secondary-muted: #a9b5c3;
-      --secondary-border: #344252;
-      --secondary-primary: #70bce8;
-      --secondary-soft: #202d3b;
-      --secondary-selected: #243f55;
-    }
-
-    .secondary-page,
-    .secondary-page *,
-    .secondary-page *::before,
-    .secondary-page *::after {
-      box-sizing: border-box;
-    }
-
-    html body.secondary-page {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--secondary-bg);
-      color: var(--secondary-text);
-      font-family: -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Arial, sans-serif;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .secondary-page input,
-    .secondary-page select,
-    .secondary-page textarea,
-    .secondary-page button {
-      font: inherit;
-    }
-
-    .secondary-page [hidden] {
-      display: none !important;
-    }
-
-    .secondary-page :focus-visible {
-      outline: 3px solid var(--secondary-primary);
-      outline-offset: 2px;
-    }
-
-    /* ==========================================
-       HOVEDLAYOUT
-       ========================================== */
-
-    html body.secondary-page .app-shell {
-      display: grid;
-      grid-template-columns: 240px minmax(0, 1fr) 340px;
-      gap: 16px;
-      align-items: start;
-      width: calc(100% - 24px);
-      max-width: 1900px;
-      margin: 12px auto;
-    }
-
-    .secondary-page .sidebar {
-      grid-column: 1;
-      min-width: 0;
-    }
-
-    .secondary-page #shared-menu {
-      min-width: 0;
-    }
-
-    .secondary-page .sidebar .form-navigation {
-      position: sticky;
-      top: 12px;
-      width: 100%;
-      min-width: 0;
-    }
-
-    .secondary-page .sidebar .form-nav-icon {
-      display: none !important;
-    }
-
-    .secondary-page .main-content {
-      grid-column: 2;
-      min-width: 0;
-      padding: 0 0 35px;
-    }
-
-    .secondary-page .report-panel {
-      grid-column: 3;
-      min-width: 0;
-      position: sticky;
-      top: 12px;
-      height: calc(100vh - 24px);
-    }
-
-    /* ==========================================
-       SKJEMASEKSJONER
-       ========================================== */
-
-    .secondary-page .form-section {
-      margin-bottom: 12px;
-      padding: 19px 21px;
-      background: var(--secondary-surface);
-      border: 1px solid var(--secondary-border);
-      border-radius: 11px;
-    }
-
-    .secondary-page .section-heading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 13px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--secondary-border);
-    }
-
-    .secondary-page .section-number {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 32px;
-      height: 32px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 8px;
-      background: var(--secondary-soft);
-      color: var(--secondary-muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .secondary-page .section-heading h3 {
-      margin: 0 0 3px;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .secondary-page .section-heading p {
-      margin: 0;
-      color: var(--secondary-muted);
-      font-size: 12px;
-    }
-
-    /* ==========================================
-       HASTEGRAD
-       ========================================== */
-
-    .secondary-page .urgency-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .secondary-page .urgency {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      padding: 14px;
-      border: 1px solid var(--secondary-border);
-      border-left: 5px solid var(--urgency-color);
-      border-radius: 10px;
-      background: var(--secondary-soft);
-      color: var(--secondary-text);
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
-    }
-
-    .secondary-page .urgency input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-    }
-
-    .secondary-page .urgency-title {
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .secondary-page .urgency small {
-      color: var(--secondary-muted);
-      font-size: 12px;
-    }
-
-    .secondary-page .urgency-acute {
-      --urgency-color: #c83b3b;
-    }
-
-    .secondary-page .urgency-urgent {
-      --urgency-color: #d4a32b;
-    }
-
-    .secondary-page .urgency-day {
-      --urgency-color: #78a67b;
-    }
-
-    .secondary-page .urgency-planned {
-      --urgency-color: #337b51;
-    }
-
-    .secondary-page .urgency:has(input:checked) {
-      background: var(--urgency-color);
-      border-color: var(--urgency-color);
-      color: white;
-      box-shadow: 0 0 0 1px var(--urgency-color);
-    }
-
-    .secondary-page .urgency:has(input:checked) small {
-      color: white;
-    }
-
-    .secondary-page .urgency-urgent:has(input:checked),
-    .secondary-page .urgency-day:has(input:checked) {
-      color: #15202b;
-    }
-
-    .secondary-page .urgency-urgent:has(input:checked) small,
-    .secondary-page .urgency-day:has(input:checked) small {
-      color: #15202b;
-    }
-
-    .secondary-page .urgency:has(input:focus-visible) {
-      outline: 3px solid var(--secondary-primary);
-      outline-offset: 2px;
-    }
-
-    /* ==========================================
-       INPUTFELTER
-       ========================================== */
-
-    .secondary-page .field-grid {
-      display: grid;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .secondary-page .field-grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .secondary-page .field-grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .secondary-page .field-grid.vitals {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .secondary-page .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 0;
-      margin-bottom: 12px;
-    }
-
-    .secondary-page .field-grid .field {
-      margin-bottom: 0;
-    }
-
-    .secondary-page .field > span,
-    .secondary-page .field-label {
-      display: block;
-      margin: 0 0 4px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .secondary-page .field input,
-    .secondary-page .field select,
-    .secondary-page .field textarea,
-    .secondary-page .dynamic-row input {
-      width: 100%;
-      min-width: 0;
-      min-height: 42px;
-      padding: 10px 12px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 9px;
-      background: var(--secondary-field);
-      color: var(--secondary-text);
-      font-size: 14px;
-    }
-
-    .secondary-page .field textarea {
-      min-height: 76px;
-      resize: vertical;
-    }
-
-    .secondary-page input::placeholder,
-    .secondary-page textarea::placeholder {
-      color: var(--secondary-muted);
-      opacity: .75;
-    }
-
-    .secondary-page .subheading {
-      margin: 17px 0 11px;
-      font-size: 14px;
-    }
-
-    /* ==========================================
-       VALGKNAPPER
-       ========================================== */
-
-    .secondary-page .chip-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin: 0 0 15px;
-    }
-
-    .secondary-page .choice {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .secondary-page .choice input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-    }
-
-    .secondary-page .choice span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 39px;
-      padding: 8px 13px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 9px;
-      background: var(--secondary-soft);
-      color: var(--secondary-text);
-      font-size: 13px;
-      font-weight: 600;
-      transition: background .15s, border-color .15s;
-    }
-
-    .secondary-page .choice:hover span {
-      border-color: var(--secondary-primary);
-    }
-
-    .secondary-page .choice input:checked + span {
-      border-color: var(--secondary-primary);
-      background: var(--secondary-selected);
-      color: var(--secondary-primary);
-      box-shadow: inset 0 0 0 1px var(--secondary-primary);
-    }
-
-    .secondary-page .choice input:focus-visible + span {
-      outline: 3px solid var(--secondary-primary);
-      outline-offset: 2px;
-    }
-
-    /* ==========================================
-       BETINGEDE FELTER
-       ========================================== */
-
-    .secondary-page .conditional {
-      padding: 14px;
-      margin: 10px 0 15px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 10px;
-      background: var(--secondary-soft);
-    }
-
-    .secondary-page .conditional.field {
-      margin: 8px 0 16px;
-    }
-
-    /* ==========================================
-       DYNAMISKE LINJER
-       ========================================== */
-
-    .secondary-page .dynamic-editor {
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid var(--secondary-border);
-    }
-
-    .secondary-page .dynamic-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 8px 0;
-    }
-
-    .secondary-page .dynamic-row input {
-      flex: 1;
-    }
-
-    .secondary-page .add-btn {
-      min-height: 37px;
-      margin-top: 4px;
-      padding: 8px 12px;
-      border: 1px solid var(--secondary-primary);
-      border-radius: 8px;
-      background: var(--secondary-selected);
-      color: var(--secondary-primary);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .secondary-page .remove-btn {
-      flex: 0 0 35px;
-      width: 35px;
-      height: 35px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 8px;
-      background: var(--secondary-surface);
-      color: #c83b3b;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    /* ==========================================
-       RAPPORT
-       ========================================== */
-
-    .secondary-page .report-panel-inner {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      min-height: 0;
-      padding: 18px;
-      background: var(--secondary-surface);
-      border: 1px solid var(--secondary-border);
-      border-radius: 14px;
-    }
-
-    .secondary-page .report-heading h2 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .secondary-page .report-heading p {
-      margin: 5px 0 15px;
-      color: var(--secondary-muted);
-      font-size: 12px;
-    }
-
-    html body.secondary-page #rapport {
-      display: block;
-      flex: 1 1 auto;
-      width: 100%;
-      min-height: 180px;
-      padding: 13px;
-      border: 1px solid var(--secondary-border);
-      border-radius: 10px;
-      background: var(--secondary-field);
-      color: var(--secondary-text);
-      font: 12px/1.6 ui-monospace, SFMono-Regular,
-        Menlo, Consolas, monospace;
-      resize: none;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-
-    .secondary-page .report-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-      padding-top: 14px;
-    }
-
-    .secondary-page .action-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      width: 100%;
-      min-height: 43px;
-      padding: 10px;
-      border: 0;
-      border-radius: 9px;
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .secondary-page .copy-btn {
-      background: #247949;
-    }
-
-    .secondary-page .print-btn {
-      background: #315c7a;
-    }
-
-    .secondary-page .reset-btn {
-      background: #a53636;
-    }
-
-    .secondary-page .feedback-btn {
-      background: #263747;
-    }
-
-    .secondary-page .copy-message {
-      margin: 0;
-      color: var(--secondary-primary);
-      font-size: 12px;
-      text-align: center;
-    }
-
-    .secondary-page .copy-message:empty {
-      display: none;
-    }
-
-    .secondary-page .page-footer {
-      margin: 26px 0;
-      color: var(--secondary-muted);
-      font-size: 12px;
-    }
-
-    /* ==========================================
-       RESPONSIVT
-       ========================================== */
-
-    @media (max-width: 1350px) {
-      html body.secondary-page .app-shell {
-        grid-template-columns: 210px minmax(0, 1fr) 300px;
-        gap: 12px;
-      }
-
-      .secondary-page .form-section {
-        padding: 17px;
-      }
-
-      .secondary-page .field-grid.vitals {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 1100px) {
-      html body.secondary-page .app-shell {
-        grid-template-columns: 190px minmax(0, 1fr);
-      }
-
-      .secondary-page .report-panel {
-        grid-column: 2;
-        position: static;
-        height: 450px;
-      }
-    }
-
-    @media (max-width: 760px) {
-      html body.secondary-page .app-shell {
-        grid-template-columns: minmax(0, 1fr);
-        width: calc(100% - 16px);
-      }
-
-      .secondary-page .sidebar,
-      .secondary-page .main-content,
-      .secondary-page .report-panel {
-        grid-column: 1;
-      }
-
-      .secondary-page .field-grid.three,
-      .secondary-page .field-grid.vitals {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 520px) {
-      .secondary-page .form-section {
-        padding: 14px;
-      }
-
-      .secondary-page .urgency-grid,
-      .secondary-page .field-grid.two {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @media print {
-      .secondary-page .app-header,
-      .secondary-page .sidebar,
-      .secondary-page .main-content,
-      .secondary-page .report-actions {
-        display: none !important;
-      }
-
-      html body.secondary-page .app-shell {
-        display: block;
-        width: 100%;
-        margin: 0;
-      }
-
-      .secondary-page .report-panel {
-        display: block;
-        position: static;
-        height: auto;
-      }
-
-      .secondary-page .report-panel-inner {
-        display: block;
-        border: 0;
-        padding: 0;
-      }
-
-      html body.secondary-page #rapport {
-        display: none;
-      }
-
-      #printReport {
-        display: block !important;
-        font: 11pt/1.5 Arial, sans-serif;
-        white-space: pre-wrap;
-      }
-    }
-  </style>
+  <!-- Sekundæroppdrag -->
+  <link rel="stylesheet" href="sekundæroppdrag.css">
+  <script src="sekundæroppdrag.js" defer></script>
 </head>
 
 <body class="secondary-page">
 
-  <!-- TOPPFELT -->
   <header class="app-header">
     <div class="header-title">
       <p class="app-eyebrow">LUFTAMBULANSEKOORDINATOR</p>
@@ -669,12 +41,11 @@
       <div id="shared-menu"></div>
     </aside>
 
-    <!-- HOVEDSKJEMA -->
+    <!-- SKJEMA -->
     <main class="main-content" id="mainContent">
-
       <form id="transportForm" autocomplete="off">
 
-        <!-- 01 HASTEGRAD -->
+        <!-- 01 REKVIRERT HASTEGRAD -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">01</span>
@@ -685,35 +56,33 @@
           </div>
 
           <div class="urgency-grid">
-
             <label class="urgency urgency-acute">
               <input type="radio" name="hastegrad" value="Akutt">
-              <span class="urgency-title">Akutt</span>
+              <span class="urgency-title">AKUTT</span>
               <small>Umiddelbar intervensjon eller kritisk tidsvindu.</small>
             </label>
 
             <label class="urgency urgency-urgent">
               <input type="radio" name="hastegrad" value="Haster">
-              <span class="urgency-title">Haster</span>
+              <span class="urgency-title">HASTER</span>
               <small>Vurdering for intervensjon. Transport så raskt som mulig.</small>
             </label>
 
             <label class="urgency urgency-day">
               <input type="radio" name="hastegrad" value="Samme døgn (V1)">
-              <span class="urgency-title">Samme døgn</span>
+              <span class="urgency-title">SAMME DØGN</span>
               <small>Transport bør gjennomføres samme dag.</small>
             </label>
 
             <label class="urgency urgency-planned">
               <input type="radio" name="hastegrad" value="Planlagt transport (V2)">
-              <span class="urgency-title">Planlagt</span>
+              <span class="urgency-title">PLANLAGT</span>
               <small>Transport kan planlegges frem i tid.</small>
             </label>
-
           </div>
         </section>
 
-        <!-- 02 TRANSPORT -->
+        <!-- 02 TRANSPORTOPPLYSNINGER -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">02</span>
@@ -726,29 +95,38 @@
           <div class="field-grid two">
             <label class="field">
               <span>Fra sykehus / avdeling</span>
-              <input name="fra" type="text">
+              <input type="text" name="fra">
             </label>
 
             <label class="field">
               <span>Til sykehus / avdeling</span>
-              <input name="til" type="text">
+              <input type="text" name="til">
             </label>
           </div>
 
           <div class="field-grid three">
             <label class="field">
-              <span>Dato</span>
-              <input type="date" id="oppdragDato" name="dato">
+              <span>Dato for transport</span>
+              <input
+                type="text"
+                id="oppdragDato"
+                name="dato"
+                inputmode="numeric"
+                aria-label="Dato for transport, dag punktum måned punktum år">
             </label>
 
             <label class="field">
               <span>Klokkeslett</span>
-              <input type="time" name="tidspunkt">
+              <input
+                type="text"
+                name="tidspunkt"
+                inputmode="numeric"
+                maxlength="5">
             </label>
 
             <label class="field">
               <span>Ressurs-ID</span>
-              <input name="ressurs" type="text" placeholder="LA / RH">
+              <input type="text" name="ressurs">
             </label>
           </div>
 
@@ -769,7 +147,6 @@
           </div>
 
           <div class="chip-grid" data-exclusive-group="folge">
-
             <label class="choice">
               <input type="checkbox" name="folge" value="Ikke behov" data-none>
               <span>Ikke behov</span>
@@ -794,7 +171,6 @@
               <input type="checkbox" name="folge" value="Jordmor">
               <span>Jordmor</span>
             </label>
-
           </div>
         </section>
 
@@ -804,12 +180,11 @@
             <span class="section-number">04</span>
             <div>
               <h3>Spesialtransport</h3>
-              <p>Oppgi spesialutstyr eller særskilte transportbehov.</p>
+              <p>Særskilte transportbehov og spesialutstyr.</p>
             </div>
           </div>
 
           <div class="chip-grid" data-exclusive-group="spesial">
-
             <label class="choice">
               <input type="checkbox" name="spesial" value="Ikke aktuelt" data-none>
               <span>Ikke aktuelt</span>
@@ -838,55 +213,118 @@
 
           <label class="field">
             <span>Merknad spesialtransport</span>
-            <input name="spesialMerknad" placeholder="Utstyrsbehov og andre opplysninger">
+            <input type="text" name="spesialMerknad">
           </label>
         </section>
 
-        <!-- 05 PASIENT -->
+        <!-- 05 PASIENTOPPLYSNINGER -->
         <section class="form-section">
           <div class="section-heading">
             <span class="section-number">05</span>
             <div>
               <h3>Pasientopplysninger</h3>
-              <p>Registrer relevante pasient- og barneopplysninger.</p>
+              <p>Relevante opplysninger for transporten.</p>
             </div>
           </div>
 
-          <div class="field-grid three">
-            <label class="field">
-              <span>Alder</span>
-              <input name="alder" type="text">
-            </label>
+          <div class="patient-grid">
 
-            <label class="field">
-              <span>Kjønn</span>
-              <select name="kjonn">
-                <option value="">Ikke oppgitt</option>
-                <option value="Mann">Mann</option>
-                <option value="Kvinne">Kvinne</option>
-              </select>
-            </label>
+            <!-- ALDER -->
+            <div class="patient-field">
+              <label class="field" for="alder">
+                <span>Alder</span>
+                <input
+                  id="alder"
+                  name="alder"
+                  inputmode="numeric">
+              </label>
 
-            <label class="field">
-              <span>Vekt (kg)</span>
-              <input name="vekt" inputmode="decimal">
-            </label>
+              <div class="unit-switch" role="group" aria-label="Enhet for alder">
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="alderEnhet"
+                    value="år"
+                    checked>
+                  <span>År</span>
+                </label>
+
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="alderEnhet"
+                    value="mnd">
+                  <span>Mnd</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- KJØNN -->
+            <div class="patient-field">
+              <p class="field-label">Kjønn</p>
+              <div class="chip-grid">
+                <label class="choice">
+                  <input type="radio" name="kjonn" value="Kvinne">
+                  <span>Kvinne</span>
+                </label>
+
+                <label class="choice">
+                  <input type="radio" name="kjonn" value="Mann">
+                  <span>Mann</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- VEKT -->
+            <div class="patient-field">
+              <label class="field" for="vekt">
+                <span>Vekt</span>
+                <input
+                  id="vekt"
+                  name="vekt"
+                  inputmode="decimal">
+              </label>
+
+              <div class="unit-switch" role="group" aria-label="Enhet for vekt">
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="vektEnhet"
+                    value="kg"
+                    checked>
+                  <span>kg</span>
+                </label>
+
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="vektEnhet"
+                    value="g">
+                  <span>g</span>
+                </label>
+              </div>
+            </div>
+
           </div>
 
           <p class="field-label">Barn?</p>
+
           <div class="chip-grid">
             <label class="choice">
               <input type="radio" name="barn" value="Nei">
               <span>Nei</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="barn" value="Nyfødt">
               <span title="0–4 uker">Nyfødt</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="barn" value="Spedbarn">
               <span title="1 måned–1 år">Spedbarn</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="barn" value="Barn">
               <span title="1–18 år">Barn</span>
@@ -899,6 +337,7 @@
                 <span>Gestasjonsalder – uker</span>
                 <input name="gaUker" inputmode="numeric">
               </label>
+
               <label class="field">
                 <span>Gestasjonsalder – dager</span>
                 <input name="gaDager" inputmode="numeric">
@@ -906,15 +345,18 @@
             </div>
 
             <p class="field-label">Transportform</p>
+
             <div class="chip-grid">
               <label class="choice">
                 <input type="radio" name="barnTransport" value="Kuvøse">
                 <span>Kuvøse</span>
               </label>
+
               <label class="choice">
                 <input type="radio" name="barnTransport" value="Pedimate">
                 <span>Pedimate</span>
               </label>
+
               <label class="choice">
                 <input type="radio" name="barnTransport" value="Barn i bag">
                 <span>Barn i bag</span>
@@ -935,12 +377,12 @@
 
           <label class="field">
             <span>Aktuelt</span>
-            <textarea name="aktuelt" rows="3"></textarea>
+            <textarea name="aktuelt" rows="4"></textarea>
           </label>
 
           <label class="field">
             <span>Tidligere</span>
-            <textarea name="tidligere" rows="3"></textarea>
+            <textarea name="tidligere" rows="2"></textarea>
           </label>
         </section>
 
@@ -950,7 +392,7 @@
             <span class="section-number">07</span>
             <div>
               <h3>Luftveier og respirasjon</h3>
-              <p>Velg luftveishåndtering og relevante innstillinger.</p>
+              <p>Luftveishåndtering og relevante innstillinger.</p>
             </div>
           </div>
 
@@ -959,22 +401,27 @@
               <input type="radio" name="luftvei" value="Spontan uten O2">
               <span>Spontan uten O2</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="luftvei" value="Spontan med O2">
               <span>Spontan med O2</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="luftvei" value="High flow">
-              <span>High flow</span>
+              <span>Spontan med high flow</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="luftvei" value="NIV (CPAP/BiPAP)">
               <span>NIV (CPAP/BiPAP)</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="luftvei" value="Intubert">
               <span>Intubert</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="luftvei" value="Trakeostomi">
               <span>Trakeostomi</span>
@@ -983,22 +430,22 @@
 
           <div id="oxygenDetails" class="conditional" hidden>
             <div class="field-grid three">
-              <label class="field" id="flowField">
+              <label class="field" id="flowField" hidden>
                 <span>O2 / flow (l/min)</span>
                 <input name="flow" inputmode="decimal">
               </label>
 
-              <label class="field" id="fio2Field">
+              <label class="field" id="fio2Field" hidden>
                 <span>FiO2 (%)</span>
                 <input name="fio2" inputmode="decimal">
               </label>
 
-              <label class="field" id="peepField">
+              <label class="field" id="peepField" hidden>
                 <span>PEEP</span>
                 <input name="peep" inputmode="decimal">
               </label>
 
-              <label class="field" id="peakField">
+              <label class="field" id="peakField" hidden>
                 <span>Topptrykk</span>
                 <input name="topptrykk" inputmode="decimal">
               </label>
@@ -1006,15 +453,18 @@
 
             <div id="trachDetails" hidden>
               <p class="field-label">Trakeostomi – respirasjonsform</p>
+
               <div class="chip-grid">
                 <label class="choice">
                   <input type="radio" name="trachForm" value="Spontan via trakeostomi">
                   <span>Spontan via trakeostomi</span>
                 </label>
+
                 <label class="choice">
                   <input type="radio" name="trachForm" value="O2 via trakeostomi">
                   <span>O2 via trakeostomi</span>
                 </label>
+
                 <label class="choice">
                   <input type="radio" name="trachForm" value="Respirator via trakeostomi">
                   <span>Respirator via trakeostomi</span>
@@ -1039,33 +489,40 @@
               <span>RF</span>
               <input name="rf" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>SpO2 (%)</span>
               <input name="spo2" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>Puls</span>
               <input name="puls" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>BT systolisk</span>
               <input name="sys" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>BT diastolisk</span>
               <input name="dia" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>MAP</span>
               <input name="map" inputmode="numeric">
             </label>
+
             <label class="field">
               <span>Temperatur (°C)</span>
               <input name="temp" inputmode="decimal">
             </label>
+
             <label class="field">
               <span>GCS</span>
-              <input name="gcs" placeholder="3–15">
+              <input name="gcs" inputmode="numeric">
             </label>
           </div>
         </section>
@@ -1076,61 +533,136 @@
             <span class="section-number">09</span>
             <div>
               <h3>Medikamenter og infusjoner</h3>
-              <p>Registrer oppgitte preparater og infusjoner.</p>
+              <p>Preparater og infusjoner oppgitt av rekvirent.</p>
             </div>
           </div>
 
-          <p class="field-label">Sedasjon / analgesi</p>
+          <!-- SEDASJON -->
+          <div class="medication-group">
+            <h4>Sedasjon / analgesi</h4>
 
-          <div class="chip-grid" data-exclusive-group="sedasjon">
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Nei" data-none>
-              <span>Nei</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Fentanyl">
-              <span>Fentanyl</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Ketamin">
-              <span>Ketamin</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Midazolam">
-              <span>Midazolam</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Sufentanil">
-              <span>Sufentanil</span>
-            </label>
-            <label class="choice">
-              <input type="checkbox" name="sedasjon" value="Propofol">
-              <span>Propofol</span>
-            </label>
+            <div class="chip-grid" data-exclusive-group="sedasjon">
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Nei" data-none>
+                <span>Nei</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Fentanyl">
+                <span>Fentanyl</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Ketamin">
+                <span>Ketamin</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Midazolam">
+                <span>Midazolam</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Sufentanil">
+                <span>Sufentanil</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="sedasjon" value="Propofol">
+                <span>Propofol</span>
+              </label>
+            </div>
+
+            <div class="auto-editor">
+              <p class="field-label">Andre medikamenter / dosering</p>
+              <div
+                id="sedationRows"
+                class="auto-rows"
+                data-placeholder="Annet sedativ / dose / infusjon">
+              </div>
+            </div>
           </div>
 
-          <div class="dynamic-editor">
-            <p class="field-label">Sedasjon – preparat og infusjon</p>
-            <div id="sedationRows"></div>
-            <button type="button" class="add-btn" data-add="sedationRows">
-              + Legg til
-            </button>
+          <!-- PRESSORER -->
+          <div class="medication-group">
+            <h4>Pressorer / vasoaktive medikamenter</h4>
+
+            <div class="chip-grid" data-exclusive-group="pressor">
+              <label class="choice">
+                <input type="checkbox" name="pressor" value="Nei" data-none>
+                <span>Nei</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="pressor" value="Adrenalin">
+                <span>Adrenalin</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="pressor" value="Noradrenalin">
+                <span>Noradrenalin</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="pressor" value="Dobutamin">
+                <span>Dobutamin</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="pressor" value="Vasopressin">
+                <span>Vasopressin</span>
+              </label>
+            </div>
+
+            <div class="auto-editor">
+              <p class="field-label">Andre medikamenter / dosering</p>
+              <div
+                id="pressorRows"
+                class="auto-rows"
+                data-placeholder="Annen pressor / dose / infusjon">
+              </div>
+            </div>
           </div>
 
-          <div class="dynamic-editor">
-            <p class="field-label">Vasoaktive medikamenter</p>
-            <div id="pressorRows"></div>
-            <button type="button" class="add-btn" data-add="pressorRows">
-              + Legg til
-            </button>
-          </div>
+          <!-- ANDRE MEDIKAMENTER -->
+          <div class="medication-group">
+            <h4>Andre medikamenter / infusjoner</h4>
 
-          <div class="dynamic-editor">
-            <p class="field-label">Andre infusjoner / medikamenter</p>
-            <div id="otherMedicationRows"></div>
-            <button type="button" class="add-btn" data-add="otherMedicationRows">
-              + Legg til
-            </button>
+            <div class="chip-grid" data-exclusive-group="annenInfusjon">
+              <label class="choice">
+                <input type="checkbox" name="annenInfusjon" value="Nei" data-none>
+                <span>Nei</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="annenInfusjon" value="Ringer">
+                <span>Ringer</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="annenInfusjon" value="NaCl">
+                <span>NaCl</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="annenInfusjon" value="Blod">
+                <span>Blod</span>
+              </label>
+
+              <label class="choice">
+                <input type="checkbox" name="annenInfusjon" value="Plasma">
+                <span>Plasma</span>
+              </label>
+            </div>
+
+            <div class="auto-editor">
+              <p class="field-label">Andre medikamenter / infusjoner</p>
+              <div
+                id="otherMedicationRows"
+                class="auto-rows"
+                data-placeholder="Annet medikament / infusjon">
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1140,19 +672,21 @@
             <span class="section-number">10</span>
             <div>
               <h3>Tilganger</h3>
-              <p>Intravaskulære tilganger og annet.</p>
+              <p>Vaskulære tilganger og annet.</p>
             </div>
           </div>
 
           <div class="chip-grid" data-exclusive-group="tilganger">
             <label class="choice">
               <input type="checkbox" name="tilganger" value="Ingen" data-none>
-              <span>Ingen</span>
+              <span>Ingen tilganger</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="tilganger" value="CVK">
               <span>CVK</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="tilganger" value="PVK">
               <span>PVK</span>
@@ -1161,38 +695,39 @@
 
           <div id="accessDetails" class="conditional" hidden>
             <div class="field-grid two">
-              <label class="field" id="cvkField">
+              <label class="field" id="cvkField" hidden>
                 <span>CVK – antall lumen</span>
                 <select name="cvkLumen">
                   <option value="">Ikke angitt</option>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </select>
               </label>
 
-              <label class="field" id="pvkField">
+              <label class="field" id="pvkField" hidden>
                 <span>PVK – antall</span>
                 <select name="pvkAntall">
                   <option value="">Ikke angitt</option>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </select>
               </label>
             </div>
           </div>
 
-          <div class="dynamic-editor">
+          <div class="auto-editor">
             <p class="field-label">Andre tilganger</p>
-            <div id="accessRows"></div>
-            <button type="button" class="add-btn" data-add="accessRows">
-              + Legg til
-            </button>
+            <div
+              id="accessRows"
+              class="auto-rows"
+              data-placeholder="Annen tilgang">
+            </div>
           </div>
         </section>
 
@@ -1209,16 +744,19 @@
           <div class="chip-grid" data-exclusive-group="utstyr">
             <label class="choice">
               <input type="checkbox" name="utstyr" value="Ingen" data-none>
-              <span>Ingen</span>
+              <span>Ingen utstyr</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="utstyr" value="Arteriekran">
               <span>Arteriekran</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="utstyr" value="Thoraxdren">
               <span>Thoraxdren</span>
             </label>
+
             <label class="choice">
               <input type="checkbox" name="utstyr" value="Sprøytepumper">
               <span>Sprøytepumper</span>
@@ -1230,26 +768,27 @@
               <span>Antall sprøytepumper</span>
               <select name="pumperAntall">
                 <option value="">Ikke oppgitt</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
-                <option>9</option>
-                <option>10</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
               </select>
             </label>
           </div>
 
-          <div class="dynamic-editor">
+          <div class="auto-editor">
             <p class="field-label">Annet utstyr</p>
-            <div id="equipmentRows"></div>
-            <button type="button" class="add-btn" data-add="equipmentRows">
-              + Legg til
-            </button>
+            <div
+              id="equipmentRows"
+              class="auto-rows"
+              data-placeholder="Beskriv utstyr">
+            </div>
           </div>
         </section>
 
@@ -1259,7 +798,7 @@
             <span class="section-number">12</span>
             <div>
               <h3>Smitte og CAVE</h3>
-              <p>Opplysninger som er relevante for transporten.</p>
+              <p>Relevante opplysninger for transporten.</p>
             </div>
           </div>
 
@@ -1294,9 +833,7 @@
 
           <label class="field conditional" id="infectionDetails" hidden>
             <span>Spesifisering smitte</span>
-            <input
-              name="smitteMerknad"
-              placeholder="Oppgi smittestoff eller relevante forhold">
+            <input type="text" name="smitteMerknad">
           </label>
 
           <p class="field-label">CAVE</p>
@@ -1306,10 +843,12 @@
               <input type="radio" name="cave" value="Nei">
               <span>Nei</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="cave" value="Ja">
               <span>Ja</span>
             </label>
+
             <label class="choice">
               <input type="radio" name="cave" value="Ukjent">
               <span>Ukjent</span>
@@ -1318,7 +857,7 @@
 
           <label class="field conditional" id="caveDetails" hidden>
             <span>Beskrivelse CAVE</span>
-            <input name="caveMerknad" placeholder="Spesifiser">
+            <input type="text" name="caveMerknad">
           </label>
         </section>
 
@@ -1333,26 +872,30 @@
           </div>
 
           <h4 class="subheading">Rekvirerende lege</h4>
+
           <div class="field-grid two">
             <label class="field">
               <span>Navn</span>
-              <input name="rekLege">
+              <input type="text" name="rekLege">
             </label>
+
             <label class="field">
               <span>Telefon</span>
-              <input name="rekTlf" type="tel">
+              <input type="tel" name="rekTlf">
             </label>
           </div>
 
           <h4 class="subheading">Mottakende lege</h4>
+
           <div class="field-grid two">
             <label class="field">
               <span>Navn</span>
-              <input name="mottLege">
+              <input type="text" name="mottLege">
             </label>
+
             <label class="field">
               <span>Telefon</span>
-              <input name="mottTlf" type="tel">
+              <input type="tel" name="mottTlf">
             </label>
           </div>
         </section>
@@ -1370,14 +913,12 @@
 
         <div class="report-heading">
           <h2>Rapporttekst</h2>
-          <p>Oppdateres automatisk fra skjemaet.</p>
         </div>
 
         <textarea
           id="rapport"
           readonly
-          aria-label="Generert rapport"
-          placeholder="Velg hastegrad og fyll ut skjemaet…"></textarea>
+          aria-label="Generert rapporttekst"></textarea>
 
         <pre id="printReport" hidden></pre>
 
@@ -1389,6 +930,15 @@
           <button type="button" id="printButton" class="action-btn print-btn">
             🖨️ Skriv ut
           </button>
+
+          <button
+type="button"
+  class="action-btn action-procedure procedure-btn"
+  disabled
+  title="Prosedyrelenke legges til senere"
+>
+  Prosedyre
+</button>
 
           <button type="button" id="resetBtn" class="action-btn reset-btn">
             ⌫ Tøm skjema
@@ -1402,754 +952,17 @@
             Send tilbakemelding
           </a>
 
-          <p id="copyMsg" class="copy-message" role="status" aria-live="polite"></p>
+          <p
+            id="copyMsg"
+            class="copy-message"
+            role="status"
+            aria-live="polite"></p>
         </div>
+
       </div>
     </aside>
+
   </div>
-
-  <!-- ==========================================
-       JAVASCRIPT – SEKUNDÆROPPDRAG
-       ========================================== -->
-
-  <script>
-    (() => {
-      "use strict";
-
-      const form = document.getElementById("transportForm");
-      const rapport = document.getElementById("rapport");
-      const copyBtn = document.getElementById("copyBtn");
-      const resetBtn = document.getElementById("resetBtn");
-      const copyMsg = document.getElementById("copyMsg");
-
-      if (!form || !rapport) return;
-
-      let copyTimer = null;
-
-      /* ========================================
-         HJELPEFUNKSJONER
-         ======================================== */
-
-      const clean = value => String(value ?? "").trim();
-
-      function value(name) {
-        const element = form.elements.namedItem(name);
-        if (!element) return "";
-
-        if (element instanceof RadioNodeList) {
-          return clean(element.value);
-        }
-
-        return clean(element.value);
-      }
-
-      function checkedValues(name) {
-        return Array.from(
-          form.querySelectorAll(`input[name="${name}"]:checked`)
-        ).map(element => element.value);
-      }
-
-      function selected(name) {
-        return checkedValues(name)[0] || "";
-      }
-
-      function appendLine(lines, label, data) {
-        const text = clean(data);
-        if (text) lines.push(`${label}: ${text}`);
-      }
-
-      function appendSection(lines, title, entries) {
-        if (!entries.length) return;
-        if (lines.length) lines.push("");
-        lines.push(title.toUpperCase());
-        lines.push(...entries);
-      }
-
-      function dynamicValues(id) {
-        const container = document.getElementById(id);
-        if (!container) return [];
-
-        return Array.from(container.querySelectorAll("input"))
-          .map(input => clean(input.value))
-          .filter(Boolean);
-      }
-
-      function setVisible(id, visible) {
-        const element = document.getElementById(id);
-        if (element) element.hidden = !visible;
-      }
-
-      /* ========================================
-         EKSKLUSIVE VALG
-         ======================================== */
-
-      document.querySelectorAll("[data-exclusive-group]").forEach(group => {
-        group.addEventListener("change", event => {
-          const changed = event.target;
-
-          if (!changed.matches('input[type="checkbox"]')) return;
-          if (!changed.checked) return;
-
-          const boxes = Array.from(
-            group.querySelectorAll('input[type="checkbox"]')
-          );
-
-          if (changed.hasAttribute("data-none")) {
-            boxes.forEach(box => {
-              if (box !== changed) box.checked = false;
-            });
-          } else {
-            const none = boxes.find(box => box.hasAttribute("data-none"));
-            if (none) none.checked = false;
-          }
-        });
-      });
-
-      /* ========================================
-         BARN
-         ======================================== */
-
-      function updateChildDetails() {
-        const child = selected("barn");
-        setVisible("childDetails", Boolean(child && child !== "Nei"));
-      }
-
-      /* ========================================
-         LUFTVEIER
-         ======================================== */
-
-      function updateAirwayDetails() {
-        const airway = selected("luftvei");
-        const trach = selected("trachForm");
-
-        const oxygen = Boolean(airway && airway !== "Spontan uten O2");
-
-        setVisible("oxygenDetails", oxygen);
-        setVisible("trachDetails", airway === "Trakeostomi");
-
-        const flow =
-          airway === "Spontan med O2" ||
-          airway === "High flow" ||
-          (airway === "Trakeostomi" && trach === "O2 via trakeostomi");
-
-        const fio2 =
-          airway === "High flow" ||
-          airway === "NIV (CPAP/BiPAP)" ||
-          airway === "Intubert" ||
-          (airway === "Trakeostomi" && trach === "Respirator via trakeostomi");
-
-        const ventilation =
-          airway === "Intubert" ||
-          (airway === "Trakeostomi" && trach === "Respirator via trakeostomi");
-
-        setVisible("flowField", flow);
-        setVisible("fio2Field", fio2);
-        setVisible("peepField", ventilation);
-        setVisible("peakField", ventilation);
-      }
-
-      /* ========================================
-         TILGANGER OG UTSTYR
-         ======================================== */
-
-      function updateAccessDetails() {
-        const access = checkedValues("tilganger");
-
-        setVisible(
-          "accessDetails",
-          access.includes("CVK") || access.includes("PVK")
-        );
-
-        setVisible("cvkField", access.includes("CVK"));
-        setVisible("pvkField", access.includes("PVK"));
-      }
-
-      function updateEquipmentDetails() {
-        setVisible(
-          "pumpDetails",
-          checkedValues("utstyr").includes("Sprøytepumper")
-        );
-      }
-
-      /* ========================================
-         SMITTE
-         ======================================== */
-
-      const infectionNone = document.getElementById("smitteIngen");
-      const bloodInfection = document.getElementById("blodsmitte");
-
-      function updateInfectionDetails() {
-        const infection = selected("smitte");
-
-        if (infection === "Ingen kjente" && bloodInfection.checked) {
-          infectionNone.checked = false;
-        }
-
-        const currentInfection = selected("smitte");
-
-        const hasInfection =
-          (Boolean(currentInfection) && currentInfection !== "Ingen kjente") ||
-          bloodInfection.checked;
-
-        setVisible("infectionDetails", hasInfection);
-      }
-
-      infectionNone.addEventListener("change", () => {
-        if (infectionNone.checked) bloodInfection.checked = false;
-      });
-
-      bloodInfection.addEventListener("change", () => {
-        if (bloodInfection.checked) infectionNone.checked = false;
-      });
-
-      /* ========================================
-         CAVE
-         ======================================== */
-
-      function updateCaveDetails() {
-        setVisible("caveDetails", selected("cave") === "Ja");
-      }
-
-      function updateConditions() {
-        updateChildDetails();
-        updateAirwayDetails();
-        updateAccessDetails();
-        updateEquipmentDetails();
-        updateInfectionDetails();
-        updateCaveDetails();
-      }
-
-      /* ========================================
-         DYNAMISKE LINJER
-         ======================================== */
-
-      const dynamicLists = {
-        sedationRows: "Preparat, dose / infusjon",
-        pressorRows: "Medikament, dose / infusjon",
-        otherMedicationRows: "Medikament eller infusjon",
-        accessRows: "Annen tilgang",
-        equipmentRows: "Annet utstyr"
-      };
-
-      function addDynamicRow(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        const row = document.createElement("div");
-        row.className = "dynamic-row";
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = dynamicLists[containerId] || "Opplysning";
-        input.setAttribute("aria-label", input.placeholder);
-
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "remove-btn";
-        remove.textContent = "×";
-        remove.setAttribute("aria-label", "Fjern linje");
-
-        remove.addEventListener("click", () => {
-          row.remove();
-          buildReport();
-        });
-
-        input.addEventListener("input", buildReport);
-
-        input.addEventListener("keydown", event => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            addDynamicRow(containerId);
-          }
-        });
-
-        row.append(input, remove);
-        container.appendChild(row);
-        input.focus();
-      }
-
-      document.querySelectorAll("[data-add]").forEach(button => {
-        button.addEventListener("click", () => {
-          addDynamicRow(button.dataset.add);
-        });
-      });
-
-      /* ========================================
-         RAPPORTBYGGER
-         ======================================== */
-
-      function buildReport() {
-        const lines = [];
-        const haste = selected("hastegrad");
-
-        lines.push("SEKUNDÆROPPDRAG");
-        lines.push("Intensiv- og helikoptertransport");
-
-        if (haste) {
-          lines.push(`Rekvirert hastegrad: ${haste}`);
-        }
-
-        /* TRANSPORT */
-
-        const transport = [];
-
-        appendLine(transport, "Fra", value("fra"));
-        appendLine(transport, "Til", value("til"));
-        appendLine(transport, "Dato", value("dato"));
-        appendLine(transport, "Klokkeslett", value("tidspunkt"));
-        appendLine(transport, "Ressurs-ID", value("ressurs"));
-        appendLine(
-          transport,
-          "Transportopplysninger",
-          value("transportMerknad")
-        );
-
-        appendSection(lines, "Transport", transport);
-
-        /* FØLGEBEHOV */
-
-        const follow = checkedValues("folge");
-
-        if (follow.length) {
-          appendSection(lines, "Følgebehov fra rekvirent", [
-            follow.join(", ")
-          ]);
-        }
-
-        /* SPESIALTRANSPORT */
-
-        const special = checkedValues("spesial");
-        const specialLines = [];
-
-        if (special.length) {
-          specialLines.push(special.join(", "));
-        }
-
-        appendLine(
-          specialLines,
-          "Merknad",
-          value("spesialMerknad")
-        );
-
-        appendSection(lines, "Spesialtransport", specialLines);
-
-        /* PASIENT */
-
-        const patient = [];
-
-        appendLine(patient, "Alder", value("alder"));
-        appendLine(patient, "Kjønn", value("kjonn"));
-
-        if (value("vekt")) {
-          appendLine(patient, "Vekt", `${value("vekt")} kg`);
-        }
-
-        const child = selected("barn");
-
-        if (child) {
-          appendLine(patient, "Barn", child);
-
-          if (child !== "Nei") {
-            const ga = [];
-
-            if (value("gaUker")) {
-              ga.push(`${value("gaUker")} uker`);
-            }
-
-            if (value("gaDager")) {
-              ga.push(`${value("gaDager")} dager`);
-            }
-
-            if (ga.length) {
-              appendLine(patient, "Gestasjonsalder", ga.join(" + "));
-            }
-
-            appendLine(
-              patient,
-              "Transportform",
-              selected("barnTransport")
-            );
-          }
-        }
-
-        appendSection(lines, "Pasient", patient);
-
-        /* MEDISINSK PROBLEMSTILLING */
-
-        const medical = [];
-
-        appendLine(medical, "Aktuelt", value("aktuelt"));
-        appendLine(medical, "Tidligere", value("tidligere"));
-
-        appendSection(lines, "Medisinsk problemstilling", medical);
-
-        /* LUFTVEIER */
-
-        const airwayLines = [];
-        const airway = selected("luftvei");
-
-        if (airway) airwayLines.push(airway);
-
-        if (airway === "Trakeostomi") {
-          appendLine(
-            airwayLines,
-            "Respirasjonsform",
-            selected("trachForm")
-          );
-        }
-
-        if (airway && !document.getElementById("flowField").hidden) {
-          if (value("flow")) {
-            appendLine(airwayLines, "O2 / flow", `${value("flow")} l/min`);
-          }
-        }
-
-        if (airway && !document.getElementById("fio2Field").hidden) {
-          if (value("fio2")) {
-            appendLine(airwayLines, "FiO2", `${value("fio2")} %`);
-          }
-        }
-
-        if (airway && !document.getElementById("peepField").hidden) {
-          appendLine(airwayLines, "PEEP", value("peep"));
-        }
-
-        if (airway && !document.getElementById("peakField").hidden) {
-          appendLine(airwayLines, "Topptrykk", value("topptrykk"));
-        }
-
-        appendSection(lines, "Luftveier", airwayLines);
-
-        /* VITALPARAMETRE */
-
-        const vitals = [];
-
-        if (value("rf")) vitals.push(`RF ${value("rf")}`);
-        if (value("spo2")) vitals.push(`SpO2 ${value("spo2")} %`);
-        if (value("puls")) vitals.push(`Puls ${value("puls")}`);
-
-        const sys = value("sys");
-        const dia = value("dia");
-
-        if (sys || dia) {
-          vitals.push(`BT ${sys || "?"}/${dia || "?"}`);
-        }
-
-        if (value("map")) vitals.push(`MAP ${value("map")}`);
-        if (value("temp")) vitals.push(`Tmp ${value("temp")} °C`);
-        if (value("gcs")) vitals.push(`GCS ${value("gcs")}`);
-
-        if (vitals.length) {
-          appendSection(lines, "Vitalparametre", [
-            vitals.join(", ")
-          ]);
-        }
-
-        /* MEDIKAMENTER */
-
-        const medication = [];
-        const sedations = checkedValues("sedasjon");
-
-        if (sedations.length) {
-          appendLine(
-            medication,
-            "Sedasjon / analgesi",
-            sedations.join(", ")
-          );
-        }
-
-        const sedationRows = dynamicValues("sedationRows");
-
-        if (sedationRows.length) {
-          appendLine(
-            medication,
-            "Sedasjon / infusjon",
-            sedationRows.join("; ")
-          );
-        }
-
-        const pressorRows = dynamicValues("pressorRows");
-
-        if (pressorRows.length) {
-          appendLine(
-            medication,
-            "Vasoaktive medikamenter",
-            pressorRows.join("; ")
-          );
-        }
-
-        const otherRows = dynamicValues("otherMedicationRows");
-
-        if (otherRows.length) {
-          appendLine(
-            medication,
-            "Andre medikamenter / infusjoner",
-            otherRows.join("; ")
-          );
-        }
-
-        appendSection(lines, "Medikamenter", medication);
-
-        /* TILGANGER */
-
-        const access = [];
-        const accessValues = checkedValues("tilganger");
-
-        if (accessValues.includes("Ingen")) {
-          access.push("Ingen oppgitte tilganger");
-        } else {
-          if (accessValues.includes("CVK")) {
-            let cvk = "CVK";
-
-            if (value("cvkLumen")) {
-              cvk += `, ${value("cvkLumen")} lumen`;
-            }
-
-            access.push(cvk);
-          }
-
-          if (accessValues.includes("PVK")) {
-            let pvk = "PVK";
-
-            if (value("pvkAntall")) {
-              pvk += `, ${value("pvkAntall")} stk`;
-            }
-
-            access.push(pvk);
-          }
-        }
-
-        access.push(...dynamicValues("accessRows"));
-
-        appendSection(lines, "Tilganger", access);
-
-        /* UTSTYR */
-
-        const equipment = [];
-        const equipmentValues = checkedValues("utstyr");
-
-        if (equipmentValues.includes("Ingen")) {
-          equipment.push("Ingen oppgitt");
-        } else {
-          equipmentValues.forEach(item => {
-            if (item === "Sprøytepumper") {
-              const count = value("pumperAntall");
-
-              equipment.push(
-                count
-                  ? `Sprøytepumper: ${count} stk`
-                  : "Sprøytepumper"
-              );
-            } else {
-              equipment.push(item);
-            }
-          });
-        }
-
-        equipment.push(...dynamicValues("equipmentRows"));
-
-        appendSection(lines, "Medisinsk utstyr", equipment);
-
-        /* SMITTE OG CAVE */
-
-        const safety = [];
-        const infection = selected("smitte");
-        const blood = bloodInfection.checked;
-
-        if (infection === "Ingen kjente") {
-          safety.push("Smitte: Ingen kjente");
-        } else {
-          if (infection) {
-            appendLine(safety, "Smitte", infection);
-          }
-
-          if (blood) {
-            safety.push("Blodsmitte");
-          }
-
-          if (infection || blood) {
-            appendLine(
-              safety,
-              "Smitteopplysninger",
-              value("smitteMerknad")
-            );
-          }
-        }
-
-        const cave = selected("cave");
-
-        appendLine(safety, "CAVE", cave);
-
-        if (cave === "Ja") {
-          appendLine(
-            safety,
-            "CAVE-spesifisering",
-            value("caveMerknad")
-          );
-        }
-
-        appendSection(lines, "Smitte og CAVE", safety);
-
-        /* LEGEKONTAKT */
-
-        const contacts = [];
-
-        if (value("rekLege") || value("rekTlf")) {
-          contacts.push(
-            `Rekvirerende lege: ${
-              [value("rekLege"), value("rekTlf")]
-                .filter(Boolean)
-                .join(" / ")
-            }`
-          );
-        }
-
-        if (value("mottLege") || value("mottTlf")) {
-          contacts.push(
-            `Mottakende lege: ${
-              [value("mottLege"), value("mottTlf")]
-                .filter(Boolean)
-                .join(" / ")
-            }`
-          );
-        }
-
-        appendSection(lines, "Legekontakt", contacts);
-
-        rapport.value = lines.join("\n");
-        document.getElementById("printReport").textContent = rapport.value;
-      }
-
-      /* ========================================
-         KOPIER RAPPORT
-         ======================================== */
-
-      function showCopyMessage(message) {
-        copyMsg.textContent = message;
-
-        if (copyTimer) clearTimeout(copyTimer);
-
-        copyTimer = setTimeout(() => {
-          copyMsg.textContent = "";
-        }, 5000);
-      }
-
-      async function copyReport() {
-        const text = rapport.value;
-        if (!text.trim()) return;
-
-        try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(text);
-          } else {
-            rapport.focus();
-            rapport.select();
-
-            const success = document.execCommand("copy");
-
-            if (!success) {
-              throw new Error("Kopiering feilet");
-            }
-
-            rapport.setSelectionRange(0, 0);
-          }
-
-          showCopyMessage("Tekst kopiert");
-        } catch (error) {
-          console.error("Kopiering feilet:", error);
-          showCopyMessage("Kunne ikke kopiere teksten.");
-        }
-      }
-
-      copyBtn.addEventListener("click", copyReport);
-
-      /* ========================================
-         UTSKRIFT
-         ======================================== */
-
-      document.getElementById("printButton").addEventListener("click", () => {
-        buildReport();
-        window.print();
-      });
-
-      /* ========================================
-         TØM SKJEMA
-         ======================================== */
-
-      resetBtn.addEventListener("click", () => {
-        const confirmed = window.confirm(
-          "Vil du tømme hele sekundæroppdragsskjemaet?"
-        );
-
-        if (!confirmed) return;
-
-        form.reset();
-
-        Object.keys(dynamicLists).forEach(id => {
-          const container = document.getElementById(id);
-          if (container) container.replaceChildren();
-        });
-
-        copyMsg.textContent = "";
-
-        if (copyTimer) {
-          clearTimeout(copyTimer);
-          copyTimer = null;
-        }
-
-        updateConditions();
-        buildReport();
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-      });
-
-      /* ========================================
-         SKJEMAOPPDATERING
-         ======================================== */
-
-      form.addEventListener("submit", event => {
-        event.preventDefault();
-      });
-
-      form.addEventListener("input", buildReport);
-
-      form.addEventListener("change", () => {
-        updateConditions();
-        buildReport();
-      });
-
-      /* ========================================
-         DAGENS DATO
-         ======================================== */
-
-      function localDateString() {
-        const today = new Date();
-
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0");
-        const day = String(today.getDate()).padStart(2, "0");
-
-        return `${year}-${month}-${day}`;
-      }
-
-      const dateField = document.getElementById("oppdragDato");
-
-      if (dateField && !dateField.value) {
-        dateField.value = localDateString();
-      }
-
-      /* ========================================
-         INITIALISERING
-         ======================================== */
-
-      updateConditions();
-      buildReport();
-
-    })();
-  </script>
 
 </body>
 </html>
