@@ -13,6 +13,7 @@
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
   <script src="primæroppdrag.js" defer></script>
+  <script src="primær posisjon.js" defer></script>
 </head>
 
 <body>
@@ -22,9 +23,13 @@
       <h1>Primæroppdrag</h1>
     </div>
 
-    <button type="button" id="themeToggle"
-            class="theme-toggle" aria-pressed="false"
-            aria-label="Slå på kveldsmodus">
+    <button
+      type="button"
+      id="themeToggle"
+      class="theme-toggle"
+      aria-pressed="false"
+      aria-label="Slå på kveldsmodus"
+    >
       <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
       <span class="theme-toggle-text">Kveldsmodus</span>
     </button>
@@ -37,9 +42,12 @@
 
     <!-- SKJEMA -->
     <div class="form-panel-frame">
-      <div class="form-panel" tabindex="0"
-           role="region"
-           aria-label="Skjema for primæroppdrag">
+      <div
+        class="form-panel"
+        tabindex="0"
+        role="region"
+        aria-label="Skjema for primæroppdrag"
+      >
 
         <form id="primaryMissionForm" autocomplete="off">
 
@@ -48,33 +56,51 @@
             <h2>1. Talegrupper</h2>
 
             <div class="tg-grid">
+
               <div class="field-card">
                 <label for="healthTg">Helse TG</label>
-                <input id="healthTg" type="text"
-                       class="tg-input" spellcheck="false">
+                <input
+                  id="healthTg"
+                  type="text"
+                  class="tg-input"
+                  spellcheck="false"
+                >
               </div>
 
               <div class="field-card">
                 <label for="bapsTg">BAPS TG</label>
-                <input id="bapsTg" type="text"
-                       class="tg-input" spellcheck="false">
+                <input
+                  id="bapsTg"
+                  type="text"
+                  class="tg-input"
+                  spellcheck="false"
+                >
               </div>
 
               <div class="field-card">
                 <label for="sarTg">SAR TG</label>
-                <input id="sarTg" type="text"
-                       class="tg-input" spellcheck="false">
+                <input
+                  id="sarTg"
+                  type="text"
+                  class="tg-input"
+                  spellcheck="false"
+                >
               </div>
 
               <div class="field-card">
                 <label for="otherTgFirst">Annen TG</label>
+
                 <div id="otherTgContainer">
-                  <input id="otherTgFirst" type="text"
-                         class="other-tg-input tg-input"
-                         aria-label="Annen talegruppe"
-                         spellcheck="false">
+                  <input
+                    id="otherTgFirst"
+                    type="text"
+                    class="other-tg-input tg-input"
+                    aria-label="Annen talegruppe"
+                    spellcheck="false"
+                  >
                 </div>
               </div>
+
             </div>
           </section>
 
@@ -83,102 +109,173 @@
             <h2>2. Mottak av primæroppdrag</h2>
 
             <div class="form-grid form-grid-2">
+
               <div class="form-field">
                 <label for="actionAmk">Aksjons-AMK</label>
-                <input id="actionAmk" type="text"
-                       list="amkSuggestions"
-                       autocomplete="off" spellcheck="false">
+                <input
+                  id="actionAmk"
+                  type="text"
+                  list="amkSuggestions"
+                  autocomplete="off"
+                  spellcheck="false"
+                >
                 <datalist id="amkSuggestions"></datalist>
               </div>
 
               <div class="form-field">
                 <span class="field-label">Hastegrad</span>
+
                 <div class="chip-group" id="urgencyChips">
-                  <button type="button" class="chip urgency"
-                          data-urgency="Akutt">Akutt</button>
-                  <button type="button" class="chip urgency"
-                          data-urgency="Haster">Haster</button>
-                  <button type="button" class="chip urgency"
-                          data-urgency="Vanlig 1">Vanlig 1</button>
-                  <button type="button" class="chip urgency"
-                          data-urgency="Vanlig 2">Vanlig 2</button>
+
+                  <button
+                    type="button"
+                    class="chip urgency"
+                    data-urgency="Akutt"
+                  >Akutt</button>
+
+                  <button
+                    type="button"
+                    class="chip urgency"
+                    data-urgency="Haster"
+                  >Haster</button>
+
+                  <button
+                    type="button"
+                    class="chip urgency"
+                    data-urgency="Vanlig 1"
+                  >Vanlig 1</button>
+
+                  <button
+                    type="button"
+                    class="chip urgency"
+                    data-urgency="Vanlig 2"
+                  >Vanlig 2</button>
+
                 </div>
               </div>
+
             </div>
+
+            <!-- POSISJON -->
+            <!-- Den nye JS-filen oppretter to synlige felt her. -->
+            <!-- Dette feltet brukes fortsatt av rapportgeneratoren. -->
 
             <div class="form-field">
               <label for="patientPosition">
                 Posisjon til pasient / skadested
               </label>
-              <input id="patientPosition" type="text">
+
+              <input
+                id="patientPosition"
+                type="hidden"
+              >
             </div>
 
+            <!-- ALDER OG KJØNN -->
             <div class="form-grid form-grid-2">
+
               <div class="form-field">
                 <label for="patientAge">Alder</label>
 
                 <div class="age-row">
-                  <input id="patientAge" type="number"
-                         min="0" max="125" step="1">
+                  <input
+                    id="patientAge"
+                    type="number"
+                    min="0"
+                    max="125"
+                    step="1"
+                  >
 
-                  <div class="chip-group age-unit"
-                       id="ageUnitChips">
-                    <button type="button"
-                            class="chip is-selected"
-                            data-age-unit="år"
-                            aria-pressed="true">
-                      År
-                    </button>
+                  <div
+                    class="chip-group age-unit"
+                    id="ageUnitChips"
+                  >
 
-                    <button type="button"
-                            class="chip"
-                            data-age-unit="mnd"
-                            aria-pressed="false">
-                      Mnd
-                    </button>
+                    <button
+                      type="button"
+                      class="chip is-selected"
+                      data-age-unit="år"
+                      aria-pressed="true"
+                    >År</button>
+
+                    <button
+                      type="button"
+                      class="chip"
+                      data-age-unit="mnd"
+                      aria-pressed="false"
+                    >Mnd</button>
+
                   </div>
                 </div>
               </div>
 
               <div class="form-field">
                 <span class="field-label">Kjønn</span>
+
                 <div class="chip-group" id="genderChips">
-                  <button type="button" class="chip"
-                          data-gender="Mann">Mann</button>
-                  <button type="button" class="chip"
-                          data-gender="Kvinne">Kvinne</button>
+
+                  <button
+                    type="button"
+                    class="chip"
+                    data-gender="Mann"
+                  >Mann</button>
+
+                  <button
+                    type="button"
+                    class="chip"
+                    data-gender="Kvinne"
+                  >Kvinne</button>
+
                 </div>
               </div>
+
             </div>
 
+            <!-- PROBLEMSTILLING -->
             <div class="form-field">
               <label for="problemDescription">
                 Problemstilling
               </label>
-              <textarea id="problemDescription" rows="3"
-                        class="auto-grow"></textarea>
+
+              <textarea
+                id="problemDescription"
+                rows="3"
+                class="auto-grow"
+              ></textarea>
             </div>
 
+            <!-- ÅRSAK TIL BISTAND -->
             <div class="form-field">
               <span class="field-label">
                 Årsak til bistand fra luftambulanse
               </span>
 
               <div class="criteria-list" id="reasonChips">
-                <button type="button" class="criteria-chip"
-                        data-reason="Tidsbesparelse med helikopter">
+
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-reason="Tidsbesparelse med helikopter"
+                >
                   Tidsbesparelse med helikopter
                 </button>
 
-                <button type="button" class="criteria-chip"
-                        data-reason="Behov for anestesilege">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-reason="Behov for anestesilege"
+                >
                   Behov for anestesilege
                 </button>
 
-                <button type="button" class="criteria-chip"
-                        data-reason="Behov for redning med helikopter">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-reason="Behov for redning med helikopter"
+                >
                   Behov for redning med helikopter
                 </button>
+
               </div>
             </div>
 
@@ -197,20 +294,31 @@
               <div id="otherResourcesRows"></div>
             </div>
 
+            <!-- LEVERINGSSTED -->
             <div class="form-field">
               <label for="deliveryLocation">
                 Forventet leveringssted
               </label>
-              <input id="deliveryLocation" type="text">
+
+              <input
+                id="deliveryLocation"
+                type="text"
+              >
             </div>
 
+            <!-- SUPPLERENDE INFORMASJON -->
             <div class="form-field">
               <label for="additionalInformation">
                 Supplerende informasjon
               </label>
-              <textarea id="additionalInformation" rows="3"
-                        class="auto-grow"></textarea>
+
+              <textarea
+                id="additionalInformation"
+                rows="3"
+                class="auto-grow"
+              ></textarea>
             </div>
+
           </section>
 
           <!-- 3. VALG OG VARSLING -->
@@ -218,123 +326,168 @@
             <h2>3. Valg og varsling av ressurs</h2>
 
             <div class="form-grid form-grid-2">
+
               <div class="form-field">
                 <label for="resourceId">Ressurs-ID</label>
-                <input id="resourceId" type="text">
+
+                <input
+                  id="resourceId"
+                  type="text"
+                >
               </div>
 
               <div class="form-field">
                 <label for="alertTime">
                   Utalarmering kl.
                 </label>
-                <input id="alertTime" type="text"
-                       inputmode="numeric" maxlength="5">
+
+                <input
+                  id="alertTime"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="5"
+                >
               </div>
+
             </div>
 
+            <!-- TILBAKEMELDING FRA BESETNINGEN -->
             <div class="form-field">
               <span class="field-label">
                 Tilbakemelding fra besetningen
               </span>
 
-              <div class="chip-group"
-                   id="quickResponseChips">
-                <button type="button"
-                        class="chip status-go"
-                        data-quick-response="Rykker ut">
-                  Rykker ut
-                </button>
+              <div
+                class="chip-group"
+                id="quickResponseChips"
+              >
 
-                <button type="button"
-                        class="chip status-wait"
-                        data-quick-response="Avventer">
-                  Avventer
-                </button>
+                <button
+                  type="button"
+                  class="chip status-go"
+                  data-quick-response="Rykker ut"
+                >Rykker ut</button>
 
-                <button type="button"
-                        class="chip status-reject"
-                        data-quick-response="Avvist">
-                  Avvist
-                </button>
+                <button
+                  type="button"
+                  class="chip status-wait"
+                  data-quick-response="Avventer"
+                >Avventer</button>
 
-                <button type="button"
-                        class="chip"
-                        data-quick-response="Avbrutt">
-                  Avbrutt
-                </button>
+                <button
+                  type="button"
+                  class="chip status-reject"
+                  data-quick-response="Avvist"
+                >Avvist</button>
+
+                <button
+                  type="button"
+                  class="chip"
+                  data-quick-response="Avbrutt"
+                >Avbrutt</button>
+
               </div>
             </div>
 
             <!-- BEGRUNNELSE VED AVVENTER -->
-            <div id="quickWait"
-                 class="conditional-field hidden">
+            <div
+              id="quickWait"
+              class="conditional-field hidden"
+            >
+
               <div class="form-field">
                 <label for="quickWaitDescription">
                   Begrunnelse for avventer
                 </label>
-                <textarea id="quickWaitDescription"
-                          rows="2"
-                          class="auto-grow"></textarea>
+
+                <textarea
+                  id="quickWaitDescription"
+                  rows="2"
+                  class="auto-grow"
+                ></textarea>
               </div>
+
             </div>
 
             <!-- AVVISNING -->
-            <div id="quickReject"
-                 class="conditional-field hidden">
+            <div
+              id="quickReject"
+              class="conditional-field hidden"
+            >
 
               <span class="field-label">
                 Årsak til avvisning
               </span>
 
-              <div class="chip-group"
-                   id="quickRejectChips">
-                <button type="button" class="chip"
-                        data-quick-rejection="Medisinsk">
-                  Medisinsk
-                </button>
+              <div
+                class="chip-group"
+                id="quickRejectChips"
+              >
 
-                <button type="button" class="chip"
-                        data-quick-rejection="Teknisk">
-                  Teknisk
-                </button>
+                <button
+                  type="button"
+                  class="chip"
+                  data-quick-rejection="Medisinsk"
+                >Medisinsk</button>
 
-                <button type="button" class="chip"
-                        data-quick-rejection="Fatigue">
-                  Fatigue
-                </button>
+                <button
+                  type="button"
+                  class="chip"
+                  data-quick-rejection="Teknisk"
+                >Teknisk</button>
 
-                <button type="button" class="chip"
-                        data-quick-rejection="Annet">
-                  Annet
-                </button>
+                <button
+                  type="button"
+                  class="chip"
+                  data-quick-rejection="Fatigue"
+                >Fatigue</button>
+
+                <button
+                  type="button"
+                  class="chip"
+                  data-quick-rejection="Annet"
+                >Annet</button>
+
               </div>
 
               <div class="form-field reject-description">
                 <label for="quickRejectDescription">
                   Beskrivelse av avvisning
                 </label>
-                <textarea id="quickRejectDescription"
-                          rows="2"
-                          class="auto-grow"></textarea>
+
+                <textarea
+                  id="quickRejectDescription"
+                  rows="2"
+                  class="auto-grow"
+                ></textarea>
               </div>
+
             </div>
 
-            <p id="responseError"
-               class="field-error"
-               role="status"></p>
+            <p
+              id="responseError"
+              class="field-error"
+              role="status"
+            ></p>
 
-            <button type="button"
-                    id="openFlightFollowing"
-                    class="flight-button">
+            <!-- FLIGHT FOLLOWING -->
+            <button
+              type="button"
+              id="openFlightFollowing"
+              class="flight-button"
+            >
               Åpne Flight following ↗
             </button>
 
-            <p id="flightMessage"
-               class="field-help"
-               role="status"></p>
+            <p
+              id="flightMessage"
+              class="field-help"
+              role="status"
+            ></p>
+
           </section>
 
-          <!-- 4. EKSTRA RESSURS -->
+          <!-- 4. VURDERING AV EKSTRA RESSURS -->
           <section class="form-section" id="ekstraressurs">
             <h2>4. Vurdering av ekstra ressurs</h2>
 
@@ -343,17 +496,27 @@
                 Hvilken ekstra ressurs vurderes?
               </span>
 
-              <div class="chip-group"
-                   id="extraResourceChips">
-                <button type="button" class="chip"
-                        data-extra="LA">
+              <div
+                class="chip-group"
+                id="extraResourceChips"
+              >
+
+                <button
+                  type="button"
+                  class="chip"
+                  data-extra="LA"
+                >
                   Luftambulanse (LA)
                 </button>
 
-                <button type="button" class="chip"
-                        data-extra="RH">
+                <button
+                  type="button"
+                  class="chip"
+                  data-extra="RH"
+                >
                   Redningshelikopter (RH)
                 </button>
+
               </div>
             </div>
 
@@ -364,23 +527,31 @@
               </p>
 
               <div class="criteria-list">
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Lokalsykehus før videre transport">
+
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Lokalsykehus før videre transport"
+                >
                   Stabilisering / CT ved lokalsykehus
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Begrenset landingsmulighet">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Begrenset landingsmulighet"
+                >
                   Bebygd område med begrenset landingsmulighet
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Behov for flere LA-leger / helikoptre">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Behov for flere LA-leger / helikoptre"
+                >
                   Behov for flere LA-leger / helikoptre
                 </button>
+
               </div>
             </div>
 
@@ -391,162 +562,229 @@
               </p>
 
               <div class="criteria-list">
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Utfordrende flyvær">
+
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Utfordrende flyvær"
+                >
                   Utfordrende flyvær
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Ingen landingsmulighet nær skadested">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Ingen landingsmulighet nær skadested"
+                >
                   Ingen landingsmulighet nær skadested
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Vannredning">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Vannredning"
+                >
                   Behov for vannredning
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Mørke og krevende terreng">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Mørke og krevende terreng"
+                >
                   Skumring / mørke og krevende terreng
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Ukjent posisjon / søk">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Ukjent posisjon / søk"
+                >
                   Ukjent posisjon / behov for søk
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Vær mot leveringssted">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Vær mot leveringssted"
+                >
                   Utfordrende flyvær mot leveringssted
                 </button>
 
-                <button type="button"
-                        class="criteria-chip"
-                        data-extra-criterion="Større kabin / flere LA-leger">
+                <button
+                  type="button"
+                  class="criteria-chip"
+                  data-extra-criterion="Større kabin / flere LA-leger"
+                >
                   Behov for større kabin / flere LA-leger
                 </button>
+
               </div>
             </div>
 
             <!-- KONKLUSJON -->
             <div class="form-field">
-              <span class="field-label">Konklusjon</span>
+              <span class="field-label">
+                Konklusjon
+              </span>
 
-              <div class="chip-group"
-                   id="extraConclusionChips">
-                <button type="button"
-                        class="chip"
-                        data-conclusion="Ikke aktuelt">
+              <div
+                class="chip-group"
+                id="extraConclusionChips"
+              >
+
+                <button
+                  type="button"
+                  class="chip"
+                  data-conclusion="Ikke aktuelt"
+                >
                   Ikke aktuelt
                 </button>
 
-                <button type="button"
-                        class="chip"
-                        data-conclusion="Aktivert"
-                        id="extraActiveConclusion">
+                <button
+                  type="button"
+                  class="chip"
+                  data-conclusion="Aktivert"
+                  id="extraActiveConclusion"
+                >
                   Utalarmert / Forespurt
                 </button>
+
               </div>
             </div>
 
             <!-- SVAR FRA EKSTRA RESSURS -->
-            <div id="extraOutcome"
-                 class="conditional-field hidden">
+            <div
+              id="extraOutcome"
+              class="conditional-field hidden"
+            >
 
               <div class="form-field">
                 <label for="extraResourceId">
                   Ekstra ressurs-ID
                 </label>
-                <input id="extraResourceId" type="text">
+
+                <input
+                  id="extraResourceId"
+                  type="text"
+                >
               </div>
 
               <span class="field-label">
                 Tilbakemelding fra ekstra ressurs
               </span>
 
-              <div class="chip-group"
-                   id="extraOutcomeButtons">
-                <button type="button"
-                        class="chip status-go"
-                        data-extra-outcome="Rykker ut">
+              <div
+                class="chip-group"
+                id="extraOutcomeButtons"
+              >
+
+                <button
+                  type="button"
+                  class="chip status-go"
+                  data-extra-outcome="Rykker ut"
+                >
                   Rykker ut
                 </button>
 
-                <button type="button"
-                        class="chip status-wait"
-                        data-extra-outcome="Avventer">
+                <button
+                  type="button"
+                  class="chip status-wait"
+                  data-extra-outcome="Avventer"
+                >
                   Avventer
                 </button>
 
-                <button type="button"
-                        class="chip status-reject"
-                        data-extra-outcome="Avvist">
+                <button
+                  type="button"
+                  class="chip status-reject"
+                  data-extra-outcome="Avvist"
+                >
                   Avvist
                 </button>
+
               </div>
 
+              <!-- BEGRUNNELSE FOR AVVISNING -->
               <div id="extraReject" class="hidden">
                 <p class="field-label">
                   Begrunnelse for avvisning
                 </p>
 
-                <div class="chip-group"
-                     id="extraRejectChips">
-                  <button type="button"
-                          class="chip"
-                          data-extra-rejection="Medisinsk">
+                <div
+                  class="chip-group"
+                  id="extraRejectChips"
+                >
+
+                  <button
+                    type="button"
+                    class="chip"
+                    data-extra-rejection="Medisinsk"
+                  >
                     Medisinsk
                   </button>
 
-                  <button type="button"
-                          class="chip"
-                          data-extra-rejection="Teknisk">
+                  <button
+                    type="button"
+                    class="chip"
+                    data-extra-rejection="Teknisk"
+                  >
                     Teknisk
                   </button>
 
-                  <button type="button"
-                          class="chip"
-                          data-extra-rejection="Fatigue">
+                  <button
+                    type="button"
+                    class="chip"
+                    data-extra-rejection="Fatigue"
+                  >
                     Fatigue
                   </button>
 
-                  <button type="button"
-                          class="chip"
-                          data-extra-rejection="Annet">
+                  <button
+                    type="button"
+                    class="chip"
+                    data-extra-rejection="Annet"
+                  >
                     Annet
                   </button>
+
                 </div>
 
                 <div class="form-field reject-description">
                   <label for="extraRejectDescription">
                     Beskrivelse av avvisning
                   </label>
-                  <textarea id="extraRejectDescription"
-                            rows="2"
-                            class="auto-grow"></textarea>
+
+                  <textarea
+                    id="extraRejectDescription"
+                    rows="2"
+                    class="auto-grow"
+                  ></textarea>
                 </div>
+
               </div>
 
-              <p id="extraError"
-                 class="field-error"
-                 role="status"></p>
+              <p
+                id="extraError"
+                class="field-error"
+                role="status"
+              ></p>
+
             </div>
 
+            <!-- MERKNAD -->
             <div class="form-field">
               <label for="extraNote">
                 Merknad / vurdering
               </label>
-              <textarea id="extraNote"
-                        rows="2"
-                        class="auto-grow"></textarea>
+
+              <textarea
+                id="extraNote"
+                rows="2"
+                class="auto-grow"
+              ></textarea>
             </div>
+
           </section>
 
           <!-- 5. TILBAKEMELDING -->
@@ -554,97 +792,131 @@
             <h2>5. Tilbakemelding</h2>
 
             <div class="form-grid form-grid-2">
+
               <div class="form-field">
                 <label for="responseResource">
                   Ressurs som gir tilbakemelding
                 </label>
-                <input id="responseResource" type="text">
+
+                <input
+                  id="responseResource"
+                  type="text"
+                >
               </div>
 
               <div class="form-field">
                 <label for="responseTime">
                   Klokken
                 </label>
-                <input id="responseTime"
-                       type="text"
-                       inputmode="numeric"
-                       maxlength="5">
+
+                <input
+                  id="responseTime"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="5"
+                >
               </div>
+
             </div>
 
             <div class="form-field">
               <label for="responseNote">
                 Beskrivelse
               </label>
-              <textarea id="responseNote"
-                        rows="3"
-                        class="auto-grow"></textarea>
+
+              <textarea
+                id="responseNote"
+                rows="3"
+                class="auto-grow"
+              ></textarea>
             </div>
+
           </section>
 
         </form>
       </div>
 
-      <button type="button"
-              id="formScrollHint"
-              class="form-scroll-hint"
-              hidden>
+      <!-- RULLEINDIKATOR -->
+      <button
+        type="button"
+        id="formScrollHint"
+        class="form-scroll-hint"
+        hidden
+      >
         Mer av skjemaet ↓
       </button>
+
     </div>
 
     <!-- RAPPORTPANEL -->
-    <aside class="side-panel"
-           aria-label="Rapport og handlinger">
+    <aside
+      class="side-panel"
+      aria-label="Rapport og handlinger"
+    >
 
       <div class="side-panel-inner">
         <h2>Rapporttekst</h2>
 
-        <textarea id="reportOutput"
-                  class="report-output"
-                  readonly
-                  aria-label="Generert rapporttekst"></textarea>
+        <textarea
+          id="reportOutput"
+          class="report-output"
+          readonly
+          aria-label="Generert rapporttekst"
+        ></textarea>
 
         <div class="action-buttons">
-          <button type="button"
-                  id="copyButton"
-                  class="action-button action-copy">
+
+          <button
+            type="button"
+            id="copyButton"
+            class="action-button action-copy"
+          >
             <span aria-hidden="true">▣</span>
             <span id="copyButtonText">Kopier tekst</span>
           </button>
 
-          <button type="button"
-                  id="printButton"
-                  class="action-button action-print">
+          <button
+            type="button"
+            id="printButton"
+            class="action-button action-print"
+          >
             <span aria-hidden="true">🖨️</span>
             <span>Skriv ut</span>
           </button>
 
-          <button type="button"
-                  id="resetButton"
-                  class="action-button action-reset">
+          <button
+            type="button"
+            id="resetButton"
+            class="action-button action-reset"
+          >
             <span aria-hidden="true">♻</span>
             <span>Tøm skjema</span>
           </button>
 
           <div class="action-space"></div>
 
-          <a href="https://ehandbok.ous-hf.no/"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="action-button action-procedure">
+          <a
+            href="https://ehandbok.ous-hf.no/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="action-button action-procedure"
+          >
             <span aria-hidden="true">▤</span>
             <span>Prosedyre primæroppdrag</span>
           </a>
 
-          <button type="button"
-                  id="emailReportButton"
-                  class="action-button action-email">
+          <button
+            type="button"
+            id="emailReportButton"
+            class="action-button action-email"
+          >
             <span aria-hidden="true">✉</span>
             <span>Tilbakemelding på skjema</span>
           </button>
+
         </div>
       </div>
+
     </aside>
 
   </main>

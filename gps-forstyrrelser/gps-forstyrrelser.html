@@ -13,6 +13,7 @@
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
   <script src="gps-forstyrrelser.js" defer></script>
+  <script src="gps-posisjon.js" defer></script>
 </head>
 
 <body>
@@ -36,7 +37,7 @@
 
   <main class="app-shell">
 
-    <!-- Felles venstremeny. Styres av meny.js. -->
+    <!-- FELLES VENSTREMENY -->
     <div id="shared-menu"></div>
 
     <!-- MIDTPANEL -->
@@ -47,6 +48,7 @@
         role="region"
         aria-label="Skjema for GPS-forstyrrelser"
       >
+
         <form id="gpsForm" autocomplete="off">
 
           <!-- 1. TIDSPUNKT -->
@@ -54,6 +56,7 @@
             <h2>1. Tidspunkt for forstyrrelsen</h2>
 
             <div class="form-grid form-grid-2">
+
               <div class="form-field">
                 <label for="eventDate">Dato</label>
                 <input
@@ -75,6 +78,7 @@
                   aria-describedby="timeError"
                 >
               </div>
+
             </div>
 
             <p
@@ -92,8 +96,16 @@
 
             <div class="form-field">
               <label for="position">
-                Posisjon (UTM eller grader og minutter)
+                Posisjon (UTM eller grader og desimalminutter)
               </label>
+
+              <!--
+                gps-posisjon.js oppretter to synlige felt:
+                UTM og grader/desimalminutter.
+
+                Dette eksisterende feltet beholdes
+                for rapportgeneratoren og Outlook.
+              -->
               <input
                 type="text"
                 id="position"
@@ -103,7 +115,9 @@
             </div>
 
             <div class="form-field">
-              <label for="placeName">Stedsnavn / område</label>
+              <label for="placeName">
+                Stedsnavn / område
+              </label>
               <input
                 type="text"
                 id="placeName"
@@ -128,6 +142,7 @@
             </div>
 
             <div class="gps-chip-row">
+
               <div class="form-field">
                 <span class="field-label">Enhet</span>
 
@@ -177,6 +192,7 @@
                   >AGL</button>
                 </div>
               </div>
+
             </div>
           </section>
 
@@ -185,6 +201,7 @@
             <h2>4. Luftfartøy</h2>
 
             <div class="form-grid aircraft-grid">
+
               <div class="form-field">
                 <label for="resourceId">Ressurs-ID</label>
                 <input
@@ -220,6 +237,7 @@
                   aria-label="Automatisk identifisert luftfartøytype"
                 >
               </div>
+
             </div>
           </section>
 
@@ -263,6 +281,7 @@
 
             <div class="notification-list">
 
+              <!-- 1. FLIGHT FOLLOWING -->
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">1</span>
@@ -281,6 +300,7 @@
                 >
               </div>
 
+              <!-- 2. POLITI -->
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">2</span>
@@ -299,6 +319,7 @@
                 >
               </div>
 
+              <!-- 3. NKOM -->
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">3</span>
@@ -315,6 +336,7 @@
                 >
               </div>
 
+              <!-- 4. OPL -->
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">4</span>
@@ -331,10 +353,13 @@
                 >
               </div>
 
+              <!-- 5. VIDERE OPPFØLGING -->
               <div class="notification-row notification-row-large">
                 <div class="notification-question">
                   <span class="notification-number">5</span>
-                  <span>Beskrivelse av videre oppfølging</span>
+                  <span>
+                    Beskrivelse av videre oppfølging
+                  </span>
                 </div>
 
                 <textarea
@@ -345,6 +370,7 @@
                 ></textarea>
               </div>
 
+              <!-- 6. AVSENDER -->
               <div class="notification-row">
                 <div class="notification-question">
                   <span class="notification-number">6</span>
@@ -358,6 +384,7 @@
                   aria-label="Fullt navn på den som har fylt ut skjemaet"
                 >
               </div>
+
             </div>
           </section>
 
@@ -385,6 +412,7 @@
         </form>
       </div>
 
+      <!-- RULLEINDIKATOR -->
       <button
         type="button"
         id="formScrollHint"
@@ -413,6 +441,8 @@
         ></textarea>
 
         <div class="action-buttons">
+
+          <!-- KOPIER -->
           <button
             type="button"
             id="copyButton"
@@ -426,6 +456,7 @@
             >Kopier tekst</span>
           </button>
 
+          <!-- SKRIV UT -->
           <button
             type="button"
             id="printButton"
@@ -435,6 +466,7 @@
             <span>Skriv ut</span>
           </button>
 
+          <!-- TØM -->
           <button
             type="button"
             id="resetButton"
@@ -444,8 +476,12 @@
             <span>Tøm skjema</span>
           </button>
 
-          <div class="action-space" aria-hidden="true"></div>
+          <div
+            class="action-space"
+            aria-hidden="true"
+          ></div>
 
+          <!-- PROSEDYRE -->
           <a
             href="https://ehandbok.ous-hf.no/document/153854"
             target="_blank"
@@ -456,6 +492,7 @@
             <span>Prosedyre GPS-forstyrrelser</span>
           </a>
 
+          <!-- TILBAKEMELDING -->
           <button
             type="button"
             id="feedbackButton"
@@ -464,6 +501,7 @@
             <span aria-hidden="true">✉️</span>
             <span>Tilbakemelding på skjema</span>
           </button>
+
         </div>
       </div>
     </aside>
