@@ -1,7 +1,6 @@
-
 /* =====================================================
    LUFTAMBULANSEKOORDINATOR – SEKUNDÆROPPDRAG
-   KOMPAKT HYBRIDDESIGN
+   KOMPAKT UTFORMING
    ===================================================== */
 
 :root {
@@ -30,7 +29,9 @@ html[data-theme="dark"] {
   --secondary-selected-border: #70bce8;
 }
 
-/* GRUNNLEGGENDE */
+/* =====================================================
+   GRUNNLEGGENDE
+   ===================================================== */
 
 .secondary-page,
 .secondary-page *,
@@ -44,8 +45,12 @@ html body.secondary-page {
   min-height: 100vh;
   background: var(--secondary-bg);
   color: var(--secondary-text);
-  font-family: -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Arial, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -66,7 +71,9 @@ html body.secondary-page {
   outline-offset: 2px;
 }
 
-/* HOVEDLAYOUT */
+/* =====================================================
+   HOVEDLAYOUT
+   ===================================================== */
 
 html body.secondary-page .app-shell {
   display: grid;
@@ -105,7 +112,7 @@ html body.secondary-page .app-shell {
 .secondary-page .main-content {
   grid-column: 2;
   min-width: 0;
-  padding-bottom: 35px;
+  padding-bottom: 24px;
 }
 
 .secondary-page .report-panel {
@@ -116,71 +123,98 @@ html body.secondary-page .app-shell {
   height: calc(100vh - 24px);
 }
 
-/* SKJEMASEKSJONER */
+/* =====================================================
+   SKJEMASEKSJONER
+   ===================================================== */
 
 .secondary-page .form-section {
-  margin-bottom: 13px;
-  padding: 19px 21px;
+  margin-bottom: 8px;
+  padding: 12px 15px;
   background: var(--secondary-surface);
   border: 1px solid var(--secondary-border);
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .03);
+  border-radius: 9px;
+  box-shadow: none;
 }
 
 .secondary-page .section-heading {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 17px;
-  padding-bottom: 13px;
-  border-bottom: 1px solid var(--secondary-border);
+  align-items: baseline;
+  gap: 7px;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
-.secondary-page .section-number {
-  display: flex;
-  flex: 0 0 33px;
-  align-items: center;
-  justify-content: center;
-  height: 33px;
-  border-radius: 9px;
-  background: var(--secondary-selected);
-  color: var(--secondary-primary);
-  border: 1px solid var(--secondary-selected-border);
-  font-size: 13px;
-  font-weight: 800;
+.secondary-page .section-heading > div {
+  min-width: 0;
+}
+
+/* Vanlige seksjonsnumre uten blå bokser */
+
+html body.secondary-page .section-number {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  color: var(--secondary-text) !important;
+  box-shadow: none !important;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .secondary-page .section-heading h3 {
-  margin: 0 0 4px;
+  margin: 0;
+  color: var(--secondary-text);
   font-size: 17px;
+  font-weight: 700;
   line-height: 1.3;
 }
 
 .secondary-page .section-heading p {
-  margin: 0;
+  margin: 2px 0 0;
   color: var(--secondary-muted);
   font-size: 12px;
+  line-height: 1.4;
 }
 
-/* HASTEGRAD – MINDRE KORT */
+/* Unngå ekstra luft nederst i hver seksjon */
+
+.secondary-page .form-section > .field:last-child,
+.secondary-page .form-section > .field-grid:last-child,
+.secondary-page .form-section > .chip-grid:last-child,
+.secondary-page .form-section > .patient-grid:last-child {
+  margin-bottom: 0;
+}
+
+/* =====================================================
+   HASTEGRAD
+   ===================================================== */
 
 .secondary-page .urgency-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
+  gap: 6px;
 }
 
 .secondary-page .urgency {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-height: 78px;
-  padding: 10px 13px;
+  gap: 3px;
+  min-height: 62px;
+  padding: 8px 28px 8px 10px;
   background: var(--secondary-soft);
   border: 1px solid var(--secondary-border);
   border-left: 4px solid var(--urgency-color);
-  border-radius: 10px;
+  border-radius: 7px;
   cursor: pointer;
   transition:
     background .15s,
@@ -248,8 +282,8 @@ html body.secondary-page .app-shell {
 .secondary-page .urgency:has(input:checked)::after {
   content: "✓";
   position: absolute;
-  top: 8px;
-  right: 10px;
+  top: 7px;
+  right: 8px;
   font-size: 15px;
   font-weight: 900;
 }
@@ -259,12 +293,14 @@ html body.secondary-page .app-shell {
   outline-offset: 3px;
 }
 
-/* VANLIGE FELTER */
+/* =====================================================
+   VANLIGE FELTER
+   ===================================================== */
 
 .secondary-page .field-grid {
   display: grid;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .secondary-page .field-grid.two {
@@ -282,9 +318,9 @@ html body.secondary-page .app-shell {
 .secondary-page .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
   min-width: 0;
-  margin-bottom: 13px;
+  margin-bottom: 8px;
 }
 
 .secondary-page .field-grid .field {
@@ -294,10 +330,14 @@ html body.secondary-page .app-shell {
 .secondary-page .field span,
 .secondary-page .field-label {
   display: block;
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 13px;
   font-weight: 700;
   color: var(--secondary-text);
+}
+
+.secondary-page .field-label {
+  margin-bottom: 5px;
 }
 
 .secondary-page .field input,
@@ -307,11 +347,11 @@ html body.secondary-page .app-shell {
   display: block;
   width: 100%;
   min-width: 0;
-  min-height: 42px;
+  min-height: 36px;
   margin: 0;
-  padding: 10px 12px;
+  padding: 7px 10px;
   border: 1px solid var(--secondary-border);
-  border-radius: 9px;
+  border-radius: 6px;
   background: var(--secondary-field);
   color: var(--secondary-text);
   font-size: 14px;
@@ -319,8 +359,16 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .field textarea {
-  min-height: 76px;
+  height: 58px;
+  min-height: 58px;
   resize: vertical;
+}
+
+/* Litt mer skriveplass til aktuell problemstilling */
+
+.secondary-page .field textarea[name="aktuelt"] {
+  height: 76px;
+  min-height: 76px;
 }
 
 .secondary-page .field input:focus,
@@ -336,18 +384,20 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .subheading {
-  margin: 18px 0 11px;
+  margin: 11px 0 6px;
   font-size: 14px;
   font-weight: 700;
 }
 
-/* PASIENT – ALDER, KJØNN OG VEKT */
+/* =====================================================
+   PASIENT – ALDER, KJØNN OG VEKT
+   ===================================================== */
 
 .secondary-page .patient-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .secondary-page .patient-field {
@@ -355,47 +405,51 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .patient-field > .field {
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 }
 
 .secondary-page .patient-field > .field-label {
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 }
 
 .secondary-page .patient-field > .chip-grid {
   margin-bottom: 0;
 }
 
-/* ENHETSKNAPPER */
+/* =====================================================
+   ENHETSKNAPPER
+   ===================================================== */
 
 .secondary-page .unit-switch {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .secondary-page .unit-switch .choice span {
-  min-height: 32px;
-  min-width: 49px;
-  padding: 5px 10px;
+  min-height: 30px;
+  min-width: 45px;
+  padding: 4px 9px;
   font-size: 12px;
 }
 
 .secondary-page .patient-field .chip-grid {
-  gap: 7px;
+  gap: 5px;
 }
 
 .secondary-page .patient-field .chip-grid .choice span {
-  min-height: 42px;
+  min-height: 36px;
 }
 
-/* VALGKNAPPER */
+/* =====================================================
+   VALGKNAPPER
+   ===================================================== */
 
 .secondary-page .chip-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
-  margin-bottom: 15px;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .secondary-page .choice {
@@ -416,16 +470,18 @@ html body.secondary-page .app-shell {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  min-height: 39px;
-  padding: 8px 13px;
+  min-height: 34px;
+  padding: 6px 10px;
   border: 1px solid var(--secondary-border);
-  border-radius: 9px;
+  border-radius: 6px;
   background: var(--secondary-soft);
   color: var(--secondary-text);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
-  transition: background .15s, border-color .15s;
+  transition:
+    background .15s,
+    border-color .15s;
 }
 
 .secondary-page .choice:hover span {
@@ -441,7 +497,7 @@ html body.secondary-page .app-shell {
 
 .secondary-page .choice input:checked + span::before {
   content: "✓";
-  margin-right: 6px;
+  margin-right: 5px;
   font-weight: 900;
 }
 
@@ -450,10 +506,12 @@ html body.secondary-page .app-shell {
   outline-offset: 2px;
 }
 
-/* MEDIKAMENTER */
+/* =====================================================
+   MEDIKAMENTER
+   ===================================================== */
 
 .secondary-page .medication-group {
-  padding: 14px 0;
+  padding: 9px 0;
   border-bottom: 1px solid var(--secondary-border);
 }
 
@@ -467,38 +525,40 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .medication-group h4 {
-  margin: 0 0 12px;
+  margin: 0 0 6px;
   font-size: 14px;
   font-weight: 800;
 }
 
 .secondary-page .medication-group .chip-grid {
-  margin-bottom: 13px;
+  margin-bottom: 7px;
 }
 
-/* AUTOMATISKE FRITEKSTFELTER */
+/* =====================================================
+   AUTOMATISKE FRITEKSTFELTER
+   ===================================================== */
 
 .secondary-page .auto-editor {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .secondary-page .auto-editor .field-label {
-  font-size: 12px;
+  margin-bottom: 5px;
   color: var(--secondary-muted);
-  margin-bottom: 8px;
+  font-size: 12px;
 }
 
 .secondary-page .auto-rows {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .secondary-page .auto-row {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 8px;
+  gap: 6px;
 }
 
 .secondary-page .auto-row input {
@@ -510,21 +570,31 @@ html body.secondary-page .app-shell {
   background: var(--secondary-field);
 }
 
-/* BETINGEDE FELTER */
+/* =====================================================
+   BETINGEDE FELTER
+   ===================================================== */
 
 .secondary-page .conditional {
-  padding: 14px;
-  margin: 10px 0 15px;
+  padding: 9px;
+  margin: 7px 0 9px;
   background: var(--secondary-soft);
   border: 1px solid var(--secondary-border);
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
 .secondary-page .conditional.field {
-  margin: 8px 0 15px;
+  margin: 6px 0 9px;
 }
 
-/* RAPPORTPANEL */
+.secondary-page .conditional > .field:last-child,
+.secondary-page .conditional > .field-grid:last-child,
+.secondary-page .conditional > .chip-grid:last-child {
+  margin-bottom: 0;
+}
+
+/* =====================================================
+   RAPPORTPANEL
+   ===================================================== */
 
 .secondary-page .report-panel-inner {
   display: flex;
@@ -556,8 +626,12 @@ html body.secondary-page #rapport {
   resize: none;
   background: var(--secondary-field);
   color: var(--secondary-text);
-  font: 12px/1.6 ui-monospace, SFMono-Regular,
-    Menlo, Consolas, monospace;
+  font:
+    12px/1.6 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
   white-space: pre-wrap;
   overflow-y: auto;
 }
@@ -580,7 +654,7 @@ html body.secondary-page #rapport {
   padding: 10px;
   border: 0;
   border-radius: 9px;
-  color: #fff;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
@@ -601,6 +675,21 @@ html body.secondary-page #rapport {
 
 .secondary-page .print-btn:hover {
   background: #274b64;
+}
+
+.secondary-page .procedure-btn {
+  background: var(--secondary-soft);
+  color: var(--secondary-text);
+  border: 1px solid var(--secondary-border);
+}
+
+.secondary-page .procedure-btn:hover {
+  border-color: var(--secondary-primary);
+}
+
+.secondary-page .procedure-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
 }
 
 .secondary-page .reset-btn {
@@ -631,21 +720,19 @@ html body.secondary-page #rapport {
 }
 
 .secondary-page .page-footer {
-  margin: 26px 0;
+  margin: 18px 0;
   color: var(--secondary-muted);
   font-size: 12px;
 }
 
-/* RESPONSIVT */
+/* =====================================================
+   RESPONSIVT
+   ===================================================== */
 
 @media (max-width: 1350px) {
   html body.secondary-page .app-shell {
     grid-template-columns: 210px minmax(0, 1fr) 300px;
     gap: 12px;
-  }
-
-  .secondary-page .form-section {
-    padding: 17px;
   }
 
   .secondary-page .field-grid.vitals {
@@ -702,7 +789,7 @@ html body.secondary-page #rapport {
 
 @media (max-width: 520px) {
   .secondary-page .form-section {
-    padding: 14px;
+    padding: 11px;
   }
 
   .secondary-page .urgency-grid,
@@ -712,11 +799,13 @@ html body.secondary-page #rapport {
   }
 
   .secondary-page .urgency {
-    min-height: 72px;
+    min-height: 58px;
   }
 }
 
-/* UTSKRIFT */
+/* =====================================================
+   UTSKRIFT
+   ===================================================== */
 
 @media print {
   .secondary-page .app-header,
@@ -755,6 +844,8 @@ html body.secondary-page #rapport {
 
   #printReport {
     display: block !important;
+    color: #000000;
+    background: #ffffff;
     font: 11pt/1.5 Arial, sans-serif;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
