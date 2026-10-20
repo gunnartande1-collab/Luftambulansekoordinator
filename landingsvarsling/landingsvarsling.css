@@ -1,8 +1,13 @@
 
 /* ==========================================
-   LANDINGSVARSEL RH
-   Luftambulansekoordinator
+   LANDINGSVARSEL REDNINGSHELIKOPTER
+   LA OSLO
    ========================================== */
+
+
+/* ======================================
+   GRUNNINNSTILLINGER
+   ====================================== */
 
 * {
   box-sizing: border-box;
@@ -14,7 +19,7 @@ html {
 
 
 /* ======================================
-   GRUNNDESIGN
+   DAGMODUS
    ====================================== */
 
 body.landingsvarsel-side {
@@ -34,23 +39,26 @@ body.landingsvarsel-side {
   margin: 0;
   min-height: 100vh;
 
-  padding: 18px;
+  padding: 0;
 
   background: var(--lv-bg);
   color: var(--lv-text);
 
   font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     Arial,
-    Helvetica,
     sans-serif;
 }
 
 
 /* ======================================
-   NATTMODUS
+   KVELDSMODUS
    ====================================== */
 
-body.landingsvarsel-side.dark-mode {
+html[data-theme="dark"]
+body.landingsvarsel-side {
 
   --lv-bg: #111b2b;
   --lv-card: #1d2a3c;
@@ -63,6 +71,84 @@ body.landingsvarsel-side.dark-mode {
 
   --lv-light: #263a52;
   --lv-danger: #f87171;
+
+}
+
+
+/* ======================================
+   FELLES TOPPFELT
+   ====================================== */
+
+/*
+   Toppfeltet bygges av felles.js.
+
+   Vi bruker de samme klassene som
+   resten av prosjektet.
+*/
+
+html body.landingsvarsel-side
+.app-header.shared-app-header {
+
+  width: 100%;
+  max-width: none;
+
+  min-height: 84px;
+
+  margin: 0;
+  padding: 12px 20px;
+
+  border-radius: 0;
+
+  background: var(--lv-card);
+  border-bottom: 1px solid var(--lv-border);
+
+}
+
+
+/* ======================================
+   PROSJEKTIDENTITET
+   ====================================== */
+
+html body.landingsvarsel-side
+.shared-app-header .header-title {
+
+  min-width: 0;
+
+}
+
+html body.landingsvarsel-side
+.shared-app-header .app-brand-mark {
+
+  color: var(--lv-text);
+
+}
+
+html body.landingsvarsel-side
+.shared-app-header .header-title h1 {
+
+  color: var(--lv-text);
+
+}
+
+html body.landingsvarsel-side
+.shared-app-header .app-header-subtitle {
+
+  color: var(--lv-muted);
+
+}
+
+
+/* ======================================
+   SKJEMATITTEL
+   ====================================== */
+
+html body.landingsvarsel-side
+.shared-app-header .app-active-page-title {
+
+  color: var(--lv-text);
+
+  font-size: 22px;
+  line-height: 1.25;
 }
 
 
@@ -71,70 +157,14 @@ body.landingsvarsel-side.dark-mode {
    ====================================== */
 
 .lv-app {
+
+  width: 100%;
   max-width: 470px;
+
   margin: 0 auto;
-}
 
+  padding: 28px 0 24px;
 
-/* ======================================
-   TOPPFELT
-   ====================================== */
-
-.lv-header {
-
-  display: flex;
-
-  justify-content: space-between;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 18px;
-}
-
-.lv-overline {
-
-  margin: 0 0 6px;
-
-  color: var(--lv-muted);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  letter-spacing: 1.3px;
-}
-
-.lv-header h1 {
-
-  margin: 0;
-
-  font-size: 24px;
-  line-height: 1.2;
-
-  font-weight: 700;
-}
-
-
-/* ======================================
-   TEMAKNAPP
-   ====================================== */
-
-.lv-theme-button {
-
-  flex-shrink: 0;
-
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid var(--lv-border);
-  border-radius: 10px;
-
-  background: var(--lv-card);
-  color: var(--lv-text);
-
-  font-size: 19px;
-
-  cursor: pointer;
 }
 
 
@@ -156,6 +186,7 @@ body.landingsvarsel-side.dark-mode {
   transition:
     background 0.2s,
     border-color 0.2s;
+
 }
 
 
@@ -173,6 +204,7 @@ body.landingsvarsel-side.dark-mode {
   font-weight: 700;
 
   letter-spacing: 0.7px;
+
 }
 
 
@@ -196,10 +228,10 @@ body.landingsvarsel-side.dark-mode {
 
   letter-spacing: -3px;
 
-  font-variant-numeric:
-    tabular-nums;
+  font-variant-numeric: tabular-nums;
 
   color: var(--lv-text);
+
 }
 
 
@@ -218,6 +250,7 @@ body.landingsvarsel-side.dark-mode {
   background: var(--lv-border);
 
   border-radius: 20px;
+
 }
 
 .lv-progress-fill {
@@ -229,8 +262,8 @@ body.landingsvarsel-side.dark-mode {
 
   border-radius: inherit;
 
-  transition:
-    width 0.15s linear;
+  transition: width 0.15s linear;
+
 }
 
 
@@ -251,6 +284,7 @@ body.landingsvarsel-side.dark-mode {
   color: var(--lv-muted);
 
   font-size: 10px;
+
 }
 
 
@@ -264,33 +298,37 @@ body.landingsvarsel-side.dark-mode {
 
   background: #fff1f1;
 
-  animation:
-    lv-flash 1s infinite;
+  animation: lv-flash 1s infinite;
+
 }
 
-body.dark-mode
+html[data-theme="dark"]
 .lv-timer-card.alarm-active {
 
   background: #49212a;
+
 }
 
 .lv-timer-card.alarm-active
 .lv-timer {
 
   color: #b91c1c;
+
 }
 
-body.dark-mode
+html[data-theme="dark"]
 .lv-timer-card.alarm-active
 .lv-timer {
 
   color: #fecaca;
+
 }
 
 .lv-timer-card.alarm-active
 .lv-progress-fill {
 
   background: #dc2626;
+
 }
 
 
@@ -312,6 +350,7 @@ body.dark-mode
 
   font-size: 14px;
   font-weight: 700;
+
 }
 
 .lv-alarm-icon {
@@ -319,6 +358,7 @@ body.dark-mode
   display: inline-block;
 
   margin-right: 6px;
+
 }
 
 
@@ -343,6 +383,7 @@ body.dark-mode
   font-weight: 700;
 
   cursor: pointer;
+
 }
 
 
@@ -354,6 +395,7 @@ body.dark-mode
 .lv-timer {
 
   color: var(--lv-danger);
+
 }
 
 
@@ -368,12 +410,14 @@ body.dark-mode
 
     box-shadow:
       0 0 0 rgba(220, 38, 38, 0);
+
   }
 
   50% {
 
     box-shadow:
       0 0 18px rgba(220, 38, 38, 0.35);
+
   }
 
 }
@@ -388,33 +432,39 @@ body.dark-mode
   display: grid;
 
   grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+    repeat(2, minmax(0, 1fr));
 
-  gap: 9px;
+  gap: 10px;
 
   margin-top: 15px;
+
 }
 
 .lv-button {
 
-  min-height: 46px;
+  min-height: 48px;
 
   padding: 10px 8px;
 
   border-radius: 10px;
 
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
+
+  font-family: inherit;
 
   cursor: pointer;
 
   transition:
     background 0.15s,
     opacity 0.15s;
+
 }
 
 
-/* STARTKNAPP */
+/* ======================================
+   STARTKNAPP
+   ====================================== */
 
 .lv-button-primary {
 
@@ -422,16 +472,20 @@ body.dark-mode
 
   background: var(--lv-primary);
 
-  color: white;
+  color: #ffffff;
+
 }
 
 .lv-button-primary:hover:not(:disabled) {
 
   background: var(--lv-primary-hover);
+
 }
 
 
-/* STOPP OG NULLSTILL */
+/* ======================================
+   NULLSTILL
+   ====================================== */
 
 .lv-button-secondary {
 
@@ -440,16 +494,26 @@ body.dark-mode
   background: var(--lv-card);
 
   color: var(--lv-text);
+
+}
+
+.lv-button-secondary:hover:not(:disabled) {
+
+  background: var(--lv-light);
+
 }
 
 
-/* DEAKTIVERTE KNAPPER */
+/* ======================================
+   DEAKTIVERTE KNAPPER
+   ====================================== */
 
 .lv-button:disabled {
 
   opacity: 0.45;
 
   cursor: not-allowed;
+
 }
 
 
@@ -465,6 +529,7 @@ body.dark-mode
   align-items: center;
 
   margin-top: 12px;
+
 }
 
 .lv-text-button {
@@ -480,8 +545,12 @@ body.dark-mode
   font-size: 12px;
   font-weight: 700;
 
+  font-family: inherit;
+
   cursor: pointer;
+
   white-space: nowrap;
+
 }
 
 
@@ -490,12 +559,12 @@ body.dark-mode
    ====================================== */
 
 .lv-button:focus-visible,
-.lv-theme-button:focus-visible,
 .lv-text-button:focus-visible,
 .lv-ack-button:focus-visible {
 
   outline: 3px solid var(--lv-primary);
   outline-offset: 3px;
+
 }
 
 
@@ -504,7 +573,82 @@ body.dark-mode
    ====================================== */
 
 [hidden] {
+
   display: none !important;
+
+}
+
+
+/* ======================================
+   NETTBRETT OG MINDRE VINDUER
+   ====================================== */
+
+@media (max-width: 1000px) {
+
+  html body.landingsvarsel-side
+  .app-header.shared-app-header {
+
+    grid-template-columns:
+      minmax(0, 1fr) auto;
+
+    grid-template-rows:
+      auto auto;
+
+    gap: 10px 12px;
+
+    padding: 12px 16px;
+
+  }
+
+  html body.landingsvarsel-side
+  .shared-app-header .header-title {
+
+    grid-column: 1;
+    grid-row: 1;
+
+    padding-left: 0;
+
+  }
+
+  html body.landingsvarsel-side
+  .shared-app-header .theme-toggle {
+
+    grid-column: 2;
+    grid-row: 1;
+
+    justify-self: end;
+
+    margin-right: 0;
+
+  }
+
+  html body.landingsvarsel-side
+  .shared-app-header .app-active-page {
+
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    justify-content: flex-start;
+
+    width: 100%;
+
+    padding: 10px 0 0;
+
+    border-top:
+      1px solid var(--lv-border);
+
+    text-align: left;
+
+  }
+
+  html body.landingsvarsel-side
+  .shared-app-header .app-active-page-title {
+
+    font-size: 21px;
+    text-align: left;
+
+  }
+
 }
 
 
@@ -512,23 +656,55 @@ body.dark-mode
    SMÅ SKJERMER
    ====================================== */
 
-@media (max-width: 380px) {
+@media (max-width: 560px) {
 
-  body.landingsvarsel-side {
-    padding: 12px;
+  .lv-app {
+
+    padding: 20px 14px 24px;
+
   }
 
+  html body.landingsvarsel-side
+  .app-header.shared-app-header {
+
+    padding: 12px;
+
+  }
+
+  html body.landingsvarsel-side
+  .shared-app-header .app-active-page-title {
+
+    font-size: 19px;
+
+  }
+
+}
+
+
+/* ======================================
+   EKSTRA SMÅ SKJERMER
+   ====================================== */
+
+@media (max-width: 380px) {
+
   .lv-timer-card {
+
     padding: 20px 12px;
+
   }
 
   .lv-timer {
+
     font-size: 64px;
+
   }
 
   .lv-markers {
+
     font-size: 9px;
+
   }
+
 }
 
 
@@ -539,11 +715,16 @@ body.dark-mode
 @media (prefers-reduced-motion: reduce) {
 
   .lv-timer-card.alarm-active {
+
     animation: none;
+
   }
 
   .lv-timer-card,
   .lv-progress-fill {
+
     transition: none;
+
   }
+
 }

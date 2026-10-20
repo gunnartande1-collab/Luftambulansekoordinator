@@ -1,0 +1,455 @@
+
+/* ==========================================
+   FLIGHT FOLLOWING – UTSKRIFT
+   Luftambulansekoordinator
+
+   A4 stående
+   3 ressursblokker per side
+   6 registreringslinjer per blokk
+
+   ========================================== */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+/* Skjult ved vanlig visning */
+
+html body.ff-page #printArea {
+  display: none;
+}
+
+/* ==========================================
+   UTSKRIFT
+   ========================================== */
+
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html,
+  html body.ff-page {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #fff !important;
+    color: #111 !important;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+  }
+
+  html body.ff-page .app-header,
+  html body.ff-page .ff-layout,
+  html body.ff-page .ff-dialog {
+    display: none !important;
+  }
+
+  html body.ff-page #printArea {
+    display: block !important;
+
+    position: static !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: white !important;
+    color: #111 !important;
+  }
+
+  /* ========================================
+     A4-SIDE
+     ======================================== */
+
+  html body.ff-page .ff-paper-page {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    /* God sikkerhetsmargin innenfor A4 */
+    height: 260mm !important;
+    max-height: 260mm !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box;
+
+    overflow: visible;
+
+    break-after: page;
+    page-break-after: always;
+  }
+
+  html body.ff-page .ff-paper-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  /* ========================================
+     DOKUMENTHODE
+     ======================================== */
+
+  .ff-paper-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+
+    gap: 6mm;
+
+    flex: 0 0 22mm;
+    height: 22mm;
+
+    margin: 0 0 3mm 0;
+    padding: 0 0 2mm 0;
+
+    border-bottom: 2px solid #222;
+
+    box-sizing: border-box;
+  }
+
+  .ff-paper-brand {
+    font-size: 9px;
+    font-weight: 700;
+
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+
+  .ff-paper-title {
+    margin: 2mm 0 1mm;
+
+    font-size: 19px;
+    line-height: 1.15;
+
+    font-weight: 800;
+  }
+
+  .ff-paper-subtitle {
+    font-size: 9px;
+    color: #333;
+  }
+
+  /* Dokumentinformasjon */
+
+  .ff-paper-meta {
+    min-width: 40mm;
+
+    border: 1px solid #444;
+
+    font-size: 8px;
+  }
+
+  .ff-paper-meta-row {
+    display: grid;
+    grid-template-columns: 15mm 1fr;
+
+    border-bottom: 1px solid #888;
+  }
+
+  .ff-paper-meta-row:last-child {
+    border-bottom: 0;
+  }
+
+  .ff-paper-meta-label {
+    padding: 1.5mm;
+
+    background: #ececec !important;
+
+    font-weight: 700;
+
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .ff-paper-meta-value {
+    padding: 1.5mm;
+
+    text-align: center;
+  }
+
+  /* ========================================
+     RESSURSBLOKKER
+
+     Fast høyde forhindrer at tabellene
+     presser bunnteksten over på ny side.
+     ======================================== */
+
+  .ff-paper-blocks {
+    display: flex;
+    flex-direction: column;
+
+    flex: 0 0 auto;
+
+    gap: 3mm;
+
+    width: 100%;
+    height: auto;
+
+    margin: 0;
+    padding: 0;
+  }
+
+  .ff-paper-block {
+    display: flex;
+    flex-direction: column;
+
+    flex: 0 0 72mm;
+
+    width: 100%;
+    height: 72mm;
+    min-height: 72mm;
+    max-height: 72mm;
+
+    margin: 0;
+    padding: 0;
+
+    border: 1.2px solid #333;
+
+    box-sizing: border-box;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ========================================
+     RESSURS OG DESTINASJON
+     ======================================== */
+
+  .ff-paper-resource-row {
+    display: grid;
+    grid-template-columns: 43% 57%;
+
+    flex: 0 0 9mm;
+
+    height: 9mm;
+
+    background: #e8edf1 !important;
+
+    border-bottom: 1.2px solid #333;
+
+    box-sizing: border-box;
+
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .ff-paper-resource-field {
+    display: flex;
+    align-items: center;
+
+    gap: 2mm;
+    padding: 1.5mm;
+
+    min-width: 0;
+
+    font-size: 9px;
+  }
+
+  .ff-paper-resource-field:first-child {
+    border-right: 1px solid #333;
+  }
+
+  .ff-paper-resource-field strong {
+    white-space: nowrap;
+  }
+
+  .ff-paper-resource-value {
+    flex: 1;
+
+    min-width: 0;
+
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* ========================================
+     TABELL
+
+     Ingen height: 100% her.
+     Tabellen får tilgjengelig høyde.
+     ======================================== */
+
+  .ff-paper-table {
+    width: 100%;
+
+    height: 62mm;
+    max-height: 62mm;
+
+    margin: 0;
+    padding: 0;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    table-layout: fixed;
+
+    font-size: 8px;
+  }
+
+  .ff-paper-table thead {
+    display: table-header-group;
+  }
+
+  /* Kolonneoverskrifter */
+
+  .ff-paper-table th {
+    height: 7mm;
+
+    padding: 1mm;
+
+    background: #e8edf1 !important;
+
+    border-right: 1px solid #333;
+    border-bottom: 1.2px solid #333;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    text-align: left;
+    vertical-align: middle;
+
+    box-sizing: border-box;
+
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .ff-paper-table th:last-child {
+    border-right: 0;
+  }
+
+  /* Registreringsrader */
+
+  .ff-paper-table tbody tr {
+    height: 9mm;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .ff-paper-table td {
+    padding: 1mm;
+
+    border-right: 1px solid #444;
+    border-bottom: 1px solid #444;
+
+    vertical-align: top;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+
+    line-height: 1.15;
+
+    font-size: 8px;
+
+    box-sizing: border-box;
+  }
+
+  .ff-paper-table td:last-child {
+    border-right: 0;
+  }
+
+  .ff-paper-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  /* ========================================
+     CELLEINNHOLD
+     ======================================== */
+
+  .ff-paper-cell-main {
+    font-weight: 600;
+  }
+
+  .ff-paper-cell-note {
+    display: block;
+
+    margin-top: .5mm;
+
+    font-size: 7px;
+    font-weight: 400;
+
+    color: #444;
+  }
+
+  .ff-paper-check {
+    display: inline-block;
+
+    width: 3mm;
+    height: 3mm;
+
+    border: 1px solid #333;
+
+    vertical-align: middle;
+  }
+
+  /* ========================================
+     BUNNTEKST
+
+     Plasseres etter tre ressursblokker.
+     Skal aldri havne på egen side.
+     ======================================== */
+
+  .ff-paper-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 3mm;
+
+    flex: 0 0 7mm;
+
+    width: 100%;
+    height: 7mm;
+    min-height: 7mm;
+
+    margin: 3mm 0 0 0;
+    padding: 1.5mm 0 0 0;
+
+    border-top: 1px solid #777;
+
+    font-size: 7px;
+
+    color: #444;
+
+    box-sizing: border-box;
+
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .ff-paper-footer strong {
+    color: #222;
+  }
+
+  .ff-paper-footer-page {
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  /* ========================================
+     SIDEBRYTING
+     ======================================== */
+
+  .ff-paper-header,
+  .ff-paper-block,
+  .ff-paper-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+}

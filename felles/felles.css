@@ -1182,3 +1182,59 @@ html body.secondary-page
   opacity: 0.6 !important;
   cursor: not-allowed !important;
 }
+
+
+/* ==========================================
+   LUFTAMBULANSEKOORDINATOR
+   BLÅGRÅ VENSTREMENY – DAGMODUS
+   ========================================== */
+
+/* Venstremeny */
+body:not(.dark-mode) .app-sidebar,
+body:not(.dark-mode) .sidebar,
+body:not(.dark-mode) .side-menu {
+  background: #DCE7F1;
+  border: 1px solid #D1DFEA;
+  border-radius: 16px;
+}
+
+/* Overskrifter i venstremeny */
+body:not(.dark-mode) .sidebar-section-title,
+body:not(.dark-mode) .menu-section-title {
+  color: #344E69;
+  font-weight: 800;
+}
+
+/* Vanlige menylenker */
+body:not(.dark-mode) .app-sidebar a,
+body:not(.dark-mode) .sidebar a,
+body:not(.dark-mode) .side-menu a {
+  color: #20364D;
+}
+
+/* Aktivt skjema */
+body:not(.dark-mode) .app-sidebar a.active,
+body:not(.dark-mode) .sidebar a.active,
+body:not(.dark-mode) .side-menu a.active,
+body:not(.dark-mode) .app-sidebar a[aria-current="page"],
+body:not(.dark-mode) .sidebar a[aria-current="page"] {
+  background: #C3DAF0;
+  color: #075A9E;
+  font-weight: 700;
+  border-left: 4px solid #0874C4;
+  border-radius: 10px;
+}
+
+/* Når musepekeren holdes over menyvalg */
+body:not(.dark-mode) .app-sidebar a:hover,
+body:not(.dark-mode) .sidebar a:hover,
+body:not(.dark-mode) .side-menu a:hover {
+  background: #CADDEA;
+}
+
+/* Skillelinjer */
+body:not(.dark-mode) .app-sidebar hr,
+body:not(.dark-mode) .sidebar hr,
+body:not(.dark-mode) .side-menu hr {
+  border-color: #C2D2E0;
+}

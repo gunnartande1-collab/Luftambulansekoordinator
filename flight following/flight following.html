@@ -9,10 +9,12 @@
 
   <link rel="stylesheet" href="../felles/felles.css">
   <link rel="stylesheet" href="flight following.css">
+  <link rel="stylesheet" href="flight-following-utskrift.css">
 
   <script src="../felles/felles.js" defer></script>
   <script src="../felles/meny.js" defer></script>
   <script src="flight following.js" defer></script>
+  <script src="flight-following-utskrift.js" defer></script>
 </head>
 
 <body class="ff-page">
@@ -46,37 +48,36 @@
     <aside id="shared-menu"></aside>
 
     <!-- REGISTRERING -->
-    <section class="ff-main"
-             aria-label="Flight Following-registrering">
+    <section
+      class="ff-main"
+      aria-label="Flight Following-registrering">
 
+      <div class="ff-toolbar">
 
+        <button
+          type="button"
+          id="printActiveBtn"
+          class="ff-btn ff-neutral">
+          Skriv ut registrerte FF
+        </button>
 
-<div class="ff-toolbar">
+        <button
+          type="button"
+          id="printBlankBtn"
+          class="ff-btn ff-neutral">
+          Skriv ut tomt skjema
+        </button>
 
-  <button
-    type="button"
-    id="printActiveBtn"
-    class="ff-btn ff-neutral">
-    Skriv ut aktive FF
-  </button>
+        <a
+          class="ff-btn ff-neutral ff-procedure-btn"
+          href="https://ehandbok.ous-hf.no/document/144258"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Åpne prosedyre for Flight Following">
+          Prosedyre
+        </a>
 
-  <button
-    type="button"
-    id="printBlankBtn"
-    class="ff-btn ff-neutral">
-    Skriv ut tom FF
-  </button>
-
-  <a
-    class="ff-btn ff-neutral ff-procedure-btn"
-    href="https://ehandbok.ous-hf.no/document/144258"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Åpne prosedyre for Flight Following">
-    Prosedyre
-  </a>
-
-</div>
+      </div>
 
       <section
         id="ffAlarmPanel"
@@ -87,6 +88,7 @@
       </section>
 
       <div id="ffContainer" class="ff-container">
+
         <div class="ff-empty">
           <strong>Ingen ressurs valgt</strong>
           <p>
@@ -94,13 +96,15 @@
             en ressurs fra oversikten til høyre.
           </p>
         </div>
+
       </div>
 
     </section>
 
-    <!-- ALLTID TILGJENGELIG HØYREPANEL -->
-    <aside class="ff-sidebar"
-           aria-label="Aktiv Flight Following">
+    <!-- HØYREPANEL -->
+    <aside
+      class="ff-sidebar"
+      aria-label="Aktiv Flight Following">
 
       <div class="ff-sidebar-top">
 
@@ -110,8 +114,11 @@
             <p>Alle registrerte ressurser</p>
           </div>
 
-          <span id="ffActiveCount"
-                class="ff-total-count">0</span>
+          <span
+            id="ffActiveCount"
+            class="ff-total-count">
+            0
+          </span>
         </div>
 
         <button
@@ -134,11 +141,14 @@
 
   <!-- NY FLIGHT FOLLOWING -->
   <dialog id="newFFDialog" class="ff-dialog">
+
     <form id="newFFForm">
 
       <h2>Ny Flight Following</h2>
 
-      <label for="resourceInput">Ressurs-ID</label>
+      <label for="resourceInput">
+        Ressurs-ID
+      </label>
 
       <input
         id="resourceInput"
@@ -149,6 +159,7 @@
         required>
 
       <div class="ff-dialog-buttons">
+
         <button
           type="button"
           id="cancelNewFFBtn"
@@ -161,16 +172,20 @@
           class="ff-btn ff-primary">
           Opprett FF
         </button>
+
       </div>
 
     </form>
+
   </dialog>
 
   <!-- REGISTRER LANDING -->
   <dialog id="landFFDialog" class="ff-dialog">
+
     <form id="landFFForm">
 
       <h2>Registrer landing</h2>
+
       <p id="landFFText"></p>
 
       <label for="landTimeInput">
@@ -183,6 +198,7 @@
         required>
 
       <div class="ff-dialog-buttons">
+
         <button
           type="button"
           id="cancelLandFFBtn"
@@ -195,18 +211,22 @@
           class="ff-btn ff-land">
           Bekreft landing
         </button>
+
       </div>
 
     </form>
+
   </dialog>
 
-  <!-- AVSLUTT FF -->
+  <!-- AVSLUTT FLIGHT FOLLOWING -->
   <dialog id="endFFDialog" class="ff-dialog">
 
     <h2>Avslutt Flight Following?</h2>
+
     <p id="endFFText"></p>
 
     <div class="ff-dialog-buttons">
+
       <button
         type="button"
         id="cancelEndFFBtn"
@@ -220,10 +240,12 @@
         class="ff-btn ff-danger">
         Avslutt FF
       </button>
+
     </div>
 
   </dialog>
 
+  <!-- UTSKRIFTSOMRÅDE -->
   <div id="printArea"></div>
 
 </body>

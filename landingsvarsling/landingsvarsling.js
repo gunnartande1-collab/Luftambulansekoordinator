@@ -1,10 +1,15 @@
 
 /* ==========================================
-   LANDINGSVARSEL RH
+   LANDINGSVARSEL REDNINGSHELIKOPTER
+   LA OSLO
    ========================================== */
 
 (() => {
   "use strict";
+
+  /* ======================================
+     INNSTILLINGER
+     ====================================== */
 
   const TOTAL_SECONDS = 180;
   const ALERT_SECONDS = 90;
@@ -26,25 +31,27 @@
   const ackButton = $("ackButton");
 
   const startButton = $("startButton");
-  const stopButton = $("stopButton");
   const resetButton = $("resetButton");
   const testSoundButton = $("testSoundButton");
-  const themeButton = $("themeButton");
+
+  /* ======================================
+     TILSTAND
+     ====================================== */
 
   let remainingMs = TOTAL_SECONDS * 1000;
+
   let running = false;
   let starting = false;
   let lastStartTime = null;
 
   let alertTriggered = false;
   let alertAcknowledged = false;
-  let startedOnce = false;
 
   let intervalId = null;
   let lastAlarmSoundTime = 0;
 
   let audioContext = null;
-
+  let timerGeneration = 0;
 
   /* ======================================
      TIDSBEREGNING
@@ -61,7 +68,6 @@
 
     return remainingMs - elapsed;
   }
-
 
   function formatTime(milliseconds) {
 
@@ -86,9 +92,8 @@
     );
   }
 
-
   /* ======================================
-     LYD
+     INITIALISER LYD
      ====================================== */
 
   async function initializeAudio() {
@@ -100,9 +105,11 @@
         window.webkitAudioContext;
 
       if (!AudioContextClass) {
+
         console.warn(
           "Lyd støttes ikke i nettleseren."
         );
+
         return false;
       }
 
@@ -127,6 +134,9 @@
     }
   }
 
+  /* ======================================
+     GENERER LYDTONE
+     ====================================== */
 
   function playTone(
     frequency,
@@ -170,18 +180,28 @@
     );
 
     oscillator.start(start);
+
     oscillator.stop(
       start + duration + 0.02
     );
   }
 
+  /* ======================================
+     DØRKLOKKELYD
+     ====================================== */
 
   async function playDoorbell() {
+
+    const generation = timerGeneration;
 
     const available =
       await initializeAudio();
 
     if (!available) {
+      return;
+    }
+
+    if (generation !== timerGeneration) {
       return;
     }
 
@@ -241,9 +261,8 @@
     );
   }
 
-
   /* ======================================
-     VARSLING
+     UTLØS ALARM
      ====================================== */
 
   function triggerAlarm() {
@@ -262,6 +281,9 @@
     updateDisplay();
   }
 
+  /* ======================================
+     KVITTER ALARM
+     ====================================== */
 
   function acknowledgeAlarm() {
 
@@ -270,9 +292,8 @@
     updateDisplay();
   }
 
-
   /* ======================================
-     OPPDATER KLOKKEN
+     OPPDATER VISNING
      ====================================== */
 
   function updateDisplay() {
@@ -281,6 +302,8 @@
 
     timerDisplay.textContent =
       formatTime(ms);
+
+    // Beregn fremdrift.
 
     const elapsed =
       TOTAL_SECONDS * 1000 - ms;
@@ -299,13 +322,14 @@
       percent + "%";
 
     if (progressTrack) {
+
       progressTrack.setAttribute(
         "aria-valuenow",
         String(Math.round(percent))
       );
     }
 
-    // Vis alarm til den blir kvittert.
+    // Alarmstatus.
 
     const alarmActive =
       alertTriggered &&
@@ -322,7 +346,7 @@
     ackButton.hidden =
       !alarmActive;
 
-    // Marker overtid visuelt.
+    // Overtid.
 
     timerCard.classList.toggle(
       "timer-overtime",
@@ -330,41 +354,25 @@
       !alarmActive
     );
 
-    // Start / stopp-knapper.
+    // Startknapp.
 
     startButton.disabled =
       running || starting;
 
-    stopButton.disabled =
-      !running;
+    startButton.textContent =
+      running
+        ? "▶ Pågår"
+        : "▶ Start";
 
-    if (running) {
-
-      startButton.textContent =
-        "▶ Pågår";
-
-    } else if (startedOnce) {
-
-      startButton.textContent =
-        "▶ Fortsett";
-
-    } else {
-
-      startButton.textContent =
-        "▶ Start";
-
-    }
-
-    // Klokken vises også i vindustittelen.
+    // Vis tid i nettleserfanen.
 
     document.title =
       formatTime(ms) +
       " | Landingsvarsel RH";
   }
 
-
   /* ======================================
-     TIMER
+     NEDTELLING
      ====================================== */
 
   function tick() {
@@ -375,18 +383,18 @@
 
     const ms = currentRemainingMs();
 
-    // Utløs alarm ved første passering
-    // av 01:30.
+    // Varsling ved 01:30.
 
     if (
       ms <= ALERT_SECONDS * 1000 &&
       !alertTriggered
     ) {
+
       triggerAlarm();
     }
 
-    // Gjenta alarmen hvert 8. sekund
-    // til varselet er kvittert.
+    // Gjenta lyd hvert 8. sekund
+    // frem til brukeren kvitterer.
 
     if (
       alertTriggered &&
@@ -405,6 +413,9 @@
     updateDisplay();
   }
 
+  /* ======================================
+     START TIMER
+     ====================================== */
 
   async function startTimer() {
 
@@ -415,20 +426,39 @@
     starting = true;
     startButton.disabled = true;
 
-    // Forsøk å aktivere lyd fra brukerklikket.
+    const generation = timerGeneration;
 
     try {
+
+      // Aktiver lyd ved brukerklikk.
+
       await initializeAudio();
+
+    } catch (error) {
+
+      console.warn(
+        "Kunne ikke initialisere lyd:",
+        error
+      );
+
     } finally {
+
       starting = false;
     }
 
-    if (running) {
+    // Unngå oppstart dersom timeren
+    // ble nullstilt i mellomtiden.
+
+    if (
+      running ||
+      generation !== timerGeneration
+    ) {
+
+      updateDisplay();
       return;
     }
 
     running = true;
-    startedOnce = true;
 
     lastStartTime =
       performance.now();
@@ -443,33 +473,19 @@
     updateDisplay();
   }
 
-
-  function stopTimer() {
-
-    if (!running) {
-      return;
-    }
-
-    remainingMs =
-      currentRemainingMs();
-
-    running = false;
-    lastStartTime = null;
-
-    clearInterval(intervalId);
-    intervalId = null;
-
-    updateDisplay();
-  }
-
+  /* ======================================
+     NULLSTILL TIMER
+     ====================================== */
 
   function resetTimer() {
 
+    timerGeneration++;
+
     clearInterval(intervalId);
     intervalId = null;
 
     running = false;
-    startedOnce = false;
+    starting = false;
 
     remainingMs =
       TOTAL_SECONDS * 1000;
@@ -484,80 +500,6 @@
     updateDisplay();
   }
 
-
-  /* ======================================
-     DAG- OG NATTMODUS
-     ====================================== */
-
-  function applyTheme(theme) {
-
-    const dark =
-      theme === "dark";
-
-    document.body.classList.toggle(
-      "dark-mode",
-      dark
-    );
-
-    themeButton.textContent =
-      dark ? "☀" : "☾";
-
-    themeButton.setAttribute(
-      "aria-label",
-      dark
-        ? "Slå på dagmodus"
-        : "Slå på nattmodus"
-    );
-
-    try {
-
-      localStorage.setItem(
-        "luftambulanse-theme",
-        theme
-      );
-
-    } catch {
-      // Tema fungerer uten lagring.
-    }
-  }
-
-
-  let savedTheme = "light";
-
-  try {
-
-    savedTheme =
-      localStorage.getItem(
-        "luftambulanse-theme"
-      ) || "light";
-
-  } catch {
-    savedTheme = "light";
-  }
-
-  applyTheme(
-    savedTheme === "dark"
-      ? "dark"
-      : "light"
-  );
-
-
-  themeButton.addEventListener(
-    "click",
-    () => {
-
-      const dark =
-        document.body.classList.contains(
-          "dark-mode"
-        );
-
-      applyTheme(
-        dark ? "light" : "dark"
-      );
-    }
-  );
-
-
   /* ======================================
      KNAPPER
      ====================================== */
@@ -565,11 +507,6 @@
   startButton.addEventListener(
     "click",
     startTimer
-  );
-
-  stopButton.addEventListener(
-    "click",
-    stopTimer
   );
 
   resetButton.addEventListener(
@@ -587,15 +524,14 @@
     playDoorbell
   );
 
-
   /* ======================================
      INITIALISERING
      ====================================== */
 
   updateDisplay();
 
-  // Oppdater etter at vinduet har
-  // vært i bakgrunnen.
+  // Oppdater når nettleservinduet
+  // blir aktivt igjen.
 
   document.addEventListener(
     "visibilitychange",

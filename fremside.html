@@ -22,7 +22,7 @@
     href="Fremside/Fremside.css"
   >
 
-  <!-- NYTT MENYDESIGN -->
+  <!-- MENYDESIGN -->
   <link
     rel="stylesheet"
     href="felles/hjelpemidler.css"
@@ -82,12 +82,8 @@
 
   <div class="app-layout">
 
-
     <!-- ===================================
          FELLES VENSTREMENY
-
-         Denne er hovedkilden for meny.js
-         på alle undersider.
          =================================== -->
 
     <nav
@@ -97,7 +93,6 @@
     >
 
       <div class="form-navigation-inner">
-
 
         <!-- SKJEMAER -->
 
@@ -190,10 +185,6 @@
 
         <!-- =================================
              NYTTIGE HJELPEMIDLER
-
-             Åpen som standard.
-             Brukeren kan lukke seksjonen.
-             Tilstanden huskes av meny.js.
              ================================= -->
 
         <details
@@ -228,9 +219,7 @@
 
           </summary>
 
-
           <ul class="form-nav-list nav-tools-list">
-
 
             <!-- INTERNT KART -->
 
@@ -245,7 +234,6 @@
               </a>
             </li>
 
-
             <!-- WINDY -->
 
             <li>
@@ -256,7 +244,6 @@
                 rel="noopener noreferrer"
                 aria-label="Windy, åpnes i ny fane"
               >
-
                 <span class="form-nav-copy">
                   Windy
                 </span>
@@ -267,10 +254,8 @@
                 >
                   ↗
                 </span>
-
               </a>
             </li>
-
 
             <!-- IPPC -->
 
@@ -282,7 +267,6 @@
                 rel="noopener noreferrer"
                 aria-label="IPPC, åpnes i ny fane"
               >
-
                 <span class="form-nav-copy">
                   IPPC
                 </span>
@@ -293,10 +277,8 @@
                 >
                   ↗
                 </span>
-
               </a>
             </li>
-
 
             <!-- GOOGLE MAPS -->
 
@@ -308,7 +290,6 @@
                 rel="noopener noreferrer"
                 aria-label="Google Maps, åpnes i ny fane"
               >
-
                 <span class="form-nav-copy">
                   Google Maps
                 </span>
@@ -319,7 +300,6 @@
                 >
                   ↗
                 </span>
-
               </a>
             </li>
 
@@ -341,7 +321,6 @@
       id="mainContent"
     >
 
-
       <!-- =================================
            HENDELSER OG VARSLING
            ================================= -->
@@ -358,9 +337,7 @@
           Hendelser og varsling
         </h3>
 
-
         <div class="primary-buttons">
-
 
           <!-- SAVNET HELIKOPTER -->
 
@@ -369,12 +346,10 @@
             class="image-button image-button-large"
             aria-label="Åpne Savnet helikopter"
           >
-
             <img
               src="img/savnet heli ferdig.png"
               alt="Savnet helikopter"
             >
-
           </a>
 
 
@@ -385,43 +360,33 @@
             class="image-button image-button-large"
             aria-label="Åpne GPS-forstyrrelser"
           >
-
             <img
               src="img/GPS forstyrrelse ferdig.png"
               alt="GPS-forstyrrelser"
             >
-
           </a>
 
 
-          <!-- LANDINGSVARSEL RH -->
+          <!-- =================================
+               REDNINGSHELIKOPTER 3 MIN
+
+               Ny bildeknapp som erstatter
+               den gamle alarmklokken.
+
+               Åpner eksisterende
+               landingsvarsel i eget vindu.
+               ================================= -->
 
           <button
             type="button"
             class="image-button image-button-large landing-button"
             id="landingWarningButton"
-            aria-label="Åpne Landingsvarsel RH"
+            aria-label="Åpne Redningshelikopter 3min"
           >
-
-            <span class="landing-button-content">
-
-              <span
-                class="landing-button-icon"
-                aria-hidden="true"
-              >
-                🔔
-              </span>
-
-              <strong>
-                Landingsvarsel RH
-              </strong>
-
-              <small>
-                3 minutter til landing
-              </small>
-
-            </span>
-
+            <img
+              src="img/Redningshelikopter - 3min.png"
+              alt="Redningshelikopter 3min"
+            >
           </button>
 
         </div>
@@ -445,9 +410,7 @@
           Reserveløsning dokumentasjon
         </h3>
 
-
         <div class="secondary-buttons">
-
 
           <!-- FLIGHT FOLLOWING -->
 
@@ -456,12 +419,10 @@
             class="image-button image-button-small"
             aria-label="Åpne Flight following"
           >
-
             <img
               src="img/FF ferdig.png"
               alt="Flight following"
             >
-
           </a>
 
 
@@ -472,12 +433,10 @@
             class="image-button image-button-small"
             aria-label="Åpne Primæroppdrag"
           >
-
             <img
               src="img/primæroppdragv2.png"
               alt="Primæroppdrag"
             >
-
           </a>
 
 
@@ -488,18 +447,15 @@
             class="image-button image-button-small"
             aria-label="Åpne Sekundæroppdrag"
           >
-
             <img
               src="img/sekundær-min.png"
               alt="Sekundæroppdrag"
             >
-
           </a>
 
         </div>
 
       </section>
-
 
     </main>
 
@@ -507,11 +463,15 @@
 
 
   <!-- =====================================
-       LANDINGSVARSEL RH
+       REDNINGSHELIKOPTER 3 MIN
+
        ÅPNES I SEPARAT VINDU
+
+       Eksisterende funksjonalitet beholdes.
        ===================================== -->
 
   <script>
+
     let landingsvarselWindow = null;
 
     function openLandingsvarsel() {
@@ -563,10 +523,11 @@
         );
 
       }
+
     }
 
 
-    // Koble landingsvarselknappen til funksjonen.
+    // Koble bildeknappen til eksisterende funksjon.
 
     document.getElementById(
       "landingWarningButton"

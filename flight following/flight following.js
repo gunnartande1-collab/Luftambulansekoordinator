@@ -580,12 +580,6 @@
 
         </div>
 
-        <div class="ff-leg-footer">
-          <span class="ff-leg-note">
-            Alarm ved ETA + ${ALARM_MINUTES} min
-            uten bekreftet landing.
-          </span>
-
           ${button(
             "Avbrutt",
             "abort",

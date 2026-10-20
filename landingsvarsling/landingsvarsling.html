@@ -9,54 +9,47 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>
-    Landingsvarsel Redningshelikopter | Luftambulansekoordinator
-  </title>
+  <title>Landingsvarsel Redningshelikopter | Luftambulansekoordinator</title>
 
+  <!-- FELLES DESIGN -->
   <link
     rel="stylesheet"
     href="../felles/felles.css"
   >
 
+  <!-- LANDINGSVARSEL DESIGN -->
   <link
     rel="stylesheet"
     href="landingsvarsling.css"
   >
 
+  <!-- FELLES FUNKSJONER OG TOPPFELT -->
+  <script
+    src="../felles/felles.js"
+    defer
+  ></script>
+
+  <!-- LANDINGSVARSEL -->
   <script
     src="landingsvarsling.js"
     defer
   ></script>
 </head>
 
-<body class="landingsvarsel-side">
+<body
+  class="landingsvarsel-side"
+  data-page-title="Landingsvarsel Redningshelikopter"
+>
+
+  <!-- FELLES TOPPFELT -->
+  <!-- Bygges automatisk av felles.js -->
+
+  <header class="app-header"></header>
+
+
+  <!-- HOVEDINNHOLD -->
 
   <main class="lv-app">
-
-    <!-- TOPPFELT -->
-
-    <header class="lv-header">
-
-      <div>
-        <p class="lv-overline">
-          LUFTAMBULANSEKOORDINATOR
-        </p>
-
-        <h1>Landingsvarsel Redningshelikopter</h1>
-      </div>
-
-      <button
-        id="themeButton"
-        class="lv-theme-button"
-        type="button"
-        title="Bytt dag-/nattmodus"
-        aria-label="Bytt dag- og nattmodus"
-      >
-        ☾
-      </button>
-
-    </header>
-
 
     <!-- NEDTELLINGSKLOKKE -->
 
@@ -89,23 +82,29 @@
         aria-valuemax="100"
         aria-valuenow="0"
       >
+
         <div
           id="progressBar"
           class="lv-progress-fill"
         ></div>
+
       </div>
 
 
       <!-- TIDSMARKØRER -->
 
       <div class="lv-markers">
+
         <span>03:00 Start</span>
+
         <span>01:30 Varsling</span>
+
         <span>00:00 Landing</span>
+
       </div>
 
 
-      <!-- VARSLING VED 01:30 -->
+      <!-- ALARM VED 01:30 -->
 
       <div
         id="alarmMessage"
@@ -128,7 +127,7 @@
       </div>
 
 
-      <!-- KVITTERING AV VARSEL -->
+      <!-- KVITTERING -->
 
       <button
         id="ackButton"
@@ -155,15 +154,6 @@
       </button>
 
       <button
-        id="stopButton"
-        type="button"
-        class="lv-button lv-button-secondary"
-        disabled
-      >
-        ■ Stopp
-      </button>
-
-      <button
         id="resetButton"
         type="button"
         class="lv-button lv-button-secondary"
@@ -174,7 +164,7 @@
     </div>
 
 
-    <!-- TEST AV LYD -->
+    <!-- LYDTEST -->
 
     <footer class="lv-footer">
 
