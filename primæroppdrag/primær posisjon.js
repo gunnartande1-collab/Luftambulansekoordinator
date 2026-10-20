@@ -672,7 +672,6 @@
           type="text"
           spellcheck="false"
           autocomplete="off"
-          placeholder="32V Ø 646073 N 6746065"
           aria-describedby="positionNotice"
         >
       </div>
@@ -687,7 +686,6 @@
           type="text"
           spellcheck="false"
           autocomplete="off"
-          placeholder="60° 49.381' N 11° 41.181' Ø"
           aria-describedby="positionNotice"
         >
       </div>
