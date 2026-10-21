@@ -88,6 +88,14 @@ html body.secondary-page .app-shell {
 .secondary-page .sidebar {
   grid-column: 1;
   min-width: 0;
+
+  position: sticky;
+  top: 12px;
+  align-self: start;
+
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .secondary-page #shared-menu {
@@ -95,12 +103,10 @@ html body.secondary-page .app-shell {
 }
 
 .secondary-page .sidebar .form-navigation {
-  position: sticky;
-  top: 12px;
+  position: static;
   width: 100%;
   min-width: 0;
 }
-
 .secondary-page .sidebar .form-nav-icon {
   display: none !important;
 }
